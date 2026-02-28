@@ -38,8 +38,8 @@ shared/
 - [x] brand-reference-schema.yml + state-schema.yml
 - [x] typography-color skill
 - [x] identity-interview skill
-- [ ] audience-personas skill ← **Next step**
-- [ ] tone-of-voice skill
+- [x] audience-personas skill
+- [ ] tone-of-voice skill ← **Next step**
 - [ ] visual-identity skill
 - [ ] content-rules skill
 - [ ] social-media skill
