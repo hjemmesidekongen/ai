@@ -89,9 +89,12 @@ For each wave from the starting wave to the final wave:
 ```yaml
 # Update state file
 status: "in_progress"
+started_at: "[now]"       # only set on first wave (preserve original value after that)
 current_wave: [wave number]
 updated_at: "[now]"
 ```
+
+If this is the first wave (`started_at` is null), set `started_at` to the current timestamp. For subsequent waves, leave `started_at` unchanged.
 
 Report to user: `"Starting wave [N] of [total]: [task names]"`
 
@@ -196,9 +199,15 @@ elif verdict == "fail":
 
 #### 4e. Write Recovery Notes
 
-After each wave completes (pass or pass_with_warnings), update the plan:
+After each wave completes (pass or pass_with_warnings), write recovery context to **both** files:
+
+**State file** (`[plan-name].state.yml`) — the resume point:
 
 ```yaml
+current_wave: [wave number]
+completed_waves: [1, 2, ...]    # append this wave
+updated_at: "[now]"
+last_session_id: "[current session]"
 recovery_notes: |
   Wave [N] completed at [timestamp].
   Tasks completed: [list].
@@ -208,7 +217,14 @@ recovery_notes: |
   Next: Wave [N+1] with tasks [list].
 ```
 
-Update `last_session_id` with the current session.
+**Plan file** (`[plan-name].yml`) — the persistent record:
+
+```yaml
+recovery_notes: <same content as above>
+last_session_id: "[current session]"
+```
+
+Both files get the same `recovery_notes` content. The state file is the primary source for `/plan:resume`; the plan file is the backup in case the state file is lost.
 
 ### Step 5: Fix-and-Retry Loop
 
@@ -252,6 +268,7 @@ After the final wave completes and passes QA:
    ```yaml
    status: "completed"
    current_wave: null
+   completed_waves: [1, 2, ..., N]    # all wave numbers
    updated_at: "[now]"
    ```
 

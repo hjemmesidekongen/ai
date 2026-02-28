@@ -89,16 +89,22 @@ for each wave W:
 
 ### Step 5: Assign Verification
 
-Each wave needs a `verification` block. The type is determined by what the wave produces:
+Each wave needs a `verification` block. The type is determined by what the wave produces.
 
-| Wave produces | Verification type |
-|---------------|-------------------|
-| YAML data sections | `data_validation` |
-| Asset files (SVG, PNG) | `file_validation` |
-| Code files | `web_lint` + `web_build` |
-| Final compilation | `schema_validation` |
+**If a `verification_profile` is provided**, use its `after_each_wave` types. Override with a more specific type when the wave's output clearly matches one (e.g., use `file_validation` for asset waves even if the profile says `data_validation`).
 
-If a `verification_profile` is provided, use its `after_each_wave` types. Otherwise, infer from `files_written` patterns.
+**If no profile is provided**, infer the type from `files_written` patterns:
+
+| files_written pattern | Verification type |
+|-----------------------|-------------------|
+| `*.yml`, `*.yaml`, `*.json` (structured data) | `data_validation` |
+| `*.svg`, `*.png`, `*.ico`, `*.jpg`, `*.webp` (assets) | `file_validation` |
+| `*.html`, `*.css` (markup/styles) | `file_validation` |
+| `*.ts`, `*.tsx`, `*.js`, `*.jsx` (code) | `web_lint` + `web_build` |
+| Final wave with broad dependencies | `schema_validation` |
+| Mixed file types in a single wave | `file_validation` (catch-all) |
+
+When a wave produces multiple file types, use `file_validation` as the default — it handles any file on disk. Only use `data_validation` when all outputs are structured data.
 
 Generate `checks` that are specific to this wave's tasks — not generic. Each check should name the concrete artifact being verified.
 

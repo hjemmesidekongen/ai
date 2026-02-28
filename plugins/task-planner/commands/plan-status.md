@@ -151,7 +151,7 @@ When `--verbose` is set, additionally show:
      Verdict: pass_with_warnings
    ```
 
-3. **Recovery notes** from the plan:
+3. **Recovery notes** from the state file (falls back to plan file):
    ```
    Recovery notes:
      Wave 2 completed. Logo concepts generated in 3 variants

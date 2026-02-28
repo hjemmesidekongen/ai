@@ -117,11 +117,13 @@ Create the initial state file:
 # .plans/[plan-name].state.yml
 plan: "[plan-name]"
 plan_file: ".plans/[plan-name].yml"
-started_at: null
+started_at: null                    # set on first wave execution
 updated_at: "[now]"
-status: "created"       # created → in_progress → completed → failed
-current_wave: null
-completed_waves: []
+status: "created"                   # created → in_progress → completed → failed
+current_wave: null                  # wave number currently executing
+completed_waves: []                 # list of completed wave numbers
+recovery_notes: null                # free-text context for session resumption
+last_session_id: null               # session that last touched this plan
 ```
 
 ### Step 7: Display Summary

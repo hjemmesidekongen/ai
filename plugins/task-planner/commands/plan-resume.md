@@ -63,15 +63,17 @@ Which plan should I resume?
 
 Load three files:
 
-1. **State file** (`[plan-name].state.yml`):
+1. **State file** (`[plan-name].state.yml`) — primary resume source:
    - `current_wave` — which wave was in progress
    - `completed_waves` — which waves are done
    - `status` — should be `in_progress`
+   - `recovery_notes` — free-text context about where things stand
+   - `last_session_id` — which session last touched this plan
 
-2. **Plan file** (`[plan-name].yml`):
+2. **Plan file** (`[plan-name].yml`) — backup and full definitions:
    - Full task and wave definitions
    - Task statuses (which tasks completed, which were in progress)
-   - `recovery_notes` — free-text context about where things stand
+   - `recovery_notes` — fallback if state file recovery_notes are missing
 
 3. **Ownership registry** (`[plan-name].ownership.yml`):
    - File ownership assignments
