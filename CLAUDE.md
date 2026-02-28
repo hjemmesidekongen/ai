@@ -40,8 +40,8 @@ shared/
 - [x] identity-interview skill
 - [x] audience-personas skill
 - [x] tone-of-voice skill
-- [ ] visual-identity skill ← **Next step**
-- [ ] content-rules skill
+- [x] visual-identity skill
+- [ ] content-rules skill ← **Next step**
 - [ ] social-media skill
 - [ ] Commands: brand-generate, brand-analyze, brand-audit, brand-switch
 - [ ] Brand manual template + export
