@@ -20,8 +20,31 @@ packages/
 shared/
   brand-context-loader/   # Shared skill used by all brand-consuming plugins
 
-## Current Phase
-Phase 1: Building task-planner plugin — starting with scaffold and plan schema
+## Progress
+
+### task-planner (complete)
+- [x] Plugin scaffold + plugin.json
+- [x] plan-schema.yml + verification-registry.yml
+- [x] wave-decomposer skill
+- [x] file-ownership skill + check-file-conflicts.sh
+- [x] verification-runner skill
+- [x] QA agent + worker agent templates
+- [x] Commands: plan-create, plan-execute, plan-status, plan-resume
+- [x] Test walkthrough + fixes
+
+### brand-guideline (in progress)
+- [x] Plugin scaffold + plugin.json
+- [x] brand-context-loader shared skill
+- [x] brand-reference-schema.yml + state-schema.yml
+- [x] typography-color skill
+- [x] identity-interview skill
+- [ ] audience-personas skill ← **Next step**
+- [ ] tone-of-voice skill
+- [ ] visual-identity skill
+- [ ] content-rules skill
+- [ ] social-media skill
+- [ ] Commands: brand-generate, brand-analyze, brand-audit, brand-switch
+- [ ] Brand manual template + export
 
 ## Specs
 Detailed specs are in /docs/ — read the relevant spec BEFORE implementing.
