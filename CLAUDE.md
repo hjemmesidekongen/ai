@@ -39,8 +39,8 @@ shared/
 - [x] typography-color skill
 - [x] identity-interview skill
 - [x] audience-personas skill
-- [ ] tone-of-voice skill ← **Next step**
-- [ ] visual-identity skill
+- [x] tone-of-voice skill
+- [ ] visual-identity skill ← **Next step**
 - [ ] content-rules skill
 - [ ] social-media skill
 - [ ] Commands: brand-generate, brand-analyze, brand-audit, brand-switch
