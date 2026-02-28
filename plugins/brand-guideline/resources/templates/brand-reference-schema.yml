@@ -253,6 +253,10 @@ colors:
   required: true
   description: "Full color system with accessibility data"
   properties:
+    # Primary, secondary, and accent colors share this extended structure.
+    # Each color includes tint/shade scales, pre-computed accessible pairs,
+    # and colorblind safety notes (per addendum-assets-and-accessibility spec).
+
     primary:
       type: array
       required: true
@@ -268,43 +272,113 @@ colors:
         rgb:
           type: string
           required: false
+        hsl:
+          type: string
+          required: false
+          description: "HSL representation (e.g. '217, 91%, 60%')"
         use:
           type: string
           required: true
+        scale:
+          type: object
+          required: true
+          description: "10-step tint/shade scale from 50 (lightest) to 900 (darkest)"
+          properties:
+            "50":  { type: string, required: true, pattern: "^#[0-9A-Fa-f]{6}$" }
+            "100": { type: string, required: true, pattern: "^#[0-9A-Fa-f]{6}$" }
+            "200": { type: string, required: true, pattern: "^#[0-9A-Fa-f]{6}$" }
+            "300": { type: string, required: true, pattern: "^#[0-9A-Fa-f]{6}$" }
+            "400": { type: string, required: true, pattern: "^#[0-9A-Fa-f]{6}$" }
+            "500": { type: string, required: true, pattern: "^#[0-9A-Fa-f]{6}$" }
+            "600": { type: string, required: true, pattern: "^#[0-9A-Fa-f]{6}$" }
+            "700": { type: string, required: true, pattern: "^#[0-9A-Fa-f]{6}$" }
+            "800": { type: string, required: true, pattern: "^#[0-9A-Fa-f]{6}$" }
+            "900": { type: string, required: true, pattern: "^#[0-9A-Fa-f]{6}$" }
+        accessible_pairs:
+          type: array
+          required: true
+          min_items: 1
+          description: "Pre-computed contrast ratios for every intended pairing"
+          items:
+            foreground:
+              type: string
+              required: true
+              pattern: "^#[0-9A-Fa-f]{6}$"
+            background:
+              type: string
+              required: true
+              pattern: "^#[0-9A-Fa-f]{6}$"
+            contrast_ratio:
+              type: number
+              required: true
+              description: "WCAG contrast ratio (e.g. 4.56)"
+            wcag_aa_normal:
+              type: boolean
+              required: true
+              description: "Passes AA for body text (≥ 4.5:1)"
+            wcag_aa_large:
+              type: boolean
+              required: true
+              description: "Passes AA for large text (≥ 3:1)"
+            wcag_aaa_normal:
+              type: boolean
+              required: false
+              description: "Passes AAA for body text (≥ 7:1)"
+            wcag_aaa_large:
+              type: boolean
+              required: false
+              description: "Passes AAA for large text (≥ 4.5:1)"
+            use:
+              type: string
+              required: true
+              description: "Where this pair is used"
+            warning:
+              type: string
+              required: false
+              description: "Set when pair fails AA — marks as decorative-only"
+        colorblind_notes:
+          type: object
+          required: true
+          description: "Visibility assessment for color vision deficiencies"
+          properties:
+            protanopia:
+              type: string
+              required: true
+              description: "Red-blind assessment"
+            deuteranopia:
+              type: string
+              required: true
+              description: "Green-blind assessment"
+            tritanopia:
+              type: string
+              required: true
+              description: "Blue-blind assessment"
     secondary:
       type: array
       required: false
+      description: "Same structure as primary (scale, accessible_pairs, colorblind_notes)"
       items:
-        name:
-          type: string
-          required: true
-        hex:
-          type: string
-          required: true
-          pattern: "^#[0-9A-Fa-f]{6}$"
-        rgb:
-          type: string
-          required: false
-        use:
-          type: string
-          required: true
+        name: { type: string, required: true }
+        hex: { type: string, required: true, pattern: "^#[0-9A-Fa-f]{6}$" }
+        rgb: { type: string, required: false }
+        hsl: { type: string, required: false }
+        use: { type: string, required: true }
+        scale: { type: object, required: true }
+        accessible_pairs: { type: array, required: true, min_items: 1 }
+        colorblind_notes: { type: object, required: true }
     accent:
       type: array
       required: false
+      description: "Same structure as primary (scale, accessible_pairs, colorblind_notes)"
       items:
-        name:
-          type: string
-          required: true
-        hex:
-          type: string
-          required: true
-          pattern: "^#[0-9A-Fa-f]{6}$"
-        rgb:
-          type: string
-          required: false
-        use:
-          type: string
-          required: true
+        name: { type: string, required: true }
+        hex: { type: string, required: true, pattern: "^#[0-9A-Fa-f]{6}$" }
+        rgb: { type: string, required: false }
+        hsl: { type: string, required: false }
+        use: { type: string, required: true }
+        scale: { type: object, required: true }
+        accessible_pairs: { type: array, required: true, min_items: 1 }
+        colorblind_notes: { type: object, required: true }
     neutrals:
       type: array
       required: true
@@ -379,6 +453,74 @@ colors:
         accent:
           type: string
           required: true
+    dark_mode:
+      type: object
+      required: false
+      description: "Dark mode color mapping with validated contrast pairs"
+      properties:
+        background:
+          type: object
+          required: true
+          properties:
+            base:
+              type: string
+              required: true
+              pattern: "^#[0-9A-Fa-f]{6}$"
+              description: "Darkest background (replaces white)"
+            surface:
+              type: string
+              required: true
+              pattern: "^#[0-9A-Fa-f]{6}$"
+              description: "Card/panel background (slightly lighter than base)"
+            elevated:
+              type: string
+              required: true
+              pattern: "^#[0-9A-Fa-f]{6}$"
+              description: "Elevated surface (modals, dropdowns)"
+        text:
+          type: object
+          required: true
+          properties:
+            primary:
+              type: string
+              required: true
+              pattern: "^#[0-9A-Fa-f]{6}$"
+            secondary:
+              type: string
+              required: true
+              pattern: "^#[0-9A-Fa-f]{6}$"
+            muted:
+              type: string
+              required: true
+              pattern: "^#[0-9A-Fa-f]{6}$"
+        brand_adjustments:
+          type: array
+          required: false
+          description: "Brand colors adjusted for dark backgrounds"
+          items:
+            original:
+              type: string
+              required: true
+              pattern: "^#[0-9A-Fa-f]{6}$"
+            dark_mode:
+              type: string
+              required: true
+              pattern: "^#[0-9A-Fa-f]{6}$"
+            reason:
+              type: string
+              required: true
+        accessible_pairs:
+          type: array
+          required: true
+          min_items: 1
+          description: "Same structure as color accessible_pairs, validated for dark backgrounds"
+          items:
+            foreground: { type: string, required: true, pattern: "^#[0-9A-Fa-f]{6}$" }
+            background: { type: string, required: true, pattern: "^#[0-9A-Fa-f]{6}$" }
+            contrast_ratio: { type: number, required: true }
+            wcag_aa_normal: { type: boolean, required: true }
+            wcag_aa_large: { type: boolean, required: true }
+            use: { type: string, required: true }
 
 # --------------------------------------------------
 # TONE OF VOICE
