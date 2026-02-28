@@ -1,0 +1,89 @@
+# Verification Registry
+# Maps verification types to concrete checks. The verification-runner
+# skill dispatches to the right checks based on the type name.
+#
+# Core types are built into this plugin. Domain-specific types are
+# registered by consuming plugins (marked with registered_by).
+
+verification_types:
+
+  # --- Core types (built-in) ---
+
+  data_validation:
+    description: "Verify YAML data is complete and valid"
+    checks:
+      - "Required fields exist and are non-empty"
+      - "Values match expected types (string, number, array)"
+      - "Cross-references resolve (e.g. color names used in pairs exist in palette)"
+    tool: yaml_validator
+
+  accessibility_validation:
+    description: "Verify WCAG compliance"
+    checks:
+      - "All color pairs have contrast_ratio computed"
+      - "All body text pairs pass WCAG AA 4.5:1"
+      - "All large text pairs pass WCAG AA 3:1"
+      - "Colorblind safety notes present for protanopia, deuteranopia, tritanopia"
+      - "Dark mode variants validated"
+    tool: contrast_calculator
+
+  file_validation:
+    description: "Verify expected files exist and are well-formed"
+    checks:
+      - "All expected files in the manifest exist on disk"
+      - "SVGs are valid XML with viewBox attribute"
+      - "PNGs are correct dimensions"
+      - "No zero-byte files"
+    tool: file_checker
+
+  schema_validation:
+    description: "Validate YAML output against JSON schema"
+    checks:
+      - "YAML parses without errors"
+      - "All required top-level sections present"
+      - "All cross-references valid"
+    tool: schema_validator
+
+  manual_approval:
+    description: "Human reviews and approves"
+    checks:
+      - "Output presented to user for review"
+      - "User explicitly approves or requests changes"
+    tool: interactive
+
+  # --- Domain-specific types (registered by consuming plugins) ---
+
+  web_lint:
+    description: "Run ESLint + Prettier on generated code"
+    registered_by: website-builder
+    checks:
+      - "npx eslint . --max-warnings 0"
+      - "npx prettier --check ."
+    tool: shell_command
+
+  web_build:
+    description: "Verify project builds without errors"
+    registered_by: website-builder
+    checks:
+      - "npm run build exits 0"
+      - "No TypeScript errors"
+      - "Bundle size within budget"
+    tool: shell_command
+
+  web_test:
+    description: "Run test suite"
+    registered_by: website-builder
+    checks:
+      - "npm test exits 0"
+      - "Coverage meets threshold"
+    tool: shell_command
+
+  seo_audit:
+    description: "Validate SEO requirements"
+    registered_by: seo-plugin
+    checks:
+      - "All pages have unique title and meta description"
+      - "H1 present on every page"
+      - "Structured data validates"
+      - "Sitemap.xml generated"
+    tool: seo_checker
