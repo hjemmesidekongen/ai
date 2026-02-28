@@ -41,6 +41,7 @@ shared/
 - [x] audience-personas skill
 - [x] tone-of-voice skill
 - [x] visual-identity skill
+- [x] logo-design skill
 - [ ] content-rules skill ← **Next step**
 - [ ] social-media skill
 - [ ] Commands: brand-generate, brand-analyze, brand-audit, brand-switch
