@@ -1,0 +1,170 @@
+# Brand State Schema
+# Defines the structure of state.yml — the execution state file that
+# tracks where brand generation is and enables cross-session resume.
+#
+# Location: ~/.claude/brands/[brand]/state.yml
+# Producer: /brand:generate, /brand:analyze
+# Consumer: brand-context-loader skill, /plan:resume
+
+# --- Top-level metadata ---
+
+command:
+  type: string
+  required: true
+  enum: ["brand:generate", "brand:analyze", "brand:audit"]
+  description: "Which command initiated this state"
+
+brand:
+  type: string
+  required: true
+  description: "Brand slug (directory name under ~/.claude/brands/)"
+
+started_at:
+  type: string
+  required: true
+  format: iso8601
+  description: "When execution began"
+
+updated_at:
+  type: string
+  required: true
+  format: iso8601
+  description: "When state was last modified"
+
+# --- Phase tracking ---
+
+current_phase:
+  type: string
+  required: true
+  description: "Name of the phase currently executing or most recently completed"
+
+current_phase_number:
+  type: integer
+  required: true
+  minimum: 1
+  description: "1-indexed number of the current phase"
+
+total_phases:
+  type: integer
+  required: true
+  description: "Total number of phases in the generation pipeline"
+
+# --- Phase definitions ---
+
+phases:
+  type: array
+  required: true
+  min_items: 1
+  description: "Ordered list of all phases with status and checkpoint data"
+  items:
+    name:
+      type: string
+      required: true
+      description: "Phase slug (e.g. identity-interview, audience-personas)"
+
+    number:
+      type: integer
+      required: true
+      minimum: 1
+
+    status:
+      type: string
+      required: true
+      enum: [pending, in_progress, completed, failed, skipped]
+      default: pending
+
+    started_at:
+      type: string
+      required: false
+      format: iso8601
+      description: "When this phase started executing"
+
+    completed_at:
+      type: string
+      required: false
+      format: iso8601
+      description: "When this phase finished (completed or failed)"
+
+    checkpoint:
+      type: object
+      required: true
+      description: "Verification gate for this phase"
+      properties:
+        type:
+          type: string
+          required: true
+          description: "Checkpoint type from verification-registry.yml"
+          enum:
+            - data_validation
+            - accessibility_validation
+            - file_validation
+            - schema_validation
+            - render_validation
+            - manual_approval
+
+        passed:
+          type: boolean
+          required: false
+          description: "null = not yet run, true = passed, false = failed"
+
+        details:
+          type: string
+          required: false
+          description: "Human-readable result of the checkpoint"
+
+        checks:
+          type: array
+          required: false
+          items:
+            type: string
+          description: "Specific checks to run for this checkpoint (populated when status is in_progress or pending)"
+
+    artifacts:
+      type: array
+      required: false
+      items:
+        type: string
+      description: "Files or sections produced by this phase"
+
+# --- Brand generation phases ---
+# The standard /brand:generate pipeline has 9 phases:
+#
+#   1. identity-interview    → brand-reference.yml (identity section)
+#      checkpoint: data_validation
+#
+#   2. audience-personas     → brand-reference.yml (audience section) + persona cards
+#      checkpoint: data_validation
+#
+#   3. tone-of-voice         → brand-reference.yml (voice section)
+#      checkpoint: data_validation
+#
+#   4. typography-color      → brand-reference.yml (typography + colors sections)
+#      checkpoint: accessibility_validation
+#
+#   5. visual-identity       → brand-reference.yml (visual section)
+#      checkpoint: data_validation
+#
+#   6. logo-design           → assets/logo/*.svg, assets/logo/*.png
+#      checkpoint: file_validation
+#
+#   7. content-rules         → brand-reference.yml (content section)
+#      checkpoint: data_validation
+#
+#   8. social-media          → brand-reference.yml (social section)
+#      checkpoint: data_validation
+#
+#   9. compile-and-export    → brand-manual.md, brand-manual.docx
+#      checkpoint: schema_validation
+#      qa_review: true (mandatory)
+
+# --- Recovery ---
+
+last_session_id:
+  type: string
+  required: false
+  description: "Session id that last modified this state"
+
+recovery_notes:
+  type: string
+  required: false
+  description: "Free-text notes for reconstructing context after session break. Written after each phase completes."
