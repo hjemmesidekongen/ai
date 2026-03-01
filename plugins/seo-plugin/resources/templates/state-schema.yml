@@ -1,0 +1,139 @@
+# SEO Plugin State Schema
+# Defines the structure of state.yml — the execution state file that
+# tracks where SEO strategy generation is and enables cross-session resume.
+#
+# Location: ~/.claude/seo/[project-name]/state.yml
+# Producer: /seo:strategy
+# Consumer: /plan:resume, seo-plugin skills
+
+# --- Top-level metadata ---
+
+command:
+  type: string
+  required: true
+  enum: ["seo:strategy"]
+  description: "Which command initiated this state"
+
+project_name:
+  type: string
+  required: true
+  description: "Project slug (directory name under ~/.claude/seo/)"
+
+brand_name:
+  type: string
+  required: false
+  description: "Brand name used for context (if any)"
+
+started_at:
+  type: string
+  required: true
+  format: iso8601
+  description: "When execution began"
+
+updated_at:
+  type: string
+  required: true
+  format: iso8601
+  description: "When state was last modified"
+
+# --- Phase tracking ---
+
+current_phase:
+  type: string
+  required: true
+  description: "Name of the phase currently executing or most recently completed"
+
+current_phase_number:
+  type: integer
+  required: true
+  minimum: 1
+  description: "1-indexed number of the current phase"
+
+total_phases:
+  type: integer
+  required: true
+  description: "Total number of phases in the generation pipeline"
+
+# --- Phase definitions ---
+
+phases:
+  type: array
+  required: true
+  min_items: 7
+  description: "Ordered list of all phases with status and checkpoint data"
+  items:
+    name:
+      type: string
+      required: true
+      description: "Phase name matching a wave in the wave plan"
+    wave:
+      type: integer
+      required: true
+      description: "Wave number from design.yml"
+    skills:
+      type: array
+      required: true
+      description: "Skills executed in this phase"
+      items:
+        type: string
+    parallel:
+      type: boolean
+      required: true
+      description: "Whether skills in this phase run in parallel"
+    status:
+      type: string
+      required: true
+      enum: ["pending", "in_progress", "completed", "failed"]
+    started_at:
+      type: string
+      required: false
+      format: iso8601
+    completed_at:
+      type: string
+      required: false
+      format: iso8601
+    checkpoint:
+      type: object
+      required: false
+      description: "Results of the phase's checkpoint validation"
+      properties:
+        type:
+          type: string
+          required: true
+        passed:
+          type: boolean
+          required: true
+        checks:
+          type: array
+          required: true
+          items:
+            name:
+              type: string
+              required: true
+            passed:
+              type: boolean
+              required: true
+            details:
+              type: string
+              required: false
+
+# --- Verification results ---
+
+verification_results:
+  type: array
+  required: false
+  description: "Accumulated verification results across all phases"
+  items:
+    phase:
+      type: string
+      required: true
+    type:
+      type: string
+      required: true
+    passed:
+      type: boolean
+      required: true
+    timestamp:
+      type: string
+      required: true
+      format: iso8601

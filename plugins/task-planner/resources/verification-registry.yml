@@ -87,3 +87,21 @@ verification_types:
       - "Structured data validates"
       - "Sitemap.xml generated"
     tool: seo_checker
+
+# ──────────────────────────────────────────────
+# Verification Profiles
+# ──────────────────────────────────────────────
+
+# Registered by: seo-plugin
+seo_plugin_profile:
+  after_each_wave:
+    - data_validation
+  final:
+    - data_validation
+    - schema_validation
+    - seo_audit
+  qa_frequency: "every_wave"
+  qa_focus:
+    - "keyword relevance and search intent alignment"
+    - "actionability of recommendations"
+    - "competitive differentiation"

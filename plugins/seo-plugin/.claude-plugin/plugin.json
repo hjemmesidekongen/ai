@@ -1,0 +1,12 @@
+{
+  "name": "seo-plugin",
+  "version": "1.0.0",
+  "description": "Generates a comprehensive SEO strategy with keyword research, on-page optimization, technical SEO audits, competitive analysis, and content recommendations tailored to a project's goals and target audience.",
+  "commands": ["strategy", "audit", "content-brief", "export"],
+  "skills": ["project-interview", "keyword-research", "competitor-analysis", "on-page-optimization", "technical-seo", "content-strategy", "link-building", "compile-and-export"],
+  "agents": [],
+  "dependencies": ["task-planner", "brand-guideline"],
+  "shared_skills": ["brand-context-loader"],
+  "brand_directory": "~/.claude/brands/",
+  "data_directory": "~/.claude/seo/[project-name]/"
+}

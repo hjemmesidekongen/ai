@@ -57,6 +57,14 @@ packages/
         state-schema.yml
         brand-manual-template.md
         brand-manual-template-docx-styles.yml
+  seo-plugin/                      # SEO strategy generator
+    .claude-plugin/plugin.json
+    commands/
+    skills/
+    resources/
+      templates/
+      examples/
+    scripts/
 shared/
   brand-context-loader/            # Shared skill — loads brand data for any plugin
 docs/
@@ -98,16 +106,33 @@ docs/
 - [x] Step 15: /brand:audit command
 - [x] Step 16: /brand:switch command + update brand-context-loader
 
-### Part 3: Plugin Generator (in progress)
+### Part 3: Plugin Generator ✅
 - [x] Step 17: Skill — plugin-design-interview
 - [x] Step 18: Skill — plugin-spec-generator
 - [x] Step 19: Skill — plugin-execution-guide-generator
 - [x] Step 20: Skill — plugin-scaffolder
 - [x] Step 21: /plugin:create command
 - [x] Step 22: /plugin:build command
-- [ ] Step 23: Test plugin generator end-to-end
+- [x] Step 23: Test plugin generator end-to-end
 
-Next step: Step 23 — Test plugin generator end-to-end
+### Part 4: SEO Plugin (in progress)
+- [x] Step 24: seo-plugin scaffold + plugin.json
+- [x] Step 25: YAML schema + document templates
+- [ ] Step 26: Skill — project-interview
+- [ ] Step 27: Skill — keyword-research
+- [ ] Step 28: Skill — competitor-analysis
+- [ ] Step 29: Skill — technical-seo
+- [ ] Step 30: Skill — on-page-optimization
+- [ ] Step 31: Skill — content-strategy
+- [ ] Step 32: Skill — link-building
+- [ ] Step 33: Skill — compile-and-export
+- [ ] Step 34: Command — /seo:strategy
+- [ ] Step 35: Command — /seo:audit
+- [ ] Step 36: Command — /seo:content-brief
+- [ ] Step 37: Command — /seo:export
+- [ ] Step 38: End-to-end test
+
+Next step: Step 26 — Skill — project-interview
 
 ## Specs
 Read the relevant spec BEFORE implementing. Do NOT try to build everything at once.
@@ -120,4 +145,7 @@ Read the relevant spec BEFORE implementing. Do NOT try to build everything at on
 | docs/brand-asset-manifest.md | Complete asset list (~85 files), dimensions, generation scripts |
 | docs/verification-memory-planning-spec.md | Checkpoints, state.yml, memory layers, task-planner design, QA agent |
 | docs/claude-code-execution-guide.md | Step-by-step build instructions with per-skill prompts (Parts 1-3) |
+| docs/seo-plugin-implementation-plan.md | SEO plugin skills, commands, YAML schema, build order |
+| docs/seo-plugin-addendum.md | SEO domain knowledge, quality standards, common mistakes |
+| docs/seo-plugin-execution-guide.md | Step-by-step SEO plugin build guide (15 steps) |
 | packages/task-planner/resources/plugin-blueprint.md | Plugin structure rules, file layout, checklist, verification profiles |
