@@ -161,39 +161,78 @@ the last completed wave via /plan:resume.
 A skill is a SKILL.md file that defines a focused, multi-step workflow.
 Commands call skills. Skills don't call other skills directly.
 
-### Skill Structure
+### Progressive Disclosure Rule
 
-```markdown
-# [Skill Name]
+SKILL.md files must be **under 80 lines** (including frontmatter). This keeps
+the orchestrator's context window lean — skills are loaded frequently, and
+200-line files waste attention on details that aren't needed until execution.
 
-## Purpose
-[What this skill does]
+**When a skill needs more than 80 lines**, move detailed process steps to a
+`references/` subdirectory:
 
-## Inputs
-[What data it reads — which sections of which YAML files]
-
-## Process
-[Numbered steps — what Claude does in sequence]
-1. Read [data] from [file]
-2. [Do something]
-3. [Ask the user something] (if interactive)
-4. [Generate output]
-5. [Write to file]
-
-## Output
-[What files/sections this skill writes to]
-
-## Checkpoint
-type: [checkpoint type from verification-registry.yml]
-required_checks:
-  - [Check 1]
-  - [Check 2]
-  - [Check 3]
-on_fail: [What to do if checks fail]
-on_pass: [Update state.yml and advance]
+```
+skills/skill-name/
+  SKILL.md              # Frontmatter + Context + Process Summary (~40-60 lines)
+  references/           # On-demand detailed docs (plural, one level deep)
+    process.md          # Full step-by-step execution instructions
+    output-format.md    # YAML schema for outputs (optional)
+    examples.md         # Example outputs, edge cases (optional)
 ```
 
 **Rules:**
+- Skills under 80 lines stay as a single file. No forced splitting.
+- SKILL.md body must end with a pointer: "Before executing, read
+  `references/process.md`" (only when `references/` exists)
+- Frontmatter `description` must include BOTH what-it-does AND 3-5 trigger
+  phrases. Under 1024 characters. No XML tags.
+
+### Skill Template (Lean Format)
+
+```yaml
+---
+name: example-skill
+description: >
+  Does X for Y. Use when user asks to Z, runs command A,
+  or during B workflow step N of M.
+---
+```
+
+```markdown
+# Example Skill
+
+Brief one-line purpose.
+
+## Context
+- Reads: [what this skill reads]
+- Writes: [what this skill writes]
+- Checkpoint: [type] ([specific checks])
+- Dependencies: [list or none]
+
+## Process Summary
+1. Step one summary
+2. Step two summary
+3. Step three summary
+
+## Execution
+Before executing, read `references/process.md` for detailed
+instructions, output formats, and edge case handling.
+```
+
+Skills that fit in 80 lines can inline their full process instead of using a
+`references/` directory. The template above shows the split-file version —
+single-file skills replace the "Execution" section with the full process steps.
+
+### Description Quality Checklist
+
+Before finalizing any SKILL.md frontmatter, verify:
+
+- [ ] Does the description say **what the skill does**?
+- [ ] Does it include **3-5 trigger phrases** a user or orchestrator might use?
+- [ ] Is it **under 1024 characters**?
+- [ ] Does it mention relevant **file types, commands, or workflow positions**?
+
+### Skill Rules
+
 - Every skill has a checkpoint — no exceptions
 - Skills write to specific files/sections — document exactly what
 - Skills that read brand data must specify which sections they need
@@ -644,6 +683,31 @@ These apply to EVERY plugin:
 17. **All errors are persisted in state.yml.** Failed approaches are logged with what was tried and what to try next. Claude reads errors before retrying.
 18. **Never repeat failed approaches.** Check state.yml errors before attempting anything. If the same approach already failed, mutate the strategy.
 19. **Session recovery runs at startup.** The SessionStart hook detects resumed sessions and reports what may have been lost since last state.yml update.
+
+---
+
+## 11a. Model Tier Assignment
+
+Every task in a plan can specify a `model_tier` that determines which model
+runs it. This optimizes cost — not every task needs the most capable model.
+
+### Model Tier Mapping
+
+| Tier | Model | Cost (input/output per M) | When to Use |
+|------|-------|---------------------------|-------------|
+| junior | Haiku 4.5 | $1/$5 | File creation, template copying, scaffolding, schema writes, formatting. Output structure is predetermined. |
+| senior | Sonnet 4.5+ | $3/$15 | Skill implementation, command logic, content generation, integration. Default tier — use when in doubt. |
+| principal | Opus 4.5+ | $15/$75 | Architecture decisions, QA review, cross-plugin verification, brand coherence, complex planning. |
+
+### Assignment Heuristics (for wave-decomposer)
+
+The wave-decomposer should assign `model_tier` based on these rules:
+
+- **junior**: difficulty=low AND risk=low AND task is primarily file creation/copying
+- **senior**: difficulty=medium OR task requires content generation/reasoning (DEFAULT)
+- **principal**: difficulty=high OR risk=high OR task is QA/verification OR task is cross-cutting
+
+When `model_tier` is omitted, it defaults to `senior`.
 
 ---
 

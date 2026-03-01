@@ -89,6 +89,13 @@ plan:
         enum: [pending, in_progress, completed, failed, skipped]
         default: pending
 
+      model_tier:
+        type: string
+        required: false
+        enum: [junior, senior, principal]
+        default: senior
+        description: "Model tier for this task. junior=Haiku (simple/templated work), senior=Sonnet (implementation/reasoning), principal=Opus (architecture/QA/cross-cutting). Defaults to senior if omitted."
+
       assigned_agent:
         type: string
         required: false
