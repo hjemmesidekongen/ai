@@ -624,3 +624,50 @@ Use `/plugin:migrate [name] --project [project]`:
 - **Patch** (1.0.0 → 1.0.1): Bugfix only. No schema change. No migration needed.
 - **Minor** (1.0.0 → 1.1.0): New fields added. Backwards compatible. Auto-safe migration.
 - **Major** (1.0.0 → 2.0.0): Breaking changes (fields removed/renamed/restructured). Requires user review.
+
+---
+
+## 13. Brainstorm Integration
+
+Every plugin can register brainstorm modes that let users explore ideas
+before committing to decisions. This is optional but recommended for
+plugins with creative or strategic decisions.
+
+### Registering a Brainstorm Mode
+
+Append to `packages/task-planner/resources/brainstorm-modes-registry.yml`:
+
+```yaml
+[mode-name]:
+  registered_by: "[plugin-name]"
+  description: "[what this brainstorm explores]"
+  topics:
+    - name: "[topic-id]"
+      prompt: "[opening question]"
+      techniques: ["[technique names from brainstorm-techniques.yml]"]
+      constraints: ["[boundaries]"]
+      depends_on: ["[other topic names]"]
+  context_from:
+    brand_reference: ["[sections to load]"]
+    other_files: ["[paths]"]
+  output_to: "brainstorm-sessions/[session-id].yml"
+  feeds_into: ["[skill names that consume these decisions]"]
+```
+
+### Consuming Brainstorm Decisions
+
+Skills listed in `feeds_into` should check for brainstorm sessions at startup:
+
+```
+1. Check state.yml for brainstorm_sessions with feeds_into including this skill
+2. If found: read session, extract decisions, present to user for confirmation
+3. If not found: proceed normally (brainstorming is always optional)
+```
+
+### When to Register Modes
+
+Register modes when your plugin has decisions that benefit from:
+- Exploring multiple options before committing
+- Weighing trade-offs with the user
+- Creative ideation (naming, visual direction, content angles)
+- Strategic choices with non-obvious consequences

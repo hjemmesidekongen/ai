@@ -7,7 +7,8 @@ A modular plugin ecosystem where plugins build on each other:
 3. **seo-plugin** — SEO strategy and audit based on brand positioning
 4. **Plugin generator** — Built into task-planner: `/plugin:create` and `/plugin:build`
 5. **Plugin versioning** — Built into task-planner: `/plugin:version` and `/plugin:migrate`
-6. Future plugins (website-builder, content-engine, etc.) — created via the generator
+6. **Brainstorm & discovery** — Built into task-planner: `/brainstorm:start` and `/brainstorm:decide`
+7. Future plugins (website-builder, content-engine, etc.) — created via the generator
 
 ## Architecture Rules (ALWAYS follow these)
 - Every plugin follows the blueprint: packages/task-planner/resources/plugin-blueprint.md
@@ -22,6 +23,7 @@ A modular plugin ecosystem where plugins build on each other:
 - Every plugin output YAML gets a `_meta` block with version stamps
 - Data loaders check version compatibility before loading — block on major mismatches
 - Every plugin has migrations/ directory with MIGRATION-REGISTRY.yml and CHANGELOG.md
+- Plugin interview skills check for brainstorm decisions.yml before asking from scratch
 
 ## Creating a New Plugin
 When asked to build a new plugin, ALWAYS read these two files FIRST:
@@ -45,11 +47,14 @@ packages/
     commands/                      # plan-create, plan-execute, plan-status, plan-resume
                                    # plugin-create, plugin-build (Part 3)
                                    # plugin-migrate, plugin-version (Part 5)
+                                   # brainstorm-start, brainstorm-decide, brainstorm-status (Part 6)
     skills/                        # wave-decomposer, file-ownership, verification-runner
                                    # plugin-design-interview, plugin-spec-generator,
                                    # plugin-execution-guide-generator, plugin-scaffolder (Part 3)
                                    # version-meta-stamper, version-compatibility-checker,
                                    # migration-guide-generator (Part 5)
+                                   # brainstorm-session, brainstorm-decision-writer,
+                                   # decision-reader (Part 6)
     agents/                        # qa-agent, worker-agent
     resources/
       plan-schema.yml
@@ -152,15 +157,23 @@ docs/
 - [x] Step 37: Command — /seo:export
 - [x] Step 38: End-to-end test
 
-### Part 5: Plugin Versioning & Migration ✅
-- [x] Step 39: Skill — version-meta-stamper
-- [x] Step 40: Skill — version-compatibility-checker
-- [x] Step 41: Skill — migration-guide-generator
-- [x] Step 42: /plugin:migrate command
-- [x] Step 43: /plugin:version command
-- [x] Step 44: Retrofit all plugins to v1.0.0 + integration test
+### Part 5: Plugin Versioning & Migration (pending)
+- [ ] Step 39: Skill — version-meta-stamper
+- [ ] Step 40: Skill — version-compatibility-checker
+- [ ] Step 41: Skill — migration-guide-generator
+- [ ] Step 42: /plugin:migrate command
+- [ ] Step 43: /plugin:version command
+- [ ] Step 44: Retrofit all plugins to v1.0.0 + integration test
 
-All parts complete. Use /plugin:create and /plugin:build to add new plugins.
+### Part 6: Brainstorm & Discovery (pending)
+- [x] Step 45: Skill — brainstorm-session
+- [ ] Step 46: Skill — brainstorm-decision-writer
+- [ ] Step 47: /brainstorm:start, /brainstorm:decide, /brainstorm:status commands
+- [ ] Step 48: Skill — decision-reader utility
+- [ ] Step 49: Update existing interview skills to read decisions
+- [ ] Step 50: Test brainstorm-to-plugin flow end-to-end
+
+Next step: Step 46 — brainstorm-decision-writer skill
 
 ## Specs
 Read the relevant spec BEFORE implementing. Do NOT try to build everything at once.
@@ -172,7 +185,7 @@ Read the relevant spec BEFORE implementing. Do NOT try to build everything at on
 | docs/addendum-assets-and-accessibility.md | WCAG standards, color theory, logo process, software stack |
 | docs/brand-asset-manifest.md | Complete asset list (~85 files), dimensions, generation scripts |
 | docs/verification-memory-planning-spec.md | Checkpoints, state.yml, memory layers, task-planner design, QA agent |
-| docs/claude-code-execution-guide.md | Step-by-step build instructions with per-skill prompts (Parts 1-5) |
+| docs/claude-code-execution-guide.md | Step-by-step build instructions with per-skill prompts (Parts 1-6) |
 | docs/seo-plugin-implementation-plan.md | SEO plugin skills, commands, YAML schema, build order |
 | docs/seo-plugin-addendum.md | SEO domain knowledge, quality standards, common mistakes |
 | docs/seo-plugin-execution-guide.md | Step-by-step SEO plugin build guide (15 steps) |

@@ -296,6 +296,25 @@ design and must be maintained.
 - Backups are mandatory before any migration
 - Use `/plugin:version` to bump, `/plugin:migrate` to migrate projects
 
+### 5i. Brainstorm & Discovery
+- `/brainstorm:start [project]` starts a freeform sparring session — no structured questions
+- Claude plays devil's advocate: push back, challenge assumptions, explore trade-offs
+- `/brainstorm:decide` co-authors structured decisions.yml with the user when ready
+- Each decision tagged by domain (brand-identity, seo, technical, etc.) and confidence (high/medium/low)
+- Transcripts saved to ~/.claude/projects/[project]/brainstorm-transcript-[date].md
+- Plugin interview skills call the decision-reader to pre-fill from brainstorm decisions
+- High confidence → quick confirmation. Medium → starting point. Low → context hint.
+- No decisions file → interview runs normally (graceful fallback)
+
+### 5i. Brainstorming
+- Available via `/brainstorm [mode]` before committing to major decisions
+- Brainstorming is always OPTIONAL — skills work without it
+- Plugins register domain-specific modes in brainstorm-modes-registry.yml
+- Each mode defines topics, ideation techniques, constraints, and which skills consume the output
+- Four phases: diverge (generate), explore (trade-offs), converge (rank), decide (commit)
+- Decisions are captured in structured session files and can be pre-loaded by downstream skills
+- The user always confirms brainstorm decisions before they're used — never silently applied
+
 ---
 
 ## 6. Brand Data Available to All Plugins
@@ -383,10 +402,12 @@ assets:
 ### Option A: Fully Automated in Claude Code (recommended)
 
 The task-planner has built-in commands that automate the entire plugin
-creation pipeline. Just run:
+creation pipeline. Optionally, brainstorm first:
 
 ```
-/plugin:create [plugin-name]
+/brainstorm plugin-architecture          # optional — explore scope & trade-offs
+/plugin:create [plugin-name]             # design, spec, scaffold
+/plugin:build [plugin-name]              # guided step-by-step build
 ```
 
 This command:
