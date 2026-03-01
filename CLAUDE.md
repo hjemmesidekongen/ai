@@ -260,6 +260,29 @@ Reference: packages/task-planner/resources/plugin-blueprint.md Sections 8, 13
 
 ### Two-Stage Verification ✅ Complete
 
+### Subagent-Driven Execution (pending)
+
+Upgrades plan-execute to dispatch each task as an isolated subagent via Task()
+tool. Parallel dispatch for independent tasks, per-task commits, model tier
+enforcement. Pattern adapted from obra/superpowers.
+
+Reference: docs/subagent-execution-plan.md
+
+- [x] SE1: Prompt templates — worker-dispatch.md, spec-review-dispatch.md, quality-review-dispatch.md in resources/prompts/
+- [ ] SE2: Schema updates — add base_sha, commit_sha, execution_mode to plan-schema.yml; add commit_range to state-schema.yml
+- [ ] SE3: plan-execute step 4b rewrite — Task() dispatch per task, model tier mapping, subagent report collection
+- [ ] SE4: Per-task spec compliance dispatch — spec-compliance-reviewer as Haiku subagent after each task/wave
+- [ ] SE5: Git-scoped quality review — qa-agent receives BASE_SHA..HEAD_SHA, review scoped to wave diff
+- [ ] SE6: Worker agent update — commit protocol, structured report, self-review checklist, Q&A section
+- [ ] SE7: State management — orchestrator records commit SHAs, writes commit_range, error context from subagent reports
+- [ ] SE8: Parallel wave dispatch — multiple Task() calls in same turn when wave.parallel == true
+- [ ] SE9: Plugin blueprint update — Section 15: Subagent Execution
+- [ ] SE10: Plugin generator updates — execution guide generator + spec generator aware of subagent dispatch
+- [ ] SE11: Integration test — sequential dispatch (2-wave plan)
+- [ ] SE12: Integration test — parallel dispatch (parallel wave)
+- [ ] SE13: Integration test — failure and retry
+- [ ] SE14: Integration test — model tier enforcement
+
 ## Specs
 Read the relevant spec BEFORE implementing. Do NOT try to build everything at once.
 
@@ -274,4 +297,5 @@ Read the relevant spec BEFORE implementing. Do NOT try to build everything at on
 | docs/seo-plugin-addendum.md | SEO domain knowledge, quality standards, common mistakes |
 | docs/seo-plugin-execution-guide.md | Step-by-step SEO plugin build guide (15 steps) |
 <!-- execution guide and planning analysis are maintained in claude.ai sessions, not yet committed to repo -->
+| docs/subagent-execution-plan.md | Subagent dispatch architecture, prompt templates, schema changes, model tier mapping, parallel dispatch, integration tests |
 | packages/task-planner/resources/plugin-blueprint.md | Plugin structure rules, file layout, checklist, verification profiles, versioning, hooks & context engineering (Section 13), brainstorm integration (Section 14) |
