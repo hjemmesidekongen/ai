@@ -48,8 +48,8 @@ shared/
 - [x] Command: brand-generate (orchestrates full pipeline, interactive + plan-based)
 - [x] Command: brand-analyze (reverse-engineer guidelines from existing materials)
 - [x] Command: brand-switch (set active brand context for all plugins)
-- [ ] Command: brand-audit ← **Next step**
-- [ ] Brand manual template + export
+- [x] Command: brand-audit (audit brand data for gaps, inconsistencies, accessibility issues)
+- [ ] Brand manual template + export ← **Next step**
 
 ## Specs
 Detailed specs are in /docs/ — read the relevant spec BEFORE implementing.
