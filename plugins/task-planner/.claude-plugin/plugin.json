@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "Generic wave-based task planning with verification and QA. Used by other plugins to plan and execute complex work.",
   "commands": ["plan-create", "plan-execute", "plan-status", "plan-resume"],
-  "skills": ["wave-decomposer", "file-ownership", "verification-runner", "qa-reviewer", "version-meta-stamper", "version-compatibility-checker"],
+  "skills": ["wave-decomposer", "file-ownership", "verification-runner", "qa-reviewer", "version-meta-stamper", "version-compatibility-checker", "migration-guide-generator"],
   "agents": ["qa-agent", "worker-agent"],
   "dependencies": []
 }
