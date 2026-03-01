@@ -171,9 +171,9 @@ docs/
 - [x] Step 47: /brainstorm:start, /brainstorm:decide, /brainstorm:status commands
 - [x] Step 48: Skill — decision-reader utility
 - [x] Step 49: Update existing interview skills to read decisions
-- [ ] Step 50: Test brainstorm-to-plugin flow end-to-end
+- [x] Step 50: Test brainstorm-to-plugin flow end-to-end
 
-Next step: Step 50 — Test brainstorm-to-plugin flow end-to-end
+Next step: Step 39 — Skill: version-meta-stamper (Part 5)
 
 ## Specs
 Read the relevant spec BEFORE implementing. Do NOT try to build everything at once.

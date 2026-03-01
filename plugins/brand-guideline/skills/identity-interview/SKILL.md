@@ -48,7 +48,7 @@ Before starting the interview, call the decision-reader skill to check if the
 user already made relevant decisions during a brainstorm session:
 
 - **Project:** the brand name being generated
-- **Domains:** `brand-identity`, `brand-audience`, `brand-voice`, `brand-visual`
+- **Domains:** `brand-identity`
 
 If decisions are found, adjust the interview flow:
 
