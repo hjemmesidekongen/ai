@@ -174,14 +174,37 @@ reports.
 
 ```
 Instead of sequential step 2:
-  1. Build ALL Task() calls for every task in the wave (steps 2a–2f)
-  2. Issue ALL Task() calls in a single response
+  1. Record wave_base_sha = current git HEAD
+  2. Build ALL Task() calls for every task in the wave (steps 2a–2f above)
+     - All tasks share the same wave_base_sha as their task_base_sha
+  3. Issue ALL Task() calls in a single response
      (Claude Code dispatches them concurrently)
-  3. Wait for ALL to return
-  4. Collect all task_complete reports
-  5. Run check-file-conflicts.sh against actual written files:
-     - If conflict detected: log error to state.yml, mark wave failed
-  6. Record all base_sha/commit_sha values
+  4. Wait for ALL to return
+  5. Collect all task_complete reports
+  6. Post-dispatch conflict check:
+     - Run check-file-conflicts.sh against actual files written by all tasks
+     - If conflict detected: log error to state.yml, mark wave failed,
+       fall through to Step 5 (fix-and-retry)
+  7. Record all base_sha/commit_sha values in plan
+  8. Record wave_head_sha = current git HEAD
+  9. Write commit_range { base_sha: wave_base_sha, head_sha: wave_head_sha }
+```
+
+**Parallel failure handling:**
+
+```
+After all parallel tasks return:
+  - If ALL succeeded: proceed to verification (step 4c)
+  - If ONE failed, others succeeded:
+    - Mark the failed task in the plan
+    - Log error to state.yml from its task_complete report
+    - Check if it blocks later waves:
+      - Blocking: fail the wave, fix-and-retry for the failed task only
+      - Non-blocking: proceed to verification, report failure at wave end
+  - If MULTIPLE failed:
+    - Mark all failed tasks
+    - Log all errors to state.yml
+    - Fail the wave, report all failures, fall through to Step 5
 ```
 
 **Failure handling** (both modes):
