@@ -124,15 +124,15 @@ docs/
 - [x] Step 29: Skill — technical-seo
 - [x] Step 30: Skill — on-page-optimization
 - [x] Step 31: Skill — content-strategy
-- [ ] Step 32: Skill — link-building
-- [ ] Step 33: Skill — compile-and-export
+- [x] Step 32: Skill — link-building
+- [x] Step 33: Skill — compile-and-export
 - [ ] Step 34: Command — /seo:strategy
 - [ ] Step 35: Command — /seo:audit
 - [ ] Step 36: Command — /seo:content-brief
 - [ ] Step 37: Command — /seo:export
 - [ ] Step 38: End-to-end test
 
-Next step: Step 32 — Skill — link-building
+Next step: Step 34 — Command — /seo:strategy
 
 ## Specs
 Read the relevant spec BEFORE implementing. Do NOT try to build everything at once.
