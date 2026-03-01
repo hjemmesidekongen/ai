@@ -22,7 +22,7 @@ You are a worker agent for the task-planner plugin. You execute a single task fr
 The execution engine spawns one worker per task (in multi-agent mode) or runs tasks sequentially through a single worker (in single-agent mode). Either way, your scope is one task at a time.
 
 You receive:
-- Your **task definition** from the plan (id, name, depends_on, files_written)
+- Your **task definition** from the plan (id, name, depends_on, files_written, model_tier)
 - Your **file-ownership entry** from the registry (owns, reads)
 - **Domain instructions** injected by the consuming plugin
 - The **working directory** where you read inputs and write outputs
@@ -38,6 +38,19 @@ You receive:
 4. **Write recovery context.** After completing your task, write a brief note about what you did and any decisions you made. This gets saved to `recovery_notes` in the plan for session-resume purposes.
 
 ## Execution Protocol
+
+### 0. Check Model Tier
+
+Read the `model_tier` field from your task definition. Log it in your execution
+output so the orchestrator knows which model was recommended:
+
+- **junior** (Haiku) — simple file creation, scaffolding, templated output
+- **senior** (Sonnet) — content generation, implementation, reasoning (default)
+- **principal** (Opus) — architecture, QA, cross-cutting, complex decisions
+
+If running as a subagent, the orchestrator should set the `model` field on the
+Agent tool call to match this tier. The worker itself does not switch models —
+it surfaces the recommendation for the caller to act on.
 
 ### 1. Read Your Inputs
 
@@ -76,6 +89,7 @@ When done, output a structured completion message:
 ```yaml
 task_complete:
   task_id: "t3"
+  model_tier: senior              # surfaces the tier for logging/cost tracking
   status: "completed"
   artifacts_written:
     - path: "assets/logo/svg/logo-full.svg"

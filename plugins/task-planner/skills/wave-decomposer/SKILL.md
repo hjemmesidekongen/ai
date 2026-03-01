@@ -108,6 +108,42 @@ When a wave produces multiple file types, use `file_validation` as the default �
 
 Generate `checks` that are specific to this wave's tasks — not generic. Each check should name the concrete artifact being verified.
 
+### Step 5a: Assign Model Tier
+
+Each task gets a `model_tier` that recommends which model should execute it.
+See `plugin-blueprint.md` Section 11a for the full mapping table.
+
+**Assignment rules:**
+
+- **junior** (Haiku) — when ALL of: the task is low difficulty, low risk, AND
+  primarily involves file creation, template copying, scaffolding, or schema
+  writes where the output structure is predetermined.
+- **senior** (Sonnet) — when: difficulty is medium, OR the task requires content
+  generation, reasoning, or integration logic. **This is the default.** If
+  unsure, assign senior.
+- **principal** (Opus) — when ANY of: difficulty is high, risk is high, the task
+  is QA/verification, the task makes architecture decisions, or the task affects
+  multiple plugins or cross-cutting concerns.
+
+```
+for each task T:
+  if T.is_qa_review or T.is_verification or T.is_architecture:
+    T.model_tier = "principal"
+  elif T.difficulty == "high" or T.risk == "high":
+    T.model_tier = "principal"
+  elif T.difficulty == "low" and T.risk == "low" and T.is_templated:
+    T.model_tier = "junior"
+  else:
+    T.model_tier = "senior"   # default
+```
+
+When inferring from task names and `files_written` patterns (since difficulty
+and risk may not be explicit inputs):
+- Tasks named "Scaffold...", "Create directory...", "Copy template..." → junior
+- Tasks named "Generate...", "Write...", "Build..." → senior
+- Tasks named "Compile...", "Review...", "Audit...", "Verify..." → principal
+- Final-wave compilation tasks → principal (they touch all prior outputs)
+
 ### Step 6: Set QA Review Flag
 
 - The **final wave** always has `qa_review: true`
@@ -139,8 +175,9 @@ plan:
       files_written: [...]
       files_read: [...]
       estimated_minutes: 5
+      model_tier: senior          # junior | senior | principal
       status: pending
-    # ... all tasks from input, with status: pending added
+    # ... all tasks from input, with status: pending and model_tier added
 
   waves:
     - wave: 1
@@ -242,6 +279,8 @@ No tasks need to be moved.
 
 **Step 5 — Verification:** Profile is "brand", so `after_each_wave` uses `data_validation`. But waves 2 and 3 produce files, so `file_validation` is more appropriate. Final wave uses `schema_validation`.
 
+**Step 5a — Model tiers:** t1, t2 generate content → senior. t3, t4 generate content → senior. t5, t6, t7 are derivative asset resizing → junior. t8 compiles all outputs → principal.
+
 **Step 6 — QA:** Brand profile has `qa_frequency: "final"`, so only wave 4 gets `qa_review: true`.
 
 ### Output
@@ -262,48 +301,56 @@ plan:
       depends_on: []
       files_written: ["brand-reference.yml#colors"]
       estimated_minutes: 5
+      model_tier: senior
       status: pending
     - id: "t2"
       name: "Generate typography system"
       depends_on: []
       files_written: ["brand-reference.yml#typography"]
       estimated_minutes: 5
+      model_tier: senior
       status: pending
     - id: "t3"
       name: "Generate logo concepts"
       depends_on: ["t1", "t2"]
       files_written: ["assets/logo/svg/*"]
       estimated_minutes: 15
+      model_tier: senior
       status: pending
     - id: "t4"
       name: "Generate icon library"
       depends_on: ["t1"]
       files_written: ["assets/icons/*"]
       estimated_minutes: 10
+      model_tier: senior
       status: pending
     - id: "t5"
       name: "Generate favicons"
       depends_on: ["t3"]
       files_written: ["assets/favicons/*"]
       estimated_minutes: 5
+      model_tier: junior
       status: pending
     - id: "t6"
       name: "Generate app icons"
       depends_on: ["t3"]
       files_written: ["assets/app-icons/*"]
       estimated_minutes: 5
+      model_tier: junior
       status: pending
     - id: "t7"
       name: "Generate social images"
       depends_on: ["t3"]
       files_written: ["assets/social/*"]
       estimated_minutes: 5
+      model_tier: junior
       status: pending
     - id: "t8"
       name: "Compile brand manual"
       depends_on: ["t1", "t2", "t3", "t4", "t5", "t6", "t7"]
       files_written: ["brand-manual.md", "brand-manual.docx"]
       estimated_minutes: 10
+      model_tier: principal
       status: pending
 
   waves:
