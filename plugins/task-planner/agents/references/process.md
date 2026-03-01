@@ -18,6 +18,32 @@ From the execution context:
 - The wave number being reviewed (or "all" for final review)
 - The working directory where outputs live
 - Stage 1 compliance report (for reference, not for re-checking)
+- **Commit range** (subagent mode only): `base_sha` and `head_sha` for this wave
+
+### Git Diff Scoping (Subagent Mode)
+
+When a commit range is provided, start your review by running:
+
+```bash
+git diff --stat <base_sha>..<head_sha>
+```
+
+This shows exactly which files were created or modified in this wave. Then:
+
+```bash
+git diff <base_sha>..<head_sha>
+```
+
+Review the full diff to understand what changed. This scoping is critical for
+later waves — the working directory contains all prior waves' output, but you
+should only judge the current wave's additions and modifications.
+
+Files **outside** the diff are read-only context. Use them for cross-skill
+alignment checks (Check 2, Check 5) but do not flag issues in them — those
+were reviewed in their own wave.
+
+When no commit range is provided (inline mode), review all files listed in the
+wave's task definitions as before.
 
 ---
 

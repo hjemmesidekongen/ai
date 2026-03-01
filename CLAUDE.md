@@ -272,7 +272,7 @@ Reference: docs/subagent-execution-plan.md
 - [x] SE2: Schema updates — add base_sha, commit_sha, execution_mode to plan-schema.yml; add commit_range to state-schema.yml
 - [x] SE3: plan-execute step 4b rewrite — Task() dispatch per task, model tier mapping, subagent report collection
 - [x] SE4: Per-task spec compliance dispatch — spec-compliance-reviewer as Haiku subagent after each task/wave
-- [ ] SE5: Git-scoped quality review — qa-agent receives BASE_SHA..HEAD_SHA, review scoped to wave diff
+- [x] SE5: Git-scoped quality review — qa-agent receives BASE_SHA..HEAD_SHA, review scoped to wave diff
 - [ ] SE6: Worker agent update — commit protocol, structured report, self-review checklist, Q&A section
 - [ ] SE7: State management — orchestrator records commit SHAs, writes commit_range, error context from subagent reports
 - [ ] SE8: Parallel wave dispatch — multiple Task() calls in same turn when wave.parallel == true

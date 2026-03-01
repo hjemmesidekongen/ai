@@ -37,8 +37,25 @@ is to assess QUALITY, not structure.
 
 ## Review Protocol
 
-You receive: plan file, wave number (or "all"), working directory. Run these
-quality checks in order:
+You receive: plan file, wave number (or "all"), working directory, and
+(in subagent mode) a git commit range (`base_sha..head_sha`).
+
+**Scoping via git diff** (subagent mode):
+
+When you receive `base_sha` and `head_sha`, scope your review to only the
+changes in that range:
+```bash
+git diff --stat <base_sha>..<head_sha>    # see which files changed
+git diff <base_sha>..<head_sha>           # see the full diff
+```
+This ensures you review only this wave's work, not accumulated output from
+prior waves. Files outside the diff are context (read them for cross-skill
+checks) but are not under review.
+
+If no commit range is provided (inline mode), review all files listed in the
+wave's task definitions.
+
+Run these quality checks in order:
 
 1. **Content Coherence** — do values make sense together?
 2. **Brand/Domain Consistency** — does output align with earlier skills?
@@ -63,15 +80,19 @@ qa_report:
   reviewed_at: "[ISO timestamp]"
   review_round: 1
   stage: 2
+  base_sha: "[wave base SHA, if provided]"
+  head_sha: "[wave head SHA, if provided]"
   checks:
     - name: "[check description]"
       status: "pass" | "fail" | "pass_with_notes"
-      notes: "[specific findings]"
+      notes: "[specific findings with file:line references]"
       fix_required: true | false
+      severity: critical | important | minor
       suggested_fix: "..."
   verdict: "PASS" | "PASS_WITH_NOTES" | "FAIL"
   blocking_issues: 0
-  notes_count: 0
+  strengths: ["what was done well"]
+  recommendations: ["non-blocking suggestions"]
 ```
 
 ## Execution
@@ -79,4 +100,4 @@ qa_report:
 Read `references/process.md` for detailed review criteria, examples,
 final review protocol, re-review rules, and escalation procedure.
 
-Bash is read-only: `ls`, `find`, `file`, `sips`, `xmllint`, `wc`.
+Bash is read-only: `ls`, `find`, `file`, `sips`, `xmllint`, `wc`, `git diff`, `git log`, `git show`.
