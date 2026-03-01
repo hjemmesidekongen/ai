@@ -21,13 +21,14 @@ Shared skill that loads brand context from disk. Every brand-aware plugin calls 
 
 Before doing ANY brand-related work:
 
-1. Check if `--brand` flag was provided
-2. If not, scan `~/.claude/brands/` for available brands
-3. If only one brand exists, load it automatically
-4. If multiple exist, ask which brand to use
-5. Read `brand-reference.yml` and `state.yml`
-6. Report status and resume point
-7. NEVER skip this check. NEVER start a phase that has already been completed.
+1. Check if `--brand` flag was provided → use that brand
+2. If not, check if `~/.claude/active-brand.yml` exists → use the active brand
+3. If not, scan `~/.claude/brands/` for available brands
+4. If only one brand exists, load it automatically
+5. If multiple exist, ask which brand to use
+6. Read `brand-reference.yml` and `state.yml`
+7. Report status and resume point
+8. NEVER skip this check. NEVER start a phase that has already been completed.
 
 ## Brand Discovery
 
@@ -35,6 +36,7 @@ Before doing ANY brand-related work:
 function load_brand(brand_flag):
   brands_dir = "~/.claude/brands/"
 
+  # Priority 1: Explicit --brand flag
   if brand_flag is provided:
     brand_path = brands_dir + brand_flag
     if not exists(brand_path):
@@ -43,7 +45,19 @@ function load_brand(brand_flag):
       STOP
     return load_from(brand_path)
 
-  # No flag — discover available brands
+  # Priority 2: Active brand set by /brand:switch
+  active_brand_path = "~/.claude/active-brand.yml"
+  if exists(active_brand_path):
+    active_config = read_yaml(active_brand_path)
+    brand_slug = active_config.active_brand
+    brand_path = brands_dir + brand_slug
+    if exists(brand_path):
+      Report: "Using active brand: [brand_slug] (set by /brand:switch)"
+      return load_from(brand_path)
+    else:
+      warn: "Active brand '[brand_slug]' no longer exists. Falling back to discovery."
+
+  # Priority 3: Auto-discover from ~/.claude/brands/
   brands = list_directories(brands_dir)
 
   if brands is empty:
@@ -52,8 +66,8 @@ function load_brand(brand_flag):
   if brands.length == 1:
     return load_from(brands_dir + brands[0])
 
-  # Multiple brands — ask user
-  ask: "Multiple brands found. Which one?"
+  # Multiple brands, no active brand set — ask user
+  ask: "Multiple brands found. Which one? (Tip: use /brand:switch to set a default)"
   options: brands
   return load_from(brands_dir + selected_brand)
 ```

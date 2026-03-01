@@ -47,7 +47,8 @@ shared/
 - [x] compile-and-export skill (brand manual, docx, asset script, web integration, preview)
 - [x] Command: brand-generate (orchestrates full pipeline, interactive + plan-based)
 - [x] Command: brand-analyze (reverse-engineer guidelines from existing materials)
-- [ ] Commands: brand-audit, brand-switch ← **Next step**
+- [x] Command: brand-switch (set active brand context for all plugins)
+- [ ] Command: brand-audit ← **Next step**
 - [ ] Brand manual template + export
 
 ## Specs
