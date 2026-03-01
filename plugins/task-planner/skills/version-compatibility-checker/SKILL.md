@@ -1,5 +1,7 @@
 # Version Compatibility Checker
 
+> checkpoint: none (utility skill — called by other skills/commands, not executed standalone)
+
 Checks whether a project's data files are compatible with the current plugin version. Called automatically when any plugin loads existing project data — ensures stale or incompatible data is never silently loaded.
 
 This is a **utility skill**. It does not run standalone or appear in wave plans. Data loaders (like `brand-context-loader`) call it before loading data.

@@ -9,7 +9,10 @@
     "tone-of-voice",
     "audience-personas",
     "content-rules",
-    "social-media"
+    "social-media",
+    "compile-and-export",
+    "identity-interview",
+    "logo-design"
   ],
   "agents": [],
   "dependencies": ["task-planner"],

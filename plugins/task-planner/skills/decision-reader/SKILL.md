@@ -1,5 +1,7 @@
 # Decision Reader
 
+> checkpoint: none (utility skill — called by other skills/commands, not executed standalone)
+
 Utility skill that reads brainstorm decisions and returns them to calling
 skills. This is the bridge between brainstorming (`/brainstorm:decide`) and
 structured plugin workflows (interview skills). It does NOT write files —

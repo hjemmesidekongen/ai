@@ -62,11 +62,13 @@ packages/
                                    # brainstorm-session, brainstorm-decision-writer,
                                    # decision-reader (Part 6)
     agents/                        # qa-agent, worker-agent
+    migrations/                    # MIGRATION-REGISTRY.yml
     resources/
       plan-schema.yml
       state-schema.yml             # Canonical state.yml schema (includes errors array)
       verification-registry.yml
       plugin-blueprint.md          # Canonical plugin structure reference
+      schemas/archive/             # v1.0.0.yml archived schema
     scripts/
       check-file-conflicts.sh
       session-recovery.sh          # SessionStart hook script
@@ -89,8 +91,8 @@ packages/
     CHANGELOG.md
   seo-plugin/                      # SEO plugin (complete)
     .claude-plugin/plugin.json     # version: "1.0.0", includes hooks
-    commands/                      # seo-strategy, seo-audit, seo-content-brief, seo-export
-    skills/                        # 7 skills (project-interview through compile-and-export)
+    commands/                      # strategy, audit, content-brief, export (invoked as /seo:strategy etc.)
+    skills/                        # 8 skills (project-interview through compile-and-export, plus link-building)
     migrations/                    # MIGRATION-REGISTRY.yml
     resources/
       templates/
@@ -99,6 +101,7 @@ packages/
     scripts/
       session-recovery.sh          # SEO-specific session recovery
       check-wave-complete.sh       # SEO-specific completion gate
+      validate-plugin.sh           # Plugin structure validator
     CHANGELOG.md
 shared/
   brand-context-loader/            # Shared skill — loads brand data for any plugin
@@ -109,11 +112,9 @@ docs/
   brand-asset-manifest.md
   verification-memory-planning-spec.md
   ecosystem-strategy.md
-  claude-code-execution-guide.md
   seo-plugin-implementation-plan.md
   seo-plugin-addendum.md
   seo-plugin-execution-guide.md
-  planning-with-files-analysis.md
 ```
 
 ## Progress
@@ -181,7 +182,6 @@ existing plugins. Parts 1-6 were built before these patterns existed. This
 retrofit brings them up to the current standard defined in plugin-blueprint.md
 Sections 8 and 13.
 
-Reference: docs/planning-with-files-analysis.md (rationale and design)
 Reference: packages/task-planner/resources/plugin-blueprint.md Sections 8, 13
 
 - [x] R1: task-planner — hooks + scripts
@@ -245,9 +245,8 @@ Read the relevant spec BEFORE implementing. Do NOT try to build everything at on
 | docs/addendum-assets-and-accessibility.md | WCAG standards, color theory, logo process, software stack |
 | docs/brand-asset-manifest.md | Complete asset list (~85 files), dimensions, generation scripts |
 | docs/verification-memory-planning-spec.md | Checkpoints, state.yml, memory layers, task-planner design, QA agent |
-| docs/claude-code-execution-guide.md | Step-by-step build instructions with per-skill prompts (Parts 1-6, hooks/findings/errors baked into steps) |
 | docs/seo-plugin-implementation-plan.md | SEO plugin skills, commands, YAML schema, build order |
 | docs/seo-plugin-addendum.md | SEO domain knowledge, quality standards, common mistakes |
 | docs/seo-plugin-execution-guide.md | Step-by-step SEO plugin build guide (15 steps) |
-| docs/planning-with-files-analysis.md | Context engineering analysis: hooks rationale, findings.md pattern, error persistence, session recovery, 2-Action Rule — the WHY behind the retrofit |
+<!-- execution guide and planning analysis are maintained in claude.ai sessions, not yet committed to repo -->
 | packages/task-planner/resources/plugin-blueprint.md | Plugin structure rules, file layout, checklist, verification profiles, versioning, hooks & context engineering (Section 13), brainstorm integration (Section 14) |

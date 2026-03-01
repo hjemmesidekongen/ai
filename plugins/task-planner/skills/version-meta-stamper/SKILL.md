@@ -1,5 +1,7 @@
 # Version Meta Stamper
 
+> checkpoint: none (utility skill — called by other skills/commands, not executed standalone)
+
 Utility skill that adds or updates the `_meta` version block in any plugin
 output YAML file. This skill is never invoked directly by the user — other
 skills call it as their last step before writing output to disk.

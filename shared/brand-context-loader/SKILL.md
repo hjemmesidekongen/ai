@@ -5,6 +5,7 @@ description: >
   Used by all brand-aware plugins (SEO, social media, website, content).
   Must fire at session start and before any brand-consuming work.
 shared: true
+checkpoint: none (utility skill — called by other skills/commands, not executed standalone)
 consumed_by:
   - brand-guideline
   - website-builder

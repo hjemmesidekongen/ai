@@ -1,5 +1,7 @@
 # Migration Guide Generator
 
+> checkpoint: none (utility skill — called by other skills/commands, not executed standalone)
+
 Generates migration definition files when a plugin version is bumped. Compares old and new YAML schemas field by field, classifies the migration type, and produces three artifacts: a human-readable migration guide, a structured transform script, and an updated MIGRATION-REGISTRY.yml.
 
 This is a **utility skill**. It is called by the `/plugin:version` command when bumping a plugin's minor or major version. It is not called directly by wave plans.

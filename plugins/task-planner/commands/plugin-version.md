@@ -555,3 +555,11 @@ on_pass: "Report success to user"
 
 - **/plugin:migrate** — applies the migration artifacts this command generates to project data files
 - **/plugin:version --status** — shows which projects need migration after a version bump
+
+## Recovery
+
+If interrupted during a version bump:
+1. Check state.yml for current phase (bump_version, update_schemas, update_changelog)
+2. If plugin.json version was updated but schemas weren't: continue from schema update
+3. If schemas updated but changelog wasn't: continue from changelog update
+4. Run verification to confirm all version stamps are consistent

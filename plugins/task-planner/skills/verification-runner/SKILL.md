@@ -1,5 +1,7 @@
 # Verification Runner
 
+> checkpoint: none (utility skill — called by other skills/commands, not executed standalone)
+
 Dispatches verification checks for completed waves. Takes a verification type and a list of checks from the plan, runs each check using the appropriate method, and returns a structured verdict.
 
 ## When This Skill Runs
