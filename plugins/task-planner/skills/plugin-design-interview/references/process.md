@@ -185,6 +185,17 @@ Present the full skill list with dependency arrows and confirm:
 Does this decomposition make sense? Any skills missing or unnecessary?"
 ```
 
+**Model tier hint:** After confirming the skill list, note which skills map to which model tier. This helps the user think about complexity and cost:
+
+```
+Model tier estimates:
+  junior  (Haiku)  — [simple skills: scaffolding, template-based output]
+  senior  (Sonnet) — [most skills: content generation, interviews, research] (default)
+  principal (Opus) — [complex skills: QA, architecture, cross-plugin verification]
+```
+
+This is advisory only — the spec generator assigns final tiers downstream. But surfacing it here helps the user gauge whether the plugin is appropriately scoped.
+
 Enforce minimums:
 - At least 2 skills
 - At least 1 interactive skill (the user should shape their plugin's output)

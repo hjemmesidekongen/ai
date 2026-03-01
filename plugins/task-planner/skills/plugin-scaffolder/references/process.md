@@ -55,10 +55,80 @@ packages/[plugin-name]/
 
 **Conditional directory:** Only create `agents/` if design.yml defines agents or if the plugin's commands reference agent-based execution. Check `design.yml` — if there is no `agents` field or it is empty, skip the `agents/` directory.
 
+**Skill directories with progressive disclosure:** For each skill in `design.yml.skills`, create a skill directory. Classify each skill as **complex** or **simple**:
+
+- **Complex** — involves interviews, research, content generation, multi-step processes, or has 5+ process steps in the spec. Create:
+  ```
+  skills/[skill-name]/
+    SKILL.md              # Lean format (≤80 lines)
+    references/
+      process.md          # Stub with template header
+  ```
+
+- **Simple** — procedural, mechanical, utility-focused (file-ownership, state-management type). Create:
+  ```
+  skills/[skill-name]/
+    SKILL.md              # Lean format (≤80 lines), no references/
+  ```
+
+**Stub `references/process.md` template:**
+```markdown
+# [Skill Name]: Detailed Process
+
+## Step-by-step Instructions
+[To be filled during skill implementation]
+
+## Output Format
+[To be filled during skill implementation]
+
+## Edge Cases
+[To be filled during skill implementation]
+```
+
+**Lean SKILL.md template** (used for ALL scaffolded skills):
+```yaml
+---
+name: [skill-name]
+description: >
+  [One sentence purpose]. Use when [trigger phrase 1],
+  [trigger phrase 2], or [trigger phrase 3].
+interactive: [true|false]
+depends_on: [from design.yml]
+reads: [from design.yml]
+writes: [from design.yml]
+checkpoint_type: [from design.yml]
+---
+```
+```markdown
+# [Skill Name]
+
+[One-sentence purpose from design.yml]
+
+## Context
+
+- Reads: [from design.yml]
+- Writes: [from design.yml]
+- Checkpoint: [type] ([brief description of checks])
+- Dependencies: [from design.yml or "none"]
+
+## Process Summary
+
+1. [Step one placeholder]
+2. [Step two placeholder]
+3. [Step three placeholder]
+
+## Execution
+
+Read `references/process.md` for detailed instructions, output formats,
+and edge case handling.
+```
+
+For simple skills without `references/`, replace the Execution section with inline process steps.
+
 **Rules:**
 - Create all directories even if they will be empty initially
 - Do NOT create placeholder files in empty directories (no .gitkeep, no empty files)
-- The `skills/` directory stays empty — individual skill directories are created during `/plugin:build`
+- Skill directories ARE pre-created with SKILL.md stubs — downstream `/plugin:build` fills in the content
 - The `commands/` directory stays empty — command files are created during `/plugin:build`
 
 ---
@@ -346,7 +416,10 @@ required_checks:
   - If needs_brand is true: plugin.json "dependencies" includes "brand-guideline"
   - If needs_brand is true: plugin.json contains "shared_skills" with "brand-context-loader"
   - packages/[plugin-name]/commands/ directory exists
-  - packages/[plugin-name]/skills/ directory exists
+  - packages/[plugin-name]/skills/ directory exists with one subdirectory per skill from design.yml
+  - Each skill directory contains a lean SKILL.md (≤80 lines) using the template format
+  - Complex skills have a references/ subdirectory with a stub process.md
+  - Simple/utility skills have SKILL.md only (no references/ directory)
   - packages/[plugin-name]/resources/templates/ directory exists
   - packages/[plugin-name]/resources/examples/ directory exists
   - packages/[plugin-name]/scripts/ directory exists

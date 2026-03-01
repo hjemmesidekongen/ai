@@ -247,6 +247,8 @@ Reference: packages/task-planner/resources/plugin-blueprint.md Sections 8, 13
 
 - [x] S8: Task-planner progressive disclosure — all 13 skills split into lean SKILL.md (≤80 lines) + references/process.md, frontmatter descriptions enriched with trigger phrases. Full verification pass: line counts, description quality, references integrity, model tier system, plugin.json validity — all pass.
 
+- [x] S9: Plugin generator pipeline — scaffolder creates progressive disclosure structure (lean SKILL.md + references/ for complex skills), spec generator includes model_tier on every task with tier distribution summary, design interview surfaces tier awareness during Q5
+
 Next step: Ecosystem standards complete. Ready for new plugins.
 
 ## Specs

@@ -17,7 +17,7 @@ reads:
 writes:
   - packages/[plugin-name]/.claude-plugin/plugin.json
   - packages/[plugin-name]/commands/ (empty directory)
-  - packages/[plugin-name]/skills/ (empty directory)
+  - packages/[plugin-name]/skills/[skill-name]/ (per-skill dirs with lean SKILL.md stubs + references/ for complex skills)
   - packages/[plugin-name]/agents/ (empty directory, only if design.yml specifies agents)
   - packages/[plugin-name]/resources/templates/ (empty directory)
   - packages/[plugin-name]/resources/examples/ (empty directory)
@@ -42,7 +42,7 @@ on disk and is ready for schema creation and skill implementation.
 ## Process Summary
 
 1. Validate prerequisites — design.yml status must be "approved"; implementation-plan.md, addendum.md, execution-guide.md must all exist
-2. Create directory structure — .claude-plugin/, commands/, skills/, resources/templates/, resources/examples/, scripts/; agents/ only if design.yml defines agents
+2. Create directory structure — .claude-plugin/, commands/, skills/ (with per-skill subdirs using progressive disclosure: lean SKILL.md + references/ for complex skills), resources/templates/, resources/examples/, scripts/; agents/ only if design.yml defines agents
 3. Generate plugin.json — name/version/description/commands/skills from design.yml; hooks (PreToolUse, PostToolUse, SessionStart, Stop); dependencies include task-planner and brand-guideline if needs_brand; command names stripped of plugin prefix
 4. Generate hook scripts — session-recovery.sh (reports state.yml phase, status, errors, findings, git diff) and check-wave-complete.sh (blocks stop if current skill not completed); both chmod +x
 5. Generate README.md — overview, prerequisites (Required tools only), commands table, output, how it works (wave structure), brand data usage if needs_brand, installation, data storage

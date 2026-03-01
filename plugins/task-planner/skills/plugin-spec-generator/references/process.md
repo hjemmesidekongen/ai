@@ -217,16 +217,38 @@ For each skill from `design.yml.skills`, expand the one-line purpose into a deta
 
 #### Section f) Build Order
 
-List all skills in the order they should be implemented:
+List all skills in the order they should be implemented, with model tier for each:
 
 ```markdown
 ## Build Order
 
-| # | Skill | Rationale |
-|---|-------|-----------|
-| 1 | [skill-name] | [Why build this first] |
-| 2 | [skill-name] | [Why next] |
-| ... | ... | ... |
+| # | Skill | Model Tier | Rationale |
+|---|-------|------------|-----------|
+| 1 | [skill-name] | junior | [Why build this first] |
+| 2 | [skill-name] | senior | [Why next] |
+| ... | ... | ... | ... |
+```
+
+**Model tier assignment rules** (from `plugin-blueprint.md` Section 11a):
+- **junior** (Haiku): scaffolding, template copying, simple file creation, schema writes, formatting. Output structure is predetermined.
+- **senior** (Sonnet): skill implementation, command logic, content generation, integration. **Default tier** — use when in doubt.
+- **principal** (Opus): architecture decisions, QA review, cross-plugin verification, brand coherence, complex planning.
+
+**Assignment heuristics:**
+- junior: difficulty=low AND risk=low AND task is primarily file creation/copying
+- senior: difficulty=medium OR task requires content generation/reasoning (DEFAULT)
+- principal: difficulty=high OR risk=high OR task is QA/verification OR task is cross-cutting
+
+After the build order table, add a tier distribution summary:
+
+```markdown
+### Model Tier Distribution
+
+| Tier | Count | Tasks |
+|------|-------|-------|
+| Junior (Haiku) | N | scaffolding, templates, ... |
+| Senior (Sonnet) | N | implementation, commands, ... |
+| Principal (Opus) | N | QA, architecture, ... |
 ```
 
 Rules for build order:
@@ -234,6 +256,7 @@ Rules for build order:
 - Interactive skills that gather user input come before autonomous skills that process it
 - Skills with no dependencies can be built in any order — pick the one that exercises the most code paths first
 - The final compilation/export skill is ALWAYS last
+- Every task MUST have a `model_tier` — no omissions
 
 ---
 
@@ -419,6 +442,8 @@ type: data_validation
 required_checks:
   - Implementation plan contains all 6 sections:
     overview, architecture, YAML schema, commands, skills, build order
+  - Build order table includes a model_tier column with valid values (junior|senior|principal) for every task
+  - A "Model Tier Distribution" summary section follows the build order table
   - YAML schema has at least 5 top-level sections, each with at least 3 typed fields
   - Every command in design.yml has a corresponding expanded section in the plan
     with purpose, input, execution strategy, output, and recovery
