@@ -17,15 +17,33 @@ two-stage flow:
 
 ### Stage 1: Spec Compliance (Mechanical)
 
-1. Dispatch `spec-compliance-reviewer` (model_tier: junior) with:
+**Subagent mode** (default):
+
+1. Fill `resources/prompts/spec-review-dispatch.md` template with:
+   - `scope_description`: wave/task identifier
+   - `tasks`: task definitions with expected outputs (from plan)
+   - `task_reports`: `task_complete` reports from implementer subagents
+   - `base_sha`, `commit_sha`: per-task git SHAs for diff scoping
+2. Dispatch via `Task()` with:
+   - `model: haiku` (junior tier)
+   - `subagent_type: "general-purpose"`
+   - `description: "Spec review: [scope]"`
+3. Collect `spec_compliance` YAML report from subagent output
+
+**Inline mode:**
+
+1. Dispatch `spec-compliance-reviewer` directly with:
    - Target skill's SKILL.md frontmatter (`writes`, `checkpoint`)
    - Output files on disk, state.yml, file-ownership map
-2. If spec compliance returns `status: fail`:
+
+**Both modes — process result:**
+
+1. If spec compliance returns `status: fail`:
    - Update phase status → `failed_spec` in state.yml
    - Log failures to state.yml `errors` array
    - Return `verdict: fail` to caller immediately
    - **Do NOT proceed to Stage 2**
-3. If spec compliance returns `status: pass`:
+2. If spec compliance returns `status: pass`:
    - Proceed to Stage 2 (if required)
 
 ### Stage 2: Quality Review (Judgment)
@@ -41,13 +59,31 @@ else → skip Stage 2, mark complete, return pass
 
 When running Stage 2:
 
-1. Dispatch `qa-agent` (model_tier: principal) with:
-   - Plan file, wave number, working directory
-   - Stage 1 compliance report (for reference)
-2. Process the qa_report:
-   - `PASS` → update phase status → `complete`, return `pass`
-   - `PASS_WITH_NOTES` → update phase status → `passed_with_notes`, return `pass_with_warnings`
-   - `FAIL` → update phase status → `failed_quality`, log to errors, return `fail`
+**Subagent mode** (default):
+
+1. Fill `resources/prompts/quality-review-dispatch.md` template with:
+   - `wave_number`: current wave
+   - `wave_summary`: task names and descriptions for this wave
+   - `wave_base_sha`, `wave_head_sha`: from phase's `commit_range`
+   - `stage1_report_summary`: summary from Stage 1 spec compliance report
+   - `plan_requirements`: relevant plan context (if any)
+   - `round`: review round number (1 on first pass)
+2. Dispatch via `Task()` with:
+   - `model: opus` (principal tier)
+   - `subagent_type: "general-purpose"`
+   - `description: "Quality review: Wave [N]"`
+3. Collect `qa_report` YAML report from subagent output
+
+**Inline mode:**
+
+1. Dispatch `qa-agent` directly with plan file, wave number, working directory,
+   and Stage 1 compliance report
+
+**Both modes — process result:**
+
+1. `PASS` → update phase status → `complete`, return `pass`
+2. `PASS_WITH_NOTES` → update phase status → `passed_with_notes`, return `pass_with_warnings`
+3. `FAIL` → update phase status → `failed_quality`, log to errors, return `fail`
 
 ---
 

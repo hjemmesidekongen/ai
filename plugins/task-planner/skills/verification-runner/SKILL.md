@@ -38,14 +38,29 @@ Stage 2: qa-agent (principal/Opus)
   → PASS → mark complete, return pass
 ```
 
+## Dispatch Mode
+
+In **subagent mode** (default), both stages dispatch via `Task()`:
+
+- **Stage 1:** Fill `resources/prompts/spec-review-dispatch.md` template with
+  task definitions, implementer reports, and base_sha..commit_sha. Dispatch as
+  Haiku subagent. Collect `spec_compliance` YAML report.
+- **Stage 2:** Fill `resources/prompts/quality-review-dispatch.md` template with
+  wave summary, commit range, and Stage 1 report. Dispatch as Opus subagent.
+  Collect `qa_report` YAML report.
+
+In **inline mode**, both stages run in the current session (legacy behavior).
+
 ## Process Summary
 
-1. **Receive input** — verification type, check strings, wave context
-2. **Stage 1** — dispatch `spec-compliance-reviewer` with target skill's
-   `writes` and `checkpoint` frontmatter. If fail → stop, log `failed_spec`
+1. **Receive input** — verification type, check strings, wave context,
+   task_complete reports (subagent mode), commit range
+2. **Stage 1** — dispatch `spec-compliance-reviewer` via Task() (haiku) with
+   task reports and git SHAs. If fail → stop, log `failed_spec`
 3. **Stage 2 gate** — check if quality review is required (wave.qa_review,
    qa_frequency, or final wave). If not required → mark complete, return pass
-4. **Stage 2** — dispatch `qa-agent` with output files and plan context
+4. **Stage 2** — dispatch `qa-agent` via Task() (opus) with commit range and
+   Stage 1 report
 5. **Produce verdict** — `pass` / `pass_with_warnings` / `fail`
 6. **Log failures** — append to state.yml `errors` array; deduplicate;
    mark resolved on re-pass

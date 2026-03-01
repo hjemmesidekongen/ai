@@ -201,10 +201,12 @@ failures before invoking a principal-tier quality reviewer.
 
 **Stage 1: Spec Compliance** (model_tier: junior)
 
-1. Dispatch `spec-compliance-reviewer` skill with:
-   - Target skill's SKILL.md frontmatter (`writes`, `checkpoint`)
-   - Output files on disk
-   - state.yml and file-ownership map
+1. Dispatch `spec-compliance-reviewer`:
+   - **Subagent mode:** Fill `resources/prompts/spec-review-dispatch.md` template
+     with task definitions, `task_complete` reports, and per-task git SHAs.
+     Dispatch via `Task(model: haiku)`.
+   - **Inline mode:** Run `spec-compliance-reviewer` directly with target skill's
+     SKILL.md frontmatter, output files, state.yml, and file-ownership map.
 2. Process the spec compliance report:
 
 ```
@@ -234,10 +236,14 @@ else:
 
 When running Stage 2:
 
-1. Spawn the `qa-agent` (from `agents/qa-agent.md`, model: opus)
-2. Pass: plan file, wave number, working directory, Stage 1 report
-3. The QA agent runs its 5-check quality protocol and returns a `qa_report`
-4. Process the report:
+1. Dispatch `qa-agent` (model: opus):
+   - **Subagent mode:** Fill `resources/prompts/quality-review-dispatch.md`
+     template with wave summary, `commit_range` (base_sha..head_sha), and
+     Stage 1 report. Dispatch via `Task(model: opus)`.
+   - **Inline mode:** Spawn `qa-agent` directly with plan file, wave number,
+     working directory, and Stage 1 report.
+2. The QA agent runs its 5-check quality protocol and returns a `qa_report`
+3. Process the report:
 
 ```
 if verdict == "PASS":
