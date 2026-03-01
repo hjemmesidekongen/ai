@@ -44,6 +44,7 @@ shared/
 - [x] logo-design skill
 - [x] content-rules skill
 - [x] social-media skill
+- [x] compile-and-export skill (brand manual, docx, asset script, web integration, preview)
 - [ ] Commands: brand-generate, brand-analyze, brand-audit, brand-switch ← **Next step**
 - [ ] Brand manual template + export
 
