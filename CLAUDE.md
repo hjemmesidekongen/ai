@@ -215,7 +215,7 @@ Reference: packages/task-planner/resources/plugin-blueprint.md Sections 8, 13
   - Update competitor-analysis SKILL.md: add findings.md + 2-Action Rule (research-heavy)
   - Update technical-seo SKILL.md: add findings.md + error logging
 
-- [ ] R5: plugin generator — update scaffold templates
+- [x] R5: plugin generator — update scaffold templates
   - Update plugin-scaffolder skill to generate hooks in plugin.json by default
   - Update plugin-scaffolder to create scripts/session-recovery.sh and check-wave-complete.sh
   - Update plugin-execution-guide-generator to include findings/errors instructions in skill prompts
@@ -233,7 +233,7 @@ Reference: packages/task-planner/resources/plugin-blueprint.md Sections 8, 13
   - Verify check-wave-complete.sh blocks premature stop
   - Verify plugin-scaffolder generates hooks + scripts for new plugins
 
-Next step: R5 — plugin generator update scaffold templates
+Next step: R6 — README updates
 
 ## Specs
 Read the relevant spec BEFORE implementing. Do NOT try to build everything at once.

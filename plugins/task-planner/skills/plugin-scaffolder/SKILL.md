@@ -103,9 +103,39 @@ Create `packages/[plugin-name]/.claude-plugin/plugin.json` with this exact struc
   "commands": ["[design.yml → commands[].name, stripped of plugin prefix]"],
   "skills": ["[design.yml → skills[].name]"],
   "agents": ["[design.yml → agents if any, else empty array]"],
-  "dependencies": ["task-planner"]
+  "dependencies": ["task-planner"],
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Write|Edit|Bash",
+        "command": "cat state.yml 2>/dev/null | head -20 || true"
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit",
+        "command": "echo '[plugin-name] File updated. If this completes a phase, update state.yml.'"
+      }
+    ],
+    "SessionStart": [
+      {
+        "command": "bash packages/[plugin-name]/scripts/session-recovery.sh"
+      }
+    ],
+    "Stop": [
+      {
+        "command": "bash packages/[plugin-name]/scripts/check-wave-complete.sh"
+      }
+    ]
+  }
 }
 ```
+
+**Hook rules:**
+- Replace `[plugin-name]` with the actual plugin name in all hook commands
+- The PostToolUse echo message uses the plugin name as a prefix (e.g., `[seo-plugin]`)
+- SessionStart and Stop hooks reference the plugin's own scripts/ directory
+- See Step 3b for the script contents
 
 **Command name extraction:** Commands in design.yml use the format `plugin:command` (e.g., `seo:strategy`). In plugin.json, store only the command part without the plugin prefix (e.g., `strategy`). If the command name already excludes the prefix, use it as-is.
 
@@ -118,6 +148,99 @@ Create `packages/[plugin-name]/.claude-plugin/plugin.json` with this exact struc
 **Additional fields (if applicable):**
 - If `needs_brand` is true: add `"brand_directory": "~/.claude/brands/"`
 - Add `"data_directory"` using the storage path from `design.yml → output.yaml.storage_path`
+
+---
+
+### Step 3b — Generate Hook Scripts
+
+Create two scripts in `packages/[plugin-name]/scripts/`:
+
+**`scripts/session-recovery.sh`:**
+
+```bash
+#!/usr/bin/env bash
+set -euo pipefail
+
+echo "=== [Plugin Name] Session Recovery Check ==="
+
+# Find state.yml — check plugin-specific data directory first, then current directory
+STATE_FILE=""
+# [Plugin-specific logic: for brand plugins, check ~/.claude/active-brand.yml;
+#  for project-based plugins, check the plugin's active-project file;
+#  fallback to state.yml in current directory]
+if [ -f state.yml ]; then
+  STATE_FILE="state.yml"
+fi
+
+if [ -n "$STATE_FILE" ]; then
+  echo "State file: $STATE_FILE"
+  echo "Current phase: $(grep '^current_phase:' "$STATE_FILE" 2>/dev/null | head -1 | awk '{print $2}' | tr -d '"' || echo 'unknown')"
+  echo "Status: $(grep '^status:' "$STATE_FILE" 2>/dev/null | head -1 | awk '{print $2}' | tr -d '"' || echo 'unknown')"
+
+  # Show last modified time (macOS and Linux compatible)
+  if stat -f %Sm "$STATE_FILE" &>/dev/null; then
+    echo "Last updated: $(stat -f '%Sm' "$STATE_FILE")"
+  elif stat -c %y "$STATE_FILE" &>/dev/null; then
+    echo "Last updated: $(stat -c '%y' "$STATE_FILE")"
+  fi
+
+  ERRORS=$(grep -c '  - timestamp:' "$STATE_FILE" 2>/dev/null || echo 0)
+  echo "Logged errors: $ERRORS"
+
+  COMPLETED=$(grep -A1 'status: completed' "$STATE_FILE" 2>/dev/null | grep 'name:' | awk '{print $2}' | tr -d '"' | tr '\n' ', ' || true)
+  if [ -n "$COMPLETED" ]; then
+    echo "Completed phases: $COMPLETED"
+  fi
+
+  # Check for findings.md
+  FINDINGS_DIR=$(dirname "$STATE_FILE")
+  if [ -f "$FINDINGS_DIR/findings.md" ]; then
+    FINDINGS_LINES=$(wc -l < "$FINDINGS_DIR/findings.md" | tr -d ' ')
+    echo "Findings file: $FINDINGS_DIR/findings.md ($FINDINGS_LINES lines)"
+  fi
+
+  echo "Git changes since last commit:"
+  git diff --stat HEAD 2>/dev/null || echo "  (not a git repo)"
+else
+  echo "No state.yml found. Fresh start."
+fi
+```
+
+**`scripts/check-wave-complete.sh`:**
+
+```bash
+#!/usr/bin/env bash
+set -euo pipefail
+
+# Find state.yml — same lookup logic as session-recovery.sh
+STATE_FILE=""
+if [ -f state.yml ]; then
+  STATE_FILE="state.yml"
+fi
+
+if [ -z "$STATE_FILE" ]; then
+  echo "No state.yml found. Nothing to verify."
+  exit 0
+fi
+
+STATUS=$(grep '^status:' "$STATE_FILE" 2>/dev/null | head -1 | awk '{print $2}' | tr -d '"')
+SKILL=$(grep '^current_phase:' "$STATE_FILE" 2>/dev/null | head -1 | awk '{print $2}' | tr -d '"')
+
+if [ "$STATUS" != "completed" ] && [ "$STATUS" != "verified" ]; then
+  echo "Current skill '$SKILL' is not complete (status: $STATUS)."
+  echo "Please complete the current skill and run verification before stopping."
+  exit 1
+fi
+
+echo "Current skill complete. Safe to stop."
+exit 0
+```
+
+**Customization rules:**
+- Replace `[Plugin Name]` in the echo header with the actual plugin name
+- If the plugin uses a project-specific data directory (like `~/.claude/seo/[project-name]/`), add lookup logic to find state.yml via an active-project file (see `packages/seo-plugin/scripts/session-recovery.sh` for an example)
+- If the plugin uses brand data directory (`~/.claude/brands/[brand-name]/`), add lookup logic via `~/.claude/active-brand.yml` (see `packages/brand-guideline/scripts/session-recovery.sh` for an example)
+- Make both scripts executable: `chmod +x packages/[plugin-name]/scripts/session-recovery.sh packages/[plugin-name]/scripts/check-wave-complete.sh`
 
 ---
 
@@ -240,13 +363,14 @@ If the checklist exists:
 
 ## Output
 
-- `packages/[plugin-name]/.claude-plugin/plugin.json` — plugin manifest with dependencies
+- `packages/[plugin-name]/.claude-plugin/plugin.json` — plugin manifest with dependencies and hooks
 - `packages/[plugin-name]/commands/` — empty directory
 - `packages/[plugin-name]/skills/` — empty directory
 - `packages/[plugin-name]/agents/` — empty directory (only if design.yml defines agents)
 - `packages/[plugin-name]/resources/templates/` — empty directory
 - `packages/[plugin-name]/resources/examples/` — empty directory
-- `packages/[plugin-name]/scripts/` — empty directory
+- `packages/[plugin-name]/scripts/session-recovery.sh` — SessionStart hook script
+- `packages/[plugin-name]/scripts/check-wave-complete.sh` — Stop hook script
 - `packages/[plugin-name]/README.md` — plugin documentation
 
 ## Checkpoint
@@ -266,6 +390,9 @@ required_checks:
   - packages/[plugin-name]/resources/templates/ directory exists
   - packages/[plugin-name]/resources/examples/ directory exists
   - packages/[plugin-name]/scripts/ directory exists
+  - packages/[plugin-name]/scripts/session-recovery.sh exists and is executable
+  - packages/[plugin-name]/scripts/check-wave-complete.sh exists and is executable
+  - plugin.json contains "hooks" with PreToolUse, PostToolUse, SessionStart, and Stop entries
   - packages/[plugin-name]/README.md exists and is non-empty
   - README.md contains all required sections:
     Overview, Prerequisites, Commands, Output, How It Works, Installation, Data Storage

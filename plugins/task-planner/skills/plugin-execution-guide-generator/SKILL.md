@@ -126,6 +126,34 @@ Read `docs/[plugin-name]-implementation-plan.md` (the "[skill-name]" section und
 
 Create `packages/[plugin-name]/skills/[skill-name]/SKILL.md`
 
+The SKILL.md must include these context engineering sections:
+
+**Findings Persistence** (add before the main process):
+```
+During [skill activity], write intermediate discoveries to the findings file:
+
+~/.claude/[domain]/[project-name]/findings.md
+
+**What to save:** [skill-specific items — e.g., user responses, research results, generation rationale]
+
+**2-Action Rule:** After every 2 research operations ([skill-specific actions]), IMMEDIATELY save key findings to findings.md before continuing.
+
+**Format:**
+[Skill-specific markdown template with relevant heading structure]
+
+This file persists across /compact and session restarts. If context is lost, findings survive.
+```
+
+**Error Logging** (add after findings persistence):
+```
+When errors occur during [skill activity] (validation failures, checkpoint failures, unexpected issues):
+
+1. Log the error to state.yml errors array immediately
+2. Before retrying any approach, check errors for previous failed attempts
+3. Never repeat a failed approach — mutate strategy instead
+4. The verification-runner logs checkpoint failures automatically
+```
+
 This skill:
 1. [Concrete step — e.g., "Read `[output-yaml].yml` section `meta` to get project name and verify the file exists"]
 2. [Concrete step — e.g., "Read `[output-yaml].yml` section `[section]` to get [specific fields]"]
@@ -183,6 +211,11 @@ Then update CLAUDE.md: check off this step in the Progress section and set "Next
 
 5. **No placeholder patterns.** Each prompt is fully self-contained. A human (or Claude Code) should be able to execute it without reading any other prompt.
 
+6. **Context engineering is mandatory.** Every skill prompt MUST include:
+   - A **Findings Persistence** section with: findings.md path, what to save (skill-specific), 2-Action Rule with skill-specific trigger actions, a markdown format template with relevant headings
+   - An **Error Logging** section with: the 4 standard error-handling rules (log immediately, check before retrying, never repeat failed approach, verification-runner auto-logs)
+   - These sections are placed BEFORE the main process steps in the generated SKILL.md
+
 ---
 
 ### Step 4 — Generate Scaffold Prompt
@@ -215,7 +248,7 @@ Create the plugin scaffold:
    └── README.md
    ```
 
-2. Write `packages/[plugin-name]/.claude-plugin/plugin.json`:
+2. Write `packages/[plugin-name]/.claude-plugin/plugin.json` (including hooks):
    ```json
    {
      "name": "[plugin-name]",
@@ -224,11 +257,19 @@ Create the plugin scaffold:
      "commands": [list all command names from design.yml],
      "skills": [list all skill names from design.yml],
      "agents": [],
-     "dependencies": ["task-planner"[, "brand-guideline" if needs_brand]]
+     "dependencies": ["task-planner"[, "brand-guideline" if needs_brand]],
+     "hooks": {
+       "PreToolUse": [{ "matcher": "Write|Edit|Bash", "command": "cat state.yml 2>/dev/null | head -20 || true" }],
+       "PostToolUse": [{ "matcher": "Write|Edit", "command": "echo '[plugin-name] File updated. If this completes a phase, update state.yml.'" }],
+       "SessionStart": [{ "command": "bash packages/[plugin-name]/scripts/session-recovery.sh" }],
+       "Stop": [{ "command": "bash packages/[plugin-name]/scripts/check-wave-complete.sh" }]
+     }
    }
    ```
 
-3. Write `packages/[plugin-name]/README.md` with:
+3. Create `packages/[plugin-name]/scripts/session-recovery.sh` and `packages/[plugin-name]/scripts/check-wave-complete.sh` (see plugin-blueprint.md Section 13 for templates). Make both executable with `chmod +x`.
+
+4. Write `packages/[plugin-name]/README.md` with:
    - Plugin name and description
    - Installation: "This plugin is part of the claude-plugins ecosystem"
    - Usage: list all commands with one-line descriptions
@@ -237,7 +278,10 @@ Create the plugin scaffold:
 Checkpoint type: file_validation
 Required checks:
 - plugin.json exists and is valid JSON
+- plugin.json contains hooks (PreToolUse, PostToolUse, SessionStart, Stop)
 - All directories exist (commands/, skills/, agents/, resources/templates/, resources/examples/, scripts/)
+- scripts/session-recovery.sh exists and is executable
+- scripts/check-wave-complete.sh exists and is executable
 - README.md exists and lists all commands
 - plugin.json dependencies includes "task-planner"
 [If needs_brand:] - plugin.json dependencies includes "brand-guideline"
@@ -523,6 +567,8 @@ Before writing the final file, validate the generated execution guide:
 2. **Prompt quality check (for EVERY skill prompt):**
    - Contains spec file reference with section name
    - Contains `Create packages/[plugin-name]/skills/[skill-name]/SKILL.md` instruction
+   - Contains findings persistence instructions (findings.md path, 2-Action Rule, format template)
+   - Contains error logging instructions (4 standard rules)
    - Contains numbered process steps (at least 5)
    - Contains checkpoint type and at least 2 measurable checks
    - Contains CLAUDE.md update instruction
@@ -561,8 +607,9 @@ type: data_validation
 required_checks:
   - Every skill from design.yml has its own dedicated prompt section
     (no "repeat this pattern" or "same as above")
-  - Every prompt contains all 6 required elements:
-    spec file reference, create instruction, numbered process steps,
+  - Every prompt contains all 8 required elements:
+    spec file reference, create instruction, findings persistence section,
+    error logging section, numbered process steps,
     checkpoint with type and checks, output declaration, CLAUDE.md update line
   - Every skill prompt has at least 5 numbered process steps
     that reference specific files and sections (not vague)
@@ -604,3 +651,4 @@ These rules are enforced during execution guide generation:
 8. **Build order is respected.** Skills are ordered by the implementation plan's Build Order table. Dependencies are satisfied before dependents.
 9. **The guide is self-contained.** Someone with access to the repo and the spec documents should be able to follow the guide from Step 1 to completion without any additional context.
 10. **No forward references between prompts.** Each prompt stands alone. It may reference spec documents, but never another prompt in the guide.
+11. **Context engineering is baked in.** Every skill prompt includes findings persistence (with 2-Action Rule) and error logging sections. The scaffold prompt generates hooks in plugin.json and hook scripts in scripts/. No plugin should ship without these patterns.
