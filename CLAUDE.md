@@ -221,19 +221,19 @@ Reference: packages/task-planner/resources/plugin-blueprint.md Sections 8, 13
   - Update plugin-execution-guide-generator to include findings/errors instructions in skill prompts
   - This ensures all FUTURE plugins get context engineering from day one
 
-- [ ] R6: README updates
+- [x] R6: README updates
   - Create packages/brand-guideline/README.md (missing entirely)
   - Update packages/task-planner/README.md (add hooks, findings, errors, session recovery sections)
   - Update packages/seo-plugin/README.md (add hooks, findings, brainstorm, versioning sections)
 
-- [ ] R7: Integration test
+- [x] R7: Integration test
   - Run /brand:generate on a test brand — verify hooks fire, findings.md created, errors logged
   - Simulate a failure — verify error persisted in state.yml
   - Run /compact then resume — verify session-recovery.sh reports context
   - Verify check-wave-complete.sh blocks premature stop
   - Verify plugin-scaffolder generates hooks + scripts for new plugins
 
-Next step: R6 — README updates
+Next step: Context Engineering Retrofit complete. Ready for new plugins.
 
 ## Specs
 Read the relevant spec BEFORE implementing. Do NOT try to build everything at once.

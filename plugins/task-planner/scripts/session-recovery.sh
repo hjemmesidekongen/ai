@@ -31,7 +31,7 @@ if [ -f state.yml ]; then
   echo "Logged errors: $ERRORS"
 
   # Show completed phases if available
-  COMPLETED=$(grep -A1 'status: completed' state.yml 2>/dev/null | grep 'name:' | awk '{print $2}' | tr -d '"' | tr '\n' ', ' || true)
+  COMPLETED=$(grep -B1 'status: completed' state.yml 2>/dev/null | grep 'name:' | awk '{print $3}' | tr -d '"' | tr '\n' ', ' || true)
   if [ -n "$COMPLETED" ]; then
     echo "Completed phases: $COMPLETED"
   fi

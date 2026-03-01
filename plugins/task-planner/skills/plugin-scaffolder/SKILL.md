@@ -187,7 +187,7 @@ if [ -n "$STATE_FILE" ]; then
   ERRORS=$(grep -c '  - timestamp:' "$STATE_FILE" 2>/dev/null || echo 0)
   echo "Logged errors: $ERRORS"
 
-  COMPLETED=$(grep -A1 'status: completed' "$STATE_FILE" 2>/dev/null | grep 'name:' | awk '{print $2}' | tr -d '"' | tr '\n' ', ' || true)
+  COMPLETED=$(grep -B1 'status: completed' "$STATE_FILE" 2>/dev/null | grep 'name:' | awk '{print $3}' | tr -d '"' | tr '\n' ', ' || true)
   if [ -n "$COMPLETED" ]; then
     echo "Completed phases: $COMPLETED"
   fi
