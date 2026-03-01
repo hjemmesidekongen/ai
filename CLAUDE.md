@@ -243,7 +243,9 @@ Reference: packages/task-planner/resources/plugin-blueprint.md Sections 8, 13
 
 - [x] S6: Brand-guideline progressive disclosure — all 9 skills split into lean SKILL.md (≤80 lines) + references/process.md, frontmatter descriptions enriched with trigger phrases
 
-Next step: Apply progressive disclosure to seo-plugin skills, then ready for new plugins.
+- [x] S7: SEO-plugin progressive disclosure — all 8 skills split into lean SKILL.md (≤80 lines) + references/process.md, frontmatter descriptions enriched with trigger phrases
+
+Next step: Ecosystem standards complete. Ready for new plugins.
 
 ## Specs
 Read the relevant spec BEFORE implementing. Do NOT try to build everything at once.
