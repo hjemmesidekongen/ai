@@ -995,3 +995,81 @@ If no decisions are found, proceed with the normal interview flow.
 
 This is a small addition — typically 5-10 lines at the top of the
 interview skill's SKILL.md.
+
+---
+
+## 15. Subagent Execution
+
+By default, `plan-execute` dispatches each task as an isolated subagent via
+Claude Code's `Task()` tool. Plugins benefit automatically — no structural
+changes needed.
+
+### How It Works
+
+1. The orchestrator reads the plan and fills a prompt template
+   (`resources/prompts/worker-dispatch.md`) for each task
+2. Each task runs in a fresh context window with only its SKILL.md, ownership
+   entry, read list, and error context
+3. The subagent commits its work and returns a structured `task_complete` report
+4. Verification dispatches as separate subagents (spec review → Haiku,
+   quality review → Opus)
+
+### Why Plugins Don't Need to Change
+
+The subagent receives the same SKILL.md + references/ structure that already
+exists. The progressive disclosure split (lean SKILL.md ≤80 lines, detail in
+references/process.md) is the ideal pattern for subagent context:
+
+- **Inlined** (by orchestrator): SKILL.md content, task definition, ownership
+- **Pointed** (read by subagent): references/process.md, prior wave outputs,
+  findings.md
+
+Plugins that already follow Section 4 (progressive disclosure) work perfectly
+as subagent targets. No changes needed.
+
+### Writing Skills That Work Well as Subagent Context
+
+1. **Keep SKILL.md ≤80 lines.** This gets inlined into the subagent prompt.
+   Longer SKILL.md files waste the subagent's context budget.
+2. **Put procedure detail in references/process.md.** The subagent reads this
+   itself — it doesn't need to be inlined.
+3. **Declare reads/writes in frontmatter.** The orchestrator uses these to
+   build the ownership entry and read list.
+4. **Don't reference state.yml in skills.** The orchestrator manages state.
+   Skills receive context through their prompt, not by reading state directly.
+5. **Don't assume accumulated context.** Each subagent starts fresh. If a
+   skill needs context from a prior wave, it must be in the "reads" list.
+
+### Model Tier Selection for Plugin Designers
+
+When defining tasks in a plan (or when the wave-decomposer assigns them),
+choose the tier based on task characteristics:
+
+| Task Type | Tier | Rationale |
+|-----------|------|-----------|
+| Scaffolding, template output, file creation | junior (Haiku) | Predetermined structure, no judgment needed |
+| Content generation, implementation | senior (Sonnet) | Needs reasoning but not deep analysis |
+| Architecture, QA, cross-cutting decisions | principal (Opus) | Requires judgment across multiple contexts |
+| Spec compliance review | junior (Haiku) | Mechanical checks only |
+| Quality review | principal (Opus) | Requires judgment and domain expertise |
+
+See Section 11a for the full model tier mapping table and assignment heuristics.
+
+### Per-Task Commits
+
+In subagent mode, each task commits before reporting. This enables:
+- **Git-scoped quality review:** `git diff base..head` shows exactly what changed
+- **Crash recovery:** If a later task fails, prior tasks' commits are preserved
+- **Audit trail:** Every task has a commit SHA in the plan
+
+The commit message format is: `<plan_name>: <task_name> [<task_id>]`
+
+### Execution Modes
+
+| Mode | Flag | Behavior |
+|------|------|----------|
+| Subagent (default) | `--mode subagent` or `--mode auto` | Each task dispatched via Task() |
+| Inline (legacy) | `--mode single` | All tasks run in orchestrator's session |
+
+Inline mode is preserved for debugging, small plans, or when subagent dispatch
+is overkill. Plugins work identically in both modes.
