@@ -41,6 +41,47 @@ Phase 3 of SEO strategy generation (runs in parallel with competitor-analysis). 
 - Read `docs/seo-plugin-implementation-plan.md` (the "Skill: technical-seo" section)
 - Read `docs/seo-plugin-addendum.md` (the "Technical SEO Fundamentals" section)
 
+## Findings Persistence
+
+During checklist generation, write intermediate discoveries to the findings file:
+
+```
+~/.claude/seo/[project-name]/findings.md
+```
+
+**What to save:** Known issues cross-referenced, industry-specific technical requirements, checklist item rationale, priority decisions.
+
+**2-Action Rule:** After every 2 research operations (checklist items generated, known issues matched, web search, file read), IMMEDIATELY save key findings to findings.md before continuing.
+
+**Format:**
+
+```markdown
+## Technical SEO Findings
+
+### Known Issues Cross-Referenced
+- [issue from project interview] → mapped to checklist item: [item]
+
+### Industry-Specific Items Added
+- [item]: added because [industry] requires [reason]
+
+### Priority Decisions
+- [item] set to [priority] because [rationale]
+
+### Research Notes
+- [technical context, industry-specific requirements, standard references]
+```
+
+This file persists across `/compact` and session restarts. If context is lost, findings survive.
+
+## Error Logging
+
+When errors occur during generation (validation failures, checkpoint failures, unexpected issues):
+
+1. Log the error to state.yml `errors` array immediately
+2. Before retrying any approach, check `errors` for previous failed attempts
+3. Never repeat a failed approach — mutate strategy instead
+4. The verification-runner logs checkpoint failures automatically
+
 ## Before You Start
 
 Load context from previous phases:

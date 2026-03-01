@@ -39,6 +39,51 @@ Phase 3 of SEO strategy generation (runs in parallel with technical-seo). This s
 - Read `docs/seo-plugin-implementation-plan.md` (the "Skill: competitor-analysis" section)
 - Read `docs/seo-plugin-addendum.md` (the "Competitive Analysis for SEO" section)
 
+## Findings Persistence
+
+During analysis, write intermediate discoveries to the findings file:
+
+```
+~/.claude/seo/[project-name]/findings.md
+```
+
+**What to save:** Competitor identification rationale, DA estimates with reasoning, content strength/weakness observations, backlink profile estimates, content gap discoveries, any industry research done.
+
+**2-Action Rule:** After every 2 research operations (competitor identified, DA estimated, content analyzed, backlinks estimated, web search), IMMEDIATELY save key findings to findings.md before continuing. Do not wait until the full analysis is complete.
+
+**Format:**
+
+```markdown
+## Competitor Analysis Findings
+
+### Competitors Identified
+- [domain]: [why selected — direct competitor / content competitor / keyword competitor]
+
+### Competitor: [domain]
+- DA estimate: [score] — reasoning: [why this estimate]
+- Top keywords: [list with position estimates]
+- Content strengths: [observations]
+- Content weaknesses: [observations]
+- Backlink profile: [referring domains estimate] — top sources: [list]
+
+### Content Gaps Discovered
+- [keyword/topic]: [gap_type] — [opportunity rationale]
+
+### Research Notes
+- [industry context, competitive landscape observations, estimation methodology]
+```
+
+This file persists across `/compact` and session restarts. If context is lost, findings survive.
+
+## Error Logging
+
+When errors occur during analysis (validation failures, checkpoint failures, unexpected issues):
+
+1. Log the error to state.yml `errors` array immediately
+2. Before retrying any approach, check `errors` for previous failed attempts
+3. Never repeat a failed approach — mutate strategy instead
+4. The verification-runner logs checkpoint failures automatically
+
 ## Before You Start
 
 Load context from previous phases:

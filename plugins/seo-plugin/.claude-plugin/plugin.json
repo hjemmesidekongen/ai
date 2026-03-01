@@ -8,5 +8,29 @@
   "dependencies": ["task-planner", "brand-guideline"],
   "shared_skills": ["brand-context-loader"],
   "brand_directory": "~/.claude/brands/",
-  "data_directory": "~/.claude/seo/[project-name]/"
+  "data_directory": "~/.claude/seo/[project-name]/",
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Write|Edit|Bash",
+        "command": "cat state.yml 2>/dev/null | head -20 || true"
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit",
+        "command": "echo '[seo-plugin] File updated. If this completes a phase, update state.yml.'"
+      }
+    ],
+    "SessionStart": [
+      {
+        "command": "bash packages/seo-plugin/scripts/session-recovery.sh"
+      }
+    ],
+    "Stop": [
+      {
+        "command": "bash packages/seo-plugin/scripts/check-wave-complete.sh"
+      }
+    ]
+  }
 }

@@ -206,7 +206,7 @@ Reference: packages/task-planner/resources/plugin-blueprint.md Sections 8, 13
   - Update tone-of-voice SKILL.md: add findings.md reference
   - Update compile-and-export SKILL.md: reference findings.md as additional context
 
-- [ ] R4: seo-plugin — hooks + scripts + findings
+- [x] R4: seo-plugin — hooks + scripts + findings
   - Add hooks section to .claude-plugin/plugin.json
   - Create scripts/session-recovery.sh (reads seo state.yml)
   - Create scripts/check-wave-complete.sh (checks seo skill completion)
@@ -233,7 +233,7 @@ Reference: packages/task-planner/resources/plugin-blueprint.md Sections 8, 13
   - Verify check-wave-complete.sh blocks premature stop
   - Verify plugin-scaffolder generates hooks + scripts for new plugins
 
-Next step: R4 — seo-plugin hooks + scripts + findings
+Next step: R5 — plugin generator update scaffold templates
 
 ## Specs
 Read the relevant spec BEFORE implementing. Do NOT try to build everything at once.

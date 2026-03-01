@@ -53,6 +53,58 @@ Phase 1 of SEO strategy generation. This is the first skill that runs — everyt
 - Read `docs/seo-plugin-addendum.md` (the "Domain Knowledge" section) for SEO context
 - Read `docs/ecosystem-strategy.md` Section 6 for the brand-reference.yml schema
 
+## Findings Persistence
+
+During the interview, write intermediate discoveries to the findings file:
+
+```
+~/.claude/seo/[project-name]/findings.md
+```
+
+**What to save:** User responses about website, industry, business model, SEO goals, audience segments, current SEO status, any research done to suggest options, brand context loaded.
+
+**2-Action Rule:** After every 2 research operations (user question answered, web search, file read), IMMEDIATELY save key findings to findings.md before continuing. Do not wait until all stages are complete.
+
+**Format:**
+
+```markdown
+## Project Interview Findings
+
+### Project Basics
+- Project name: [answer]
+- Website URL: [answer]
+- Industry: [answer]
+- Brand context: [loaded/not loaded]
+
+### SEO Goals
+- Goal 1: [goal] → [metric] (target: [target], [timeframe])
+- Goal 2: [goal] → [metric] (target: [target], [timeframe])
+
+### Target Audience
+- [Segment 1]: [search_behavior] — prefers [content_format]
+- [Segment 2]: [search_behavior] — prefers [content_format]
+
+### Current Status
+- Domain authority: [estimate]
+- Indexed pages: [count]
+- Top keywords: [list or "none"]
+- Known issues: [list or "none"]
+
+### Research Notes
+- [any industry research, goal suggestions, or context gathered]
+```
+
+This file persists across `/compact` and session restarts. If context is lost, findings survive.
+
+## Error Logging
+
+When errors occur during the interview (validation failures, checkpoint failures, unexpected issues):
+
+1. Log the error to state.yml `errors` array immediately
+2. Before retrying any approach, check `errors` for previous failed attempts
+3. Never repeat a failed approach — mutate strategy instead
+4. The verification-runner logs checkpoint failures automatically
+
 ## Interview Philosophy
 
 - Ask **one question at a time**. Never present a wall of questions.

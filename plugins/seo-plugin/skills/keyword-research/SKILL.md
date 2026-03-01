@@ -48,6 +48,54 @@ Phase 2 of SEO strategy generation. This skill builds on the project context fro
 - Read `docs/seo-plugin-addendum.md` (the "Keyword Research Methodology" section) for domain knowledge
 - Read `docs/ecosystem-strategy.md` Section 6 for the brand-reference.yml schema
 
+## Findings Persistence
+
+During research, write intermediate discoveries to the findings file:
+
+```
+~/.claude/seo/[project-name]/findings.md
+```
+
+**What to save:** Seed keyword rationale, search volume estimates, difficulty assessments, intent classifications, user feedback on keyword selections, any industry research done to inform suggestions.
+
+**2-Action Rule:** After every 2 research operations (keyword generation, volume estimation, user question answered, web search), IMMEDIATELY save key findings to findings.md before continuing. Do not wait until all keywords are finalized.
+
+**Format:**
+
+```markdown
+## Keyword Research Findings
+
+### Seed Keywords
+- [keyword]: from [source: industry/goal/audience/brand] — [rationale]
+
+### Primary Keywords (confirmed)
+- [keyword]: volume [est], difficulty [est], intent [type]
+
+### Secondary Keywords
+- [keyword]: volume [est], difficulty [est], intent [type]
+
+### Long-Tail Keywords
+- [keyword]: volume [est], difficulty [est], intent [type]
+
+### User Feedback
+- Removed: [keyword] — reason: [user explanation]
+- Added: [keyword] — reason: [user explanation]
+
+### Research Notes
+- [industry benchmarks, volume estimation rationale, competitive observations]
+```
+
+This file persists across `/compact` and session restarts. If context is lost, findings survive.
+
+## Error Logging
+
+When errors occur during research (validation failures, checkpoint failures, unexpected issues):
+
+1. Log the error to state.yml `errors` array immediately
+2. Before retrying any approach, check `errors` for previous failed attempts
+3. Never repeat a failed approach — mutate strategy instead
+4. The verification-runner logs checkpoint failures automatically
+
 ## Before You Start
 
 Load the context from previous phases:
