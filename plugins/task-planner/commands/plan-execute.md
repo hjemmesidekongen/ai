@@ -83,6 +83,14 @@ Verify that all waves before the starting wave are marked `completed` in state. 
 
 For each wave from the starting wave to the final wave:
 
+#### State Ownership Rule
+
+**The orchestrator is the sole writer of state.yml and the plan file.** Subagents
+never read or write state.yml — they receive context via their prompt and return
+structured reports. The orchestrator extracts information from reports and writes
+it to state. This prevents race conditions in parallel dispatch and keeps state
+management centralized.
+
 #### 4a. Update State
 
 ```yaml
@@ -95,7 +103,9 @@ updated_at: "[now]"
 
 If this is the first wave (`started_at` is null), set `started_at` to the current timestamp. For subsequent waves, leave `started_at` unchanged.
 
-In subagent mode, also record the current git HEAD as the wave's `base_sha` — this is needed later to scope quality review diffs.
+In subagent mode:
+- Record the current git HEAD as the wave's `base_sha` (for quality review scoping)
+- Before dispatching each task, update task status → `in_progress` in the plan
 
 Report to user: `"Starting wave [N] of [total]: [task names]"`
 
@@ -178,11 +188,19 @@ Instead of sequential step 2:
 
 ```
 If any task reports status == "failed" or "blocked":
-  - Mark the task as failed/blocked in the plan
-  - Log the error from the task_complete report
-  - Check if the failed task blocks later waves:
-    - If blocking: mark wave as failed, fall through to Step 5 (fix-and-retry)
-    - If non-blocking: continue with remaining tasks, report failure at wave end
+  1. Mark the task as failed/blocked in the plan
+  2. Extract error context from the task_complete report and append to
+     state.yml errors array:
+       - timestamp: [now]
+       - skill: [task_name from report]
+       - error: [error field from task_complete]
+       - attempted_fix: "pending"
+       - result: "unresolved"
+       - next_approach: [recovery_notes from task_complete, if any]
+  3. Check if the failed task blocks later waves:
+     - If blocking: mark wave as failed, fall through to Step 5 (fix-and-retry)
+     - If non-blocking: continue with remaining tasks, report failure at wave end
+  4. Update state.yml updated_at
 ```
 
 **Model tier mapping reference:**
