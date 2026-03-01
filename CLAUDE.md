@@ -104,10 +104,10 @@ docs/
 - [x] Step 19: Skill — plugin-execution-guide-generator
 - [x] Step 20: Skill — plugin-scaffolder
 - [x] Step 21: /plugin:create command
-- [ ] Step 22: /plugin:build command
+- [x] Step 22: /plugin:build command
 - [ ] Step 23: Test plugin generator end-to-end
 
-Next step: Step 22 — /plugin:build command
+Next step: Step 23 — Test plugin generator end-to-end
 
 ## Specs
 Read the relevant spec BEFORE implementing. Do NOT try to build everything at once.
