@@ -112,6 +112,18 @@ state:
           type: string
         description: "Files created or modified during this phase"
 
+      commit_range:
+        type: object
+        required: false
+        description: "Git commit range for this phase, used by quality reviewer to scope review diffs"
+        properties:
+          base_sha:
+            type: string
+            required: true
+          head_sha:
+            type: string
+            required: true
+
   # --- Error tracking ---
   # The errors array survives /compact and session restarts.
   # Every plugin MUST follow these rules:
