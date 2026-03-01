@@ -156,11 +156,11 @@ docs/
 - [x] Step 39: Skill — version-meta-stamper
 - [x] Step 40: Skill — version-compatibility-checker
 - [x] Step 41: Skill — migration-guide-generator
-- [ ] Step 42: /plugin:migrate command
+- [x] Step 42: /plugin:migrate command
 - [ ] Step 43: /plugin:version command
 - [ ] Step 44: Retrofit all plugins to v1.0.0 + integration test
 
-Next step: Step 42 — /plugin:migrate command
+Next step: Step 43 — /plugin:version command
 
 ## Specs
 Read the relevant spec BEFORE implementing. Do NOT try to build everything at once.
