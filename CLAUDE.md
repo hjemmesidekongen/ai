@@ -239,6 +239,7 @@ Reference: packages/task-planner/resources/plugin-blueprint.md Sections 8, 13
 - [x] S2: Model tier schema — model_tier field in plan-schema.yml, mapping table + heuristics in blueprint Section 11a
 - [x] S3: Wave decomposer — Step 5a assigns model_tier to tasks using assignment rules + name-based heuristics
 - [x] S4: Worker agent — reads model_tier from task, surfaces recommendation in completion report
+- [x] S5: Execution guide generator — per-skill prompts include model tier and references/ pointers
 
 Next step: Ecosystem standards complete. Ready for new plugins.
 

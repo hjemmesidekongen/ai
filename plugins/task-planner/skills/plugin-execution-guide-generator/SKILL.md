@@ -114,6 +114,7 @@ For EACH skill in build order, generate a complete, self-contained prompt. Every
 > **What:** [one-sentence purpose from implementation plan]
 > **Interactive:** [yes/no]
 > **Depends on:** [list of skills that must be built first]
+> **Model tier:** [junior|senior|principal] ([Haiku|Sonnet|Opus])
 
 **Prompt:**
 
@@ -125,6 +126,7 @@ Read `docs/[plugin-name]-implementation-plan.md` (the "[skill-name]" section und
 [If reads another skill's output:] Read the "[other-skill-name]" section in the implementation plan to understand the data this skill consumes.
 
 Create `packages/[plugin-name]/skills/[skill-name]/SKILL.md`
+[If skill exceeds 80 lines:] Also create `packages/[plugin-name]/skills/[skill-name]/references/process.md` with the detailed execution steps. The SKILL.md body must end with: "Before executing, read `references/process.md` for detailed instructions, output formats, and edge case handling."
 
 The SKILL.md must include these context engineering sections:
 
@@ -211,7 +213,15 @@ Then update CLAUDE.md: check off this step in the Progress section and set "Next
 
 5. **No placeholder patterns.** Each prompt is fully self-contained. A human (or Claude Code) should be able to execute it without reading any other prompt.
 
-6. **Context engineering is mandatory.** Every skill prompt MUST include:
+6. **Model tier is assigned.** Every skill prompt includes a model tier recommendation. If the task plan provides `model_tier`, use it. Otherwise assign based on skill type:
+   - **junior** (Haiku) — scaffolding skills, template-copying skills, file-creation-only skills
+   - **senior** (Sonnet) — interview/research skills, content generation, compile/export skills (DEFAULT)
+   - **principal** (Opus) — QA/verification skills, cross-plugin integration, architecture decisions
+   See `plugin-blueprint.md` Section 11a for the full mapping table.
+
+7. **Progressive disclosure is respected.** If a skill will need more than 80 lines in its SKILL.md, the prompt instructs creation of a `references/process.md` with detailed steps. The SKILL.md stays lean (~40-60 lines) with a pointer to the references directory. See `plugin-blueprint.md` Section 4 for the progressive disclosure rule.
+
+8. **Context engineering is mandatory.** Every skill prompt MUST include:
    - A **Findings Persistence** section with: findings.md path, what to save (skill-specific), 2-Action Rule with skill-specific trigger actions, a markdown format template with relevant headings
    - An **Error Logging** section with: the 4 standard error-handling rules (log immediately, check before retrying, never repeat failed approach, verification-runner auto-logs)
    - These sections are placed BEFORE the main process steps in the generated SKILL.md
@@ -514,15 +524,15 @@ Add this to the Progress section of CLAUDE.md:
 
 ## Timeline
 
-| Step | Name | Type | Estimated Effort |
-|------|------|------|-----------------|
-| 1 | Scaffold + plugin.json | Setup | Quick (5 min) |
-| 2 | Schema + templates | Setup | Medium (15 min) |
+| Step | Name | Type | Model Tier | Estimated Effort |
+|------|------|------|------------|-----------------|
+| 1 | Scaffold + plugin.json | Setup | junior | Quick (5 min) |
+| 2 | Schema + templates | Setup | junior | Medium (15 min) |
 [For each skill:]
-| [N] | [skill-name] | Skill ([interactive/autonomous]) | [estimate based on complexity] |
+| [N] | [skill-name] | Skill ([interactive/autonomous]) | [junior/senior/principal] | [estimate based on complexity] |
 [For each command:]
-| [N] | /[plugin]:[command] | Command | Medium (15 min) |
-| [M] | End-to-end test | Test | Medium-Long (20-30 min) |
+| [N] | /[plugin]:[command] | Command | senior | Medium (15 min) |
+| [M] | End-to-end test | Test | principal | Medium-Long (20-30 min) |
 
 **Total estimated effort:** [sum] across [count] sessions
 
@@ -567,6 +577,7 @@ Before writing the final file, validate the generated execution guide:
 2. **Prompt quality check (for EVERY skill prompt):**
    - Contains spec file reference with section name
    - Contains `Create packages/[plugin-name]/skills/[skill-name]/SKILL.md` instruction
+   - Contains model tier recommendation (junior, senior, or principal) in the header
    - Contains findings persistence instructions (findings.md path, 2-Action Rule, format template)
    - Contains error logging instructions (4 standard rules)
    - Contains numbered process steps (at least 5)
@@ -575,6 +586,7 @@ Before writing the final file, validate the generated execution guide:
    - If interactive: contains "one question at a time, offer examples"
    - If brand-dependent: contains brand data sections list
    - If reads previous skill output: names exact fields
+   - If skill will exceed 80 lines: contains `references/process.md` creation instruction
 
 3. **Exhaustiveness check:**
    - Search the entire guide for: "etc.", "similar", "and so on", "repeat this pattern", "same as above", "follow the same structure"
@@ -607,9 +619,9 @@ type: data_validation
 required_checks:
   - Every skill from design.yml has its own dedicated prompt section
     (no "repeat this pattern" or "same as above")
-  - Every prompt contains all 8 required elements:
-    spec file reference, create instruction, findings persistence section,
-    error logging section, numbered process steps,
+  - Every prompt contains all 9 required elements:
+    spec file reference, create instruction, model tier recommendation,
+    findings persistence section, error logging section, numbered process steps,
     checkpoint with type and checks, output declaration, CLAUDE.md update line
   - Every skill prompt has at least 5 numbered process steps
     that reference specific files and sections (not vague)
