@@ -115,7 +115,7 @@ docs/
 - [x] Step 22: /plugin:build command
 - [x] Step 23: Test plugin generator end-to-end
 
-### Part 4: SEO Plugin (in progress)
+### Part 4: SEO Plugin ✅
 - [x] Step 24: seo-plugin scaffold + plugin.json
 - [x] Step 25: YAML schema + document templates
 - [x] Step 26: Skill — project-interview
@@ -130,9 +130,9 @@ docs/
 - [x] Step 35: Command — /seo:audit
 - [x] Step 36: Command — /seo:content-brief
 - [x] Step 37: Command — /seo:export
-- [ ] Step 38: End-to-end test
+- [x] Step 38: End-to-end test
 
-Next step: Step 38 — End-to-end test
+All 4 parts complete. Next: build new plugins via `/plugin:create` and `/plugin:build`.
 
 ## Specs
 Read the relevant spec BEFORE implementing. Do NOT try to build everything at once.
