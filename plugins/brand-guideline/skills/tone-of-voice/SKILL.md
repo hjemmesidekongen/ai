@@ -63,6 +63,46 @@ At the end, note which decisions were applied in state.yml:
 decisions_applied: [d2, d7]
 ```
 
+## Findings Persistence
+
+During the interview, write intermediate voice decisions to the findings file:
+
+```
+~/.claude/brands/[brand-name]/findings.md
+```
+
+**What to save:** Spectrum positions with user reasoning, personality attribute choices, channel variation decisions, vocabulary preferences, and messaging drafts.
+
+**2-Action Rule:** After every 2 research operations (user question answered, web search, file read), IMMEDIATELY save key findings to findings.md before continuing.
+
+**Format:**
+
+```markdown
+## Tone of Voice Findings
+
+### Spectrum Decisions
+- Formality: [N] — [user's reasoning]
+- Humor: [N] — [user's reasoning]
+- Enthusiasm: [N] — [user's reasoning]
+- Technicality: [N] — [user's reasoning]
+- Archetype: [name]
+
+### Personality Attributes
+- [attribute], not [not] — [user's explanation]
+
+### Channel Variations
+- Website: [user's preference]
+- Social: [user's preference]
+- Email: [user's preference]
+
+### Vocabulary
+- Preferred words: [list with reasons]
+- Banned words: [list with reasons]
+- Jargon policy: [decision]
+```
+
+Also read findings.md for context from previous phases (identity-interview, audience-personas) — this data informs voice suggestions.
+
 ## Before You Start
 
 Read the brand's existing data from brand-reference.yml:

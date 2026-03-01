@@ -59,6 +59,55 @@ At the end, note which decisions were applied in state.yml:
 decisions_applied: [d2, d6]
 ```
 
+## Findings Persistence
+
+During the interview, write intermediate discoveries to the findings file:
+
+```
+~/.claude/brands/[brand-name]/findings.md
+```
+
+**What to save:** User responses about market type, segment descriptions, persona details as they're captured, channel preferences, decision factors, and any industry research done to suggest options.
+
+**2-Action Rule:** After every 2 research operations (user question answered, web search, file read), IMMEDIATELY save key findings to findings.md before continuing. Do not wait until all personas are complete.
+
+**Format:**
+
+```markdown
+## Audience & Personas Findings
+
+### Market Overview
+- Market type: [B2B/B2C/Both]
+- Primary market description: "[verbatim]"
+
+### Segments Identified
+- [Segment 1]: [brief description]
+- [Segment 2]: [brief description]
+
+### Persona: [Name]
+- Role: [answer]
+- Age range: [answer]
+- Goals: [raw user input]
+- Frustrations: [raw user input]
+- Channels: [raw user input]
+- Decision factors: [raw user input]
+- Quote: "[verbatim]"
+
+### Research Notes
+- [any industry research, channel suggestions, or context gathered]
+```
+
+This file persists across `/compact` and session restarts. If context is lost, findings survive.
+
+## Error Logging
+
+When errors occur during the interview (validation failures, checkpoint failures, unexpected issues):
+
+1. Log the error to state.yml `errors` array immediately
+2. Before retrying any approach, check `errors` for previous failed attempts
+3. Never repeat a failed approach — mutate strategy instead
+4. The verification-runner logs checkpoint failures automatically
+
 ## Before You Start
 
 Read the brand's identity data from brand-reference.yml:

@@ -59,6 +59,8 @@ Phase 9 — the final skill in the brand generation pipeline. This skill takes e
 
 Read the complete `brand-reference.yml` and `state.yml`. Verify that all 8 previous phases are marked complete in state.yml. If any phase is incomplete, stop and inform the user which phases still need to run.
 
+Also read `findings.md` if it exists — it contains research notes, user responses, and rationale from all previous phases. This additional context can enrich the brand manual narrative sections (brand story, positioning rationale, audience insights) beyond what's captured in brand-reference.yml alone.
+
 Also scan the `assets/` directory to understand what SVG masters exist. You'll reference these files throughout.
 
 ## Step 1: Validate brand-reference.yml

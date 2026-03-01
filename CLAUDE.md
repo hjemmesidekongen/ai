@@ -197,7 +197,7 @@ Reference: packages/task-planner/resources/plugin-blueprint.md Sections 8, 13
   - Update verification-runner SKILL.md to log failures to state.yml errors
   - Update plan-execute command to read errors before retrying failed waves
 
-- [ ] R3: brand-guideline — hooks + scripts + findings
+- [x] R3: brand-guideline — hooks + scripts + findings
   - Add hooks section to .claude-plugin/plugin.json
   - Create scripts/session-recovery.sh (reads brand state.yml)
   - Create scripts/check-wave-complete.sh (checks brand skill completion)
@@ -233,7 +233,7 @@ Reference: packages/task-planner/resources/plugin-blueprint.md Sections 8, 13
   - Verify check-wave-complete.sh blocks premature stop
   - Verify plugin-scaffolder generates hooks + scripts for new plugins
 
-Next step: R3 — brand-guideline hooks + scripts + findings
+Next step: R4 — seo-plugin hooks + scripts + findings
 
 ## Specs
 Read the relevant spec BEFORE implementing. Do NOT try to build everything at once.

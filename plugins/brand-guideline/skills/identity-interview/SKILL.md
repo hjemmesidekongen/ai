@@ -33,6 +33,58 @@ checkpoint:
 
 Phase 1 of brand generation. This is the first skill that runs — everything else builds on the foundation captured here. The interview produces the `meta` and `identity` sections of `brand-reference.yml`.
 
+## Findings Persistence
+
+During the interview, write intermediate discoveries to the findings file:
+
+```
+~/.claude/brands/[brand-name]/findings.md
+```
+
+**What to save:** User responses verbatim, industry context gathered, competitive landscape notes, any research done to suggest options, rationale for positioning choices.
+
+**2-Action Rule:** After every 2 research operations (user question answered, web search, file read), IMMEDIATELY save key findings to findings.md before continuing. Do not wait until the end of the interview.
+
+**Format:**
+
+```markdown
+## Identity Interview Findings
+
+### Brand Basics
+- Brand name: [answer]
+- Industry: [answer]
+- [any notes about name/industry context]
+
+### Mission & Vision
+- User's raw mission input: "[verbatim]"
+- Refined to: "[final version]"
+- [reasoning for refinement]
+
+### Values
+- [value]: [user's explanation]
+- [value]: [user's explanation]
+
+### Positioning
+- Target: [answer + context]
+- Category: [answer + context]
+- Differentiator: [answer + context]
+- Proof: [answer + context]
+
+### Competitive Landscape
+- [competitor]: [strengths] / [weaknesses]
+```
+
+This file persists across `/compact` and session restarts. If context is lost, findings survive.
+
+## Error Logging
+
+When errors occur during the interview (validation failures, checkpoint failures, unexpected issues):
+
+1. Log the error to state.yml `errors` array immediately
+2. Before retrying any approach, check `errors` for previous failed attempts
+3. Never repeat a failed approach — mutate strategy instead
+4. The verification-runner logs checkpoint failures automatically
+
 ## Interview Philosophy
 
 - Ask **one question at a time**. Never present a wall of questions.
