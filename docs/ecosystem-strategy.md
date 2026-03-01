@@ -286,6 +286,16 @@ design and must be maintained.
 - Git commit after every step
 - Specs live in docs/ — Claude reads files, user doesn't paste content
 
+### 5h. Versioning & Migration
+- Every plugin starts at v1.0.0 with a migrations/ directory and CHANGELOG.md
+- Every YAML output file gets a `_meta` block (plugin_version, schema_version, timestamps)
+- Data loaders check version compatibility before loading project data
+- Major version mismatches block execution until migrated
+- Schema archived before every minor/major bump (for migration diffing)
+- Migration chain: v1→v2→v3 applied step by step, never skipped
+- Backups are mandatory before any migration
+- Use `/plugin:version` to bump, `/plugin:migrate` to migrate projects
+
 ---
 
 ## 6. Brand Data Available to All Plugins

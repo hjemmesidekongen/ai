@@ -46,10 +46,16 @@ packages/[plugin-name]/
 │       └── SKILL.md             # One directory per skill
 ├── agents/                      # Optional — only if plugin needs specialized agents
 │   └── [agent-name].md
+├── migrations/
+│   ├── MIGRATION-REGISTRY.yml   # Index of all migrations (empty at v1.0.0)
+│   └── scripts/                 # Automated transform scripts per version bump
 ├── resources/
 │   ├── templates/               # YAML schemas, document templates, configs
+│   ├── schemas/
+│   │   └── archive/             # Archived schemas per version (for migration diffing)
 │   └── examples/                # Sample inputs and outputs
 ├── scripts/                     # Shell scripts for build/convert/validate
+├── CHANGELOG.md                 # Version history
 └── README.md                    # What the plugin does, how to install, how to use
 ```
 
@@ -541,3 +547,80 @@ These apply to EVERY plugin:
 8. **Brand data flows through brand-context-loader.** No re-asking the user for brand information that's already in brand-reference.yml.
 9. **Skills are built one at a time.** One session per skill, `/compact` between them.
 10. **Specs live in docs/, not in prompts.** Tell Claude to read the file, don't paste content.
+11. **Every plugin output is version-stamped.** All YAML output files get a `_meta` block with plugin version and schema version.
+12. **Every plugin has a migrations/ directory.** Even if empty at v1.0.0. Contains MIGRATION-REGISTRY.yml and per-version migration definitions.
+13. **Data loaders check version compatibility.** Before loading project data, verify the file version matches the plugin version. Block on major mismatches.
+
+---
+
+## 12. Plugin Versioning
+
+Every plugin tracks its version and supports migration of project data when
+the plugin is updated.
+
+### Required Structure
+
+```
+packages/[plugin-name]/
+  .claude-plugin/
+    plugin.json              # "version": "1.0.0"
+  migrations/
+    MIGRATION-REGISTRY.yml   # Index of all migrations
+    v1.0.0-to-v1.1.0.md     # Migration guide per version bump
+    v1.1.0-to-v2.0.0.md
+    scripts/
+      v1.0.0-to-v1.1.0.sh   # Automated transform script
+      v1.1.0-to-v2.0.0.sh
+  resources/
+    schemas/
+      archive/
+        v1.0.0.yml           # Archived schema per version (for diffing)
+        v1.1.0.yml
+  CHANGELOG.md               # Human-readable version history
+```
+
+### Version Stamping
+
+Every YAML output file (brand-reference.yml, seo-strategy.yml, etc.) must 
+include a `_meta` block:
+
+```yaml
+_meta:
+  plugin_name: "brand-guideline"
+  plugin_version: "1.0.0"
+  schema_version: "1.0.0"
+  created_at: "2026-03-01T12:00:00Z"
+  updated_at: "2026-03-01T12:00:00Z"
+  migrated_from: null
+```
+
+The final skill in any plugin's generation pipeline must call the 
+version-meta-stamper to add/update this block.
+
+### Compatibility Checking
+
+Data loaders (like brand-context-loader) must call the 
+version-compatibility-checker before loading data:
+- **Exact/patch match:** proceed
+- **Minor mismatch:** warn, suggest migration, proceed
+- **Major mismatch:** block, require migration
+
+### Bumping Versions
+
+Use `/plugin:version [name] bump [major|minor|patch]`:
+- Archives the current schema
+- Generates migration files (for minor/major)
+- Updates CHANGELOG.md
+
+### Migrating Projects
+
+Use `/plugin:migrate [name] --project [project]`:
+- Backs up the project first (always)
+- Applies migration chain step by step
+- Runs verification after migration
+- Supports --dry-run and --rollback
+
+### Semver Rules
+- **Patch** (1.0.0 → 1.0.1): Bugfix only. No schema change. No migration needed.
+- **Minor** (1.0.0 → 1.1.0): New fields added. Backwards compatible. Auto-safe migration.
+- **Major** (1.0.0 → 2.0.0): Breaking changes (fields removed/renamed/restructured). Requires user review.
