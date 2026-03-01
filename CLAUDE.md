@@ -45,7 +45,8 @@ shared/
 - [x] content-rules skill
 - [x] social-media skill
 - [x] compile-and-export skill (brand manual, docx, asset script, web integration, preview)
-- [ ] Commands: brand-generate, brand-analyze, brand-audit, brand-switch ← **Next step**
+- [x] Command: brand-generate (orchestrates full pipeline, interactive + plan-based)
+- [ ] Commands: brand-analyze, brand-audit, brand-switch ← **Next step**
 - [ ] Brand manual template + export
 
 ## Specs
