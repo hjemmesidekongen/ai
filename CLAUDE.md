@@ -157,15 +157,15 @@ docs/
 - [x] Step 37: Command — /seo:export
 - [x] Step 38: End-to-end test
 
-### Part 5: Plugin Versioning & Migration (pending)
+### Part 5: Plugin Versioning & Migration ✅
 - [x] Step 39: Skill — version-meta-stamper
-- [ ] Step 40: Skill — version-compatibility-checker
-- [ ] Step 41: Skill — migration-guide-generator
-- [ ] Step 42: /plugin:migrate command
-- [ ] Step 43: /plugin:version command
-- [ ] Step 44: Retrofit all plugins to v1.0.0 + integration test
+- [x] Step 40: Skill — version-compatibility-checker
+- [x] Step 41: Skill — migration-guide-generator
+- [x] Step 42: /plugin:migrate command
+- [x] Step 43: /plugin:version command
+- [x] Step 44: Retrofit all plugins to v1.0.0 + integration test
 
-### Part 6: Brainstorm & Discovery (pending)
+### Part 6: Brainstorm & Discovery ✅
 - [x] Step 45: Skill — brainstorm-session
 - [x] Step 46: Skill — brainstorm-decision-writer
 - [x] Step 47: /brainstorm:start, /brainstorm:decide, /brainstorm:status commands
@@ -173,7 +173,7 @@ docs/
 - [x] Step 49: Update existing interview skills to read decisions
 - [x] Step 50: Test brainstorm-to-plugin flow end-to-end
 
-Next step: Step 40 — Skill: version-compatibility-checker (Part 5)
+Next step: All steps complete. Ready for new plugins or enhancements.
 
 ## Specs
 Read the relevant spec BEFORE implementing. Do NOT try to build everything at once.
