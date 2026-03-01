@@ -118,8 +118,8 @@ docs/
 ### Part 4: SEO Plugin (in progress)
 - [x] Step 24: seo-plugin scaffold + plugin.json
 - [x] Step 25: YAML schema + document templates
-- [ ] Step 26: Skill — project-interview
-- [ ] Step 27: Skill — keyword-research
+- [x] Step 26: Skill — project-interview
+- [x] Step 27: Skill — keyword-research
 - [ ] Step 28: Skill — competitor-analysis
 - [ ] Step 29: Skill — technical-seo
 - [ ] Step 30: Skill — on-page-optimization
@@ -132,7 +132,7 @@ docs/
 - [ ] Step 37: Command — /seo:export
 - [ ] Step 38: End-to-end test
 
-Next step: Step 26 — Skill — project-interview
+Next step: Step 28 — Skill — competitor-analysis
 
 ## Specs
 Read the relevant spec BEFORE implementing. Do NOT try to build everything at once.
