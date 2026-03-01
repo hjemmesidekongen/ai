@@ -42,8 +42,8 @@ shared/
 - [x] tone-of-voice skill
 - [x] visual-identity skill
 - [x] logo-design skill
-- [ ] content-rules skill ← **Next step**
-- [ ] social-media skill
+- [x] content-rules skill
+- [ ] social-media skill ← **Next step**
 - [ ] Commands: brand-generate, brand-analyze, brand-audit, brand-switch
 - [ ] Brand manual template + export
 
