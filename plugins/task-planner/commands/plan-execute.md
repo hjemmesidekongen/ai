@@ -232,11 +232,20 @@ When verification or QA fails:
 
 ```
 for round in 1..3:
+  0. Read state.yml errors array for this skill/wave.
+     For each blocking issue, check if a previous error entry exists
+     with the same skill + error text:
+       - If result is "unresolved" and next_approach is set:
+         USE next_approach instead of suggested_fix (avoid repeating failures)
+       - If the same approach was already tried and failed:
+         SKIP it and try an alternative strategy
+
   1. Report failures to user:
      "Verification failed for wave [N]. [count] blocking issues found."
+     If previous errors exist: "Previous attempts logged — using alternative approach."
 
   2. For each blocking issue:
-     - Show the issue and suggested_fix
+     - Show the issue and the fix to apply (next_approach from errors, or suggested_fix if first attempt)
      - Route back to the implementing task/agent
 
   3. Apply fixes:
@@ -250,6 +259,7 @@ for round in 1..3:
   6. If all pass: break out of loop, continue to next wave
 
   7. If still failing: increment round, try again
+     The verification-runner logs the failure to state.yml errors automatically.
 
 if round > 3:
   Escalate to human:

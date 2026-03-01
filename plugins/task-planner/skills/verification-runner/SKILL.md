@@ -315,6 +315,63 @@ Validates SEO requirements for generated web content.
 
 ---
 
+## Error Logging to state.yml
+
+When any check results in `status: "fail"`, the verification runner MUST log the failure to the `errors` array in state.yml. This ensures errors persist across `/compact` and session restarts.
+
+### Logging Procedure
+
+After producing the verification result, for each failed check:
+
+1. **Read state.yml** to get the current `errors` array.
+2. **Check for duplicates.** If an error with the same `skill` and `error` text already exists and has `result: "unresolved"`, do NOT add a duplicate. Instead, update the existing entry's `attempted_fix` and `next_approach`.
+3. **Append a new error entry** (if not a duplicate):
+
+```yaml
+errors:
+  - timestamp: "[ISO timestamp]"
+    skill: "[current phase/skill name from state.yml]"
+    error: "[check name]: [failure details from verification result]"
+    attempted_fix: "[suggested_fix from the check, or 'pending' if no fix attempted yet]"
+    result: "unresolved"
+    next_approach: "[suggested_fix text, so the next attempt knows what to try]"
+```
+
+4. **On successful re-run**, if a previously failed check now passes, find the matching error entry and update:
+
+```yaml
+    result: "resolved"
+    next_approach: null
+```
+
+### Example
+
+A checkpoint fails for missing viewBox on an SVG:
+
+```yaml
+# Added to state.yml errors array:
+errors:
+  - timestamp: "2026-03-01T10:30:00Z"
+    skill: "visual-identity"
+    error: "Icon SVGs exist with consistent viewBox: 2 missing viewBox attribute"
+    attempted_fix: "pending"
+    result: "unresolved"
+    next_approach: "Add viewBox=\"0 0 24 24\" to arrow-right.svg and chevron-down.svg"
+```
+
+After the fix is applied and re-verification passes:
+
+```yaml
+  - timestamp: "2026-03-01T10:30:00Z"
+    skill: "visual-identity"
+    error: "Icon SVGs exist with consistent viewBox: 2 missing viewBox attribute"
+    attempted_fix: "Added viewBox=\"0 0 24 24\" to arrow-right.svg and chevron-down.svg"
+    result: "resolved"
+    next_approach: null
+```
+
+---
+
 ## Error Handling
 
 ### Unknown Verification Type

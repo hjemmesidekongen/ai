@@ -191,7 +191,7 @@ Reference: packages/task-planner/resources/plugin-blueprint.md Sections 8, 13
   - Test: run session-recovery.sh with and without state.yml
   - Test: run check-wave-complete.sh with in_progress vs completed status
 
-- [ ] R2: task-planner — state schema + error persistence
+- [x] R2: task-planner — state schema + error persistence
   - Create resources/state-schema.yml (canonical schema for all plugins)
   - Add errors array to schema (timestamp, skill, error, attempted_fix, result, next_approach)
   - Update verification-runner SKILL.md to log failures to state.yml errors
@@ -233,7 +233,7 @@ Reference: packages/task-planner/resources/plugin-blueprint.md Sections 8, 13
   - Verify check-wave-complete.sh blocks premature stop
   - Verify plugin-scaffolder generates hooks + scripts for new plugins
 
-Next step: R2 — task-planner state schema + error persistence
+Next step: R3 — brand-guideline hooks + scripts + findings
 
 ## Specs
 Read the relevant spec BEFORE implementing. Do NOT try to build everything at once.
