@@ -26,6 +26,33 @@ Before starting this skill, read:
 2. `packages/task-planner/resources/plugin-blueprint.md` — Section 1 (Every Plugin Must Answer These Questions)
 3. `packages/task-planner/resources/verification-registry.yml` — for Q7 (standard verification types)
 
+## Pre-Interview: Load Brainstorm Decisions
+
+Before starting the interview, call the decision-reader skill to check if the
+user already made relevant decisions during a brainstorm session:
+
+- **Project:** the plugin name being designed
+- **Domains:** `technical`, `general`
+
+If decisions are found, adjust the interview flow:
+
+| Confidence | Behavior |
+|------------|----------|
+| **High** | Pre-fill the answer and show for quick confirmation: "From your brainstorm: [decision]. Still good? [Y/n]" — if confirmed, skip the question |
+| **Medium** | Present as starting point: "You were leaning toward: [decision]. Go with this, or explore further?" — if accepted, use it; otherwise ask normally with the decision as context |
+| **Low** | Mention as context when asking the question: "You mentioned [decision] during brainstorming. Let's discuss..." — then proceed with the normal question |
+| **Not found** | Ask normally — this is the default behavior without brainstorming |
+
+Use the decision-reader's `check_decision` method before each question to find
+matching decisions. For example, before asking Q1 (what does it do), check for
+decisions in the `technical` domain matching plugin purpose or scope.
+
+At the end, note which decisions were applied in design.yml:
+
+```yaml
+decisions_applied: [d3, d4]
+```
+
 ## Process
 
 ### Step 0 — Get the Idea

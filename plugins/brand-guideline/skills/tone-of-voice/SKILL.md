@@ -36,6 +36,33 @@ checkpoint:
 
 Phase 3 of brand generation. This skill translates the brand's identity (Phase 1) and audience (Phase 2) into a concrete voice framework: how the brand sounds, what it says, and what it never says. The output drives content creation, social media strategy, website copy, and all future brand communications.
 
+## Pre-Interview: Load Brainstorm Decisions
+
+Before starting the interview, call the decision-reader skill to check if the
+user already made relevant decisions during a brainstorm session:
+
+- **Project:** the brand name being generated
+- **Domains:** `brand-voice`
+
+If decisions are found, adjust the interview flow:
+
+| Confidence | Behavior |
+|------------|----------|
+| **High** | Pre-fill voice direction and show for quick confirmation: "From your brainstorm: [decision]. Still good? [Y/n]" — if confirmed, use the decision as the answer |
+| **Medium** | Present as starting point: "You were leaning toward: [decision]. Go with this, or explore further?" — if accepted, use it; otherwise ask normally with the decision as context |
+| **Low** | Mention as context when asking the question: "You mentioned [decision] during brainstorming. Let's discuss..." — then proceed with the normal question |
+| **Not found** | Ask normally — this is the default behavior without brainstorming |
+
+Voice decisions may pre-fill tone direction, formality level, personality
+attributes, or vocabulary preferences. Use the decision-reader's
+`check_decision` method before each question to find matching decisions.
+
+At the end, note which decisions were applied in state.yml:
+
+```yaml
+decisions_applied: [d2, d7]
+```
+
 ## Before You Start
 
 Read the brand's existing data from brand-reference.yml:

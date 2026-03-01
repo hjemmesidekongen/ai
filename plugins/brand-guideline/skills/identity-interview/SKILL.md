@@ -42,6 +42,33 @@ Phase 1 of brand generation. This is the first skill that runs — everything el
 - Keep the tone conversational and encouraging — this is a creative exercise, not a form.
 - After each answer, briefly reflect back what you understood before moving on. This catches misunderstandings early.
 
+## Pre-Interview: Load Brainstorm Decisions
+
+Before starting the interview, call the decision-reader skill to check if the
+user already made relevant decisions during a brainstorm session:
+
+- **Project:** the brand name being generated
+- **Domains:** `brand-identity`, `brand-audience`, `brand-voice`, `brand-visual`
+
+If decisions are found, adjust the interview flow:
+
+| Confidence | Behavior |
+|------------|----------|
+| **High** | Pre-fill the answer and show for quick confirmation: "From your brainstorm: [decision]. Still good? [Y/n]" — if confirmed, skip the question |
+| **Medium** | Present as starting point: "You were leaning toward: [decision]. Go with this, or explore further?" — if accepted, use it; otherwise ask normally with the decision as context |
+| **Low** | Mention as context when asking the question: "You mentioned [decision] during brainstorming. Let's discuss..." — then proceed with the normal question |
+| **Not found** | Ask normally — this is the default behavior without brainstorming |
+
+Use the decision-reader's `check_decision` method before each question to find
+matching decisions. For example, before asking about brand name, check for
+decisions matching the `brand_name` field in the `brand-identity` domain.
+
+At the end, note which decisions were applied in state.yml:
+
+```yaml
+decisions_applied: [d1, d2, d5]
+```
+
 ## Interview Flow
 
 The interview has 6 stages. Each stage produces data for a specific part of the schema.

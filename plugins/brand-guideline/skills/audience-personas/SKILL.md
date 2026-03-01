@@ -32,6 +32,33 @@ checkpoint:
 
 Phase 2 of brand generation. This skill builds on the identity foundation from Phase 1 to identify who the brand serves and create detailed personas. The output feeds directly into tone-of-voice (Phase 3), content rules, and social media strategy.
 
+## Pre-Interview: Load Brainstorm Decisions
+
+Before starting the interview, call the decision-reader skill to check if the
+user already made relevant decisions during a brainstorm session:
+
+- **Project:** the brand name being generated
+- **Domains:** `brand-audience`
+
+If decisions are found, adjust the interview flow:
+
+| Confidence | Behavior |
+|------------|----------|
+| **High** | Pre-fill persona details and show for quick confirmation: "From your brainstorm: [decision]. Still good? [Y/n]" — if confirmed, use the decision as the answer |
+| **Medium** | Present as starting point: "You were leaning toward: [decision]. Go with this, or explore further?" — if accepted, use it; otherwise ask normally with the decision as context |
+| **Low** | Mention as context when asking the question: "You mentioned [decision] during brainstorming. Let's discuss..." — then proceed with the normal question |
+| **Not found** | Ask normally — this is the default behavior without brainstorming |
+
+Audience decisions may pre-fill market type, segment names, persona
+demographics, or channel preferences. Use the decision-reader's
+`check_decision` method before each question to find matching decisions.
+
+At the end, note which decisions were applied in state.yml:
+
+```yaml
+decisions_applied: [d2, d6]
+```
+
 ## Before You Start
 
 Read the brand's identity data from brand-reference.yml:
