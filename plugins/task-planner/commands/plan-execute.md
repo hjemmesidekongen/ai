@@ -10,9 +10,9 @@ arguments:
   - name: mode
     type: string
     required: false
-    enum: [single, multi, auto]
+    enum: [single, subagent, auto]
     default: auto
-    description: "Execution mode. 'auto' checks for CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS."
+    description: "Execution mode. 'single' runs inline. 'subagent' dispatches each task via Task(). 'auto' defaults to subagent."
   - name: start_wave
     type: integer
     required: false
@@ -32,7 +32,7 @@ Executes a wave plan produced by `/plan:create`. Runs tasks wave by wave with ve
 
 ```
 /plan:execute .plans/brand-generate-acme-corp.yml
-/plan:execute .plans/site-build.yml --mode single
+/plan:execute .plans/site-build.yml --mode single    # inline, no subagents
 /plan:execute .plans/brand-generate-acme-corp.yml --start-wave 3
 /plan:execute .plans/brand-generate-acme-corp.yml --dry-run
 ```
@@ -53,19 +53,18 @@ Executes a wave plan produced by `/plan:create`. Runs tasks wave by wave with ve
 
 ```
 if --mode is "single":
-  mode = single_agent
-elif --mode is "multi":
-  mode = multi_agent
+  mode = inline
+elif --mode is "subagent":
+  mode = subagent
 elif --mode is "auto":
-  if CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS is set:
-    mode = multi_agent
-  else:
-    mode = single_agent
+  mode = subagent    # subagent is the default
 ```
 
+Write `execution_mode` to the plan file (if not already set).
+
 Report the selected mode to the user:
-- Single-agent: "Running in single-agent mode. Tasks execute sequentially."
-- Multi-agent: "Running in multi-agent mode. Parallel tasks will spawn separate agents."
+- Inline: "Running in inline mode. Tasks execute sequentially in this session."
+- Subagent: "Running in subagent mode. Each task dispatches as an isolated subagent via Task()."
 
 ### Step 3: Determine Starting Wave
 
@@ -96,11 +95,13 @@ updated_at: "[now]"
 
 If this is the first wave (`started_at` is null), set `started_at` to the current timestamp. For subsequent waves, leave `started_at` unchanged.
 
+In subagent mode, also record the current git HEAD as the wave's `base_sha` — this is needed later to scope quality review diffs.
+
 Report to user: `"Starting wave [N] of [total]: [task names]"`
 
 #### 4b. Run Tasks
 
-**Single-agent mode:**
+**Inline mode** (`--mode single`):
 
 Execute tasks within the wave sequentially, one at a time:
 
@@ -117,26 +118,80 @@ for each task_id in wave.tasks:
   6. Report: "Task [id]: [name] — completed"
 ```
 
-**Multi-agent mode:**
+**Subagent mode** (default):
 
-Spawn parallel agents for tasks in the wave:
+Dispatch each task as an isolated subagent via `Task()`. The orchestrator never
+does domain work — it reads the plan, fills templates, dispatches, and collects
+reports.
 
 ```
-for each task_id in wave.tasks (in parallel):
-  1. Spawn a worker agent (based on worker-agent.md template)
-  2. Pass: task definition, ownership entry, domain instructions
-  3. The agent executes independently
-  4. Collect the agent's task_complete report
+1. Record wave_base_sha = current git HEAD
+
+2. For each task in wave.tasks:
+   a. Read task definition from plan
+   b. Read ownership entry (owns/reads) from ownership registry
+   c. Read the task's SKILL.md content (≤80 lines from progressive disclosure)
+   d. Check state.yml errors array for previous attempts on this task
+   e. Build the read_list — files the subagent should read before starting:
+      - references/process.md (if skill has one)
+      - Files from the task's "reads" list (prior wave outputs)
+      - findings.md (if skill uses research persistence)
+   f. Fill worker-dispatch.md template (from resources/prompts/) with:
+      - task_id, task_name, task_definition_from_plan
+      - SKILL_MD_content (the lean SKILL.md)
+      - owns, reads (from ownership entry)
+      - read_list (assembled in step e)
+      - previous_errors (from state.yml, if retry)
+      - plan_name, model_tier
+   g. Record task_base_sha = current git HEAD
+   h. Dispatch via Task() tool:
+      - description: "Task {task_id}: {task_name}"
+      - prompt: the filled worker-dispatch.md template
+      - model: model_tier_map[task.model_tier]
+        (junior → haiku, senior → sonnet, principal → opus)
+      - subagent_type: "general-purpose"
+   i. Collect task_complete YAML report from subagent output
+   j. Record task.base_sha and task.commit_sha in the plan
+   k. Update task status in plan (completed | failed | blocked)
+   l. Report: "Task [id]: [name] — [status]"
+
+3. Record wave_head_sha = current git HEAD
+4. Write commit_range { base_sha: wave_base_sha, head_sha: wave_head_sha }
+   to the current phase in state.yml
 ```
 
-Wait for all agents in the wave to complete before proceeding.
+**Parallel dispatch** (when `wave.parallel == true` and mode is subagent):
 
-If any agent reports `status: "failed"`:
-- Log the failure
-- Mark the task as `failed` in the plan
-- Decide whether to abort the wave or continue with remaining tasks:
-  - If the failed task is a dependency for later waves: abort wave
-  - If the failed task is independent: continue, report failure at wave end
+```
+Instead of sequential step 2:
+  1. Build ALL Task() calls for every task in the wave (steps 2a–2f)
+  2. Issue ALL Task() calls in a single response
+     (Claude Code dispatches them concurrently)
+  3. Wait for ALL to return
+  4. Collect all task_complete reports
+  5. Run check-file-conflicts.sh against actual written files:
+     - If conflict detected: log error to state.yml, mark wave failed
+  6. Record all base_sha/commit_sha values
+```
+
+**Failure handling** (both modes):
+
+```
+If any task reports status == "failed" or "blocked":
+  - Mark the task as failed/blocked in the plan
+  - Log the error from the task_complete report
+  - Check if the failed task blocks later waves:
+    - If blocking: mark wave as failed, fall through to Step 5 (fix-and-retry)
+    - If non-blocking: continue with remaining tasks, report failure at wave end
+```
+
+**Model tier mapping reference:**
+
+| model_tier | Task() model | Typical use |
+|-----------|-------------|-------------|
+| `junior`  | `haiku`     | Scaffolding, templated output, spec compliance review |
+| `senior`  | `sonnet`    | Content generation, implementation, reasoning |
+| `principal` | `opus`    | Architecture, QA review, cross-cutting decisions |
 
 #### 4c. Two-Stage Verification
 
@@ -234,6 +289,17 @@ recovery_notes: |
   Next: Wave [N+1] with tasks [list].
 ```
 
+In subagent mode, also write the `commit_range` to the phase entry (if not already written in step 4b):
+
+```yaml
+# Phase entry in state.yml
+phases:
+  - name: "[phase name]"
+    commit_range:
+      base_sha: "[wave_base_sha from step 4b]"
+      head_sha: "[wave_head_sha from step 4b]"
+```
+
 **Plan file** (`[plan-name].yml`) — the persistent record:
 
 ```yaml
@@ -266,8 +332,9 @@ for round in 1..3:
      - Route back to the implementing task/agent
 
   3. Apply fixes:
-     - Single-agent: re-execute the failed task with the fix guidance
-     - Multi-agent: re-spawn the worker agent with the fix guidance
+     - Inline mode: re-execute the failed task with the fix guidance
+     - Subagent mode: re-dispatch Task() with error context populated
+       (worker-dispatch.md template fills previous_errors section)
 
   4. Re-run verification (only failed checks)
 
@@ -337,6 +404,6 @@ All 4 waves completed. All verifications passed. QA approved.
 | Plan file not found | Abort. Suggest running `/plan:create` first. |
 | Plan already completed | Report status. Ask if user wants to re-run. |
 | Previous wave not completed | Warn user. Suggest `/plan:resume` or `--start-wave`. |
-| Agent spawn fails (multi-agent) | Fall back to single-agent mode for this wave. |
+| Task() dispatch fails (subagent) | Fall back to inline mode for this task. Log error to state.yml. |
 | Task produces no output | Mark task as failed. Enter fix-and-retry. |
 | Session interrupted mid-wave | State is preserved. `/plan:resume` picks up from current wave. |
