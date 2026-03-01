@@ -32,7 +32,7 @@ PROMPT per skill — never "repeat this pattern."
 
 - Reads: design.yml, implementation-plan.md, addendum.md, asset-manifest.md (if exists), ecosystem-strategy.md (Section 4), plugin-blueprint.md (Sections 3–4)
 - Writes: `docs/[plugin-name]-execution-guide.md`
-- Checkpoint: data_validation (every skill has a dedicated prompt with 10 required elements, no forbidden phrases)
+- Checkpoint: data_validation (every skill has a dedicated prompt with 11 required elements, no forbidden phrases)
 - Dependencies: plugin-spec-generator
 
 ## Process Summary

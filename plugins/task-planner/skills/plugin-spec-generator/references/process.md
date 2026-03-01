@@ -257,6 +257,8 @@ Rules for build order:
 - Skills with no dependencies can be built in any order — pick the one that exercises the most code paths first
 - The final compilation/export skill is ALWAYS last
 - Every task MUST have a `model_tier` — no omissions
+- Tasks are dispatched as isolated subagents via Task() — each gets a fresh context
+  window with only its SKILL.md, ownership, and read list. Keep tasks self-contained.
 
 ### Verification Task Generation
 
@@ -280,6 +282,8 @@ one "QA review" task:
 - For non-final waves where `qa_frequency` is `"final"`, the quality review task
   can be omitted — only spec compliance is required
 - The final wave ALWAYS gets both verification tasks regardless of `qa_frequency`
+- In subagent mode, spec review receives per-task `base_sha..commit_sha` for
+  git-diff-scoped verification. Quality review receives the wave's `commit_range`.
 
 ---
 

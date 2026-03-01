@@ -277,7 +277,7 @@ Reference: docs/subagent-execution-plan.md
 - [x] SE7: State management — orchestrator records commit SHAs, writes commit_range, error context from subagent reports
 - [x] SE8: Parallel wave dispatch — multiple Task() calls in same turn when wave.parallel == true
 - [x] SE9: Plugin blueprint update — Section 15: Subagent Execution
-- [ ] SE10: Plugin generator updates — execution guide generator + spec generator aware of subagent dispatch
+- [x] SE10: Plugin generator updates — execution guide generator + spec generator aware of subagent dispatch
 - [ ] SE11: Integration test — sequential dispatch (2-wave plan)
 - [ ] SE12: Integration test — parallel dispatch (parallel wave)
 - [ ] SE13: Integration test — failure and retry

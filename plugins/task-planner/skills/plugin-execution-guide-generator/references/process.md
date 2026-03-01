@@ -159,6 +159,13 @@ Required checks:
 - [Measurable check 2]
 - [Measurable check 3]
 
+Commit Protocol (Subagent Mode):
+When running as a subagent (dispatched via Task()):
+1. Stage only files in your ownership list
+2. Commit with message: `[plan_name]: [skill-name] [[task_id]]`
+3. Include commit SHA in your task_complete report
+When running inline: commit after verification passes.
+
 Verification (Two-Stage):
 Stage 1 — Spec Compliance (Haiku):
   Run spec-compliance-reviewer against this skill's outputs.
@@ -548,6 +555,7 @@ Before writing the final file, validate the generated execution guide:
    - If reads previous skill output: names exact fields
    - If skill will exceed 80 lines: contains `references/process.md` creation instruction
    - Contains two-stage verification block (Stage 1 spec compliance + Stage 2 quality review)
+   - Contains commit protocol section (subagent mode: stage owned files, commit with plan name, report SHA)
 
 3. **Exhaustiveness check:**
    - Search the entire guide for: "etc.", "similar", "and so on", "repeat this pattern", "same as above", "follow the same structure"
@@ -575,11 +583,11 @@ type: data_validation
 required_checks:
   - Every skill from design.yml has its own dedicated prompt section
     (no "repeat this pattern" or "same as above")
-  - Every prompt contains all 10 required elements:
+  - Every prompt contains all 11 required elements:
     spec file reference, create instruction, model tier recommendation,
     findings persistence section, error logging section, numbered process steps,
-    checkpoint with type and checks, two-stage verification block,
-    output declaration, CLAUDE.md update line
+    checkpoint with type and checks, commit protocol (subagent mode),
+    two-stage verification block, output declaration, CLAUDE.md update line
   - Every skill prompt has at least 5 numbered process steps
     that reference specific files and sections (not vague)
   - Every checkpoint has at least 2 measurable checks
