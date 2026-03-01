@@ -169,11 +169,11 @@ docs/
 - [x] Step 45: Skill — brainstorm-session
 - [x] Step 46: Skill — brainstorm-decision-writer
 - [x] Step 47: /brainstorm:start, /brainstorm:decide, /brainstorm:status commands
-- [ ] Step 48: Skill — decision-reader utility
+- [x] Step 48: Skill — decision-reader utility
 - [ ] Step 49: Update existing interview skills to read decisions
 - [ ] Step 50: Test brainstorm-to-plugin flow end-to-end
 
-Next step: Step 48 — decision-reader utility skill
+Next step: Step 49 — Update existing interview skills to read decisions
 
 ## Specs
 Read the relevant spec BEFORE implementing. Do NOT try to build everything at once.
