@@ -1,0 +1,877 @@
+<!-- ============================================================
+     BRAND MANUAL TEMPLATE
+     Used by: compile-and-export skill (Phase 9)
+     Data source: brand-reference.yml
+     Placeholder syntax: {{section.field}} or {{section.field[index].subfield}}
+     Iteration syntax: {{#each section.array}} ... {{/each}}
+     Conditional syntax: {{#if section.field}} ... {{/if}}
+
+     The compile-and-export skill reads brand-reference.yml, resolves
+     all placeholders, and writes the final brand-manual.md.
+     ============================================================ -->
+
+
+<!-- COVER PAGE -->
+
+# {{meta.brand_name}}
+
+> {{meta.tagline}}
+
+**Brand Guidelines**
+
+Version {{meta.version}} · {{meta.generated_date}}
+
+<!-- Cover logo: the compile-and-export skill inserts the primary logo here.
+     Source: visual.logo.primary or assets.logo.full_light -->
+![{{meta.brand_name}} Logo]({{visual.logo.primary}})
+
+---
+
+<!-- TABLE OF CONTENTS
+     Auto-generated from section headings by pandoc (--toc) or
+     by the compile-and-export skill scanning ## headings. -->
+
+## Table of Contents
+
+1. [Brand Foundation](#1-brand-foundation)
+2. [Target Audience](#2-target-audience)
+3. [Brand Voice](#3-brand-voice)
+4. [Color System](#4-color-system)
+5. [Typography](#5-typography)
+6. [Visual Identity](#6-visual-identity)
+7. [Logo Usage](#7-logo-usage)
+8. [Content Rules](#8-content-rules)
+9. [Social Media](#9-social-media)
+10. [Appendix — Asset Inventory](#appendix--asset-inventory)
+
+---
+
+
+<!-- ============================================================
+     SECTION 1 — BRAND FOUNDATION
+     Source: meta + identity
+     ============================================================ -->
+
+## 1. Brand Foundation
+
+### Mission
+
+{{identity.mission}}
+
+### Vision
+
+{{identity.vision}}
+
+### Core Values
+
+<!-- Source: identity.values[] — each has name + description -->
+
+| Value | What It Means |
+|-------|---------------|
+{{#each identity.values}}
+| **{{name}}** | {{description}} |
+{{/each}}
+
+### Brand Story
+
+<!-- Source: identity.brand_story — optional, may be multi-paragraph -->
+
+{{#if identity.brand_story}}
+{{identity.brand_story}}
+{{/if}}
+
+{{#unless identity.brand_story}}
+*Brand story not yet defined. Run the identity-interview skill to create one.*
+{{/unless}}
+
+### Brand Positioning Statement
+
+> For **{{identity.positioning.target}}**, {{meta.brand_name}} is the **{{identity.positioning.category}}** that **{{identity.positioning.differentiator}}** because **{{identity.positioning.proof}}**.
+
+### Competitive Landscape
+
+<!-- Source: identity.positioning — the positioning statement implicitly defines
+     the competitive landscape. The compile-and-export skill expands this
+     into a brief competitive context paragraph based on category + differentiator. -->
+
+{{meta.brand_name}} competes in the **{{identity.positioning.category}}** space. Our key differentiator is: *{{identity.positioning.differentiator}}*.
+
+---
+
+
+<!-- ============================================================
+     SECTION 2 — TARGET AUDIENCE
+     Source: audience
+     ============================================================ -->
+
+## 2. Target Audience
+
+### Audience Overview
+
+**Primary market:** {{audience.primary_market}}
+
+### Personas
+
+{{#each audience.personas}}
+
+---
+
+#### {{name}} {{#if @first}}*(Primary Persona)*{{/if}}
+
+> "{{quote}}"
+
+<!-- Persona photo placeholder — the compile-and-export skill can replace
+     this with a generated avatar or leave as placeholder for manual addition -->
+<!-- ![{{name}}](persona-placeholder.png) -->
+
+| | |
+|---|---|
+| **Role** | {{role}} |
+{{#if age_range}}
+| **Age Range** | {{age_range}} |
+{{/if}}
+{{#if content_preferences}}
+| **Content Preferences** | {{content_preferences}} |
+{{/if}}
+
+**Goals:**
+{{#each goals}}
+- {{this}}
+{{/each}}
+
+**Frustrations:**
+{{#each frustrations}}
+- {{this}}
+{{/each}}
+
+**Channels:**
+{{#each channels}}
+- {{this}}
+{{/each}}
+
+{{#if decision_factors}}
+**Decision Factors:**
+{{#each decision_factors}}
+- {{this}}
+{{/each}}
+{{/if}}
+
+{{/each}}
+
+---
+
+
+<!-- ============================================================
+     SECTION 3 — BRAND VOICE
+     Source: voice
+     ============================================================ -->
+
+## 3. Brand Voice
+
+### Voice Spectrum
+
+<!-- Source: voice.spectrum — each dimension is a 1-10 scale.
+     Visual bars are rendered as filled/empty blocks:
+     █ = filled (value), ░ = empty (10 - value) -->
+
+| Dimension | Level | |
+|-----------|-------|-|
+| Formality | {{voice.spectrum.formality}}/10 | {{voice.spectrum.formality_bar}} |
+| Humor | {{voice.spectrum.humor}}/10 | {{voice.spectrum.humor_bar}} |
+| Enthusiasm | {{voice.spectrum.enthusiasm}}/10 | {{voice.spectrum.enthusiasm_bar}} |
+| Technicality | {{voice.spectrum.technicality}}/10 | {{voice.spectrum.technicality_bar}} |
+
+<!-- Note: the _bar placeholders are generated by the compile-and-export skill
+     using this formula: "█" repeated N times + "░" repeated (10-N) times.
+     Example: formality=7 → "███████░░░" -->
+
+### Voice Attributes
+
+<!-- Source: voice.personality[] — each has attribute, not, description -->
+
+| We Are | We Are NOT | What This Means |
+|--------|-----------|-----------------|
+{{#each voice.personality}}
+| **{{attribute}}** | {{not}} | {{description}} |
+{{/each}}
+
+### Key Messages
+
+**Tagline:** {{voice.messaging.tagline}}
+
+**Value Propositions:**
+{{#each voice.messaging.value_propositions}}
+- {{this}}
+{{/each}}
+
+**Elevator Pitch:**
+
+{{voice.messaging.elevator_pitch}}
+
+{{#if voice.messaging.boilerplate}}
+**Boilerplate (About Us):**
+
+{{voice.messaging.boilerplate}}
+{{/if}}
+
+### Channel Variations
+
+<!-- The compile-and-export skill generates a subsection per channel by combining:
+     - voice.personality (base voice)
+     - social.platforms[].tone_adjustment (platform-specific shifts)
+     - content.content_types[].tone_adjustment (format-specific shifts)
+
+     This shows how the base voice adapts across channels. -->
+
+{{#each channel_variations}}
+#### {{channel_name}}
+**Tone shift:** {{tone_adjustment}}
+**Example:** {{example}}
+{{/each}}
+
+### Vocabulary Guide
+
+{{#if content.terminology.preferred}}
+| Use This | Not This | Context |
+|----------|----------|---------|
+{{#each content.terminology.preferred}}
+| **{{term}}** | {{not}} | {{context}} |
+{{/each}}
+{{/if}}
+
+{{#if content.terminology.industry_terms}}
+**Industry Terminology:**
+
+| Term | Definition |
+|------|-----------|
+{{#each content.terminology.industry_terms}}
+| **{{term}}** | {{definition}} |
+{{/each}}
+{{/if}}
+
+### Writing Samples
+
+| Context | Do This | Not This | Why |
+|---------|---------|----------|-----|
+{{#each voice.writing_samples}}
+| {{context}} | {{good}} | {{bad}} | {{why}} |
+{{/each}}
+
+---
+
+
+<!-- ============================================================
+     SECTION 4 — COLOR SYSTEM
+     Source: colors
+     ============================================================ -->
+
+## 4. Color System
+
+### Primary Palette
+
+<!-- Source: colors.primary[] — each has name, hex, rgb, hsl, use -->
+
+| Color | Hex | RGB | Usage |
+|-------|-----|-----|-------|
+{{#each colors.primary}}
+| **{{name}}** | `{{hex}}` | {{rgb}} | {{use}} |
+{{/each}}
+
+### Full Tint/Shade Scales
+
+<!-- Source: colors.primary[].scale — 10 steps from 50 (lightest) to 900 (darkest).
+     The compile-and-export skill renders these as a visual scale table. -->
+
+{{#each colors.primary}}
+#### {{name}} Scale
+
+| 50 | 100 | 200 | 300 | 400 | 500 | 600 | 700 | 800 | 900 |
+|----|-----|-----|-----|-----|-----|-----|-----|-----|-----|
+| `{{scale.50}}` | `{{scale.100}}` | `{{scale.200}}` | `{{scale.300}}` | `{{scale.400}}` | `{{scale.500}}` | `{{scale.600}}` | `{{scale.700}}` | `{{scale.800}}` | `{{scale.900}}` |
+
+{{/each}}
+
+{{#if colors.secondary}}
+### Secondary Palette
+
+| Color | Hex | RGB | Usage |
+|-------|-----|-----|-------|
+{{#each colors.secondary}}
+| **{{name}}** | `{{hex}}` | {{rgb}} | {{use}} |
+{{/each}}
+
+{{#each colors.secondary}}
+#### {{name}} Scale
+
+| 50 | 100 | 200 | 300 | 400 | 500 | 600 | 700 | 800 | 900 |
+|----|-----|-----|-----|-----|-----|-----|-----|-----|-----|
+| `{{scale.50}}` | `{{scale.100}}` | `{{scale.200}}` | `{{scale.300}}` | `{{scale.400}}` | `{{scale.500}}` | `{{scale.600}}` | `{{scale.700}}` | `{{scale.800}}` | `{{scale.900}}` |
+
+{{/each}}
+{{/if}}
+
+{{#if colors.accent}}
+### Accent Palette
+
+| Color | Hex | RGB | Usage |
+|-------|-----|-----|-------|
+{{#each colors.accent}}
+| **{{name}}** | `{{hex}}` | {{rgb}} | {{use}} |
+{{/each}}
+{{/if}}
+
+### Neutrals
+
+| Color | Hex | Usage |
+|-------|-----|-------|
+{{#each colors.neutrals}}
+| **{{name}}** | `{{hex}}` | {{use}} |
+{{/each}}
+
+### Semantic Colors
+
+{{#if colors.semantic}}
+| Purpose | Color | Hex |
+|---------|-------|-----|
+| Success | {{colors.semantic.success}} | `{{colors.semantic.success}}` |
+| Warning | {{colors.semantic.warning}} | `{{colors.semantic.warning}}` |
+| Error | {{colors.semantic.error}} | `{{colors.semantic.error}}` |
+| Info | {{colors.semantic.info}} | `{{colors.semantic.info}}` |
+
+> Every semantic color must be paired with an icon or text label. Never rely on color alone to convey meaning.
+{{/if}}
+
+{{#unless colors.semantic}}
+*Semantic colors not yet defined.*
+{{/unless}}
+
+### Color Proportions
+
+{{#if colors.proportions}}
+**Rule:** {{colors.proportions.rule}}
+
+| Role | Color |
+|------|-------|
+| Dominant (60%) | {{colors.proportions.dominant}} |
+| Secondary (30%) | {{colors.proportions.secondary}} |
+| Accent (10%) | {{colors.proportions.accent}} |
+{{/if}}
+
+### Contrast Matrix — Accessibility
+
+<!-- Source: colors.primary[].accessible_pairs + colors.accessibility[]
+     The compile-and-export skill combines both sources into one matrix.
+     Every foreground/background pair is listed with its contrast ratio
+     and WCAG pass/fail status. -->
+
+| Pair | Foreground | Background | Ratio | AA Normal | AA Large | AAA Normal |
+|------|-----------|------------|-------|-----------|----------|------------|
+{{#each contrast_matrix}}
+| {{use}} | `{{foreground}}` | `{{background}}` | {{contrast_ratio}}:1 | {{wcag_aa_normal_icon}} | {{wcag_aa_large_icon}} | {{wcag_aaa_normal_icon}} |
+{{/each}}
+
+<!-- Icons: ✓ = passes, ✗ = fails
+     The compile-and-export skill replaces boolean true/false with ✓/✗ -->
+
+**WCAG 2.2 Thresholds:**
+- AA Normal text (under 18px): 4.5:1
+- AA Large text (18px+ or 14px bold): 3:1
+- AAA Normal text: 7:1
+
+### Colorblind Safety
+
+<!-- Source: colors.primary[].colorblind_notes -->
+
+{{#each colors.primary}}
+**{{name}}:**
+- Protanopia (red-blind): {{colorblind_notes.protanopia}}
+- Deuteranopia (green-blind): {{colorblind_notes.deuteranopia}}
+- Tritanopia (blue-blind): {{colorblind_notes.tritanopia}}
+
+{{/each}}
+
+### Dark Mode
+
+{{#if colors.dark_mode}}
+#### Background Surfaces
+
+| Surface | Hex | Usage |
+|---------|-----|-------|
+| Base | `{{colors.dark_mode.background.base}}` | Page background |
+| Surface | `{{colors.dark_mode.background.surface}}` | Cards, panels |
+| Elevated | `{{colors.dark_mode.background.elevated}}` | Modals, dropdowns |
+
+#### Text Colors
+
+| Level | Hex |
+|-------|-----|
+| Primary | `{{colors.dark_mode.text.primary}}` |
+| Secondary | `{{colors.dark_mode.text.secondary}}` |
+| Muted | `{{colors.dark_mode.text.muted}}` |
+
+{{#if colors.dark_mode.brand_adjustments}}
+#### Brand Color Adjustments
+
+| Original | Dark Mode | Reason |
+|----------|-----------|--------|
+{{#each colors.dark_mode.brand_adjustments}}
+| `{{original}}` | `{{dark_mode}}` | {{reason}} |
+{{/each}}
+{{/if}}
+
+#### Dark Mode Contrast Pairs
+
+| Pair | Foreground | Background | Ratio | AA Normal | AA Large |
+|------|-----------|------------|-------|-----------|----------|
+{{#each colors.dark_mode.accessible_pairs}}
+| {{use}} | `{{foreground}}` | `{{background}}` | {{contrast_ratio}}:1 | {{wcag_aa_normal_icon}} | {{wcag_aa_large_icon}} |
+{{/each}}
+{{/if}}
+
+{{#unless colors.dark_mode}}
+*Dark mode palette not yet defined.*
+{{/unless}}
+
+---
+
+
+<!-- ============================================================
+     SECTION 5 — TYPOGRAPHY
+     Source: typography
+     ============================================================ -->
+
+## 5. Typography
+
+### Primary Font: {{typography.primary.family}}
+
+**Use:** {{typography.primary.use}}
+**Source:** {{typography.primary.source}}
+
+**Available Weights:**
+{{#each typography.primary.weights}}
+- {{this}}
+{{/each}}
+
+<!-- Font specimen: the compile-and-export skill generates sample text
+     at multiple weights. In docx this uses the actual font if installed;
+     in markdown it's represented textually. -->
+
+{{#if typography.secondary}}
+### Secondary Font: {{typography.secondary.family}}
+
+**Use:** {{typography.secondary.use}}
+**Source:** {{typography.secondary.source}}
+
+**Available Weights:**
+{{#each typography.secondary.weights}}
+- {{this}}
+{{/each}}
+{{/if}}
+
+### Type Scale
+
+| Level | Size | Weight | Line Height | Usage |
+|-------|------|--------|-------------|-------|
+{{#each typography.scale}}
+| {{level}} | {{size}} | {{weight}} | {{line_height}} | {{use}} |
+{{/each}}
+
+### Font Pairing Rationale
+
+<!-- The compile-and-export skill generates this paragraph from the primary
+     and secondary font data, explaining why these fonts complement each other.
+     Considers: contrast (serif vs sans-serif), x-height compatibility,
+     mood alignment with voice personality. -->
+
+{{font_pairing_rationale}}
+
+---
+
+
+<!-- ============================================================
+     SECTION 6 — VISUAL IDENTITY
+     Source: visual.imagery + visual.layout + assets.icon_library
+     ============================================================ -->
+
+## 6. Visual Identity
+
+### Photography & Illustration Style
+
+{{#if visual.imagery}}
+**Style:** {{visual.imagery.style}}
+**Mood:** {{visual.imagery.mood}}
+
+{{#if visual.imagery.subjects}}
+**Preferred Subjects:** {{visual.imagery.subjects}}
+{{/if}}
+
+{{#if visual.imagery.avoid}}
+**Avoid:** {{visual.imagery.avoid}}
+{{/if}}
+{{/if}}
+
+### Iconography Rules
+
+<!-- Source: assets.icon_library.style -->
+
+{{#if assets.icon_library}}
+| Property | Value |
+|----------|-------|
+| Stroke width | {{assets.icon_library.style.stroke_width}} |
+| ViewBox | {{assets.icon_library.style.viewbox}} |
+| Corner radius | {{assets.icon_library.style.corner_radius}} |
+| Fill | {{assets.icon_library.style.fill}} |
+| Stroke color | {{assets.icon_library.style.stroke}} |
+| Line cap | {{assets.icon_library.style.stroke_linecap}} |
+| Line join | {{assets.icon_library.style.stroke_linejoin}} |
+
+**Total icons:** {{assets.icon_library.count}}
+**Icon sprite:** `{{assets.icon_library.sprite}}`
+{{/if}}
+
+### Shape Language
+
+<!-- The compile-and-export skill derives shape language from:
+     - Logo geometry (rounded vs angular, organic vs geometric)
+     - Icon style (stroke weight, corner radius)
+     - Layout principles
+     This is a narrative paragraph, not raw data. -->
+
+{{shape_language}}
+
+### Layout & Grid System
+
+{{#if visual.layout}}
+**Grid:** {{visual.layout.grid}}
+**Alignment:** {{visual.layout.alignment}}
+{{/if}}
+
+### Spacing Philosophy
+
+{{#if visual.layout.spacing_principle}}
+{{visual.layout.spacing_principle}}
+{{/if}}
+
+---
+
+
+<!-- ============================================================
+     SECTION 7 — LOGO USAGE
+     Source: visual.logo + assets.logo
+     ============================================================ -->
+
+## 7. Logo Usage
+
+### Primary Logo
+
+<!-- Logo image: the compile-and-export skill embeds the primary logo SVG
+     as an inline image reference. For docx, it converts to PNG first. -->
+
+![Primary Logo — Light Background]({{assets.logo.full_light}})
+
+### All Variants
+
+<!-- Source: visual.logo.variants[] + assets.logo.*
+     Displayed as a grid showing each variant with its label and use case. -->
+
+| Variant | Preview | Use On |
+|---------|---------|--------|
+{{#each visual.logo.variants}}
+| **{{name}}** | ![{{name}}]({{file}}) | {{use_on}} |
+{{/each}}
+
+**Additional variants:**
+
+| Variant | File |
+|---------|------|
+| Full logo — light bg | `{{assets.logo.full_light}}` |
+| Full logo — dark bg | `{{assets.logo.full_dark}}` |
+| Wordmark — light bg | `{{assets.logo.wordmark_light}}` |
+| Wordmark — dark bg | `{{assets.logo.wordmark_dark}}` |
+| Mark only | `{{assets.logo.mark}}` |
+| Monochrome mark | `{{assets.logo.mark_mono}}` |
+
+### Clear Space Rules
+
+<!-- Source: visual.logo.clear_space
+     Diagram placeholder: the compile-and-export skill generates an ASCII
+     or SVG diagram showing clear space around the logo. -->
+
+{{visual.logo.clear_space}}
+
+```
+     ┌─────────────────────────┐
+     │         ↕ X             │
+     │  ←X→ [  LOGO  ] ←X→    │
+     │         ↕ X             │
+     └─────────────────────────┘
+
+     X = minimum clear space
+```
+
+### Minimum Sizes
+
+| Context | Minimum Size |
+|---------|-------------|
+| Digital | {{visual.logo.minimum_size.digital}} |
+| Print | {{visual.logo.minimum_size.print}} |
+
+### Backgrounds: Approved and Prohibited
+
+**Approved backgrounds:**
+- White or light neutral backgrounds → use the light variant
+- Dark or brand-colored backgrounds → use the dark/reversed variant
+- Photography with sufficient contrast → use reversed variant with overlay if needed
+
+**Prohibited backgrounds:**
+- Busy patterns or photographs without overlay
+- Colors that clash with or are too similar to the logo colors
+- Low-contrast situations where the logo becomes hard to read
+
+### Misuse Examples — What NOT to Do
+
+<!-- Source: visual.logo.misuse_rules[] or assets.logo.misuse[] -->
+
+{{#each logo_misuse_rules}}
+{{@index_plus_one}}. **{{this}}**
+{{/each}}
+
+---
+
+
+<!-- ============================================================
+     SECTION 8 — CONTENT RULES
+     Source: content
+     ============================================================ -->
+
+## 8. Content Rules
+
+### Writing Standards
+
+{{#if content.grammar}}
+| Rule | Standard |
+|------|----------|
+{{#if content.grammar.oxford_comma}}
+| Oxford comma | {{content.grammar.oxford_comma}} |
+{{/if}}
+{{#if content.grammar.capitalization}}
+| Capitalization | {{content.grammar.capitalization}} |
+{{/if}}
+{{#if content.grammar.numbers}}
+| Numbers | {{content.grammar.numbers}} |
+{{/if}}
+{{#if content.grammar.date_format}}
+| Date format | {{content.grammar.date_format}} |
+{{/if}}
+{{/if}}
+
+### Writing Dos
+
+{{#each content.dos}}
+- {{this}}
+{{/each}}
+
+### Writing Don'ts
+
+{{#each content.donts}}
+- {{this}}
+{{/each}}
+
+### Content Types & Rules
+
+{{#if content.content_types}}
+{{#each content.content_types}}
+#### {{type}}
+
+| Property | Guideline |
+|----------|-----------|
+{{#if length}}
+| Length | {{length}} |
+{{/if}}
+{{#if tone_adjustment}}
+| Tone | {{tone_adjustment}} |
+{{/if}}
+{{#if structure}}
+| Structure | {{structure}} |
+{{/if}}
+
+{{/each}}
+{{/if}}
+
+### SEO Guidelines
+
+<!-- The compile-and-export skill generates SEO guidance from:
+     - voice.messaging (tagline, value propositions for meta descriptions)
+     - content.terminology (preferred terms = target keywords)
+     - audience.personas[].channels (where they search)
+     This is advisory — detailed SEO work is done by the seo-plugin. -->
+
+- Use preferred terminology (see Vocabulary Guide above) as primary keywords
+- Meta descriptions should reflect the brand voice — {{voice.spectrum.formality_description}}
+- Title tags: {{meta.brand_name}} | [Page Title] — [Tagline or Value Prop]
+- Align content with audience channels: {{audience_channels_summary}}
+
+### Readability Target
+
+<!-- The compile-and-export skill sets this based on audience type:
+     Consumer → Grade 8, B2B → Grade 10-12, Technical → Grade 12+ -->
+
+{{readability_target}}
+
+### Legal & Compliance
+
+- Always include trademark symbol (™ or ®) on first use of brand name in formal documents
+- Copyright notice: © {{current_year}} {{meta.brand_name}}. All rights reserved.
+- Disclaimer and terms of use must be reviewed by legal counsel before publication
+
+---
+
+
+<!-- ============================================================
+     SECTION 9 — SOCIAL MEDIA
+     Source: social
+     ============================================================ -->
+
+## 9. Social Media
+
+### Platform Strategy
+
+| Platform | Purpose | Frequency | Voice Adjustment |
+|----------|---------|-----------|-----------------|
+{{#each social.platforms}}
+| **{{name}}** | {{audience}} | {{frequency}} | {{tone_adjustment}} |
+{{/each}}
+
+{{#each social.platforms}}
+
+#### {{name}}
+
+**Audience:** {{audience}}
+**Tone:** {{tone_adjustment}}
+{{#if frequency}}**Frequency:** {{frequency}}{{/if}}
+
+**Post types:**
+{{#each post_types}}
+- {{this}}
+{{/each}}
+
+{{#if hashtag_strategy}}
+**Hashtag strategy:** {{hashtag_strategy}}
+{{/if}}
+
+{{#if visual_format}}
+**Visual format:** {{visual_format}}
+{{/if}}
+
+{{/each}}
+
+### Content Pillars
+
+<!-- The compile-and-export skill generates content pillars from:
+     - identity.values (value-driven content)
+     - audience.personas[].goals (solution-driven content)
+     - voice.messaging.value_propositions (proposition-driven content)
+     Each pillar has a theme, description, and example topics. -->
+
+{{#each content_pillars}}
+**{{name}}:** {{description}}
+- Example topics: {{#each examples}}{{this}}{{#unless @last}}, {{/unless}}{{/each}}
+
+{{/each}}
+
+### Hashtag Strategy
+
+{{#if social_hashtag_summary}}
+{{social_hashtag_summary}}
+{{/if}}
+
+### Visual Rules per Platform
+
+<!-- Source: social.platforms[].visual_format + assets.social -->
+
+| Platform | Image Dimensions | Profile Picture |
+|----------|-----------------|-----------------|
+{{#each social.platforms}}
+| {{name}} | {{visual_format}} | Use {{profile_picture_variant}} |
+{{/each}}
+
+### Engagement Rules
+
+{{#if social.engagement}}
+- **Response time:** {{social.engagement.response_time}}
+- **Tone in replies:** {{social.engagement.tone_in_replies}}
+- **Escalation:** {{social.engagement.escalation}}
+
+**Never:**
+{{#each social.engagement.never}}
+- {{this}}
+{{/each}}
+{{/if}}
+
+---
+
+
+<!-- ============================================================
+     APPENDIX — ASSET INVENTORY
+     Source: assets + file system scan
+     ============================================================ -->
+
+## Appendix — Asset Inventory
+
+### Generated Files
+
+| Category | Location | Files | Format | Notes |
+|----------|----------|-------|--------|-------|
+| Logo SVGs | `assets/logo/svg/` | {{logo_svg_count}} files | SVG | Master source — never delete |
+| Logo PNGs | `assets/logo/png/` | {{logo_png_count}} files | PNG @1x, @2x, @3x | Generated from SVGs |
+| Brand icons | `assets/brand-icon/` | {{brand_icon_count}} files | SVG | Simplified mark variants |
+| Favicons | `assets/favicons/` | {{favicon_count}} files | SVG, ICO, PNG | Includes dark mode SVG |
+| iOS icons | `assets/app-icons/ios/` | {{ios_icon_count}} files | PNG | All required sizes |
+| Android icons | `assets/app-icons/android/` | {{android_icon_count}} files | PNG | All density buckets |
+| PWA icons | `assets/app-icons/pwa/` | {{pwa_icon_count}} files | PNG | 72px–512px |
+| Social images | `assets/social/` | {{social_image_count}} files | PNG | OG, Twitter, LinkedIn |
+| Icon library | `assets/icons/individual/` | {{icon_library_count}} files | SVG | Custom brand icons |
+
+### Quick Reference
+
+<!-- One-page summary of the most commonly needed brand elements -->
+
+| Element | Value |
+|---------|-------|
+| Brand name | {{meta.brand_name}} |
+| Tagline | {{meta.tagline}} |
+| Primary color | `{{colors.primary[0].hex}}` |
+| Secondary color | {{#if colors.secondary}}`{{colors.secondary[0].hex}}`{{/if}}{{#unless colors.secondary}}—{{/unless}} |
+| Primary font | {{typography.primary.family}} |
+| Secondary font | {{#if typography.secondary}}{{typography.secondary.family}}{{/if}}{{#unless typography.secondary}}—{{/unless}} |
+| Logo (light bg) | `{{assets.logo.full_light}}` |
+| Logo (dark bg) | `{{assets.logo.full_dark}}` |
+| Logo mark | `{{assets.logo.mark}}` |
+| Favicon | `{{assets.favicons.svg}}` |
+| Voice attributes | {{voice_attributes_summary}} |
+
+### Regenerating Assets
+
+PNG assets are generated from SVG masters using the included script:
+
+```bash
+# Install ImageMagick (if not already installed):
+#   macOS:  brew install imagemagick
+#   Linux:  apt-get install imagemagick
+
+# Generate all PNGs from SVG masters:
+./scripts/generate-assets.sh ~/.claude/brands/{{meta.brand_slug}}
+```
+
+### Web Integration
+
+Copy the contents of `html-head-snippet.html` into your site's `<head>`:
+
+```bash
+cat ~/.claude/brands/{{meta.brand_slug}}/html-head-snippet.html
+```
+
+---
+
+*Generated by /brand:generate — {{meta.brand_name}} Brand Guidelines v{{meta.version}}*
+*{{meta.generated_date}}*

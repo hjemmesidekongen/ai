@@ -49,7 +49,7 @@ shared/
 - [x] Command: brand-analyze (reverse-engineer guidelines from existing materials)
 - [x] Command: brand-switch (set active brand context for all plugins)
 - [x] Command: brand-audit (audit brand data for gaps, inconsistencies, accessibility issues)
-- [ ] Brand manual template + export ← **Next step**
+- [x] Brand manual template + docx styles
 
 ## Specs
 Detailed specs are in /docs/ — read the relevant spec BEFORE implementing.
