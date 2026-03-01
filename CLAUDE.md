@@ -260,7 +260,7 @@ Reference: packages/task-planner/resources/plugin-blueprint.md Sections 8, 13
 
 ### Two-Stage Verification ✅ Complete
 
-### Subagent-Driven Execution (pending)
+### Subagent-Driven Execution ✅
 
 Upgrades plan-execute to dispatch each task as an isolated subagent via Task()
 tool. Parallel dispatch for independent tasks, per-task commits, model tier
@@ -278,10 +278,10 @@ Reference: docs/subagent-execution-plan.md
 - [x] SE8: Parallel wave dispatch — multiple Task() calls in same turn when wave.parallel == true
 - [x] SE9: Plugin blueprint update — Section 15: Subagent Execution
 - [x] SE10: Plugin generator updates — execution guide generator + spec generator aware of subagent dispatch
-- [ ] SE11: Integration test — sequential dispatch (2-wave plan)
-- [ ] SE12: Integration test — parallel dispatch (parallel wave)
-- [ ] SE13: Integration test — failure and retry
-- [ ] SE14: Integration test — model tier enforcement
+- [x] SE11: Integration test — sequential dispatch (2-wave plan)
+- [x] SE12: Integration test — parallel dispatch (parallel wave)
+- [x] SE13: Integration test — failure and retry
+- [x] SE14: Integration test — model tier enforcement
 
 ## Specs
 Read the relevant spec BEFORE implementing. Do NOT try to build everything at once.
