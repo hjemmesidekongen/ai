@@ -32,14 +32,14 @@ PROMPT per skill — never "repeat this pattern."
 
 - Reads: design.yml, implementation-plan.md, addendum.md, asset-manifest.md (if exists), ecosystem-strategy.md (Section 4), plugin-blueprint.md (Sections 3–4)
 - Writes: `docs/[plugin-name]-execution-guide.md`
-- Checkpoint: data_validation (every skill has a dedicated prompt with 9 required elements, no forbidden phrases)
+- Checkpoint: data_validation (every skill has a dedicated prompt with 10 required elements, no forbidden phrases)
 - Dependencies: plugin-spec-generator
 
 ## Process Summary
 
 1. Collect inputs — index all data from design.yml, implementation plan, addendum, and asset manifest
 2. Determine step numbering — scaffold (1), schema (2), skills in build order (3–N), commands (N+1–M-1), end-to-end test (M)
-3. Generate per-skill prompts — one fully self-contained prompt per skill with spec reference, model tier, findings persistence, error logging, process steps, checkpoint, and CLAUDE.md update
+3. Generate per-skill prompts — one fully self-contained prompt per skill with spec reference, model tier, findings persistence, error logging, process steps, checkpoint, two-stage verification, and CLAUDE.md update
 4. Generate scaffold prompt (Step 1) — directory structure, plugin.json with hooks, session-recovery.sh, check-wave-complete.sh, README
 5. Generate schema + templates prompt (Step 2) — YAML schema, markdown template, DOCX styles if needed
 6. Generate command prompts — one per command with purpose, prerequisites, execution strategy, output, recovery

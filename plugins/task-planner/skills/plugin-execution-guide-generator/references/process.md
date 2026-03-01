@@ -159,6 +159,16 @@ Required checks:
 - [Measurable check 2]
 - [Measurable check 3]
 
+Verification (Two-Stage):
+Stage 1 — Spec Compliance (Haiku):
+  Run spec-compliance-reviewer against this skill's outputs.
+  Checks file existence, schema presence, non-empty content, file ownership, state consistency.
+  If FAIL: fix structural issues before proceeding. Do NOT run Stage 2.
+Stage 2 — Quality Review (Opus):
+  Only runs after Stage 1 passes.
+  Run qa-reviewer against this skill's outputs for content quality, brand coherence, and completeness.
+  If FAIL: address quality issues. If PASS_WITH_NOTES: review notes, decide whether to address.
+
 Then update CLAUDE.md: check off this step in the Progress section and set "Next step" to the following step. Commit everything.
 
 ---
@@ -174,6 +184,7 @@ Then update CLAUDE.md: check off this step in the Progress section and set "Next
 6. **Model tier is assigned.** Use `model_tier` from task plan if provided, otherwise: junior (Haiku) for scaffolding/template-copying; senior (Sonnet) for interview/research/content generation (DEFAULT); principal (Opus) for QA/verification/architecture. See `plugin-blueprint.md` Section 11a.
 7. **Progressive disclosure is respected.** If a skill will need more than 80 lines in its SKILL.md, the prompt instructs creation of a `references/process.md`. See `plugin-blueprint.md` Section 4.
 8. **Context engineering is mandatory.** Every skill prompt MUST include findings persistence (path, what to save, 2-Action Rule, format template) and error logging (4 standard rules) placed BEFORE the main process steps.
+9. **Two-stage verification is mandatory.** Every skill prompt MUST include the two-stage verification block after the checkpoint section: Stage 1 (spec-compliance-reviewer, Haiku) gates Stage 2 (qa-reviewer, Opus). Stage 1 failure skips Stage 2 and marks `failed_spec`. Stage 2 failure marks `failed_quality`.
 
 ---
 
@@ -536,6 +547,7 @@ Before writing the final file, validate the generated execution guide:
    - If brand-dependent: contains brand data sections list
    - If reads previous skill output: names exact fields
    - If skill will exceed 80 lines: contains `references/process.md` creation instruction
+   - Contains two-stage verification block (Stage 1 spec compliance + Stage 2 quality review)
 
 3. **Exhaustiveness check:**
    - Search the entire guide for: "etc.", "similar", "and so on", "repeat this pattern", "same as above", "follow the same structure"
@@ -563,10 +575,11 @@ type: data_validation
 required_checks:
   - Every skill from design.yml has its own dedicated prompt section
     (no "repeat this pattern" or "same as above")
-  - Every prompt contains all 9 required elements:
+  - Every prompt contains all 10 required elements:
     spec file reference, create instruction, model tier recommendation,
     findings persistence section, error logging section, numbered process steps,
-    checkpoint with type and checks, output declaration, CLAUDE.md update line
+    checkpoint with type and checks, two-stage verification block,
+    output declaration, CLAUDE.md update line
   - Every skill prompt has at least 5 numbered process steps
     that reference specific files and sections (not vague)
   - Every checkpoint has at least 2 measurable checks

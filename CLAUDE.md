@@ -255,9 +255,10 @@ Reference: packages/task-planner/resources/plugin-blueprint.md Sections 8, 13
 - [x] V2: Blueprint updated — two-stage verification flow documented in Section 5, new status values (failed_spec, failed_quality, passed_with_notes) added to state.yml schema
 - [x] V3: qa-agent updated to act as Stage 2 — only runs after Stage 1 passes, 5 quality checks, 3 verdict levels
 - [x] V4: verification-runner updated to orchestrate two-stage flow, plan-execute updated with combined 4c step
-- [ ] V5: Integration test — simulate Stage 1 fail (skips Stage 2), Stage 1 pass → Stage 2
+- [x] V5: Generators produce two-stage verification — execution guide generator includes two-stage block in per-skill prompts (10 required elements), spec generator produces split verification tasks (spec compliance junior + quality review principal with dependency). Full verification pass: all 6 check groups pass. spec-compliance-reviewer added to plugin.json.
+- [ ] V6: Integration test — simulate Stage 1 fail (skips Stage 2), Stage 1 pass → Stage 2
 
-Next step: V5 — integration test of two-stage verification flow.
+Next step: V6 — integration test of two-stage verification flow.
 
 ## Specs
 Read the relevant spec BEFORE implementing. Do NOT try to build everything at once.

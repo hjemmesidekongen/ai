@@ -38,7 +38,7 @@ and generates the complete spec documents for the new plugin.
 ## Process Summary
 
 1. Read and validate design.yml — must have all required fields and status "approved"
-2. Generate implementation plan (6 sections: overview, architecture, YAML schema, commands, skills, build order with model tiers and tier distribution summary)
+2. Generate implementation plan (6 sections: overview, architecture, YAML schema, commands, skills, build order with model tiers, tier distribution summary, and split verification tasks per skill)
 3. Generate domain addendum (5 sections: domain knowledge, quality standards, tools, validation criteria, common mistakes)
 4. Generate asset manifest if design.yml defines assets — skip entirely if none
 5. Register verification profile in verification-registry.yml — add new types if needed

@@ -258,6 +258,29 @@ Rules for build order:
 - The final compilation/export skill is ALWAYS last
 - Every task MUST have a `model_tier` — no omissions
 
+### Verification Task Generation
+
+For each skill in the build order, generate TWO verification tasks instead of
+one "QA review" task:
+
+```markdown
+| # | Task | Model Tier | Depends On |
+|---|------|------------|------------|
+| N | [skill-name] | senior | ... |
+| N+1 | [skill-name] spec compliance check | junior | [skill-name] |
+| N+2 | [skill-name] quality review | principal | [skill-name] spec compliance check |
+```
+
+**Rules:**
+- The spec compliance check (junior/Haiku) runs Stage 1 mechanical checks
+- The quality review (principal/Opus) runs Stage 2 judgment-based review
+- The quality review MUST depend on the spec compliance check — Stage 1 gates Stage 2
+- If Stage 1 fails, Stage 2 is skipped and the skill is marked `failed_spec`
+- If Stage 2 fails, the skill is marked `failed_quality`
+- For non-final waves where `qa_frequency` is `"final"`, the quality review task
+  can be omitted — only spec compliance is required
+- The final wave ALWAYS gets both verification tasks regardless of `qa_frequency`
+
 ---
 
 ### Step 3 — Generate Domain Addendum
@@ -457,6 +480,8 @@ required_checks:
   - Domain addendum has at least 5 common mistakes listed
   - If design.yml defines assets: asset manifest exists with file list and generation methods
   - Verification profile is registered in verification-registry.yml
+  - Build order generates split verification tasks: spec compliance (junior) + quality review (principal) per skill
+  - Quality review tasks depend on spec compliance tasks (Stage 1 gates Stage 2)
   - Cross-reference validation passes (Step 6 — all 7 consistency checks)
 on_fail: >
   Report which checks failed. For missing sections, generate them.

@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "Generic wave-based task planning with verification and QA. Used by other plugins to plan and execute complex work.",
   "commands": ["plan-create", "plan-execute", "plan-status", "plan-resume", "plugin-migrate", "plugin-version", "brainstorm-decide", "brainstorm-start", "brainstorm-status", "plugin-build", "plugin-create"],
-  "skills": ["wave-decomposer", "file-ownership", "verification-runner", "version-meta-stamper", "version-compatibility-checker", "migration-guide-generator", "brainstorm-decision-writer", "brainstorm-session", "decision-reader", "plugin-design-interview", "plugin-execution-guide-generator", "plugin-scaffolder", "plugin-spec-generator"],
+  "skills": ["wave-decomposer", "file-ownership", "verification-runner", "spec-compliance-reviewer", "version-meta-stamper", "version-compatibility-checker", "migration-guide-generator", "brainstorm-decision-writer", "brainstorm-session", "decision-reader", "plugin-design-interview", "plugin-execution-guide-generator", "plugin-scaffolder", "plugin-spec-generator"],
   "agents": ["qa-agent", "worker-agent"],
   "dependencies": [],
   "hooks": {
