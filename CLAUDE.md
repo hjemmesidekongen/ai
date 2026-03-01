@@ -158,7 +158,7 @@ docs/
 - [x] Step 38: End-to-end test
 
 ### Part 5: Plugin Versioning & Migration (pending)
-- [ ] Step 39: Skill — version-meta-stamper
+- [x] Step 39: Skill — version-meta-stamper
 - [ ] Step 40: Skill — version-compatibility-checker
 - [ ] Step 41: Skill — migration-guide-generator
 - [ ] Step 42: /plugin:migrate command
@@ -173,7 +173,7 @@ docs/
 - [x] Step 49: Update existing interview skills to read decisions
 - [x] Step 50: Test brainstorm-to-plugin flow end-to-end
 
-Next step: Step 39 — Skill: version-meta-stamper (Part 5)
+Next step: Step 40 — Skill: version-compatibility-checker (Part 5)
 
 ## Specs
 Read the relevant spec BEFORE implementing. Do NOT try to build everything at once.
