@@ -34,7 +34,7 @@ state:
   status:
     type: string
     required: true
-    enum: [pending, in_progress, completed, verified, failed]
+    enum: [pending, in_progress, completed, verified, failed, failed_spec, failed_quality]
     default: pending
     description: "Top-level execution status. Must be at column 0 (no indent) in YAML."
 
@@ -75,9 +75,9 @@ state:
       status:
         type: string
         required: true
-        enum: [pending, in_progress, completed, failed, skipped]
+        enum: [pending, in_progress, completed, failed, failed_spec, failed_quality, passed_with_notes, skipped]
         default: pending
-        description: "Phase-level status (nested, indented under phases array)"
+        description: "Phase-level status. failed_spec = Stage 1 failed; failed_quality = Stage 2 failed; passed_with_notes = both passed with concerns"
 
       started_at:
         type: string

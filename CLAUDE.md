@@ -253,11 +253,11 @@ Reference: packages/task-planner/resources/plugin-blueprint.md Sections 8, 13
 
 - [x] V1: spec-compliance-reviewer skill — Stage 1 mechanical checks (file existence, schema presence, non-empty, file ownership, state consistency). Includes references/process.md and references/check-templates.md.
 - [x] V2: Blueprint updated — two-stage verification flow documented in Section 5, new status values (failed_spec, failed_quality, passed_with_notes) added to state.yml schema
-- [ ] V3: qa-agent updated to act as Stage 2 — only runs after Stage 1 passes (next session)
-- [ ] V4: verification-runner updated to orchestrate two-stage flow (next session)
+- [x] V3: qa-agent updated to act as Stage 2 — only runs after Stage 1 passes, 5 quality checks, 3 verdict levels
+- [x] V4: verification-runner updated to orchestrate two-stage flow, plan-execute updated with combined 4c step
 - [ ] V5: Integration test — simulate Stage 1 fail (skips Stage 2), Stage 1 pass → Stage 2
 
-Next step: V3 — update qa-agent to act as Stage 2 quality reviewer (requires Stage 1 pass).
+Next step: V5 — integration test of two-stage verification flow.
 
 ## Specs
 Read the relevant spec BEFORE implementing. Do NOT try to build everything at once.

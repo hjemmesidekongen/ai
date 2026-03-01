@@ -138,63 +138,80 @@ If any agent reports `status: "failed"`:
   - If the failed task is a dependency for later waves: abort wave
   - If the failed task is independent: continue, report failure at wave end
 
-#### 4c. Run Verification
+#### 4c. Two-Stage Verification
 
-After all tasks in the wave complete (or after each task in single-agent mode if the profile specifies):
+After all tasks in the wave complete, run two-stage verification. Stage 1
+(mechanical) gates Stage 2 (quality). This saves cost by catching structural
+failures before invoking a principal-tier quality reviewer.
 
-1. Read the wave's `verification` block from the plan
-2. Call the `verification-runner` skill with the type and checks
-3. Process the result:
+**Stage 1: Spec Compliance** (model_tier: junior)
+
+1. Dispatch `spec-compliance-reviewer` skill with:
+   - Target skill's SKILL.md frontmatter (`writes`, `checkpoint`)
+   - Output files on disk
+   - state.yml and file-ownership map
+2. Process the spec compliance report:
 
 ```
-if verdict == "pass":
-  Update wave status → "completed"
-  Update verification.passed → true
-  Continue to next wave
-
-elif verdict == "pass_with_warnings":
-  Update wave status → "completed"
-  Update verification.passed → true
-  Log warnings for final report
-  Continue to next wave
-
-elif verdict == "fail":
-  Log blocking issues
+if status == "fail":
+  Update phase status → "failed_spec"
+  Log blocking issues to state.yml errors
   Enter fix-and-retry loop (see Step 5)
+  DO NOT proceed to Stage 2
 ```
 
-#### 4d. Run QA Review (If Required)
+If Stage 1 passes, proceed to Stage 2.
 
-Check if this wave requires QA review:
+**Stage 2: Quality Review** (model_tier: principal)
+
+Only runs after Stage 1 passes. Check if this wave requires quality review:
 
 ```
 if wave.qa_review is true:
-  run QA
+  run Stage 2
 elif verification_profile.qa_frequency == "every_wave":
-  run QA
+  run Stage 2
 elif this is the final wave:
-  run QA (always required for final wave)
+  run Stage 2 (always required for final wave)
 else:
-  skip QA for this wave
+  skip Stage 2 — mark phase "complete", continue to next wave
 ```
 
-When running QA:
+When running Stage 2:
 
-1. Spawn the `qa-agent` (from `agents/qa-agent.md`)
-2. Pass: the plan file, the wave number, the working directory
-3. The QA agent runs its 4-check protocol and returns a `qa_report`
+1. Spawn the `qa-agent` (from `agents/qa-agent.md`, model: opus)
+2. Pass: plan file, wave number, working directory, Stage 1 report
+3. The QA agent runs its 5-check quality protocol and returns a `qa_report`
 4. Process the report:
 
 ```
-if verdict == "pass":
+if verdict == "PASS":
+  Update phase status → "complete"
   Continue to next wave
 
-elif verdict == "pass_with_warnings":
-  Log warnings
+elif verdict == "PASS_WITH_NOTES":
+  Update phase status → "passed_with_notes"
+  Log notes for final report
   Continue to next wave
 
-elif verdict == "fail":
-  Enter fix-and-retry loop with QA issues (see Step 5)
+elif verdict == "FAIL":
+  Update phase status → "failed_quality"
+  Log blocking issues to state.yml errors
+  Enter fix-and-retry loop (see Step 5)
+```
+
+**Combined flow summary:**
+
+```
+Skill completes
+  → Stage 1: spec-compliance-reviewer (junior/Haiku)
+    → FAIL → mark failed_spec, fix-and-retry, skip Stage 2
+    → PASS → check if Stage 2 required
+      → Not required → mark complete, next wave
+      → Required → Stage 2: qa-agent (principal/Opus)
+        → FAIL → mark failed_quality, fix-and-retry
+        → PASS_WITH_NOTES → mark passed_with_notes, continue
+        → PASS → mark complete, continue
 ```
 
 #### 4e. Write Recovery Notes

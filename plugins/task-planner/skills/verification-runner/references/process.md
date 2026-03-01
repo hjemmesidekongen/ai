@@ -1,12 +1,55 @@
 # Verification Runner — Full Process
 
-Dispatches verification checks for completed waves. Takes a verification type and a list of checks from the plan, runs each check using the appropriate method, and returns a structured verdict.
+Orchestrates two-stage verification for completed waves. Stage 1 runs mechanical
+checks (spec-compliance-reviewer, junior/Haiku). Stage 2 runs quality review
+(qa-agent, principal/Opus) — only if Stage 1 passes.
 
 ## When This Skill Runs
 
 1. **After each wave completes** — `plan-execute` calls this skill with the wave's `verification` block.
-2. **On QA failure re-check** — After fixes are applied, the runner re-runs the failed checks.
+2. **On failure re-check** — After fixes are applied, the runner re-runs the failed stage.
 3. **On plan resume** — `plan-resume` re-runs verification for the last in-progress wave to confirm state.
+
+## Two-Stage Orchestration
+
+Before dispatching individual verification checks, the runner orchestrates the
+two-stage flow:
+
+### Stage 1: Spec Compliance (Mechanical)
+
+1. Dispatch `spec-compliance-reviewer` (model_tier: junior) with:
+   - Target skill's SKILL.md frontmatter (`writes`, `checkpoint`)
+   - Output files on disk, state.yml, file-ownership map
+2. If spec compliance returns `status: fail`:
+   - Update phase status → `failed_spec` in state.yml
+   - Log failures to state.yml `errors` array
+   - Return `verdict: fail` to caller immediately
+   - **Do NOT proceed to Stage 2**
+3. If spec compliance returns `status: pass`:
+   - Proceed to Stage 2 (if required)
+
+### Stage 2: Quality Review (Judgment)
+
+Only runs after Stage 1 passes. Check if quality review is required:
+
+```
+if wave.qa_review is true → run Stage 2
+elif verification_profile.qa_frequency == "every_wave" → run Stage 2
+elif this is the final wave → run Stage 2 (always required)
+else → skip Stage 2, mark complete, return pass
+```
+
+When running Stage 2:
+
+1. Dispatch `qa-agent` (model_tier: principal) with:
+   - Plan file, wave number, working directory
+   - Stage 1 compliance report (for reference)
+2. Process the qa_report:
+   - `PASS` → update phase status → `complete`, return `pass`
+   - `PASS_WITH_NOTES` → update phase status → `passed_with_notes`, return `pass_with_warnings`
+   - `FAIL` → update phase status → `failed_quality`, log to errors, return `fail`
+
+---
 
 ## Input
 
