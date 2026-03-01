@@ -57,3 +57,52 @@ Also requires `brand-guideline` to be installed and at least one brand generated
 - YAML output: `~/.claude/seo/[project-name]/seo-strategy.yml`
 - Documents: `~/.claude/seo/[project-name]/seo-strategy.md`
 - State tracking: `~/.claude/seo/[project-name]/state.yml`
+
+## Hooks
+
+| Hook | Trigger | Purpose |
+|------|---------|---------|
+| **PreToolUse** | Before any tool call | Re-reads `state.yml` to ensure the agent has current phase context and doesn't repeat completed work |
+| **Stop** | Before session ends | Prevents premature completion — blocks if the current phase hasn't passed its checkpoint |
+| **SessionStart** | When a session begins | Runs recovery: loads `state.yml`, reports progress, identifies the resume point |
+
+## Findings and Error Persistence
+
+### findings.md
+
+Research-heavy skills store intermediate findings in `~/.claude/seo/[project-name]/findings.md`:
+
+- **keyword-research** — seed keywords, search volume estimates, difficulty scores, long-tail variants
+- **competitor-analysis** — competitor URLs, ranking keywords, backlink profiles, content gaps
+- **technical-seo** — crawl results, performance metrics, indexing issues, structured data status
+
+This file persists between sessions and survives `/compact`, so research context isn't lost.
+
+### Error Tracking and 2-Action Rule
+
+Errors are logged to `state.yml` under each phase's checkpoint block. When a checkpoint fails, the skill gets at most **2 attempts** to fix it before escalating to the user. This applies especially to `keyword-research`, `competitor-analysis`, and `technical-seo` where external data quality can cause validation failures.
+
+## Brainstorm Integration
+
+If the user ran `/brainstorm:start` before `/seo:strategy`, the `project-interview` skill automatically checks for pre-existing decisions:
+
+- **Domain:** `seo` — for SEO goals, target keywords, audience segments, competitive focus
+- **Domain:** `brand-identity` — for brand positioning context that informs keyword strategy
+
+Decisions are matched by confidence level:
+- **High** — pre-filled and shown for quick confirmation
+- **Medium** — presented as a starting point
+- **Low** — mentioned as context when asking the question
+
+Applied decisions are tracked in `state.yml` under `decisions_applied`.
+
+## Version and Migration
+
+- **Current version:** 1.0.0 (set in `.claude-plugin/plugin.json`)
+- **Migrations directory:** `migrations/` with `MIGRATION-REGISTRY.yml`
+- **Archived schemas:** `resources/schemas/archive/v1.0.0.yml`
+- **Version stamping:** `compile-and-export` calls `version-meta-stamper` to add/update the `_meta` block in `seo-strategy.yml`
+- **Changelog:** `CHANGELOG.md` tracks version history
+
+To bump the version: `/plugin:version seo-plugin bump [major|minor|patch]`
+To migrate existing projects: `/plugin:migrate seo-plugin --project [name]`
