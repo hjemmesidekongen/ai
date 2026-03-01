@@ -43,8 +43,8 @@ shared/
 - [x] visual-identity skill
 - [x] logo-design skill
 - [x] content-rules skill
-- [ ] social-media skill ← **Next step**
-- [ ] Commands: brand-generate, brand-analyze, brand-audit, brand-switch
+- [x] social-media skill
+- [ ] Commands: brand-generate, brand-analyze, brand-audit, brand-switch ← **Next step**
 - [ ] Brand manual template + export
 
 ## Specs
