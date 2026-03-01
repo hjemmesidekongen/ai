@@ -233,7 +233,14 @@ Reference: packages/task-planner/resources/plugin-blueprint.md Sections 8, 13
   - Verify check-wave-complete.sh blocks premature stop
   - Verify plugin-scaffolder generates hooks + scripts for new plugins
 
-Next step: Context Engineering Retrofit complete. Ready for new plugins.
+### Ecosystem Standards
+
+- [x] S1: Progressive disclosure rule — SKILL.md 80-line limit, references/ overflow pattern, lean skill template, description quality checklist (blueprint Section 4)
+- [x] S2: Model tier schema — model_tier field in plan-schema.yml, mapping table + heuristics in blueprint Section 11a
+- [x] S3: Wave decomposer — Step 5a assigns model_tier to tasks using assignment rules + name-based heuristics
+- [x] S4: Worker agent — reads model_tier from task, surfaces recommendation in completion report
+
+Next step: Ecosystem standards complete. Ready for new plugins.
 
 ## Specs
 Read the relevant spec BEFORE implementing. Do NOT try to build everything at once.
