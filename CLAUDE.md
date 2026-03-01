@@ -154,13 +154,13 @@ docs/
 
 ### Part 5: Plugin Versioning & Migration (pending)
 - [x] Step 39: Skill — version-meta-stamper
-- [ ] Step 40: Skill — version-compatibility-checker
+- [x] Step 40: Skill — version-compatibility-checker
 - [ ] Step 41: Skill — migration-guide-generator
 - [ ] Step 42: /plugin:migrate command
 - [ ] Step 43: /plugin:version command
 - [ ] Step 44: Retrofit all plugins to v1.0.0 + integration test
 
-Next step: Step 40 — version-compatibility-checker skill
+Next step: Step 41 — migration-guide-generator skill
 
 ## Specs
 Read the relevant spec BEFORE implementing. Do NOT try to build everything at once.
