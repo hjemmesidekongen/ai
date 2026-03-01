@@ -152,15 +152,15 @@ docs/
 - [x] Step 37: Command — /seo:export
 - [x] Step 38: End-to-end test
 
-### Part 5: Plugin Versioning & Migration (pending)
+### Part 5: Plugin Versioning & Migration ✅
 - [x] Step 39: Skill — version-meta-stamper
 - [x] Step 40: Skill — version-compatibility-checker
 - [x] Step 41: Skill — migration-guide-generator
 - [x] Step 42: /plugin:migrate command
 - [x] Step 43: /plugin:version command
-- [ ] Step 44: Retrofit all plugins to v1.0.0 + integration test
+- [x] Step 44: Retrofit all plugins to v1.0.0 + integration test
 
-Next step: Step 44 — Retrofit all plugins to v1.0.0 + integration test
+All parts complete. Use /plugin:create and /plugin:build to add new plugins.
 
 ## Specs
 Read the relevant spec BEFORE implementing. Do NOT try to build everything at once.

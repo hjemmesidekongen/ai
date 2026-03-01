@@ -120,6 +120,48 @@ if file does not exist:
   No state to recover — start from phase 1 if generating
 ```
 
+### 3. Version Compatibility Check
+
+After loading brand-reference.yml and before returning data, call the
+version-compatibility-checker skill
+(packages/task-planner/skills/version-compatibility-checker/SKILL.md) to
+verify the file is compatible with the current plugin version.
+
+```
+brand_ref = read_yaml(brand_path + "/brand-reference.yml")
+
+# Check version compatibility
+result = version_compatibility_check(
+  data_file: brand_path + "/brand-reference.yml",
+  plugin_dir: "packages/brand-guideline/"
+)
+
+if result.severity == "ok" or result.severity == "info":
+  # Proceed normally — versions match or only patch difference
+  pass
+
+if result.severity == "warning":
+  # Show migration suggestion but continue
+  Report: result.message
+  # e.g. "This project was created with brand-guideline v1.0.0.
+  #  Current is v1.1.0. New features are available.
+  #  Run /plugin:migrate brand-guideline --project [brand] to update.
+  #  You can continue without migrating."
+
+if result.severity == "blocking":
+  # Stop — schema has breaking changes
+  Report: result.message
+  # e.g. "This project was created with brand-guideline v1.0.0.
+  #  Current is v2.0.0. The schema has breaking changes.
+  #  You must migrate before continuing.
+  #  Run /plugin:migrate brand-guideline --project [brand]"
+  STOP — do not proceed with loading data
+```
+
+**Legacy files (no `_meta` block):** The checker treats these as v0.0.0
+and returns a warning. The brand can still be loaded, but the user is
+advised to run `/plugin:migrate` to add version tracking.
+
 ## What Gets Loaded
 
 The full brand-reference.yml has these sections. Consuming plugins request only what they need:

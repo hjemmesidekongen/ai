@@ -1,0 +1,625 @@
+# SEO Strategy Schema
+# Defines the structure of seo-strategy.yml — the machine-readable
+# SEO strategy data file.
+#
+# Location: ~/.claude/seo/[project-name]/seo-strategy.yml
+# Producer: /seo:strategy
+# Consumer: /seo:audit, /seo:content-brief, /seo:export, other plugins
+
+meta:
+  type: object
+  required: true
+  description: "Strategy metadata and versioning"
+  properties:
+    plugin_name:
+      type: string
+      required: true
+      description: "Always 'seo-plugin'"
+    project_name:
+      type: string
+      required: true
+      description: "User's project identifier (kebab-case)"
+    created_at:
+      type: string
+      required: true
+      format: iso8601
+      description: "When the strategy was first created"
+    updated_at:
+      type: string
+      required: true
+      format: iso8601
+      description: "When the strategy was last modified"
+    version:
+      type: string
+      required: true
+      description: "Schema version (e.g. 1.0)"
+    generated_by:
+      type: string
+      required: true
+      description: "Plugin identifier (e.g. seo-plugin v1.0.0)"
+    brand_name:
+      type: string
+      required: false
+      description: "Brand name used for context (if any)"
+
+project_context:
+  type: object
+  required: true
+  description: "Project information gathered during the interview"
+  properties:
+    website_url:
+      type: string
+      required: true
+      format: url
+      description: "Target website URL"
+    industry:
+      type: string
+      required: true
+      description: "Business industry (e.g. SaaS, E-commerce, Agency)"
+    goals:
+      type: array
+      required: true
+      min_items: 2
+      description: "SEO objectives with measurable targets"
+      items:
+        goal:
+          type: string
+          required: true
+          description: "Goal description"
+        metric:
+          type: string
+          required: true
+          description: "Measurable metric name"
+        target:
+          type: string
+          required: true
+          description: "Target value"
+        timeframe:
+          type: string
+          required: true
+          description: "Target timeframe"
+    target_audience:
+      type: array
+      required: true
+      min_items: 2
+      description: "Audience segments with search behavior"
+      items:
+        segment:
+          type: string
+          required: true
+          description: "Segment name"
+        search_behavior:
+          type: string
+          required: true
+          enum: ["unaware", "problem-aware", "solution-aware", "product-aware"]
+          description: "Search awareness level"
+        preferred_content:
+          type: string
+          required: true
+          description: "Content format preference"
+    current_status:
+      type: object
+      required: true
+      description: "Current SEO assessment"
+      properties:
+        domain_authority:
+          type: number
+          required: true
+          minimum: 0
+          maximum: 100
+          description: "Estimated domain authority"
+        indexed_pages:
+          type: number
+          required: true
+          description: "Pages in search index"
+        top_keywords:
+          type: array
+          required: false
+          description: "Currently ranking keywords"
+        known_issues:
+          type: array
+          required: true
+          description: "Identified SEO problems"
+
+keywords:
+  type: object
+  required: true
+  description: "Keyword research results organized by category"
+  properties:
+    primary:
+      type: array
+      required: true
+      min_items: 5
+      description: "Main target keywords"
+      items:
+        keyword:
+          type: string
+          required: true
+        search_volume:
+          type: number
+          required: true
+          description: "Estimated monthly searches"
+        difficulty:
+          type: number
+          required: true
+          minimum: 0
+          maximum: 100
+          description: "Competition score"
+        search_intent:
+          type: string
+          required: true
+          enum: ["informational", "navigational", "commercial", "transactional"]
+        current_position:
+          type: number
+          required: false
+          description: "Current SERP position (null if not ranking)"
+        target_position:
+          type: number
+          required: false
+          description: "Target SERP position"
+        priority:
+          type: string
+          required: true
+          enum: ["high", "medium", "low"]
+    secondary:
+      type: array
+      required: true
+      min_items: 10
+      description: "Supporting keywords"
+      items:
+        keyword:
+          type: string
+          required: true
+        search_volume:
+          type: number
+          required: true
+        difficulty:
+          type: number
+          required: true
+          minimum: 0
+          maximum: 100
+        search_intent:
+          type: string
+          required: true
+          enum: ["informational", "navigational", "commercial", "transactional"]
+        current_position:
+          type: number
+          required: false
+        target_position:
+          type: number
+          required: false
+        priority:
+          type: string
+          required: true
+          enum: ["high", "medium", "low"]
+    long_tail:
+      type: array
+      required: true
+      min_items: 15
+      description: "Long-tail keywords"
+      items:
+        keyword:
+          type: string
+          required: true
+        search_volume:
+          type: number
+          required: true
+        difficulty:
+          type: number
+          required: true
+          minimum: 0
+          maximum: 100
+        search_intent:
+          type: string
+          required: true
+          enum: ["informational", "navigational", "commercial", "transactional"]
+        current_position:
+          type: number
+          required: false
+        target_position:
+          type: number
+          required: false
+        priority:
+          type: string
+          required: true
+          enum: ["high", "medium", "low"]
+
+competitors:
+  type: object
+  required: true
+  description: "Competitor analysis results"
+  properties:
+    analyzed:
+      type: array
+      required: true
+      min_items: 3
+      description: "Competitor profiles"
+      items:
+        domain:
+          type: string
+          required: true
+        domain_authority:
+          type: number
+          required: true
+          minimum: 0
+          maximum: 100
+        top_keywords:
+          type: array
+          required: true
+          min_items: 3
+          items:
+            keyword:
+              type: string
+              required: true
+            position:
+              type: number
+              required: true
+            estimated_traffic:
+              type: number
+              required: false
+        content_strengths:
+          type: array
+          required: true
+          min_items: 2
+        content_weaknesses:
+          type: array
+          required: true
+          min_items: 2
+        backlink_profile:
+          type: object
+          required: true
+          properties:
+            total_backlinks:
+              type: number
+              required: true
+            referring_domains:
+              type: number
+              required: true
+            top_sources:
+              type: array
+              required: false
+    content_gaps:
+      type: array
+      required: true
+      min_items: 5
+      description: "Opportunity keywords where competitors are weak"
+      items:
+        keyword:
+          type: string
+          required: true
+        gap_type:
+          type: string
+          required: true
+          enum: ["missing", "thin", "outdated"]
+        opportunity_score:
+          type: number
+          required: true
+          minimum: 0
+          maximum: 100
+        recommended_action:
+          type: string
+          required: true
+
+on_page:
+  type: object
+  required: true
+  description: "On-page SEO optimization rules"
+  properties:
+    title_tag:
+      type: object
+      required: true
+      properties:
+        pattern:
+          type: string
+          required: true
+        max_length:
+          type: number
+          required: true
+          maximum: 60
+        rules:
+          type: array
+          required: true
+          min_items: 2
+    meta_description:
+      type: object
+      required: true
+      properties:
+        pattern:
+          type: string
+          required: true
+        max_length:
+          type: number
+          required: true
+          maximum: 155
+        rules:
+          type: array
+          required: true
+          min_items: 2
+    heading_hierarchy:
+      type: object
+      required: true
+      properties:
+        h1:
+          type: object
+          required: true
+          properties:
+            rules:
+              type: array
+              required: true
+        h2:
+          type: object
+          required: true
+          properties:
+            rules:
+              type: array
+              required: true
+        h3:
+          type: object
+          required: true
+          properties:
+            rules:
+              type: array
+              required: true
+        h4:
+          type: object
+          required: true
+          properties:
+            rules:
+              type: array
+              required: true
+    internal_linking:
+      type: array
+      required: true
+      min_items: 3
+      items:
+        rule:
+          type: string
+          required: true
+        implementation:
+          type: string
+          required: true
+    schema_markup:
+      type: array
+      required: true
+      min_items: 2
+      items:
+        type:
+          type: string
+          required: true
+          description: "schema.org type name"
+        required_properties:
+          type: array
+          required: true
+        use_case:
+          type: string
+          required: true
+
+technical:
+  type: object
+  required: true
+  description: "Technical SEO checklist and targets"
+  properties:
+    core_web_vitals:
+      type: object
+      required: true
+      properties:
+        lcp:
+          type: object
+          required: true
+          properties:
+            target:
+              type: number
+              required: true
+              maximum: 2.5
+            unit:
+              type: string
+              required: true
+              enum: ["seconds"]
+            description:
+              type: string
+              required: true
+        fid:
+          type: object
+          required: true
+          properties:
+            target:
+              type: number
+              required: true
+              maximum: 100
+            unit:
+              type: string
+              required: true
+              enum: ["milliseconds"]
+            description:
+              type: string
+              required: true
+        cls:
+          type: object
+          required: true
+          properties:
+            target:
+              type: number
+              required: true
+              maximum: 0.1
+            unit:
+              type: string
+              required: true
+              enum: ["score"]
+            description:
+              type: string
+              required: true
+    checklist:
+      type: array
+      required: true
+      min_items: 10
+      items:
+        item:
+          type: string
+          required: true
+        priority:
+          type: string
+          required: true
+          enum: ["critical", "high", "medium", "low"]
+        status:
+          type: string
+          required: true
+          enum: ["pending", "in_progress", "done", "na"]
+        category:
+          type: string
+          required: true
+    mobile_requirements:
+      type: array
+      required: true
+      min_items: 4
+
+content_plan:
+  type: object
+  required: true
+  description: "Content strategy with topic clusters and calendar"
+  properties:
+    topic_clusters:
+      type: array
+      required: true
+      min_items: 3
+      items:
+        pillar:
+          type: object
+          required: true
+          properties:
+            title:
+              type: string
+              required: true
+            target_keyword:
+              type: string
+              required: true
+            word_count:
+              type: number
+              required: true
+              minimum: 3000
+              maximum: 6000
+            content_type:
+              type: string
+              required: true
+              enum: ["ultimate_guide", "how_to", "listicle", "case_study", "comparison", "tutorial"]
+        supporting_pages:
+          type: array
+          required: true
+          min_items: 3
+          items:
+            title:
+              type: string
+              required: true
+            target_keyword:
+              type: string
+              required: true
+            search_intent:
+              type: string
+              required: true
+              enum: ["informational", "navigational", "commercial", "transactional"]
+            word_count:
+              type: number
+              required: true
+            content_type:
+              type: string
+              required: true
+              enum: ["ultimate_guide", "how_to", "listicle", "case_study", "comparison", "tutorial"]
+            priority:
+              type: string
+              required: true
+              enum: ["high", "medium", "low"]
+    content_types:
+      type: array
+      required: true
+      min_items: 3
+      items:
+        type:
+          type: string
+          required: true
+        word_count_range:
+          type: string
+          required: true
+        structure:
+          type: string
+          required: true
+        seo_elements:
+          type: array
+          required: true
+    calendar:
+      type: object
+      required: true
+      properties:
+        cadence:
+          type: string
+          required: true
+        months_planned:
+          type: number
+          required: true
+          minimum: 3
+        schedule:
+          type: array
+          required: true
+          items:
+            month:
+              type: number
+              required: true
+            content:
+              type: array
+              required: true
+
+link_building:
+  type: object
+  required: true
+  description: "Link-building strategy and outreach plan"
+  properties:
+    strategies:
+      type: array
+      required: true
+      min_items: 3
+      items:
+        name:
+          type: string
+          required: true
+        description:
+          type: string
+          required: true
+        estimated_effort:
+          type: string
+          required: true
+          enum: ["low", "medium", "high"]
+        expected_impact:
+          type: string
+          required: true
+          enum: ["low", "medium", "high"]
+        timeline:
+          type: string
+          required: true
+        tactics:
+          type: array
+          required: true
+          min_items: 2
+    outreach_targets:
+      type: array
+      required: true
+      min_items: 5
+      items:
+        category:
+          type: string
+          required: true
+        criteria:
+          type: string
+          required: true
+        estimated_count:
+          type: number
+          required: true
+    content_promotion:
+      type: array
+      required: true
+      min_items: 3
+      items:
+        channel:
+          type: string
+          required: true
+        tactics:
+          type: array
+          required: true
+          min_items: 2

@@ -221,6 +221,17 @@ Update `seo-strategy.yml`:
 - Set `meta.updated_at` to current ISO 8601 timestamp
 - Set `meta.version` to "1.0"
 
+### Step 11: Version Stamp
+
+After writing seo-strategy.yml, call the version-meta-stamper skill
+(packages/task-planner/skills/version-meta-stamper/SKILL.md) to
+add/update the `_meta` block with the current plugin version.
+
+This ensures every seo-strategy.yml file is traceable to the plugin
+version that created it. The `_meta` block is added at the end of the
+file with `plugin_name: "seo-plugin"` and `plugin_version` set to
+the current version from `packages/seo-plugin/.claude-plugin/plugin.json`.
+
 ## Writing the Output
 
 After assembling the document, present a summary:
