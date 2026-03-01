@@ -11,12 +11,12 @@ interactive: false
 depends_on:
   - plugin-spec-generator
 reads:
-  - packages/[plugin-name]/design.yml
+  - plugins/[plugin-name]/design.yml
   - docs/[plugin-name]-implementation-plan.md
   - docs/[plugin-name]-addendum.md
   - docs/[plugin-name]-asset-manifest.md (if it exists)
   - docs/ecosystem-strategy.md (Section 4: Skill Prompt Template)
-  - packages/task-planner/resources/plugin-blueprint.md (Sections 3-4)
+  - plugins/task-planner/resources/plugin-blueprint.md (Sections 3-4)
 writes:
   - docs/[plugin-name]-execution-guide.md
 checkpoint_type: data_validation

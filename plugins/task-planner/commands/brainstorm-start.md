@@ -93,7 +93,7 @@ previous sessions.
 ### Step 4: Activate Brainstorm Mode
 
 Load the brainstorm-session skill
-(`packages/task-planner/skills/brainstorm-session/SKILL.md`).
+(`plugins/task-planner/skills/brainstorm-session/SKILL.md`).
 
 This changes Claude's behavior:
 - Sparring partner, not interviewer

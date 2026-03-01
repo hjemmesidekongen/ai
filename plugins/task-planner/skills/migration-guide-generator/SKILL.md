@@ -10,12 +10,12 @@ description: >
 interactive: false
 depends_on: []
 reads:
-  - "packages/[plugin]/resources/schemas/archive/v[old].yml"
-  - "packages/[plugin]/resources/templates/[plugin]-schema.yml"
+  - "plugins/[plugin]/resources/schemas/archive/v[old].yml"
+  - "plugins/[plugin]/resources/templates/[plugin]-schema.yml"
 writes:
-  - "packages/[plugin]/migrations/v[old]-to-v[new].md"
-  - "packages/[plugin]/migrations/scripts/v[old]-to-v[new].yml"
-  - "packages/[plugin]/migrations/MIGRATION-REGISTRY.yml"
+  - "plugins/[plugin]/migrations/v[old]-to-v[new].md"
+  - "plugins/[plugin]/migrations/scripts/v[old]-to-v[new].yml"
+  - "plugins/[plugin]/migrations/MIGRATION-REGISTRY.yml"
 checkpoint:
   type: data_validation
   required_checks:

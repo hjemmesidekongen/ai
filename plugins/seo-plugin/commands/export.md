@@ -68,7 +68,7 @@ No interactive phases. Single-pass execution:
 
 Use the compile-and-export skill's document generation logic:
 
-1. Read the template from `packages/seo-plugin/resources/templates/seo-strategy-template.md`
+1. Read the template from `plugins/seo-plugin/resources/templates/seo-strategy-template.md`
 2. Replace all template placeholders with data from seo-strategy.yml
 3. Generate all 7 sections:
    - Executive Summary (synthesized from project_context + keywords + competitors)

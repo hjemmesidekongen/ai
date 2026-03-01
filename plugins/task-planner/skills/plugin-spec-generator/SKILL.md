@@ -11,15 +11,15 @@ interactive: false
 depends_on:
   - plugin-design-interview
 reads:
-  - packages/[plugin-name]/design.yml
+  - plugins/[plugin-name]/design.yml
   - docs/ecosystem-strategy.md (Section 3: Spec Document Template, Section 6: Brand Data)
-  - packages/task-planner/resources/plugin-blueprint.md (Sections 2-8)
-  - packages/task-planner/resources/verification-registry.yml
+  - plugins/task-planner/resources/plugin-blueprint.md (Sections 2-8)
+  - plugins/task-planner/resources/verification-registry.yml
 writes:
   - docs/[plugin-name]-implementation-plan.md
   - docs/[plugin-name]-addendum.md
   - docs/[plugin-name]-asset-manifest.md (if design.yml defines assets)
-  - packages/task-planner/resources/verification-registry.yml (appends verification profile)
+  - plugins/task-planner/resources/verification-registry.yml (appends verification profile)
 checkpoint_type: data_validation
 ---
 

@@ -7,7 +7,7 @@ Phase 7 — the final skill in the SEO strategy generation pipeline. This skill 
 ## Prerequisites
 
 - Read `docs/seo-plugin-implementation-plan.md` (the "Skill: compile-and-export" section)
-- Read `packages/seo-plugin/resources/templates/seo-strategy-template.md` for the document structure
+- Read `plugins/seo-plugin/resources/templates/seo-strategy-template.md` for the document structure
 
 ## Before You Start
 
@@ -168,7 +168,7 @@ Create the link-building section:
 
 Combine all sections into `seo-strategy.md` at `~/.claude/seo/[project-name]/seo-strategy.md`.
 
-Use the template from `packages/seo-plugin/resources/templates/seo-strategy-template.md` as the structural guide:
+Use the template from `plugins/seo-plugin/resources/templates/seo-strategy-template.md` as the structural guide:
 
 1. Header with project name, generation date, and brand name
 2. Table of contents with anchor links
@@ -189,13 +189,13 @@ Update `seo-strategy.yml`:
 ### Step 11: Version Stamp
 
 After writing seo-strategy.yml, call the version-meta-stamper skill
-(packages/task-planner/skills/version-meta-stamper/SKILL.md) to
+(plugins/task-planner/skills/version-meta-stamper/SKILL.md) to
 add/update the `_meta` block with the current plugin version.
 
 This ensures every seo-strategy.yml file is traceable to the plugin
 version that created it. The `_meta` block is added at the end of the
 file with `plugin_name: "seo-plugin"` and `plugin_version` set to
-the current version from `packages/seo-plugin/.claude-plugin/plugin.json`.
+the current version from `plugins/seo-plugin/.claude-plugin/plugin.json`.
 
 ## Writing the Output
 

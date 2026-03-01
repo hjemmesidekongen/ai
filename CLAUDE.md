@@ -11,7 +11,7 @@ A modular plugin ecosystem where plugins build on each other:
 7. Future plugins (website-builder, content-engine, etc.) — created via the generator
 
 ## Architecture Rules (ALWAYS follow these)
-- Every plugin follows the blueprint: packages/task-planner/resources/plugin-blueprint.md
+- Every plugin follows the blueprint: plugins/task-planner/resources/plugin-blueprint.md
 - task-planner is a dependency of ALL other plugins
 - Plugins that need brand data also depend on brand-guideline
 - Every skill has a checkpoint — no self-grading
@@ -34,7 +34,7 @@ A modular plugin ecosystem where plugins build on each other:
 ## Creating a New Plugin
 When asked to build a new plugin, ALWAYS read these two files FIRST:
 1. docs/ecosystem-strategy.md — design process, 8 questions, spec templates, quality standards
-2. packages/task-planner/resources/plugin-blueprint.md — structure, checklist, verification
+2. plugins/task-planner/resources/plugin-blueprint.md — structure, checklist, verification
 
 Workflow:
 1. Read both files above
@@ -47,7 +47,7 @@ Or use `/plugin:create [name]` and `/plugin:build [name]` to automate.
 
 ## Project Structure
 ```
-packages/
+plugins/
   task-planner/                    # Foundation plugin (complete)
     .claude-plugin/plugin.json     # includes hooks: PreToolUse, PostToolUse, SessionStart, Stop
     commands/                      # plan-create, plan-execute, plan-status, plan-resume
@@ -182,7 +182,7 @@ existing plugins. Parts 1-6 were built before these patterns existed. This
 retrofit brings them up to the current standard defined in plugin-blueprint.md
 Sections 8 and 13.
 
-Reference: packages/task-planner/resources/plugin-blueprint.md Sections 8, 13
+Reference: plugins/task-planner/resources/plugin-blueprint.md Sections 8, 13
 
 - [x] R1: task-planner — hooks + scripts
   - Add hooks section to .claude-plugin/plugin.json (PreToolUse, PostToolUse, SessionStart, Stop)
@@ -222,9 +222,9 @@ Reference: packages/task-planner/resources/plugin-blueprint.md Sections 8, 13
   - This ensures all FUTURE plugins get context engineering from day one
 
 - [x] R6: README updates
-  - Create packages/brand-guideline/README.md (missing entirely)
-  - Update packages/task-planner/README.md (add hooks, findings, errors, session recovery sections)
-  - Update packages/seo-plugin/README.md (add hooks, findings, brainstorm, versioning sections)
+  - Create plugins/brand-guideline/README.md (missing entirely)
+  - Update plugins/task-planner/README.md (add hooks, findings, errors, session recovery sections)
+  - Update plugins/seo-plugin/README.md (add hooks, findings, brainstorm, versioning sections)
 
 - [x] R7: Integration test
   - Run /brand:generate on a test brand — verify hooks fire, findings.md created, errors logged
@@ -256,7 +256,7 @@ Reference: packages/task-planner/resources/plugin-blueprint.md Sections 8, 13
 - [x] V3: qa-agent updated to act as Stage 2 — only runs after Stage 1 passes, 5 quality checks, 3 verdict levels
 - [x] V4: verification-runner updated to orchestrate two-stage flow, plan-execute updated with combined 4c step
 - [x] V5: Generators produce two-stage verification — execution guide generator includes two-stage block in per-skill prompts (10 required elements), spec generator produces split verification tasks (spec compliance junior + quality review principal with dependency). Full verification pass: all 6 check groups pass. spec-compliance-reviewer added to plugin.json.
-- [x] V6: Integration test — packages/task-planner/tests/v6-two-stage-integration.md. Covers: Stage 1 FAIL (Stage 2 skipped, phase → failed_spec), Stage 1 PASS with Stage 2 gate logic (PASS → complete, PASS_WITH_NOTES → passed_with_notes, FAIL → failed_quality), qa_review:false shortcut (Stage 2 skipped when not required), retry behavior (Stage 1 re-runs on failed_spec fix; Stage 1 result cached on failed_quality retry). Decision matrix documents all 5 paths.
+- [x] V6: Integration test — plugins/task-planner/tests/v6-two-stage-integration.md. Covers: Stage 1 FAIL (Stage 2 skipped, phase → failed_spec), Stage 1 PASS with Stage 2 gate logic (PASS → complete, PASS_WITH_NOTES → passed_with_notes, FAIL → failed_quality), qa_review:false shortcut (Stage 2 skipped when not required), retry behavior (Stage 1 re-runs on failed_spec fix; Stage 1 result cached on failed_quality retry). Decision matrix documents all 5 paths.
 
 ### Two-Stage Verification ✅ Complete
 
@@ -298,4 +298,4 @@ Read the relevant spec BEFORE implementing. Do NOT try to build everything at on
 | docs/seo-plugin-execution-guide.md | Step-by-step SEO plugin build guide (15 steps) |
 <!-- execution guide and planning analysis are maintained in claude.ai sessions, not yet committed to repo -->
 | docs/subagent-execution-plan.md | Subagent dispatch architecture, prompt templates, schema changes, model tier mapping, parallel dispatch, integration tests |
-| packages/task-planner/resources/plugin-blueprint.md | Plugin structure rules, file layout, checklist, verification profiles, versioning, hooks & context engineering (Section 13), brainstorm integration (Section 14) |
+| plugins/task-planner/resources/plugin-blueprint.md | Plugin structure rules, file layout, checklist, verification profiles, versioning, hooks & context engineering (Section 13), brainstorm integration (Section 14) |

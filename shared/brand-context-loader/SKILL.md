@@ -125,7 +125,7 @@ if file does not exist:
 
 After loading brand-reference.yml and before returning data, call the
 version-compatibility-checker skill
-(packages/task-planner/skills/version-compatibility-checker/SKILL.md) to
+(plugins/task-planner/skills/version-compatibility-checker/SKILL.md) to
 verify the file is compatible with the current plugin version.
 
 ```
@@ -134,7 +134,7 @@ brand_ref = read_yaml(brand_path + "/brand-reference.yml")
 # Check version compatibility
 result = version_compatibility_check(
   data_file: brand_path + "/brand-reference.yml",
-  plugin_dir: "packages/brand-guideline/"
+  plugin_dir: "plugins/brand-guideline/"
 )
 
 if result.severity == "ok" or result.severity == "info":

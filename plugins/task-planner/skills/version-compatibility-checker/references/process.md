@@ -22,7 +22,7 @@ If the result is "blocking", stop and show the migration message.
 ### Step 1: Version Check
 
 Before loading [data-file], call the version-compatibility-checker skill
-(packages/task-planner/skills/version-compatibility-checker/SKILL.md) to
+(plugins/task-planner/skills/version-compatibility-checker/SKILL.md) to
 verify compatibility. If the result severity is "blocking", stop execution
 and display the migration message to the user.
 ```
@@ -32,7 +32,7 @@ and display the migration message to the user.
 The calling skill provides (implicitly via context):
 
 - **Data file path** — the YAML file being loaded (e.g., `~/.claude/seo/my-project/seo-strategy.yml`)
-- **Plugin directory** — the `packages/[plugin-name]/` directory containing `.claude-plugin/plugin.json`
+- **Plugin directory** — the `plugins/[plugin-name]/` directory containing `.claude-plugin/plugin.json`
 
 ## Process
 
@@ -92,7 +92,7 @@ Apply these rules in order:
 
 Only run this step if severity is `warning` or `blocking`.
 
-1. Look for `packages/[plugin-name]/migrations/MIGRATION-REGISTRY.yml`
+1. Look for `plugins/[plugin-name]/migrations/MIGRATION-REGISTRY.yml`
 2. If the file does not exist:
    - Set `migration_available` to `false`
    - Set `migration_chain` to `[]`

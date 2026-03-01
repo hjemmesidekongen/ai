@@ -195,7 +195,7 @@ Every skill prompt follows this structure. Never deviate.
 Read [specific spec file] ([specific section]).
 [If brand-dependent: Also read brand-reference.yml schema for available data.]
 
-Create packages/[plugin]/skills/[skill-name]/SKILL.md
+Create plugins/[plugin]/skills/[skill-name]/SKILL.md
 
 This skill:
 1. [Read X from Y file]

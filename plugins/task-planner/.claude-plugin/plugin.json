@@ -21,12 +21,12 @@
     ],
     "SessionStart": [
       {
-        "command": "bash packages/task-planner/scripts/session-recovery.sh"
+        "command": "bash plugins/task-planner/scripts/session-recovery.sh"
       }
     ],
     "Stop": [
       {
-        "command": "bash packages/task-planner/scripts/check-wave-complete.sh"
+        "command": "bash plugins/task-planner/scripts/check-wave-complete.sh"
       }
     ]
   }

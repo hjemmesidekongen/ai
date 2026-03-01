@@ -12,7 +12,7 @@ When someone says "build me a plugin for [X]", Claude Code reads this file AND
 
 **Read BOTH files before creating any new plugin.**
 
-**Location:** `packages/task-planner/resources/plugin-blueprint.md`
+**Location:** `plugins/task-planner/resources/plugin-blueprint.md`
 
 ---
 
@@ -36,7 +36,7 @@ Before writing a single file, the new plugin needs clear answers to:
 Every plugin follows this exact structure. No exceptions.
 
 ```
-packages/[plugin-name]/
+plugins/[plugin-name]/
 ├── .claude-plugin/
 │   └── plugin.json              # Manifest — name, version, dependencies, commands, skills, hooks
 ├── commands/
@@ -248,7 +248,7 @@ Every plugin registers a verification profile in the task-planner's
 
 ### How to Register
 
-Add a new section to `packages/task-planner/resources/verification-registry.yml`:
+Add a new section to `plugins/task-planner/resources/verification-registry.yml`:
 
 ```yaml
 # Registered by: [plugin-name]
@@ -521,7 +521,7 @@ the task-planner itself), follow this sequence:
 #### Phase A: Design (plan mode)
 
 ```
-Read packages/task-planner/resources/plugin-blueprint.md and 
+Read plugins/task-planner/resources/plugin-blueprint.md and 
 docs/ecosystem-strategy.md. Help me answer the 8 design questions 
 for a [plugin-name] plugin.
 ```
@@ -532,7 +532,7 @@ Output: design.yml with all 8 answers.
 
 ```
 Based on the design, create the plugin scaffold following the blueprint:
-1. packages/[plugin-name]/.claude-plugin/plugin.json
+1. plugins/[plugin-name]/.claude-plugin/plugin.json
    (include hooks: PreToolUse, PostToolUse, SessionStart, Stop — see blueprint Section 13)
 2. Empty directories: commands/, skills/, agents/, resources/, scripts/
 3. scripts/session-recovery.sh and scripts/check-wave-complete.sh
@@ -549,7 +549,7 @@ Then update CLAUDE.md: check off this step in the Progress section and set
 ```
 Create the YAML schema for [plugin-name]'s main output file.
 Also create any document templates needed.
-Store in packages/[plugin-name]/resources/templates/
+Store in plugins/[plugin-name]/resources/templates/
 
 Then update CLAUDE.md: check off this step in the Progress section and set 
 "Next step" to the following step. Commit everything.
@@ -560,11 +560,11 @@ Then update CLAUDE.md: check off this step in the Progress section and set
 For each skill, use this prompt template:
 
 ```
-Read packages/task-planner/resources/plugin-blueprint.md (sections 4 and 5).
+Read plugins/task-planner/resources/plugin-blueprint.md (sections 4 and 5).
 [If brand-dependent: Also read the brand-reference.yml schema to know what 
 brand data is available.]
 
-Create packages/[plugin-name]/skills/[skill-name]/SKILL.md
+Create plugins/[plugin-name]/skills/[skill-name]/SKILL.md
 
 This skill:
 1. [Step 1]
@@ -600,7 +600,7 @@ Then update CLAUDE.md: check off this step in the Progress section and set
 #### Phase E: Commands
 
 ```
-Create the slash commands in packages/[plugin-name]/commands/.
+Create the slash commands in plugins/[plugin-name]/commands/.
 Each command follows the structure defined in the blueprint (section 3).
 Commands that do complex work must use /plan:create and /plan:execute.
 
@@ -769,7 +769,7 @@ the plugin is updated.
 ### Required Structure
 
 ```
-packages/[plugin-name]/
+plugins/[plugin-name]/
   .claude-plugin/
     plugin.json              # "version": "1.0.0"
   migrations/

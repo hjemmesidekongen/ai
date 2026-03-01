@@ -6,7 +6,7 @@
 
 **Why:** The current `plan-execute` command runs all tasks inline in a single session. After many tool calls, context pollution degrades quality. Subagent dispatch gives each task a fresh context window — the implementer can't see previous tasks' accumulated state, and reviewers start neutral. This also enables true parallel execution when `wave.parallel == true`.
 
-**Scope:** Changes to `packages/task-planner/` only. No changes to brand-guideline, seo-plugin, or shared/ — those plugins benefit automatically because they delegate execution to plan-execute.
+**Scope:** Changes to `plugins/task-planner/` only. No changes to brand-guideline, seo-plugin, or shared/ — those plugins benefit automatically because they delegate execution to plan-execute.
 
 **Dependencies:** None (builds on existing infrastructure).
 
@@ -364,7 +364,7 @@ The worker-agent already reads and surfaces `model_tier` in its report. The chan
 
 #### Step 1: Create prompt templates directory and files
 
-Create `packages/task-planner/resources/prompts/` with three templates:
+Create `plugins/task-planner/resources/prompts/` with three templates:
 
 | File | Purpose | Size |
 |------|---------|------|
@@ -385,7 +385,7 @@ Content as specified in the Prompt Templates section above.
 Add `base_sha` and `commit_sha` fields to task items. Add `execution_mode` field to plan root.
 
 **Files modified:**
-- `packages/task-planner/resources/plan-schema.yml`
+- `plugins/task-planner/resources/plan-schema.yml`
 
 **Verification:** YAML parses cleanly. New fields are optional (backward-compatible with existing plans).
 
@@ -394,7 +394,7 @@ Add `base_sha` and `commit_sha` fields to task items. Add `execution_mode` field
 Add `commit_range` object to phase items.
 
 **Files modified:**
-- `packages/task-planner/resources/state-schema.yml`
+- `plugins/task-planner/resources/state-schema.yml`
 
 **Verification:** YAML parses cleanly. New fields are optional.
 
@@ -449,7 +449,7 @@ Inline mode (--mode single):
 ```
 
 **Files modified:**
-- `packages/task-planner/commands/plan-execute.md` — step 4b rewrite + new step 2 mode logic
+- `plugins/task-planner/commands/plan-execute.md` — step 4b rewrite + new step 2 mode logic
 
 **New execution modes:**
 
@@ -493,8 +493,8 @@ After task(s) complete:
 ```
 
 **Files modified:**
-- `packages/task-planner/commands/plan-execute.md` — step 4c updated
-- `packages/task-planner/skills/verification-runner/SKILL.md` — updated to dispatch via Task()
+- `plugins/task-planner/commands/plan-execute.md` — step 4c updated
+- `plugins/task-planner/skills/verification-runner/SKILL.md` — updated to dispatch via Task()
 
 **Verification:** Spec review catches a deliberate file-ownership violation; catches a missing output file.
 
@@ -503,10 +503,10 @@ After task(s) complete:
 Quality review now receives `BASE_SHA..HEAD_SHA` for the wave, not just file paths.
 
 **Files modified:**
-- `packages/task-planner/commands/plan-execute.md` — step 4c quality review section
-- `packages/task-planner/agents/qa-agent.md` — add git diff instructions to review protocol
-- `packages/task-planner/skills/verification-runner/SKILL.md` — updated dispatch
-- `packages/task-planner/skills/verification-runner/references/process.md` — updated procedures
+- `plugins/task-planner/commands/plan-execute.md` — step 4c quality review section
+- `plugins/task-planner/agents/qa-agent.md` — add git diff instructions to review protocol
+- `plugins/task-planner/skills/verification-runner/SKILL.md` — updated dispatch
+- `plugins/task-planner/skills/verification-runner/references/process.md` — updated procedures
 
 **Verification:** QA agent receives and uses commit range; review is scoped to wave changes only.
 
@@ -526,7 +526,7 @@ The worker agent template needs to be updated to work as a true subagent (not ju
 - Remove references to "single-agent mode" inline behavior (preserved in legacy mode only)
 
 **Files modified:**
-- `packages/task-planner/agents/worker-agent.md`
+- `plugins/task-planner/agents/worker-agent.md`
 
 **Verification:** Worker agent template has commit protocol, report format, self-review checklist.
 
@@ -545,7 +545,7 @@ The orchestrator is the sole writer of state.yml — subagents never touch it. T
 - On failure: append to `errors` array with context from the failed subagent's report
 
 **Files modified:**
-- `packages/task-planner/commands/plan-execute.md` — steps 4a, 4b, 4e
+- `plugins/task-planner/commands/plan-execute.md` — steps 4a, 4b, 4e
 
 **Verification:** state.yml has commit_range after wave completion. Error entries have correct context from subagent reports.
 
@@ -578,7 +578,7 @@ if wave.parallel == true AND mode == subagent:
 - If multiple tasks fail: fail the wave, report all failures
 
 **Files modified:**
-- `packages/task-planner/commands/plan-execute.md` — step 4b parallel path
+- `plugins/task-planner/commands/plan-execute.md` — step 4b parallel path
 
 **Verification:** Two independent tasks dispatched simultaneously, both complete, no file conflicts.
 
@@ -595,7 +595,7 @@ Add Section 15: "Subagent Execution" documenting:
 - Model tier selection guidance for plugin designers
 
 **Files modified:**
-- `packages/task-planner/resources/plugin-blueprint.md`
+- `plugins/task-planner/resources/plugin-blueprint.md`
 
 #### Step 11: Update plugin generators
 
@@ -605,10 +605,10 @@ Update the generators so that NEW plugins get subagent-aware structure:
 - `plugin-scaffolder` — no structural changes needed (progressive disclosure already creates the right SKILL.md/references split)
 
 **Files modified:**
-- `packages/task-planner/skills/plugin-execution-guide-generator/SKILL.md`
-- `packages/task-planner/skills/plugin-execution-guide-generator/references/process.md`
-- `packages/task-planner/skills/plugin-spec-generator/SKILL.md`
-- `packages/task-planner/skills/plugin-spec-generator/references/process.md`
+- `plugins/task-planner/skills/plugin-execution-guide-generator/SKILL.md`
+- `plugins/task-planner/skills/plugin-execution-guide-generator/references/process.md`
+- `plugins/task-planner/skills/plugin-spec-generator/SKILL.md`
+- `plugins/task-planner/skills/plugin-spec-generator/references/process.md`
 
 ---
 
@@ -616,7 +616,7 @@ Update the generators so that NEW plugins get subagent-aware structure:
 
 #### Step 12: End-to-end test — sequential subagent dispatch
 
-Create `packages/task-planner/tests/subagent-sequential-test.md`:
+Create `plugins/task-planner/tests/subagent-sequential-test.md`:
 
 1. Create a minimal 2-wave plan (wave 1: 1 task, wave 2: 1 task dependent on wave 1)
 2. Execute with `--mode subagent`
@@ -631,7 +631,7 @@ Create `packages/task-planner/tests/subagent-sequential-test.md`:
 
 #### Step 13: End-to-end test — parallel subagent dispatch
 
-Create `packages/task-planner/tests/subagent-parallel-test.md`:
+Create `plugins/task-planner/tests/subagent-parallel-test.md`:
 
 1. Create a plan with a parallel wave (2 tasks, non-overlapping file ownership)
 2. Execute with `--mode subagent`
@@ -643,7 +643,7 @@ Create `packages/task-planner/tests/subagent-parallel-test.md`:
 
 #### Step 14: End-to-end test — failure and retry
 
-Create `packages/task-planner/tests/subagent-failure-test.md`:
+Create `plugins/task-planner/tests/subagent-failure-test.md`:
 
 1. Create a plan where one task will fail spec compliance (e.g., missing required output)
 2. Execute with `--mode subagent`
@@ -656,7 +656,7 @@ Create `packages/task-planner/tests/subagent-failure-test.md`:
 
 #### Step 15: End-to-end test — model tier enforcement
 
-Create `packages/task-planner/tests/subagent-model-tier-test.md`:
+Create `plugins/task-planner/tests/subagent-model-tier-test.md`:
 
 1. Create a plan with tasks at each tier: junior, senior, principal
 2. Execute with `--mode subagent`

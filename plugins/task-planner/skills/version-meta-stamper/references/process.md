@@ -13,7 +13,7 @@ Any skill that writes a plugin output YAML file must call the version-meta-stamp
 ```
 stamp_meta(
   file_path:    "[path to the YAML output file]",
-  plugin_path:  "[path to the plugin root, e.g. packages/brand-guideline]"
+  plugin_path:  "[path to the plugin root, e.g. plugins/brand-guideline]"
 )
 ```
 
@@ -28,7 +28,7 @@ Before writing [output-file] to disk, call the version-meta-stamper:
 
   stamp_meta(
     file_path:   "~/.claude/brands/[brand]/brand-reference.yml",
-    plugin_path: "packages/brand-guideline"
+    plugin_path: "plugins/brand-guideline"
   )
 
 This reads plugin.json, resolves the schema version, and inserts/updates the
@@ -44,7 +44,7 @@ Before writing brand-reference.yml to disk:
 
 1. Call version-meta-stamper with:
    - file_path: the brand-reference.yml being compiled
-   - plugin_path: packages/brand-guideline
+   - plugin_path: plugins/brand-guideline
 2. The stamper reads plugin.json → gets name ("brand-guideline") and version ("1.0.0")
 3. It checks for a schema version file → defaults to plugin version
 4. It inserts _meta as the first key in brand-reference.yml
@@ -157,7 +157,7 @@ _meta:
 - **If `_meta` already exists:** replace the entire block with the new one
 - **If `_meta` does not exist:** insert it as the **first top-level key**
 
-The `_meta` block must always be the **first section** in the file. This convention makes it immediately visible when reading the file and ensures consistent placement across all plugins. It matches the format shown in `packages/task-planner/resources/plugin-blueprint.md` Section 12.
+The `_meta` block must always be the **first section** in the file. This convention makes it immediately visible when reading the file and ensures consistent placement across all plugins. It matches the format shown in `plugins/task-planner/resources/plugin-blueprint.md` Section 12.
 
 ### Step 6: Return to Calling Skill
 

@@ -12,7 +12,7 @@
 #   8. Template sections match compile-and-export expectations
 #   9. Verification profile registered in task-planner
 #
-# Usage: bash packages/seo-plugin/scripts/validate-plugin.sh
+# Usage: bash plugins/seo-plugin/scripts/validate-plugin.sh
 
 set -euo pipefail
 
@@ -480,7 +480,7 @@ done
 section "10. Verification Profile"
 # ─────────────────────────────────────────────────
 
-REGISTRY_FILE="$ROOT_DIR/packages/task-planner/resources/verification-registry.yml"
+REGISTRY_FILE="$ROOT_DIR/plugins/task-planner/resources/verification-registry.yml"
 
 if [[ -f "$REGISTRY_FILE" ]]; then
   if grep -q "seo_plugin_profile:" "$REGISTRY_FILE"; then

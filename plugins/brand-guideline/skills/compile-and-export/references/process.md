@@ -948,13 +948,13 @@ All SVG masters are ready. To generate PNGs:
 ## Step 8: Version Stamp
 
 After writing brand-reference.yml, call the version-meta-stamper skill
-(packages/task-planner/skills/version-meta-stamper/SKILL.md) to
+(plugins/task-planner/skills/version-meta-stamper/SKILL.md) to
 add/update the `_meta` block with the current plugin version.
 
 This ensures every brand-reference.yml file is traceable to the plugin
 version that created it. The `_meta` block is added at the end of the
 file with `plugin_name: "brand-guideline"` and `plugin_version` set to
-the current version from `packages/brand-guideline/.claude-plugin/plugin.json`.
+the current version from `plugins/brand-guideline/.claude-plugin/plugin.json`.
 
 ## Step 9: Final Summary
 

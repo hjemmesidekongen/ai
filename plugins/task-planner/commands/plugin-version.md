@@ -48,29 +48,29 @@ This command does NOT use the task-planner for wave execution — it runs a line
 ## Prerequisites
 
 Before running, read:
-1. `packages/task-planner/resources/plugin-blueprint.md` — Section 12 (Plugin Versioning)
+1. `plugins/task-planner/resources/plugin-blueprint.md` — Section 12 (Plugin Versioning)
 2. The three versioning skills:
-   - `packages/task-planner/skills/version-meta-stamper/SKILL.md`
-   - `packages/task-planner/skills/version-compatibility-checker/SKILL.md`
-   - `packages/task-planner/skills/migration-guide-generator/SKILL.md`
+   - `plugins/task-planner/skills/version-meta-stamper/SKILL.md`
+   - `plugins/task-planner/skills/version-compatibility-checker/SKILL.md`
+   - `plugins/task-planner/skills/migration-guide-generator/SKILL.md`
 
 ## Execution Steps
 
 ### Step 1: Validate Plugin
 
-1. Verify the plugin directory exists at `packages/[plugin-name]/`.
+1. Verify the plugin directory exists at `plugins/[plugin-name]/`.
    If not:
    ```
-   Plugin not found: packages/[plugin-name]/
-   Available plugins: [list directories in packages/ that contain .claude-plugin/plugin.json]
+   Plugin not found: plugins/[plugin-name]/
+   Available plugins: [list directories in plugins/ that contain .claude-plugin/plugin.json]
    ```
    Exit.
 
-2. Read `packages/[plugin-name]/.claude-plugin/plugin.json` to get the current version.
+2. Read `plugins/[plugin-name]/.claude-plugin/plugin.json` to get the current version.
    If the `version` field is missing:
    ```
    plugin.json is missing a "version" field.
-   Add "version": "1.0.0" to packages/[plugin-name]/.claude-plugin/plugin.json first.
+   Add "version": "1.0.0" to plugins/[plugin-name]/.claude-plugin/plugin.json first.
    ```
    Exit.
 
@@ -94,7 +94,7 @@ Display a comprehensive version overview for the plugin.
 
 #### 2a: Plugin Version
 
-Read `packages/[plugin-name]/.claude-plugin/plugin.json`:
+Read `plugins/[plugin-name]/.claude-plugin/plugin.json`:
 ```
 Plugin: [plugin-name]
 Version: v[version]
@@ -102,13 +102,13 @@ Version: v[version]
 
 #### 2b: Migration Count
 
-Read `packages/[plugin-name]/migrations/MIGRATION-REGISTRY.yml`:
+Read `plugins/[plugin-name]/migrations/MIGRATION-REGISTRY.yml`:
 - If the file exists: count entries in the `migrations` array
 - If the file does not exist: `0 migrations (no registry)`
 
 #### 2c: Archived Schemas
 
-List files in `packages/[plugin-name]/resources/schemas/archive/`:
+List files in `plugins/[plugin-name]/resources/schemas/archive/`:
 - If directory exists: list all `.yml` files
 - If directory does not exist: `No archived schemas`
 
@@ -156,8 +156,8 @@ Display the version history as a formatted changelog.
 #### 3a: Read Sources
 
 Read both:
-1. `packages/[plugin-name]/migrations/MIGRATION-REGISTRY.yml` — for structured migration data
-2. `packages/[plugin-name]/CHANGELOG.md` — for human-readable descriptions
+1. `plugins/[plugin-name]/migrations/MIGRATION-REGISTRY.yml` — for structured migration data
+2. `plugins/[plugin-name]/CHANGELOG.md` — for human-readable descriptions
 
 #### 3b: Build Timeline
 
@@ -242,24 +242,24 @@ If the user declines, exit without changes.
 **This step is mandatory for minor and major bumps. Skip for patch bumps.**
 
 1. Find the plugin's current YAML schema template:
-   - Look in `packages/[plugin-name]/resources/templates/` for the main `*-schema.yml` file
+   - Look in `plugins/[plugin-name]/resources/templates/` for the main `*-schema.yml` file
    - `brand-guideline` → `brand-reference-schema.yml`
    - `seo-plugin` → `seo-strategy-schema.yml`
    - Other plugins → the largest `*-schema.yml` file in the templates directory
 
 2. If the schema file does not exist:
    ```
-   No schema template found in packages/[plugin-name]/resources/templates/.
+   No schema template found in plugins/[plugin-name]/resources/templates/.
    Cannot archive schema without a schema file.
    Create the schema first, then run this command again.
    ```
    Exit.
 
 3. Create the archive directory if it doesn't exist:
-   `packages/[plugin-name]/resources/schemas/archive/`
+   `plugins/[plugin-name]/resources/schemas/archive/`
 
 4. Copy the current schema to:
-   `packages/[plugin-name]/resources/schemas/archive/v[current].yml`
+   `plugins/[plugin-name]/resources/schemas/archive/v[current].yml`
 
 5. If the archive file already exists:
    ```
@@ -270,12 +270,12 @@ If the user declines, exit without changes.
 
 6. Report:
    ```
-   Schema archived: packages/[plugin-name]/resources/schemas/archive/v[current].yml
+   Schema archived: plugins/[plugin-name]/resources/schemas/archive/v[current].yml
    ```
 
 #### 4d: Update plugin.json
 
-Update the `version` field in `packages/[plugin-name]/.claude-plugin/plugin.json` to the new version.
+Update the `version` field in `plugins/[plugin-name]/.claude-plugin/plugin.json` to the new version.
 
 Report:
 ```
@@ -290,7 +290,7 @@ Ask the user whether the YAML schema has already been updated for the new versio
 
 ```
 Has the YAML schema been updated for v[new]?
-  Schema file: packages/[plugin-name]/resources/templates/[schema-file]
+  Schema file: plugins/[plugin-name]/resources/templates/[schema-file]
 
   The migration generator needs to diff the old schema (just archived)
   against the new schema to produce migration artifacts.
@@ -305,10 +305,10 @@ Has the YAML schema been updated for v[new]?
 ```
 Schema not yet updated for v[new].
   plugin.json has been updated to v[new].
-  Schema archived at: packages/[plugin-name]/resources/schemas/archive/v[current].yml
+  Schema archived at: plugins/[plugin-name]/resources/schemas/archive/v[current].yml
 
   Next steps:
-    1. Update the schema at packages/[plugin-name]/resources/templates/[schema-file]
+    1. Update the schema at plugins/[plugin-name]/resources/templates/[schema-file]
     2. Run /plugin:version [plugin-name] bump [level] again to generate migration artifacts
        (The command will detect that plugin.json is already at v[new] and skip to migration generation.)
 ```
@@ -321,10 +321,10 @@ Revised "No" response:
 ```
 Schema not yet updated for v[new].
   plugin.json has been updated to v[new].
-  Schema archived at: packages/[plugin-name]/resources/schemas/archive/v[previous].yml
+  Schema archived at: plugins/[plugin-name]/resources/schemas/archive/v[previous].yml
 
   Next steps:
-    1. Update the schema at packages/[plugin-name]/resources/templates/[schema-file]
+    1. Update the schema at plugins/[plugin-name]/resources/templates/[schema-file]
     2. Run /plugin:version [plugin-name] bump [level] again
        (It will detect the archived schema and skip to migration generation.)
 ```
@@ -336,25 +336,25 @@ Exit.
 
 Call the migration-guide-generator skill to diff the old and new schemas and produce migration artifacts:
 
-1. Read `packages/task-planner/skills/migration-guide-generator/SKILL.md`
+1. Read `plugins/task-planner/skills/migration-guide-generator/SKILL.md`
 2. Invoke it with:
    - **Plugin name:** `[plugin-name]`
    - **Old version:** `[current]` (the version before the bump)
    - **New version:** `[new]` (the new version)
-   - **Old schema path:** `packages/[plugin-name]/resources/schemas/archive/v[current].yml`
-   - **New schema path:** `packages/[plugin-name]/resources/templates/[schema-file]`
+   - **Old schema path:** `plugins/[plugin-name]/resources/schemas/archive/v[current].yml`
+   - **New schema path:** `plugins/[plugin-name]/resources/templates/[schema-file]`
 
 3. The migration-guide-generator produces three files:
-   - `packages/[plugin-name]/migrations/v[current]-to-v[new].md` — migration guide
-   - `packages/[plugin-name]/migrations/scripts/v[current]-to-v[new].yml` — transform script
-   - `packages/[plugin-name]/migrations/MIGRATION-REGISTRY.yml` — updated registry
+   - `plugins/[plugin-name]/migrations/v[current]-to-v[new].md` — migration guide
+   - `plugins/[plugin-name]/migrations/scripts/v[current]-to-v[new].yml` — transform script
+   - `plugins/[plugin-name]/migrations/MIGRATION-REGISTRY.yml` — updated registry
 
 4. Verify all three files were created:
    ```
    Migration artifacts generated:
-     Guide:    packages/[plugin-name]/migrations/v[current]-to-v[new].md
-     Script:   packages/[plugin-name]/migrations/scripts/v[current]-to-v[new].yml
-     Registry: packages/[plugin-name]/migrations/MIGRATION-REGISTRY.yml (updated)
+     Guide:    plugins/[plugin-name]/migrations/v[current]-to-v[new].md
+     Script:   plugins/[plugin-name]/migrations/scripts/v[current]-to-v[new].yml
+     Registry: plugins/[plugin-name]/migrations/MIGRATION-REGISTRY.yml (updated)
    ```
 
    If any file is missing:
@@ -368,7 +368,7 @@ Call the migration-guide-generator skill to diff the old and new schemas and pro
 
 #### 4g: Update CHANGELOG.md
 
-Read or create `packages/[plugin-name]/CHANGELOG.md`.
+Read or create `plugins/[plugin-name]/CHANGELOG.md`.
 
 **If the file does not exist**, create it with the header:
 
@@ -528,22 +528,22 @@ on_pass: "Report success to user"
 
 ### What this command reads
 
-- `packages/[plugin-name]/.claude-plugin/plugin.json` — current plugin version
-- `packages/[plugin-name]/resources/templates/*-schema.yml` — current schema (to archive and diff)
-- `packages/[plugin-name]/resources/schemas/archive/` — previously archived schemas
-- `packages/[plugin-name]/migrations/MIGRATION-REGISTRY.yml` — migration index
-- `packages/[plugin-name]/CHANGELOG.md` — version history
+- `plugins/[plugin-name]/.claude-plugin/plugin.json` — current plugin version
+- `plugins/[plugin-name]/resources/templates/*-schema.yml` — current schema (to archive and diff)
+- `plugins/[plugin-name]/resources/schemas/archive/` — previously archived schemas
+- `plugins/[plugin-name]/migrations/MIGRATION-REGISTRY.yml` — migration index
+- `plugins/[plugin-name]/CHANGELOG.md` — version history
 - `~/.claude/[domain]/` — project data directories (for --status)
 
 ### What this command writes
 
-- `packages/[plugin-name]/.claude-plugin/plugin.json` — updated version
-- `packages/[plugin-name]/resources/schemas/archive/v[version].yml` — archived schema
-- `packages/[plugin-name]/CHANGELOG.md` — new changelog entry
+- `plugins/[plugin-name]/.claude-plugin/plugin.json` — updated version
+- `plugins/[plugin-name]/resources/schemas/archive/v[version].yml` — archived schema
+- `plugins/[plugin-name]/CHANGELOG.md` — new changelog entry
 - Migration artifacts (via migration-guide-generator):
-  - `packages/[plugin-name]/migrations/v[old]-to-v[new].md`
-  - `packages/[plugin-name]/migrations/scripts/v[old]-to-v[new].yml`
-  - `packages/[plugin-name]/migrations/MIGRATION-REGISTRY.yml`
+  - `plugins/[plugin-name]/migrations/v[old]-to-v[new].md`
+  - `plugins/[plugin-name]/migrations/scripts/v[old]-to-v[new].yml`
+  - `plugins/[plugin-name]/migrations/MIGRATION-REGISTRY.yml`
 
 ### Related skills
 

@@ -78,7 +78,7 @@ Gather everything the brainstorm-decision-writer skill needs:
 ### Step 4: Activate Decision Writer
 
 Load the brainstorm-decision-writer skill
-(`packages/task-planner/skills/brainstorm-decision-writer/SKILL.md`).
+(`plugins/task-planner/skills/brainstorm-decision-writer/SKILL.md`).
 
 The skill handles:
 - Reviewing existing decisions (if any)

@@ -6,7 +6,7 @@
 # session by checking for state.yml in the active SEO project directory,
 # then reports current progress so Claude can orient before doing any work.
 #
-# Usage: bash packages/seo-plugin/scripts/session-recovery.sh
+# Usage: bash plugins/seo-plugin/scripts/session-recovery.sh
 # Exit 0: Always (informational only — never blocks startup)
 
 set -euo pipefail

@@ -6,7 +6,7 @@
 # session by checking for state.yml, then reports current progress
 # so Claude can orient before doing any work.
 #
-# Usage: bash packages/task-planner/scripts/session-recovery.sh
+# Usage: bash plugins/task-planner/scripts/session-recovery.sh
 # Exit 0: Always (informational only — never blocks startup)
 
 set -euo pipefail

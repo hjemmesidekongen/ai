@@ -33,12 +33,12 @@
     ],
     "SessionStart": [
       {
-        "command": "bash packages/brand-guideline/scripts/session-recovery.sh"
+        "command": "bash plugins/brand-guideline/scripts/session-recovery.sh"
       }
     ],
     "Stop": [
       {
-        "command": "bash packages/brand-guideline/scripts/check-wave-complete.sh"
+        "command": "bash plugins/brand-guideline/scripts/check-wave-complete.sh"
       }
     ]
   }

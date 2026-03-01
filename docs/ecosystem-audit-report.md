@@ -22,19 +22,19 @@
 ## Critical Issues (must fix)
 
 ### C1. task-planner plugin.json missing 5 commands
-**File:** `packages/task-planner/.claude-plugin/plugin.json`
+**File:** `plugins/task-planner/.claude-plugin/plugin.json`
 **Problem:** Commands added in Parts 3 and 6 were never registered in the `commands` array.
 **Missing:** `brainstorm-decide`, `brainstorm-start`, `brainstorm-status`, `plugin-build`, `plugin-create`
 **Impact:** These commands won't be discoverable by the plugin system.
 
 ### C2. task-planner plugin.json missing 7 skills (and has 1 ghost)
-**File:** `packages/task-planner/.claude-plugin/plugin.json`
+**File:** `plugins/task-planner/.claude-plugin/plugin.json`
 **Problem:** Skills added in Parts 3 and 6 were never registered. `qa-reviewer` is declared but doesn't exist on disk.
 **Missing:** `brainstorm-decision-writer`, `brainstorm-session`, `decision-reader`, `plugin-design-interview`, `plugin-execution-guide-generator`, `plugin-scaffolder`, `plugin-spec-generator`
 **Ghost:** `qa-reviewer` (declared in JSON, no matching directory)
 
 ### C3. brand-guideline plugin.json missing 3 skills
-**File:** `packages/brand-guideline/.claude-plugin/plugin.json`
+**File:** `plugins/brand-guideline/.claude-plugin/plugin.json`
 **Problem:** Three core skills used in `/brand:generate` are not declared.
 **Missing:** `compile-and-export`, `identity-interview`, `logo-design`
 
@@ -55,7 +55,7 @@ The `link-building` skill exists on disk and in plugin.json but CLAUDE.md's proj
 CLAUDE.md lists this directory but it doesn't exist on disk. Either create it or remove the reference.
 
 ### N3. seo-plugin has undocumented `validate-plugin.sh` script
-`packages/seo-plugin/scripts/validate-plugin.sh` (22KB) exists but isn't listed in CLAUDE.md's project structure.
+`plugins/seo-plugin/scripts/validate-plugin.sh` (22KB) exists but isn't listed in CLAUDE.md's project structure.
 
 ### N4. task-planner missing migrations/ infrastructure
 Violates Quality Standard #12 ("Every plugin has a migrations/ directory"). brand-guideline and seo-plugin both have:
@@ -129,8 +129,8 @@ All other multi-step commands have explicit Recovery sections. `plugin-version` 
 - planning-with-files-analysis.md: ❌ MISSING
 
 **Unexpected files on disk (not in CLAUDE.md):**
-- ⚠️ `packages/seo-plugin/skills/link-building/` — undocumented skill
-- ⚠️ `packages/seo-plugin/scripts/validate-plugin.sh` — undocumented script
+- ⚠️ `plugins/seo-plugin/skills/link-building/` — undocumented skill
+- ⚠️ `plugins/seo-plugin/scripts/validate-plugin.sh` — undocumented script
 - ⚠️ `docs/ecosystem-strategy.md` — exists but also listed, just noting extra `.DS_Store` and `plugin-blueprint.md` in docs/
 
 ---
@@ -278,8 +278,8 @@ Commands without recovery sections are appropriately single-pass or read-only:
 3. Either create `docs/claude-code-execution-guide.md` and `docs/planning-with-files-analysis.md`, or remove their references from CLAUDE.md's project structure and specs table
 
 ### Priority 3 — Structural consistency
-4. Create `packages/task-planner/migrations/` with `MIGRATION-REGISTRY.yml` and `resources/schemas/archive/v1.0.0.yml` to match other plugins
-5. Create `packages/seo-plugin/resources/examples/` (empty dir) or remove from CLAUDE.md
+4. Create `plugins/task-planner/migrations/` with `MIGRATION-REGISTRY.yml` and `resources/schemas/archive/v1.0.0.yml` to match other plugins
+5. Create `plugins/seo-plugin/resources/examples/` (empty dir) or remove from CLAUDE.md
 6. Update CLAUDE.md to mention `link-building` skill (8 skills, not 7)
 
 ### Priority 4 — Documentation polish

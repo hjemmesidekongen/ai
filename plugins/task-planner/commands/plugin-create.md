@@ -30,7 +30,7 @@ This command does NOT use the task-planner for wave execution — it runs sequen
 ## Prerequisites
 
 Before running, read:
-1. `packages/task-planner/resources/plugin-blueprint.md` — Section 9 (New Plugin Creation)
+1. `plugins/task-planner/resources/plugin-blueprint.md` — Section 9 (New Plugin Creation)
 2. `docs/ecosystem-strategy.md` — Section 7 (Workflow: Creating a New Plugin)
 
 ## Execution Steps
@@ -40,7 +40,7 @@ Before running, read:
 Check the provided `plugin-name`:
 
 1. **Kebab-case:** Must match `/^[a-z][a-z0-9]*(-[a-z0-9]+)*$/`. If not, suggest a corrected name and ask the user to confirm.
-2. **No conflicts:** Check that `packages/[plugin-name]/` does not already exist. If it does, report the conflict and ask the user to choose a different name or confirm they want to continue (which would add to the existing directory).
+2. **No conflicts:** Check that `plugins/[plugin-name]/` does not already exist. If it does, report the conflict and ask the user to choose a different name or confirm they want to continue (which would add to the existing directory).
 3. **Reserved names:** Must not be `task-planner` or `brand-guideline` — these are built-in plugins that already exist.
 
 If validation fails, stop and report the issue. Do not proceed with an invalid name.
@@ -50,7 +50,7 @@ If validation fails, stop and report the issue. Do not proceed with an invalid n
 ### Step 2: Create Plugin Directory
 
 ```bash
-mkdir -p packages/[plugin-name]
+mkdir -p plugins/[plugin-name]
 ```
 
 This is the only directory created at this point. The scaffolder skill (Step 6) creates the full internal structure.
@@ -64,7 +64,7 @@ This is the only directory created at this point. The scaffolder skill (Step 6) 
 1. Read the file at the provided path
 2. Validate it has all required fields (see plugin-design-interview SKILL.md for the schema)
 3. Validate `status` is `approved`
-4. Copy it to `packages/[plugin-name]/design.yml` (if not already there)
+4. Copy it to `plugins/[plugin-name]/design.yml` (if not already there)
 5. Show the user a summary of the loaded design:
 
 ```
@@ -80,13 +80,13 @@ Loaded existing design from [path]:
 **If `--from-design` is NOT provided:**
 
 1. Call the `plugin-design-interview` skill
-   - Read: `packages/task-planner/skills/plugin-design-interview/SKILL.md`
+   - Read: `plugins/task-planner/skills/plugin-design-interview/SKILL.md`
    - Follow its 10-step process (Q1–Q8, produce design, user review)
-   - The skill writes `packages/[plugin-name]/design.yml`
+   - The skill writes `plugins/[plugin-name]/design.yml`
 2. After the interview completes, confirm with the user before proceeding:
 
 ```
-Design interview complete. design.yml written to packages/[plugin-name]/design.yml.
+Design interview complete. design.yml written to plugins/[plugin-name]/design.yml.
 
 Ready to generate specs, execution guide, and scaffold?
 (This will create ~4 documents in docs/ and the plugin directory structure.)
@@ -99,14 +99,14 @@ Wait for explicit confirmation. If the user wants to stop here and review the de
 ### Step 4: Generate Specs
 
 Call the `plugin-spec-generator` skill:
-- Read: `packages/task-planner/skills/plugin-spec-generator/SKILL.md`
+- Read: `plugins/task-planner/skills/plugin-spec-generator/SKILL.md`
 - Follow its 6-step process
 
 This produces:
 - `docs/[plugin-name]-implementation-plan.md` — full implementation specification
 - `docs/[plugin-name]-addendum.md` — domain knowledge, quality standards, tools
 - `docs/[plugin-name]-asset-manifest.md` — only if design.yml defines assets
-- Updated `packages/task-planner/resources/verification-registry.yml` — new verification profile
+- Updated `plugins/task-planner/resources/verification-registry.yml` — new verification profile
 
 After completion, show the user a summary:
 
@@ -131,7 +131,7 @@ Specs generated:
 ### Step 5: Generate Execution Guide
 
 Call the `plugin-execution-guide-generator` skill:
-- Read: `packages/task-planner/skills/plugin-execution-guide-generator/SKILL.md`
+- Read: `plugins/task-planner/skills/plugin-execution-guide-generator/SKILL.md`
 - Follow its process
 
 This produces:
@@ -152,18 +152,18 @@ Execution guide generated:
 ### Step 6: Scaffold the Plugin
 
 Call the `plugin-scaffolder` skill:
-- Read: `packages/task-planner/skills/plugin-scaffolder/SKILL.md`
+- Read: `plugins/task-planner/skills/plugin-scaffolder/SKILL.md`
 - Follow its 7-step process
 
 This creates:
-- `packages/[plugin-name]/.claude-plugin/plugin.json`
-- `packages/[plugin-name]/commands/` (empty)
-- `packages/[plugin-name]/skills/` (empty)
-- `packages/[plugin-name]/agents/` (empty, only if design.yml defines agents)
-- `packages/[plugin-name]/resources/templates/` (empty)
-- `packages/[plugin-name]/resources/examples/` (empty)
-- `packages/[plugin-name]/scripts/` (empty)
-- `packages/[plugin-name]/README.md`
+- `plugins/[plugin-name]/.claude-plugin/plugin.json`
+- `plugins/[plugin-name]/commands/` (empty)
+- `plugins/[plugin-name]/skills/` (empty)
+- `plugins/[plugin-name]/agents/` (empty, only if design.yml defines agents)
+- `plugins/[plugin-name]/resources/templates/` (empty)
+- `plugins/[plugin-name]/resources/examples/` (empty)
+- `plugins/[plugin-name]/scripts/` (empty)
+- `plugins/[plugin-name]/README.md`
 
 ---
 
@@ -173,7 +173,7 @@ Read `CLAUDE.md` and make three updates:
 
 **a) Add the new plugin to the Project Structure section:**
 
-Under the `packages/` tree, add:
+Under the `plugins/` tree, add:
 
 ```
   [plugin-name]/                   # [description from design.yml]
@@ -222,7 +222,7 @@ Plugin [name] is designed and scaffolded.
 ## What was created
 
 ### Design
-- packages/[name]/design.yml — your design decisions
+- plugins/[name]/design.yml — your design decisions
 
 ### Specs
 - docs/[name]-implementation-plan.md — full specification
@@ -234,9 +234,9 @@ Plugin [name] is designed and scaffolded.
 - docs/[name]-execution-guide.md — step-by-step build instructions
 
 ### Scaffold
-- packages/[name]/ — plugin directory structure
-- packages/[name]/.claude-plugin/plugin.json — plugin manifest
-- packages/[name]/README.md — plugin documentation
+- plugins/[name]/ — plugin directory structure
+- plugins/[name]/.claude-plugin/plugin.json — plugin manifest
+- plugins/[name]/README.md — plugin documentation
 
 ### Updated
 - CLAUDE.md — progress checklist added
@@ -271,7 +271,7 @@ Build one skill at a time. /compact between each skill.
 
 This command is sequential and does not use state.yml for recovery. However, each step produces durable artifacts:
 
-- If interrupted after Step 3: `design.yml` exists. Re-run with `--from-design packages/[name]/design.yml`
+- If interrupted after Step 3: `design.yml` exists. Re-run with `--from-design plugins/[name]/design.yml`
 - If interrupted after Step 4: specs exist. The scaffolder can still run independently
 - If interrupted after Step 6: everything exists except CLAUDE.md updates. Manually add the progress checklist
 

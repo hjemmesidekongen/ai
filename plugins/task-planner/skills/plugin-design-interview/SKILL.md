@@ -10,10 +10,10 @@ interactive: true
 depends_on: []
 reads:
   - docs/ecosystem-strategy.md (Section 2: The 8 Design Questions, Section 6: Brand Data)
-  - packages/task-planner/resources/plugin-blueprint.md (Section 1: Questions)
-  - packages/task-planner/resources/verification-registry.yml
+  - plugins/task-planner/resources/plugin-blueprint.md (Section 1: Questions)
+  - plugins/task-planner/resources/verification-registry.yml
 writes:
-  - packages/[plugin-name]/design.yml
+  - plugins/[plugin-name]/design.yml
 checkpoint_type: data_validation
 ---
 
@@ -26,7 +26,7 @@ before any code or specs are written.
 ## Context
 
 - Reads: ecosystem-strategy.md (Sections 2, 6), plugin-blueprint.md (Section 1), verification-registry.yml
-- Writes: `packages/[plugin-name]/design.yml`
+- Writes: `plugins/[plugin-name]/design.yml`
 - Checkpoint: data_validation (all 8 questions answered, status "approved")
 - Dependencies: none (first skill in plugin creation workflow)
 

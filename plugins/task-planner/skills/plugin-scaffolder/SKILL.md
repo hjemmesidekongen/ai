@@ -10,19 +10,19 @@ interactive: false
 depends_on:
   - plugin-execution-guide-generator
 reads:
-  - packages/[plugin-name]/design.yml
+  - plugins/[plugin-name]/design.yml
   - docs/[plugin-name]-implementation-plan.md (for tools/dependencies from addendum)
   - docs/[plugin-name]-addendum.md (for tools/dependencies and domain context)
-  - packages/task-planner/resources/plugin-blueprint.md (Section 2: Required Plugin Structure)
+  - plugins/task-planner/resources/plugin-blueprint.md (Section 2: Required Plugin Structure)
 writes:
-  - packages/[plugin-name]/.claude-plugin/plugin.json
-  - packages/[plugin-name]/commands/ (empty directory)
-  - packages/[plugin-name]/skills/[skill-name]/ (per-skill dirs with lean SKILL.md stubs + references/ for complex skills)
-  - packages/[plugin-name]/agents/ (empty directory, only if design.yml specifies agents)
-  - packages/[plugin-name]/resources/templates/ (empty directory)
-  - packages/[plugin-name]/resources/examples/ (empty directory)
-  - packages/[plugin-name]/scripts/ (empty directory)
-  - packages/[plugin-name]/README.md
+  - plugins/[plugin-name]/.claude-plugin/plugin.json
+  - plugins/[plugin-name]/commands/ (empty directory)
+  - plugins/[plugin-name]/skills/[skill-name]/ (per-skill dirs with lean SKILL.md stubs + references/ for complex skills)
+  - plugins/[plugin-name]/agents/ (empty directory, only if design.yml specifies agents)
+  - plugins/[plugin-name]/resources/templates/ (empty directory)
+  - plugins/[plugin-name]/resources/examples/ (empty directory)
+  - plugins/[plugin-name]/scripts/ (empty directory)
+  - plugins/[plugin-name]/README.md
 checkpoint_type: file_validation
 ---
 

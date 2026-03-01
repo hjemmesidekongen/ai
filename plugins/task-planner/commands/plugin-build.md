@@ -37,7 +37,7 @@ No checkpoint needed — this is a driver command that orchestrates steps which 
 ## Prerequisites
 
 Before running, read:
-1. `packages/task-planner/resources/plugin-blueprint.md` — Section 9 (New Plugin Creation)
+1. `plugins/task-planner/resources/plugin-blueprint.md` — Section 9 (New Plugin Creation)
 2. `docs/ecosystem-strategy.md` — Section 7 (Workflow: Creating a New Plugin)
 
 ## Execution Steps
@@ -46,10 +46,10 @@ Before running, read:
 
 Check that the plugin has been fully created by `/plugin:create`:
 
-1. **design.yml exists:** `packages/[plugin-name]/design.yml` must exist and have `status: approved`
+1. **design.yml exists:** `plugins/[plugin-name]/design.yml` must exist and have `status: approved`
 2. **Execution guide exists:** `docs/[plugin-name]-execution-guide.md` must exist
 3. **Implementation plan exists:** `docs/[plugin-name]-implementation-plan.md` must exist
-4. **Plugin scaffold exists:** `packages/[plugin-name]/.claude-plugin/plugin.json` must exist
+4. **Plugin scaffold exists:** `plugins/[plugin-name]/.claude-plugin/plugin.json` must exist
 
 If any are missing, stop and report:
 
@@ -59,7 +59,7 @@ Plugin [name] is not fully created. Missing:
 
 Run /plugin:create [name] first to generate all required artifacts.
 [If only execution guide is missing:]
-Or run /plugin:create [name] --from-design packages/[name]/design.yml
+Or run /plugin:create [name] --from-design plugins/[name]/design.yml
 to regenerate from the existing design.
 ```
 
@@ -250,7 +250,7 @@ The plugin is ready to use. Try:
 | Implementation plan missing | Report error: "Run /plugin:create [name] first" |
 | `--step` number out of range | Report valid range and ask user to choose a valid step |
 | Step dependency not built | Warn user, offer to build dependency first or continue anyway |
-| Execution guide malformed (can't parse steps) | Warn and suggest regenerating: "/plugin:create [name] --from-design packages/[name]/design.yml" |
+| Execution guide malformed (can't parse steps) | Warn and suggest regenerating: "/plugin:create [name] --from-design plugins/[name]/design.yml" |
 | Checkpoint fails 3 times | Offer options: review spec, skip step, or stop |
 | CLAUDE.md progress section missing | Create it from the execution guide (same logic as /plugin:create Step 7) |
 

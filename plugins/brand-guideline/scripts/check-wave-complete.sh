@@ -6,7 +6,7 @@
 # checking whether the current skill/phase has been marked as
 # completed or verified in state.yml.
 #
-# Usage: bash packages/brand-guideline/scripts/check-wave-complete.sh
+# Usage: bash plugins/brand-guideline/scripts/check-wave-complete.sh
 # Exit 0: Current skill is complete — safe to stop
 # Exit 1: Current skill is NOT complete — Claude must keep working
 

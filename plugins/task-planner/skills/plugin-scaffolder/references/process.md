@@ -3,9 +3,9 @@
 ## Prerequisites
 
 Before running this skill, read:
-1. `packages/[plugin-name]/design.yml` — the approved design (status must be "approved")
+1. `plugins/[plugin-name]/design.yml` — the approved design (status must be "approved")
 2. `docs/[plugin-name]-addendum.md` — Section c (Tools and Dependencies) for README prerequisites
-3. `packages/task-planner/resources/plugin-blueprint.md` — Section 2 (Required Plugin Structure) and Section 5 (Verification Profiles)
+3. `plugins/task-planner/resources/plugin-blueprint.md` — Section 2 (Required Plugin Structure) and Section 5 (Verification Profiles)
 
 Also verify these exist (produced by upstream skills):
 - `docs/[plugin-name]-implementation-plan.md`
@@ -15,7 +15,7 @@ Also verify these exist (produced by upstream skills):
 
 ### Step 1 — Validate Prerequisites
 
-Read `packages/[plugin-name]/design.yml`. Validate:
+Read `plugins/[plugin-name]/design.yml`. Validate:
 
 ```
 Required fields for scaffolding:
@@ -40,10 +40,10 @@ If any are missing, STOP and report which upstream skill needs to run first.
 
 ### Step 2 — Create Directory Structure
 
-Create the full directory tree under `packages/[plugin-name]/`:
+Create the full directory tree under `plugins/[plugin-name]/`:
 
 ```
-packages/[plugin-name]/
+plugins/[plugin-name]/
 ├── .claude-plugin/
 ├── commands/
 ├── skills/
@@ -135,7 +135,7 @@ For simple skills without `references/`, replace the Execution section with inli
 
 ### Step 3 — Generate plugin.json
 
-Create `packages/[plugin-name]/.claude-plugin/plugin.json` with this exact structure:
+Create `plugins/[plugin-name]/.claude-plugin/plugin.json` with this exact structure:
 
 ```json
 {
@@ -161,12 +161,12 @@ Create `packages/[plugin-name]/.claude-plugin/plugin.json` with this exact struc
     ],
     "SessionStart": [
       {
-        "command": "bash packages/[plugin-name]/scripts/session-recovery.sh"
+        "command": "bash plugins/[plugin-name]/scripts/session-recovery.sh"
       }
     ],
     "Stop": [
       {
-        "command": "bash packages/[plugin-name]/scripts/check-wave-complete.sh"
+        "command": "bash plugins/[plugin-name]/scripts/check-wave-complete.sh"
       }
     ]
   }
@@ -195,7 +195,7 @@ Create `packages/[plugin-name]/.claude-plugin/plugin.json` with this exact struc
 
 ### Step 3b — Generate Hook Scripts
 
-Create two scripts in `packages/[plugin-name]/scripts/`:
+Create two scripts in `plugins/[plugin-name]/scripts/`:
 
 **`scripts/session-recovery.sh`:**
 
@@ -280,15 +280,15 @@ exit 0
 
 **Customization rules:**
 - Replace `[Plugin Name]` in the echo header with the actual plugin name
-- If the plugin uses a project-specific data directory (like `~/.claude/seo/[project-name]/`), add lookup logic to find state.yml via an active-project file (see `packages/seo-plugin/scripts/session-recovery.sh` for an example)
-- If the plugin uses brand data directory (`~/.claude/brands/[brand-name]/`), add lookup logic via `~/.claude/active-brand.yml` (see `packages/brand-guideline/scripts/session-recovery.sh` for an example)
-- Make both scripts executable: `chmod +x packages/[plugin-name]/scripts/session-recovery.sh packages/[plugin-name]/scripts/check-wave-complete.sh`
+- If the plugin uses a project-specific data directory (like `~/.claude/seo/[project-name]/`), add lookup logic to find state.yml via an active-project file (see `plugins/seo-plugin/scripts/session-recovery.sh` for an example)
+- If the plugin uses brand data directory (`~/.claude/brands/[brand-name]/`), add lookup logic via `~/.claude/active-brand.yml` (see `plugins/brand-guideline/scripts/session-recovery.sh` for an example)
+- Make both scripts executable: `chmod +x plugins/[plugin-name]/scripts/session-recovery.sh plugins/[plugin-name]/scripts/check-wave-complete.sh`
 
 ---
 
 ### Step 4 — Generate README.md
 
-Create `packages/[plugin-name]/README.md` with this structure:
+Create `plugins/[plugin-name]/README.md` with this structure:
 
 ```markdown
 # [Plugin Name]
@@ -408,25 +408,25 @@ If the checklist exists:
 ```
 type: file_validation
 required_checks:
-  - packages/[plugin-name]/.claude-plugin/plugin.json exists and is valid JSON
+  - plugins/[plugin-name]/.claude-plugin/plugin.json exists and is valid JSON
   - plugin.json contains all required fields: name, version, description,
     commands, skills, dependencies
   - plugin.json "name" matches design.yml "name"
   - plugin.json "dependencies" includes "task-planner"
   - If needs_brand is true: plugin.json "dependencies" includes "brand-guideline"
   - If needs_brand is true: plugin.json contains "shared_skills" with "brand-context-loader"
-  - packages/[plugin-name]/commands/ directory exists
-  - packages/[plugin-name]/skills/ directory exists with one subdirectory per skill from design.yml
+  - plugins/[plugin-name]/commands/ directory exists
+  - plugins/[plugin-name]/skills/ directory exists with one subdirectory per skill from design.yml
   - Each skill directory contains a lean SKILL.md (≤80 lines) using the template format
   - Complex skills have a references/ subdirectory with a stub process.md
   - Simple/utility skills have SKILL.md only (no references/ directory)
-  - packages/[plugin-name]/resources/templates/ directory exists
-  - packages/[plugin-name]/resources/examples/ directory exists
-  - packages/[plugin-name]/scripts/ directory exists
-  - packages/[plugin-name]/scripts/session-recovery.sh exists and is executable
-  - packages/[plugin-name]/scripts/check-wave-complete.sh exists and is executable
+  - plugins/[plugin-name]/resources/templates/ directory exists
+  - plugins/[plugin-name]/resources/examples/ directory exists
+  - plugins/[plugin-name]/scripts/ directory exists
+  - plugins/[plugin-name]/scripts/session-recovery.sh exists and is executable
+  - plugins/[plugin-name]/scripts/check-wave-complete.sh exists and is executable
   - plugin.json contains "hooks" with PreToolUse, PostToolUse, SessionStart, and Stop entries
-  - packages/[plugin-name]/README.md exists and is non-empty
+  - plugins/[plugin-name]/README.md exists and is non-empty
   - README.md contains all required sections:
     Overview, Prerequisites, Commands, Output, How It Works, Installation, Data Storage
   - README.md lists every command from design.yml with its purpose

@@ -3,10 +3,10 @@
 ## Prerequisites
 
 Before running this skill, read:
-1. `packages/[plugin-name]/design.yml` — the approved design from the interview
+1. `plugins/[plugin-name]/design.yml` — the approved design from the interview
 2. `docs/ecosystem-strategy.md` — Section 3 (Spec Document Template), Section 6 (Brand Data Available)
-3. `packages/task-planner/resources/plugin-blueprint.md` — Sections 2–8
-4. `packages/task-planner/resources/verification-registry.yml` — existing types and profiles
+3. `plugins/task-planner/resources/plugin-blueprint.md` — Sections 2–8
+4. `plugins/task-planner/resources/verification-registry.yml` — existing types and profiles
 
 Also read the brand-guideline specs as reference examples of the output format:
 - `docs/implementation-plan-v2.md` — reference implementation plan
@@ -17,7 +17,7 @@ Also read the brand-guideline specs as reference examples of the output format:
 
 ### Step 1 — Read and Validate design.yml
 
-Read `packages/[plugin-name]/design.yml`. Validate before proceeding:
+Read `plugins/[plugin-name]/design.yml`. Validate before proceeding:
 
 ```
 Required fields:
@@ -407,7 +407,7 @@ Output: [what it produces]
 
 ### Step 5 — Register Verification Profile
 
-Read `packages/task-planner/resources/verification-registry.yml`.
+Read `plugins/task-planner/resources/verification-registry.yml`.
 
 #### 5a) Check for new verification types
 

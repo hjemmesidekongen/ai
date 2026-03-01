@@ -32,15 +32,15 @@ Before starting, these spec documents must exist in docs/:
 
 ---
 
-Read `packages/task-planner/resources/plugin-blueprint.md` (Section 2: Required Plugin Structure).
-Read `packages/task-planner/skills/plugin-scaffolder/SKILL.md` for the scaffolding process.
-Read `packages/seo-plugin/design.yml` for plugin metadata.
+Read `plugins/task-planner/resources/plugin-blueprint.md` (Section 2: Required Plugin Structure).
+Read `plugins/task-planner/skills/plugin-scaffolder/SKILL.md` for the scaffolding process.
+Read `plugins/seo-plugin/design.yml` for plugin metadata.
 
 Create the plugin scaffold:
 
 1. Create directory structure:
    ```
-   packages/seo-plugin/
+   plugins/seo-plugin/
    ├── .claude-plugin/
    │   └── plugin.json
    ├── commands/
@@ -52,7 +52,7 @@ Create the plugin scaffold:
    └── README.md
    ```
 
-2. Write `packages/seo-plugin/.claude-plugin/plugin.json`:
+2. Write `plugins/seo-plugin/.claude-plugin/plugin.json`:
    ```json
    {
      "name": "seo-plugin",
@@ -68,7 +68,7 @@ Create the plugin scaffold:
    }
    ```
 
-3. Write `packages/seo-plugin/README.md` with:
+3. Write `plugins/seo-plugin/README.md` with:
    - Overview: what seo-plugin does, who it's for (developer/technical marketer), dependencies
    - Prerequisites: Claude Code with task-planner, brand guidelines via `/brand:generate`
    - Commands table: `/seo:strategy`, `/seo:audit`, `/seo:content-brief`, `/seo:export` with purposes
@@ -76,23 +76,23 @@ Create the plugin scaffold:
    - How It Works: 7-wave structure from design.yml
    - Brand Data Usage: project-interview uses identity+audience, keyword-research uses voice+content, content-strategy uses voice+audience+content, link-building uses identity
    - Installation and Data Storage sections
-   - Follow the README format in `packages/task-planner/skills/plugin-scaffolder/SKILL.md` Step 4
+   - Follow the README format in `plugins/task-planner/skills/plugin-scaffolder/SKILL.md` Step 4
 
 4. Verify brand-context-loader exists at `shared/brand-context-loader/SKILL.md`
 
 Checkpoint type: file_validation
 Required checks:
-- `packages/seo-plugin/.claude-plugin/plugin.json` exists and is valid JSON
+- `plugins/seo-plugin/.claude-plugin/plugin.json` exists and is valid JSON
 - plugin.json contains all required fields: name, version, description, commands, skills, dependencies
 - plugin.json "name" matches "seo-plugin"
 - plugin.json "dependencies" includes "task-planner" and "brand-guideline"
 - plugin.json contains "shared_skills" with "brand-context-loader"
-- `packages/seo-plugin/commands/` directory exists
-- `packages/seo-plugin/skills/` directory exists
-- `packages/seo-plugin/resources/templates/` directory exists
-- `packages/seo-plugin/resources/examples/` directory exists
-- `packages/seo-plugin/scripts/` directory exists
-- `packages/seo-plugin/README.md` exists and is non-empty
+- `plugins/seo-plugin/commands/` directory exists
+- `plugins/seo-plugin/skills/` directory exists
+- `plugins/seo-plugin/resources/templates/` directory exists
+- `plugins/seo-plugin/resources/examples/` directory exists
+- `plugins/seo-plugin/scripts/` directory exists
+- `plugins/seo-plugin/README.md` exists and is non-empty
 - README.md contains all required sections: Overview, Prerequisites, Commands, Output, How It Works, Brand Data Usage, Installation, Data Storage
 - No placeholder text remains (no "[plugin-name]", no "[from design.yml]", no "TODO")
 
@@ -111,12 +111,12 @@ Then update CLAUDE.md: check off this step in the Progress section and set "Next
 ---
 
 Read `docs/seo-plugin-implementation-plan.md` (the "YAML Schema" section).
-Also read `packages/brand-guideline/resources/templates/brand-reference-schema.yml` as a reference for schema structure.
+Also read `plugins/brand-guideline/resources/templates/brand-reference-schema.yml` as a reference for schema structure.
 
-1. Create `packages/seo-plugin/resources/templates/seo-strategy-schema.yml`:
+1. Create `plugins/seo-plugin/resources/templates/seo-strategy-schema.yml`:
    Copy the COMPLETE YAML schema from the implementation plan's "YAML Schema" section. This includes all 8 top-level sections: meta, project_context, keywords, competitors, on_page, technical, content_plan, link_building. Every field must have a type annotation. Every enum must list all valid values.
 
-2. Create `packages/seo-plugin/resources/templates/seo-strategy-template.md`:
+2. Create `plugins/seo-plugin/resources/templates/seo-strategy-template.md`:
    Generate a markdown template with these sections as headings:
    - Executive Summary (placeholder describing what goes here)
    - Keyword Strategy (table template for primary, secondary, long-tail keywords)
@@ -126,18 +126,18 @@ Also read `packages/brand-guideline/resources/templates/brand-reference-schema.y
    - Content Plan (topic cluster and calendar template)
    - Link-Building Strategy (strategy and outreach template)
 
-3. Create `packages/seo-plugin/resources/templates/state-schema.yml`:
-   Generate state.yml schema following the pattern in `packages/brand-guideline/resources/templates/state-schema.yml`:
+3. Create `plugins/seo-plugin/resources/templates/state-schema.yml`:
+   Generate state.yml schema following the pattern in `plugins/brand-guideline/resources/templates/state-schema.yml`:
    - project_name, brand_name, created_at, updated_at
    - phases: one entry per wave with phase_name, status (pending/in_progress/completed/failed), started_at, completed_at, skills array
    - current_phase, verification_results
 
 Checkpoint type: file_validation
 Required checks:
-- `packages/seo-plugin/resources/templates/seo-strategy-schema.yml` exists and contains at least 8 top-level sections
+- `plugins/seo-plugin/resources/templates/seo-strategy-schema.yml` exists and contains at least 8 top-level sections
 - Every field in the schema has a type annotation (string, number, boolean, array, enum, object)
-- `packages/seo-plugin/resources/templates/seo-strategy-template.md` exists and has 7 section headings
-- `packages/seo-plugin/resources/templates/state-schema.yml` exists
+- `plugins/seo-plugin/resources/templates/seo-strategy-template.md` exists and has 7 section headings
+- `plugins/seo-plugin/resources/templates/state-schema.yml` exists
 - No placeholder text remains in generated files
 
 Then update CLAUDE.md: check off this step in the Progress section and set "Next step" to the following step. Commit everything.
@@ -158,7 +158,7 @@ Read `docs/seo-plugin-implementation-plan.md` (the "Skill: project-interview" se
 Also read the brand-reference.yml schema in `docs/ecosystem-strategy.md` Section 6 to know what brand data is available.
 Read `docs/seo-plugin-addendum.md` (the "Domain Knowledge" section) for SEO context.
 
-Create `packages/seo-plugin/skills/project-interview/SKILL.md`
+Create `plugins/seo-plugin/skills/project-interview/SKILL.md`
 
 This skill:
 1. Load brand context if available — call brand-context-loader to read `identity.mission`, `identity.values`, `identity.positioning`, and `audience.segments` from brand-reference.yml
@@ -203,7 +203,7 @@ Read `docs/seo-plugin-implementation-plan.md` (the "Skill: keyword-research" sec
 Also read the brand-reference.yml schema in `docs/ecosystem-strategy.md` Section 6 to know what brand data is available.
 Read `docs/seo-plugin-addendum.md` (the "Keyword Research Methodology" section) for domain knowledge on search intent classification and keyword categorization.
 
-Create `packages/seo-plugin/skills/keyword-research/SKILL.md`
+Create `plugins/seo-plugin/skills/keyword-research/SKILL.md`
 
 This skill:
 1. Read seo-strategy.yml section `project_context` to get industry, goals, target_audience, and current_status.top_keywords
@@ -248,7 +248,7 @@ Then update CLAUDE.md: check off this step in the Progress section and set "Next
 Read `docs/seo-plugin-implementation-plan.md` (the "Skill: competitor-analysis" section under Skills).
 Read `docs/seo-plugin-addendum.md` (the "Competitive Analysis for SEO" section) for domain knowledge on competitor analysis methodology.
 
-Create `packages/seo-plugin/skills/competitor-analysis/SKILL.md`
+Create `plugins/seo-plugin/skills/competitor-analysis/SKILL.md`
 
 This skill:
 1. Read seo-strategy.yml section `project_context` to get industry, website_url, and current_status
@@ -289,7 +289,7 @@ Then update CLAUDE.md: check off this step in the Progress section and set "Next
 Read `docs/seo-plugin-implementation-plan.md` (the "Skill: technical-seo" section under Skills).
 Read `docs/seo-plugin-addendum.md` (the "Technical SEO Fundamentals" section) for domain knowledge on Core Web Vitals, crawlability, and mobile-first indexing.
 
-Create `packages/seo-plugin/skills/technical-seo/SKILL.md`
+Create `plugins/seo-plugin/skills/technical-seo/SKILL.md`
 
 This skill:
 1. Read seo-strategy.yml section `project_context` to get website_url and current_status (particularly known_issues)
@@ -337,7 +337,7 @@ Read `docs/seo-plugin-implementation-plan.md` (the "Skill: on-page-optimization"
 Read the "Skill: keyword-research" section in the implementation plan to understand the keyword data this skill consumes.
 Read `docs/seo-plugin-addendum.md` (the "Technical SEO Fundamentals" section, specifically the structured data paragraph).
 
-Create `packages/seo-plugin/skills/on-page-optimization/SKILL.md`
+Create `plugins/seo-plugin/skills/on-page-optimization/SKILL.md`
 
 This skill:
 1. Read seo-strategy.yml section `project_context` to get website_url and industry
@@ -387,7 +387,7 @@ Also read the brand-reference.yml schema in `docs/ecosystem-strategy.md` Section
 Read `docs/seo-plugin-addendum.md` (the "Topic Clusters and Content Architecture" section) for domain knowledge on pillar-cluster content models.
 Read the "Skill: keyword-research" and "Skill: competitor-analysis" sections in the implementation plan to understand the data this skill consumes.
 
-Create `packages/seo-plugin/skills/content-strategy/SKILL.md`
+Create `plugins/seo-plugin/skills/content-strategy/SKILL.md`
 
 This skill:
 1. Read seo-strategy.yml section `keywords` to get primary keywords (for pillar topics), secondary keywords (for cluster content), and long-tail keywords (for supporting pages)
@@ -435,7 +435,7 @@ Also read the brand-reference.yml schema in `docs/ecosystem-strategy.md` Section
 Read `docs/seo-plugin-addendum.md` (the "Link-Building in 2026" section) for domain knowledge on modern link-building strategies.
 Read the "Skill: competitor-analysis" and "Skill: content-strategy" sections in the implementation plan to understand the data this skill consumes.
 
-Create `packages/seo-plugin/skills/link-building/SKILL.md`
+Create `plugins/seo-plugin/skills/link-building/SKILL.md`
 
 This skill:
 1. Read seo-strategy.yml section `competitors.analyzed` to get each competitor's backlink_profile — total_backlinks, referring_domains, top_sources
@@ -475,9 +475,9 @@ Then update CLAUDE.md: check off this step in the Progress section and set "Next
 ---
 
 Read `docs/seo-plugin-implementation-plan.md` (the "Skill: compile-and-export" section under Skills).
-Read `packages/seo-plugin/resources/templates/seo-strategy-template.md` for the document structure template.
+Read `plugins/seo-plugin/resources/templates/seo-strategy-template.md` for the document structure template.
 
-Create `packages/seo-plugin/skills/compile-and-export/SKILL.md`
+Create `plugins/seo-plugin/skills/compile-and-export/SKILL.md`
 
 This skill:
 1. Read the complete seo-strategy.yml — validate all 7 data sections exist: project_context, keywords, competitors, on_page, technical, content_plan, link_building
@@ -517,10 +517,10 @@ Then update CLAUDE.md: check off this step in the Progress section and set "Next
 ---
 
 Read `docs/seo-plugin-implementation-plan.md` (the "/seo:strategy" section under Commands).
-Read `packages/task-planner/resources/plugin-blueprint.md` (Section 3: How Commands Work).
-Read `packages/brand-guideline/commands/brand-generate.md` as a reference for command file structure.
+Read `plugins/task-planner/resources/plugin-blueprint.md` (Section 3: How Commands Work).
+Read `plugins/brand-guideline/commands/brand-generate.md` as a reference for command file structure.
 
-Create `packages/seo-plugin/commands/strategy.md`
+Create `plugins/seo-plugin/commands/strategy.md`
 
 This command:
 1. Purpose: Generates a full SEO strategy through an interactive process with keyword research, competitor analysis, and actionable recommendations
@@ -542,7 +542,7 @@ This command:
 
 Checkpoint type: data_validation
 Required checks:
-- Command file exists at `packages/seo-plugin/commands/strategy.md`
+- Command file exists at `plugins/seo-plugin/commands/strategy.md`
 - Contains all 6 sections: purpose, prerequisites, input, execution strategy, output, recovery
 - Execution strategy references correct skills in correct wave order (project-interview → keyword-research → competitor-analysis+technical-seo → on-page-optimization → content-strategy → link-building → compile-and-export)
 - /plan:create call specifies verification profile "seo_plugin_profile" and QA frequency "every_wave"
@@ -562,9 +562,9 @@ Then update CLAUDE.md: check off this step in the Progress section and set "Next
 ---
 
 Read `docs/seo-plugin-implementation-plan.md` (the "/seo:audit" section under Commands).
-Read `packages/task-planner/resources/plugin-blueprint.md` (Section 3: How Commands Work).
+Read `plugins/task-planner/resources/plugin-blueprint.md` (Section 3: How Commands Work).
 
-Create `packages/seo-plugin/commands/audit.md`
+Create `plugins/seo-plugin/commands/audit.md`
 
 This command:
 1. Purpose: Audits an existing website or page against SEO best practices and reports issues with fix recommendations
@@ -583,7 +583,7 @@ This command:
 
 Checkpoint type: data_validation
 Required checks:
-- Command file exists at `packages/seo-plugin/commands/audit.md`
+- Command file exists at `plugins/seo-plugin/commands/audit.md`
 - Contains all 6 sections: purpose, prerequisites, input, execution strategy, output, recovery
 - Execution strategy covers both on-page and technical audit checks
 
@@ -602,9 +602,9 @@ Then update CLAUDE.md: check off this step in the Progress section and set "Next
 ---
 
 Read `docs/seo-plugin-implementation-plan.md` (the "/seo:content-brief" section under Commands).
-Read `packages/task-planner/resources/plugin-blueprint.md` (Section 3: How Commands Work).
+Read `plugins/task-planner/resources/plugin-blueprint.md` (Section 3: How Commands Work).
 
-Create `packages/seo-plugin/commands/content-brief.md`
+Create `plugins/seo-plugin/commands/content-brief.md`
 
 This command:
 1. Purpose: Generates a detailed content brief for a specific keyword or topic
@@ -623,7 +623,7 @@ This command:
 
 Checkpoint type: data_validation
 Required checks:
-- Command file exists at `packages/seo-plugin/commands/content-brief.md`
+- Command file exists at `plugins/seo-plugin/commands/content-brief.md`
 - Contains all 6 sections: purpose, prerequisites, input, execution strategy, output, recovery
 - Interactive phases ask about content type and angle
 
@@ -642,9 +642,9 @@ Then update CLAUDE.md: check off this step in the Progress section and set "Next
 ---
 
 Read `docs/seo-plugin-implementation-plan.md` (the "/seo:export" section under Commands).
-Read `packages/task-planner/resources/plugin-blueprint.md` (Section 3: How Commands Work).
+Read `plugins/task-planner/resources/plugin-blueprint.md` (Section 3: How Commands Work).
 
-Create `packages/seo-plugin/commands/export.md`
+Create `plugins/seo-plugin/commands/export.md`
 
 This command:
 1. Purpose: Exports the SEO strategy as a formatted report in Markdown or DOCX format
@@ -662,7 +662,7 @@ This command:
 
 Checkpoint type: data_validation
 Required checks:
-- Command file exists at `packages/seo-plugin/commands/export.md`
+- Command file exists at `plugins/seo-plugin/commands/export.md`
 - Contains all 6 sections: purpose, prerequisites, input, execution strategy, output, recovery
 - Execution strategy handles both md and docx format options
 

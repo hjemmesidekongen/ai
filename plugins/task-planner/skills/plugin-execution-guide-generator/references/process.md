@@ -3,12 +3,12 @@
 ## Prerequisites
 
 Before running this skill, read:
-1. `packages/[plugin-name]/design.yml` — the approved design
+1. `plugins/[plugin-name]/design.yml` — the approved design
 2. `docs/[plugin-name]-implementation-plan.md` — full spec with skills, commands, schema, build order
 3. `docs/[plugin-name]-addendum.md` — domain knowledge, quality standards, tools
 4. `docs/[plugin-name]-asset-manifest.md` — asset details (only if design.yml defines assets)
 5. `docs/ecosystem-strategy.md` — Section 4 (Skill Prompt Template)
-6. `packages/task-planner/resources/plugin-blueprint.md` — Sections 3 (Commands) and 4 (Skills)
+6. `plugins/task-planner/resources/plugin-blueprint.md` — Sections 3 (Commands) and 4 (Skills)
 
 ## Process
 
@@ -101,8 +101,8 @@ Read `docs/[plugin-name]-implementation-plan.md` (the "[skill-name]" section und
 [If domain-specific knowledge needed:] Read `docs/[plugin-name]-addendum.md` ([specific section name]).
 [If reads another skill's output:] Read the "[other-skill-name]" section in the implementation plan to understand the data this skill consumes.
 
-Create `packages/[plugin-name]/skills/[skill-name]/SKILL.md`
-[If skill exceeds 80 lines:] Also create `packages/[plugin-name]/skills/[skill-name]/references/process.md` with the detailed execution steps. The SKILL.md body must end with: "Before executing, read `references/process.md` for detailed instructions, output formats, and edge case handling."
+Create `plugins/[plugin-name]/skills/[skill-name]/SKILL.md`
+[If skill exceeds 80 lines:] Also create `plugins/[plugin-name]/skills/[skill-name]/references/process.md` with the detailed execution steps. The SKILL.md body must end with: "Before executing, read `references/process.md` for detailed instructions, output formats, and edge case handling."
 
 The SKILL.md must include these context engineering sections:
 
@@ -206,13 +206,13 @@ Generate the Step 1 prompt for scaffolding:
 
 ---
 
-Read `packages/task-planner/resources/plugin-blueprint.md` (Section 2: Required Plugin Structure).
+Read `plugins/task-planner/resources/plugin-blueprint.md` (Section 2: Required Plugin Structure).
 
 Create the plugin scaffold:
 
 1. Create directory structure:
    ```
-   packages/[plugin-name]/
+   plugins/[plugin-name]/
    ├── .claude-plugin/
    │   └── plugin.json
    ├── commands/
@@ -225,7 +225,7 @@ Create the plugin scaffold:
    └── README.md
    ```
 
-2. Write `packages/[plugin-name]/.claude-plugin/plugin.json` (including hooks):
+2. Write `plugins/[plugin-name]/.claude-plugin/plugin.json` (including hooks):
    ```json
    {
      "name": "[plugin-name]",
@@ -238,15 +238,15 @@ Create the plugin scaffold:
      "hooks": {
        "PreToolUse": [{ "matcher": "Write|Edit|Bash", "command": "cat state.yml 2>/dev/null | head -20 || true" }],
        "PostToolUse": [{ "matcher": "Write|Edit", "command": "echo '[plugin-name] File updated. If this completes a phase, update state.yml.'" }],
-       "SessionStart": [{ "command": "bash packages/[plugin-name]/scripts/session-recovery.sh" }],
-       "Stop": [{ "command": "bash packages/[plugin-name]/scripts/check-wave-complete.sh" }]
+       "SessionStart": [{ "command": "bash plugins/[plugin-name]/scripts/session-recovery.sh" }],
+       "Stop": [{ "command": "bash plugins/[plugin-name]/scripts/check-wave-complete.sh" }]
      }
    }
    ```
 
-3. Create `packages/[plugin-name]/scripts/session-recovery.sh` and `packages/[plugin-name]/scripts/check-wave-complete.sh` (see plugin-blueprint.md Section 13 for templates). Make both executable with `chmod +x`.
+3. Create `plugins/[plugin-name]/scripts/session-recovery.sh` and `plugins/[plugin-name]/scripts/check-wave-complete.sh` (see plugin-blueprint.md Section 13 for templates). Make both executable with `chmod +x`.
 
-4. Write `packages/[plugin-name]/README.md` with:
+4. Write `plugins/[plugin-name]/README.md` with:
    - Plugin name and description
    - Installation: "This plugin is part of the claude-plugins ecosystem"
    - Usage: list all commands with one-line descriptions
@@ -282,21 +282,21 @@ Generate the Step 2 prompt for creating the YAML schema and document templates:
 ---
 
 Read `docs/[plugin-name]-implementation-plan.md` (the "YAML Schema" section).
-Also read `packages/brand-guideline/resources/templates/brand-reference-schema.yml` as a reference for schema structure.
+Also read `plugins/brand-guideline/resources/templates/brand-reference-schema.yml` as a reference for schema structure.
 
-Create `packages/[plugin-name]/resources/templates/[yaml-name]-schema.yml`:
+Create `plugins/[plugin-name]/resources/templates/[yaml-name]-schema.yml`:
 [Paste the COMPLETE YAML schema from the implementation plan — every field, every type, every enum value]
 
-Create `packages/[plugin-name]/resources/templates/[document-name]-template.md`:
+Create `plugins/[plugin-name]/resources/templates/[document-name]-template.md`:
 [Generate a markdown template with all document sections as headings, with placeholder content describing what goes in each section]
 
 [If format includes docx:]
-Create `packages/[plugin-name]/resources/templates/[document-name]-docx-styles.yml`:
-[Generate document styling config following the pattern in `packages/brand-guideline/resources/templates/brand-manual-template-docx-styles.yml`]
+Create `plugins/[plugin-name]/resources/templates/[document-name]-docx-styles.yml`:
+[Generate document styling config following the pattern in `plugins/brand-guideline/resources/templates/brand-manual-template-docx-styles.yml`]
 
 [If design.yml defines a state schema:]
-Create `packages/[plugin-name]/resources/templates/state-schema.yml`:
-[Generate state.yml schema following the pattern in `packages/brand-guideline/resources/templates/state-schema.yml`]
+Create `plugins/[plugin-name]/resources/templates/state-schema.yml`:
+[Generate state.yml schema following the pattern in `plugins/brand-guideline/resources/templates/state-schema.yml`]
 
 Checkpoint type: file_validation
 Required checks:
@@ -325,9 +325,9 @@ For EACH command in design.yml, generate a complete prompt:
 ---
 
 Read `docs/[plugin-name]-implementation-plan.md` (the "/[plugin]:[command-name]" section under Commands).
-Read `packages/task-planner/resources/plugin-blueprint.md` (Section 3: How Commands Work).
+Read `plugins/task-planner/resources/plugin-blueprint.md` (Section 3: How Commands Work).
 
-Create `packages/[plugin-name]/commands/[command-name].md`
+Create `plugins/[plugin-name]/commands/[command-name].md`
 
 This command:
 1. [Purpose — from implementation plan]
@@ -543,7 +543,7 @@ Before writing the final file, validate the generated execution guide:
 
 2. **Prompt quality check (for EVERY skill prompt):**
    - Contains spec file reference with section name
-   - Contains `Create packages/[plugin-name]/skills/[skill-name]/SKILL.md` instruction
+   - Contains `Create plugins/[plugin-name]/skills/[skill-name]/SKILL.md` instruction
    - Contains model tier recommendation (junior, senior, or principal) in the header
    - Contains findings persistence instructions (findings.md path, 2-Action Rule, format template)
    - Contains error logging instructions (4 standard rules)

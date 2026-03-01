@@ -18,7 +18,7 @@ If the migration type is "major", require user confirmation before proceeding.
 ### Step N: Generate Migration
 
 After archiving the schema, call the migration-guide-generator skill
-(packages/task-planner/skills/migration-guide-generator/SKILL.md) to
+(plugins/task-planner/skills/migration-guide-generator/SKILL.md) to
 diff the old and new schemas and produce the migration guide, transform
 script, and MIGRATION-REGISTRY.yml entry.
 ```
@@ -30,8 +30,8 @@ The calling command provides:
 - **Plugin name** — the plugin being versioned (e.g., `seo-plugin`)
 - **Old version** — the previous version number (e.g., `1.0.0`)
 - **New version** — the new version number (e.g., `1.1.0` or `2.0.0`)
-- **Old schema path** — path to the archived schema (e.g., `packages/seo-plugin/resources/schemas/archive/v1.0.0.yml`)
-- **New schema path** — path to the current schema (e.g., `packages/seo-plugin/resources/templates/seo-strategy-schema.yml`)
+- **Old schema path** — path to the archived schema (e.g., `plugins/seo-plugin/resources/schemas/archive/v1.0.0.yml`)
+- **New schema path** — path to the current schema (e.g., `plugins/seo-plugin/resources/templates/seo-strategy-schema.yml`)
 
 ---
 
@@ -39,9 +39,9 @@ The calling command provides:
 
 Read both YAML schema files and parse them into a comparable tree structure.
 
-**Old schema:** Read from `packages/[plugin]/resources/schemas/archive/v[old].yml`
+**Old schema:** Read from `plugins/[plugin]/resources/schemas/archive/v[old].yml`
 
-**New schema:** Read from the plugin's current schema template. The exact filename varies by plugin — look in `packages/[plugin]/resources/templates/` for the main `*-schema.yml` file.
+**New schema:** Read from the plugin's current schema template. The exact filename varies by plugin — look in `plugins/[plugin]/resources/templates/` for the main `*-schema.yml` file.
 
 If either file does not exist, fail with error:
 ```
@@ -151,7 +151,7 @@ Generate a one-paragraph summary describing what changed and why. Reference spec
 
 ## Step 4: Generate the Migration Guide
 
-Create `packages/[plugin]/migrations/v[old]-to-v[new].md`:
+Create `plugins/[plugin]/migrations/v[old]-to-v[new].md`:
 
 ```markdown
 # Migration: [plugin] v[old] → v[new]
@@ -238,7 +238,7 @@ To revert this migration:
 
 ## Step 5: Generate the Transform Script
 
-Create `packages/[plugin]/migrations/scripts/v[old]-to-v[new].yml`:
+Create `plugins/[plugin]/migrations/scripts/v[old]-to-v[new].yml`:
 
 Use a structured YAML format (not a shell script) so that `/plugin:migrate` can parse and apply transformations programmatically:
 
@@ -306,7 +306,7 @@ transforms:
 
 ## Step 6: Update MIGRATION-REGISTRY.yml
 
-Read or create `packages/[plugin]/migrations/MIGRATION-REGISTRY.yml`.
+Read or create `plugins/[plugin]/migrations/MIGRATION-REGISTRY.yml`.
 
 **If the file does not exist**, create it with the header:
 
@@ -349,9 +349,9 @@ migrations:
 
 Three files are created or updated:
 
-1. `packages/[plugin]/migrations/v[old]-to-v[new].md` — human-readable migration guide
-2. `packages/[plugin]/migrations/scripts/v[old]-to-v[new].yml` — structured transform definition
-3. `packages/[plugin]/migrations/MIGRATION-REGISTRY.yml` — updated migration index
+1. `plugins/[plugin]/migrations/v[old]-to-v[new].md` — human-readable migration guide
+2. `plugins/[plugin]/migrations/scripts/v[old]-to-v[new].yml` — structured transform definition
+3. `plugins/[plugin]/migrations/MIGRATION-REGISTRY.yml` — updated migration index
 
 ## Checkpoint (full detail)
 
@@ -379,7 +379,7 @@ Although this is a utility skill (called by `/plugin:version`, not by wave plans
 | New schema file not found | Fail with error: "Cannot find current schema at [path]. Verify the plugin has a schema template." |
 | MIGRATION-REGISTRY.yml has a duplicate entry | Ask user whether to overwrite the existing entry |
 | Migration chain gap (e.g., jumping from 1.0.0 to 1.2.0 without 1.1.0) | Warn: "No migration exists from v[last] to v[old]. The migration chain has a gap." Generate the file anyway — the gap is the caller's problem. |
-| Plugin has no schema template | Fail with error: "No schema template found in packages/[plugin]/resources/templates/. Cannot diff without schemas." |
+| Plugin has no schema template | Fail with error: "No schema template found in plugins/[plugin]/resources/templates/. Cannot diff without schemas." |
 | Ambiguous renames (multiple removed + multiple added fields) | Ask the user about each potential rename individually. Never assume renames. |
 | Array item schema changes (e.g., items inside `keywords.primary[]`) | Diff array item sub-fields recursively. Treat `[].fieldname` paths the same as regular paths. |
 

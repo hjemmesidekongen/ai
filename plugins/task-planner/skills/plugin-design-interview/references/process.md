@@ -4,8 +4,8 @@
 
 Before starting this skill, read:
 1. `docs/ecosystem-strategy.md` — Section 2 (The 8 Design Questions) and Section 6 (Brand Data Available)
-2. `packages/task-planner/resources/plugin-blueprint.md` — Section 1 (Every Plugin Must Answer These Questions)
-3. `packages/task-planner/resources/verification-registry.yml` — for Q7 (standard verification types)
+2. `plugins/task-planner/resources/plugin-blueprint.md` — Section 1 (Every Plugin Must Answer These Questions)
+3. `plugins/task-planner/resources/verification-registry.yml` — for Q7 (standard verification types)
 
 ## Pre-Interview: Load Brainstorm Decisions
 
@@ -235,7 +235,7 @@ For [plugin-name]:
 
 ### Step 7 — Q7: What Verification Types?
 
-Read `packages/task-planner/resources/verification-registry.yml` for the standard types.
+Read `plugins/task-planner/resources/verification-registry.yml` for the standard types.
 
 Present the standard types:
 
@@ -310,7 +310,7 @@ Enforce minimums:
 
 After all 8 questions are answered, compile the structured design summary.
 
-Write to `packages/[plugin-name]/design.yml`:
+Write to `plugins/[plugin-name]/design.yml`:
 
 ```yaml
 # ============================================================
@@ -423,7 +423,7 @@ Present the design summary to the user for review:
 **Output:** [yaml name] + [document format]
 **Waves:** [count] — [wave summary]
 
-Review the full design.yml at packages/[plugin-name]/design.yml.
+Review the full design.yml at plugins/[plugin-name]/design.yml.
 Does everything look correct? Any changes before we generate the specs?"
 ```
 

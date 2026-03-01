@@ -50,11 +50,11 @@ This command does NOT use the task-planner for wave execution — it runs a line
 ## Prerequisites
 
 Before running, read:
-1. `packages/task-planner/resources/plugin-blueprint.md` — Section 12 (Plugin Versioning)
+1. `plugins/task-planner/resources/plugin-blueprint.md` — Section 12 (Plugin Versioning)
 2. The three versioning skills:
-   - `packages/task-planner/skills/version-meta-stamper/SKILL.md`
-   - `packages/task-planner/skills/version-compatibility-checker/SKILL.md`
-   - `packages/task-planner/skills/migration-guide-generator/SKILL.md`
+   - `plugins/task-planner/skills/version-meta-stamper/SKILL.md`
+   - `plugins/task-planner/skills/version-compatibility-checker/SKILL.md`
+   - `plugins/task-planner/skills/migration-guide-generator/SKILL.md`
 
 ## Execution Steps
 
@@ -84,7 +84,7 @@ Resolve the project's data directory based on the plugin name:
    - If `_meta` exists → `file_version = _meta.plugin_version`
    - If `_meta` does not exist → `file_version = "0.0.0"` (pre-versioning legacy file)
 
-4. Read `packages/[plugin-name]/.claude-plugin/plugin.json` to get `current_plugin_version`.
+4. Read `plugins/[plugin-name]/.claude-plugin/plugin.json` to get `current_plugin_version`.
 
 5. If `file_version == current_plugin_version`:
    ```
@@ -94,11 +94,11 @@ Resolve the project's data directory based on the plugin name:
 
 ### Step 2: Determine Migration Chain
 
-1. Read `packages/[plugin-name]/migrations/MIGRATION-REGISTRY.yml`.
+1. Read `plugins/[plugin-name]/migrations/MIGRATION-REGISTRY.yml`.
 
    If the file does not exist:
    ```
-   No migration registry found at packages/[plugin-name]/migrations/MIGRATION-REGISTRY.yml.
+   No migration registry found at plugins/[plugin-name]/migrations/MIGRATION-REGISTRY.yml.
    This plugin has no registered migrations. Cannot proceed.
    ```
    Exit.
@@ -205,8 +205,8 @@ For each migration in the chain (in order):
 #### 5a: Load Migration Artifacts
 
 Read the migration guide and transform script:
-- Guide: `packages/[plugin-name]/migrations/v[from]-to-v[to].md`
-- Script: `packages/[plugin-name]/migrations/scripts/v[from]-to-v[to].yml`
+- Guide: `plugins/[plugin-name]/migrations/v[from]-to-v[to].md`
+- Script: `plugins/[plugin-name]/migrations/scripts/v[from]-to-v[to].yml`
 
 If either file is missing:
 ```
@@ -336,7 +336,7 @@ When a path contains `[]` (e.g., `keywords.primary[].volume`), apply the transfo
 #### 5f: Version Stamp
 
 After applying all transforms for this migration step, call the version-meta-stamper skill to update the `_meta` block:
-- Read `packages/task-planner/skills/version-meta-stamper/SKILL.md`
+- Read `plugins/task-planner/skills/version-meta-stamper/SKILL.md`
 - Apply it to the data file with the `to` version as the current version
 
 This ensures `_meta.plugin_version` reflects the version after this migration step (not the final target — that happens in the last step of the chain).
@@ -410,7 +410,7 @@ verification_result: "passed"
 #### 6b: Run Verification
 
 Run the version-compatibility-checker to confirm the migrated data is now compatible:
-- Read `packages/task-planner/skills/version-compatibility-checker/SKILL.md`
+- Read `plugins/task-planner/skills/version-compatibility-checker/SKILL.md`
 - Apply it to the data file
 - Expected result: severity `ok` (exact match after migration)
 
@@ -481,16 +481,16 @@ on_pass: "Report success to user"
 | Backup directory already exists for this timestamp | Append a counter: `[timestamp]-2`, `[timestamp]-3` |
 | Transform script references a path that doesn't exist in data | Warn and skip that transform (don't fail the whole migration) |
 | Multiple data files in project directory | Only migrate the main data file (primary YAML output). Other files are auxiliary. |
-| Plugin directory not found | Error: "Plugin [name] not found at packages/[name]/" |
+| Plugin directory not found | Error: "Plugin [name] not found at plugins/[name]/" |
 
 ## Integration Points
 
 ### What this command reads
 
-- `packages/[plugin-name]/.claude-plugin/plugin.json` — current plugin version
-- `packages/[plugin-name]/migrations/MIGRATION-REGISTRY.yml` — migration chain index
-- `packages/[plugin-name]/migrations/v[from]-to-v[to].md` — migration guide (for display)
-- `packages/[plugin-name]/migrations/scripts/v[from]-to-v[to].yml` — transform definitions
+- `plugins/[plugin-name]/.claude-plugin/plugin.json` — current plugin version
+- `plugins/[plugin-name]/migrations/MIGRATION-REGISTRY.yml` — migration chain index
+- `plugins/[plugin-name]/migrations/v[from]-to-v[to].md` — migration guide (for display)
+- `plugins/[plugin-name]/migrations/scripts/v[from]-to-v[to].yml` — transform definitions
 - `[project-dir]/[main-data-file].yml` — the file being migrated
 
 ### What this command writes
