@@ -121,7 +121,7 @@ docs/
 - [x] Step 26: Skill — project-interview
 - [x] Step 27: Skill — keyword-research
 - [x] Step 28: Skill — competitor-analysis
-- [ ] Step 29: Skill — technical-seo
+- [x] Step 29: Skill — technical-seo
 - [ ] Step 30: Skill — on-page-optimization
 - [ ] Step 31: Skill — content-strategy
 - [ ] Step 32: Skill — link-building
@@ -132,7 +132,7 @@ docs/
 - [ ] Step 37: Command — /seo:export
 - [ ] Step 38: End-to-end test
 
-Next step: Step 29 — Skill — technical-seo
+Next step: Step 30 — Skill — on-page-optimization
 
 ## Specs
 Read the relevant spec BEFORE implementing. Do NOT try to build everything at once.
