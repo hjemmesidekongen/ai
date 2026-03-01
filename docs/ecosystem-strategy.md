@@ -306,14 +306,16 @@ design and must be maintained.
 - High confidence → quick confirmation. Medium → starting point. Low → context hint.
 - No decisions file → interview runs normally (graceful fallback)
 
-### 5i. Brainstorming
-- Available via `/brainstorm [mode]` before committing to major decisions
-- Brainstorming is always OPTIONAL — skills work without it
-- Plugins register domain-specific modes in brainstorm-modes-registry.yml
-- Each mode defines topics, ideation techniques, constraints, and which skills consume the output
-- Four phases: diverge (generate), explore (trade-offs), converge (rank), decide (commit)
-- Decisions are captured in structured session files and can be pre-loaded by downstream skills
-- The user always confirms brainstorm decisions before they're used — never silently applied
+### 5j. Hooks & Context Engineering
+- Every plugin defines hooks in plugin.json (PreToolUse, PostToolUse, SessionStart, Stop)
+- **PreToolUse hook** re-reads state.yml before every Write/Edit/Bash — prevents goal drift after 50+ tool calls
+- **PostToolUse hook** reminds to update state after file writes — prevents forgotten status updates
+- **SessionStart hook** runs session-recovery.sh — detects resumed sessions, reports lost context
+- **Stop hook** runs check-wave-complete.sh — prevents premature completion, Claude cannot stop until current skill is verified
+- **2-Action Rule** for research skills: save findings to findings.md every 2 research operations
+- **Error persistence**: all failures logged to state.yml errors array with what was tried and what to try next
+- **Never repeat failures**: check errors before retrying — mutate approach if same method already failed
+- findings.md stores intermediate research; persists across `/compact` and session restarts
 
 ---
 

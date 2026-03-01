@@ -5,5 +5,29 @@
   "commands": ["plan-create", "plan-execute", "plan-status", "plan-resume", "plugin-migrate", "plugin-version"],
   "skills": ["wave-decomposer", "file-ownership", "verification-runner", "qa-reviewer", "version-meta-stamper", "version-compatibility-checker", "migration-guide-generator"],
   "agents": ["qa-agent", "worker-agent"],
-  "dependencies": []
+  "dependencies": [],
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Write|Edit|Bash",
+        "command": "cat state.yml 2>/dev/null | head -20 || true"
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit",
+        "command": "echo '[task-planner] File updated. If this completes a phase, update state.yml.'"
+      }
+    ],
+    "SessionStart": [
+      {
+        "command": "bash packages/task-planner/scripts/session-recovery.sh"
+      }
+    ],
+    "Stop": [
+      {
+        "command": "bash packages/task-planner/scripts/check-wave-complete.sh"
+      }
+    ]
+  }
 }

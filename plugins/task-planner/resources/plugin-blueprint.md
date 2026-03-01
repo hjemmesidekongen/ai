@@ -38,7 +38,7 @@ Every plugin follows this exact structure. No exceptions.
 ```
 packages/[plugin-name]/
 ├── .claude-plugin/
-│   └── plugin.json              # Manifest — name, version, dependencies, commands, skills
+│   └── plugin.json              # Manifest — name, version, dependencies, commands, skills, hooks
 ├── commands/
 │   └── [command-name].md        # One file per slash command
 ├── skills/
@@ -54,7 +54,9 @@ packages/[plugin-name]/
 │   ├── schemas/
 │   │   └── archive/             # Archived schemas per version (for migration diffing)
 │   └── examples/                # Sample inputs and outputs
-├── scripts/                     # Shell scripts for build/convert/validate
+├── scripts/
+│   ├── session-recovery.sh      # SessionStart hook: detect resumed session, show context
+│   └── check-wave-complete.sh   # Stop hook: prevent premature stops, verify skill complete
 ├── CHANGELOG.md                 # Version history
 └── README.md                    # What the plugin does, how to install, how to use
 ```
@@ -69,7 +71,31 @@ packages/[plugin-name]/
   "commands": ["[list of command names without plugin prefix]"],
   "skills": ["[list of skill directory names]"],
   "agents": ["[list of agent filenames without .md]"],
-  "dependencies": ["task-planner"]
+  "dependencies": ["task-planner"],
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Write|Edit|Bash",
+        "command": "cat state.yml 2>/dev/null | head -20 || true"
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit",
+        "command": "echo '[plugin-name] File updated. If this completes a phase, update state.yml.'"
+      }
+    ],
+    "SessionStart": [
+      {
+        "command": "scripts/session-recovery.sh"
+      }
+    ],
+    "Stop": [
+      {
+        "command": "scripts/check-wave-complete.sh"
+      }
+    ]
+  }
 }
 ```
 
@@ -77,6 +103,7 @@ packages/[plugin-name]/
 - `dependencies` ALWAYS includes `task-planner` — every plugin uses it for planning and verification
 - If the plugin needs brand data, add `brand-guideline` to dependencies
 - The `name` field must be kebab-case
+- `hooks` section is required for all plugins (see Section 13: Hooks & Context Engineering)
 
 ---
 
@@ -315,11 +342,59 @@ phases:
     artifacts:
       - "[file that was created]"
 
+errors:
+  - timestamp: "[ISO timestamp]"
+    skill: "[skill name]"
+    error: "[what went wrong]"
+    attempted_fix: "[what was tried]"
+    result: "resolved | partial | unresolved"
+    next_approach: "[what to try next, if unresolved]"
+
 last_session_id: "[session ID]"
 recovery_notes: |
   [Human-readable notes about where we are and what's next.
    This is what Claude reads when resuming.]
 ```
+
+### Error Persistence Rules
+
+The `errors` array in state.yml survives `/compact` and session restarts.
+Every plugin must follow these rules:
+
+1. **Log ALL errors.** If something fails, add it to `errors` immediately.
+2. **Never repeat failures.** Before attempting an approach, check `errors`
+   for previous attempts. If the same approach already failed, mutate.
+3. **Track resolution.** When an error is fixed, update `result` to "resolved"
+   but keep the entry — it documents what was tried.
+4. **Verification runner writes errors.** When a checkpoint fails,
+   the verification-runner logs it to state.yml automatically.
+
+### Findings File
+
+During research-heavy skills (interviews, competitor analysis, keyword
+research), intermediate discoveries are written to a findings file:
+
+```
+~/.claude/[domain]/[project-name]/findings.md
+```
+
+For brand: `~/.claude/brands/[brand-name]/findings.md`
+For SEO: `~/.claude/seo/[project-name]/findings.md`
+
+**findings.md** stores:
+- Research discoveries and source URLs
+- Competitor analysis notes
+- Technical decisions with rationale
+- User responses and clarifications during interviews
+- Any information gathered before the final YAML is written
+
+**Rules:**
+- Skills that do research MUST write to findings.md, not just keep it in context
+- **2-Action Rule:** After every 2 research operations (web search, file read,
+  user question), IMMEDIATELY save key findings to findings.md before continuing
+- findings.md persists across sessions — if context is lost, findings survive
+- The compile/export skill can reference findings.md for additional context
+- findings.md stays as a permanent research archive after the project is complete
 
 ---
 
@@ -369,9 +444,12 @@ Output: design.yml with all 8 answers.
 ```
 Based on the design, create the plugin scaffold following the blueprint:
 1. packages/[plugin-name]/.claude-plugin/plugin.json
+   (include hooks: PreToolUse, PostToolUse, SessionStart, Stop — see blueprint Section 13)
 2. Empty directories: commands/, skills/, agents/, resources/, scripts/
-3. README.md
-4. Register the verification profile in task-planner's verification-registry.yml
+3. scripts/session-recovery.sh and scripts/check-wave-complete.sh
+   (follow the patterns from blueprint Section 13)
+4. README.md
+5. Register the verification profile in task-planner's verification-registry.yml
 
 Then update CLAUDE.md: check off this step in the Progress section and set 
 "Next step" to the following step. Commit everything.
@@ -407,6 +485,16 @@ This skill:
 
 [If it needs brand data:]
 Brand data needed: [list sections from brand-reference.yml]
+
+[If it does research (interviews, competitor analysis, web search):]
+Research & findings:
+- Write intermediate discoveries to findings.md in the project directory
+- 2-Action Rule: after every 2 research operations, save to findings.md immediately
+- Check findings.md from previous skills for relevant context
+
+Error handling:
+- Log failures to state.yml errors array (timestamp, skill, error, attempted_fix)
+- Before retrying: check state.yml errors for previous attempts on this skill
 
 Output: [what files/sections it writes]
 Checkpoint type: [type]
@@ -550,6 +638,12 @@ These apply to EVERY plugin:
 11. **Every plugin output is version-stamped.** All YAML output files get a `_meta` block with plugin version and schema version.
 12. **Every plugin has a migrations/ directory.** Even if empty at v1.0.0. Contains MIGRATION-REGISTRY.yml and per-version migration definitions.
 13. **Data loaders check version compatibility.** Before loading project data, verify the file version matches the plugin version. Block on major mismatches.
+14. **Every plugin has hooks.** PreToolUse re-reads state before actions. Stop hook prevents premature completion. SessionStart runs recovery check. (See Section 13.)
+15. **Research skills write to findings.md.** Intermediate discoveries go to disk, not just context. Findings survive `/compact`.
+16. **2-Action Rule for research.** After every 2 research operations (search, read, question), IMMEDIATELY save findings to findings.md.
+17. **All errors are persisted in state.yml.** Failed approaches are logged with what was tried and what to try next. Claude reads errors before retrying.
+18. **Never repeat failed approaches.** Check state.yml errors before attempting anything. If the same approach already failed, mutate the strategy.
+19. **Session recovery runs at startup.** The SessionStart hook detects resumed sessions and reports what may have been lost since last state.yml update.
 
 ---
 
@@ -627,47 +721,163 @@ Use `/plugin:migrate [name] --project [project]`:
 
 ---
 
-## 13. Brainstorm Integration
+## 13. Hooks & Context Engineering
 
-Every plugin can register brainstorm modes that let users explore ideas
-before committing to decisions. This is optional but recommended for
-plugins with creative or strategic decisions.
+Hooks are Claude Code lifecycle events that run automatically. Every plugin
+uses hooks to maintain context, prevent drift, and enforce completion.
 
-### Registering a Brainstorm Mode
+### Why Hooks Matter
 
-Append to `packages/task-planner/resources/brainstorm-modes-registry.yml`:
+After 50+ tool calls, Claude's original goals are at the TOP of the context
+window (far from attention). Recent tool outputs are at the BOTTOM (where
+attention is). Goals get "lost in the middle." Hooks fix this by re-injecting
+key state into the attention window at critical moments.
 
-```yaml
-[mode-name]:
-  registered_by: "[plugin-name]"
-  description: "[what this brainstorm explores]"
-  topics:
-    - name: "[topic-id]"
-      prompt: "[opening question]"
-      techniques: ["[technique names from brainstorm-techniques.yml]"]
-      constraints: ["[boundaries]"]
-      depends_on: ["[other topic names]"]
-  context_from:
-    brand_reference: ["[sections to load]"]
-    other_files: ["[paths]"]
-  output_to: "brainstorm-sessions/[session-id].yml"
-  feeds_into: ["[skill names that consume these decisions]"]
+### Required Hooks
+
+Every plugin must define these in plugin.json:
+
+**PreToolUse** — Re-read state before every action
+```
+matcher: "Write|Edit|Bash"
+command: "cat [state-file] 2>/dev/null | head -20 || true"
+```
+- Runs before every Write, Edit, or Bash tool call
+- Re-injects current phase/wave/objectives into the attention window
+- Prevents goal drift during long execution sequences
+- Plugin-specific: brand-guideline reads state.yml, seo-plugin reads
+  its own state, etc.
+
+**PostToolUse** — Remind to update state after writes
+```
+matcher: "Write|Edit"
+command: "echo '[plugin-name] File updated. If this completes a phase, update state.yml.'"
+```
+- Gentle reminder after every file write
+- Prevents the common failure of completing work but not updating state
+
+**SessionStart** — Recovery check on session start
+```
+command: "scripts/session-recovery.sh"
+```
+- Detects if this is a resumed session (after `/compact` or `/clear`)
+- Reports: current phase, last state update, pending errors, git changes
+- Claude reads this output and orients before doing any work
+
+**Stop** — Completion gate before Claude stops
+```
+command: "scripts/check-wave-complete.sh"
+```
+- Runs when Claude tries to finish
+- Checks state.yml: is the current skill/phase marked complete + verified?
+- If not complete: returns error message, Claude must keep working
+- If complete: allows stop
+- Prevents premature "I'm done!" when work is still in progress
+
+### Plugin-Specific Hooks
+
+Plugins can add hooks beyond the required set. Examples:
+
+**brand-guideline** might add:
+```json
+"PreToolUse": [
+  {
+    "matcher": "Write|Edit|Bash",
+    "command": "cat ~/.claude/brands/$(cat ~/.claude/active-brand.yml 2>/dev/null)/state.yml 2>/dev/null | head -20 || true"
+  }
+]
 ```
 
-### Consuming Brainstorm Decisions
+**seo-plugin** might add a PostToolUse hook that validates SEO-specific
+output after every write.
 
-Skills listed in `feeds_into` should check for brainstorm sessions at startup:
+### Hook Scripts
+
+Two scripts are required in every plugin's `scripts/` directory:
+
+**scripts/session-recovery.sh:**
+```bash
+#!/bin/bash
+echo "=== Session Recovery Check ==="
+if [ -f state.yml ]; then
+  echo "State file found."
+  echo "Current phase: $(grep 'current_phase:' state.yml 2>/dev/null)"
+  echo "Last updated: $(stat -c %Y state.yml 2>/dev/null || stat -f %m state.yml 2>/dev/null)"
+  ERRORS=$(grep -c '  - timestamp:' state.yml 2>/dev/null || echo 0)
+  echo "Logged errors: $ERRORS"
+  echo "Git changes since last commit:"
+  git diff --stat HEAD 2>/dev/null || echo "  (not a git repo)"
+else
+  echo "No state.yml found. Fresh start."
+fi
+```
+
+**scripts/check-wave-complete.sh:**
+```bash
+#!/bin/bash
+STATUS=$(grep 'status:' state.yml 2>/dev/null | tail -1 | awk '{print $2}' | tr -d '"')
+SKILL=$(grep 'current_phase:' state.yml 2>/dev/null | awk '{print $2}' | tr -d '"')
+
+if [ "$STATUS" != "completed" ] && [ "$STATUS" != "verified" ]; then
+  echo "⚠️  Current skill '$SKILL' is not complete (status: $STATUS)."
+  echo "Please complete the current skill and run verification before stopping."
+  exit 1
+fi
+echo "✅ Current skill complete. Safe to stop."
+exit 0
+```
+
+---
+
+## 14. Brainstorm Integration
+
+Every plugin's interview skills check for brainstorm decisions before
+asking questions from scratch. This is handled by the decision-reader
+utility skill in task-planner.
+
+### How It Works
+
+1. User runs `/brainstorm:start [project]` and spars with Claude
+2. User runs `/brainstorm:decide` — they co-author decisions.yml together
+3. Each decision is tagged with a domain and confidence level
+4. When a plugin's interview skill starts, it calls decision-reader
+5. decision-reader returns relevant decisions filtered by domain
+6. The interview skill adapts based on confidence:
+   - **high** → Pre-fill answer, show for quick confirmation
+   - **medium** → Present as starting point, allow changes
+   - **low** → Mention as context, still ask the full question
+   - **not found** → Ask normally (brainstorming is always optional)
+
+### Standard Decision Domains
+
+Plugins consume decisions tagged with these domains:
+
+| Domain | Consumed By |
+|--------|-------------|
+| brand-identity | brand-guideline (identity-interview) |
+| brand-audience | brand-guideline (audience-personas) |
+| brand-voice | brand-guideline (tone-of-voice) |
+| brand-visual | brand-guideline (typography-color, visual-identity, logo-design) |
+| seo | seo-plugin (project-interview, keyword-research) |
+| website | website-builder (when built) |
+| content | content-engine (when built) |
+| technical | task-planner (plugin-design-interview) |
+| business | any plugin needing business context |
+| general | any plugin |
+
+### Adding Brainstorm Support to a New Plugin
+
+When creating a new plugin, its interview skills should include this as
+the first step:
 
 ```
-1. Check state.yml for brainstorm_sessions with feeds_into including this skill
-2. If found: read session, extract decisions, present to user for confirmation
-3. If not found: proceed normally (brainstorming is always optional)
+Before starting the interview, call the decision-reader skill:
+- Project: [the project/brand name]
+- Domains: [relevant domains for this skill]
+
+If decisions are found, adapt the interview accordingly.
+If no decisions are found, proceed with the normal interview flow.
 ```
 
-### When to Register Modes
-
-Register modes when your plugin has decisions that benefit from:
-- Exploring multiple options before committing
-- Weighing trade-offs with the user
-- Creative ideation (naming, visual direction, content angles)
-- Strategic choices with non-obvious consequences
+This is a small addition — typically 5-10 lines at the top of the
+interview skill's SKILL.md.
