@@ -245,6 +245,8 @@ Reference: packages/task-planner/resources/plugin-blueprint.md Sections 8, 13
 
 - [x] S7: SEO-plugin progressive disclosure — all 8 skills split into lean SKILL.md (≤80 lines) + references/process.md, frontmatter descriptions enriched with trigger phrases
 
+- [x] S8: Task-planner progressive disclosure — all 13 skills split into lean SKILL.md (≤80 lines) + references/process.md, frontmatter descriptions enriched with trigger phrases. Full verification pass: line counts, description quality, references integrity, model tier system, plugin.json validity — all pass.
+
 Next step: Ecosystem standards complete. Ready for new plugins.
 
 ## Specs
