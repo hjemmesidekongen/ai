@@ -290,6 +290,56 @@ add it:
 | `web_test` | npm test passes, coverage met | Web projects |
 | `seo_audit` | Title, meta, structured data, sitemap | SEO work |
 
+### Two-Stage Verification
+
+Every skill checkpoint runs in two stages. This separates cheap mechanical
+checks from expensive judgment-based review:
+
+**Stage 1: Spec Compliance** (model_tier: junior)
+- Runs the `spec-compliance-reviewer` skill
+- Checks: file existence, schema presence, non-empty content, file-ownership
+  compliance, state.yml consistency
+- Fast, deterministic, no judgment calls
+- If any check fails → Stage 2 is **skipped**, skill is marked `failed_spec`
+
+**Stage 2: Quality Review** (model_tier: principal)
+- Runs only after Stage 1 passes
+- QA agent evaluates content quality, brand coherence, domain accuracy
+- Judgment-based: "Is this good?" not "Does this exist?"
+- Can return `passed_with_notes` for minor concerns that don't block
+
+**Why two stages?** A principal-tier QA review costs ~15x more than a
+junior-tier structural check. Catching a missing file before invoking
+quality review saves time and cost. Most failures in practice are
+structural (wrong path, missing section, forgot to update state).
+
+**Flow:**
+
+```
+Skill completes
+  → Stage 1: spec-compliance-reviewer (junior)
+    → FAIL → mark failed_spec, route fixes back, skip Stage 2
+    → PASS → Stage 2: qa-agent (principal)
+      → FAIL → mark failed_quality, route feedback back
+      → PASS with notes → mark passed_with_notes
+      → PASS clean → mark complete
+```
+
+### Verification Status Values
+
+Skills in state.yml use these status values during verification:
+
+| Status | Meaning |
+|--------|---------|
+| `pending` | Not yet started |
+| `in_progress` | Currently executing |
+| `failed_spec` | Stage 1 failed — structural/mechanical issue |
+| `failed_quality` | Stage 1 passed, Stage 2 failed — content/quality issue |
+| `passed_with_notes` | Both stages passed, Stage 2 flagged non-blocking concerns |
+| `complete` | Both stages passed clean (existing value, unchanged) |
+| `failed` | General failure (non-verification, e.g., runtime error) |
+| `skipped` | Skill was skipped (e.g., conditional execution) |
+
 ---
 
 ## 6. Dual Output Requirement
@@ -371,7 +421,7 @@ total_phases: [N]
 phases:
   - name: "[skill name]"
     number: 1
-    status: "completed"     # pending | in_progress | completed | failed | skipped
+    status: "completed"     # pending | in_progress | completed | failed | failed_spec | failed_quality | passed_with_notes | skipped
     started_at: "[ISO timestamp]"
     completed_at: "[ISO timestamp]"
     checkpoint:

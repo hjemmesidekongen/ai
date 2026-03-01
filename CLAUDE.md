@@ -249,7 +249,15 @@ Reference: packages/task-planner/resources/plugin-blueprint.md Sections 8, 13
 
 - [x] S9: Plugin generator pipeline — scaffolder creates progressive disclosure structure (lean SKILL.md + references/ for complex skills), spec generator includes model_tier on every task with tier distribution summary, design interview surfaces tier awareness during Q5
 
-Next step: Ecosystem standards complete. Ready for new plugins.
+### Two-Stage Verification
+
+- [x] V1: spec-compliance-reviewer skill — Stage 1 mechanical checks (file existence, schema presence, non-empty, file ownership, state consistency). Includes references/process.md and references/check-templates.md.
+- [x] V2: Blueprint updated — two-stage verification flow documented in Section 5, new status values (failed_spec, failed_quality, passed_with_notes) added to state.yml schema
+- [ ] V3: qa-agent updated to act as Stage 2 — only runs after Stage 1 passes (next session)
+- [ ] V4: verification-runner updated to orchestrate two-stage flow (next session)
+- [ ] V5: Integration test — simulate Stage 1 fail (skips Stage 2), Stage 1 pass → Stage 2
+
+Next step: V3 — update qa-agent to act as Stage 2 quality reviewer (requires Stage 1 pass).
 
 ## Specs
 Read the relevant spec BEFORE implementing. Do NOT try to build everything at once.
