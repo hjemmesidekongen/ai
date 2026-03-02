@@ -8,7 +8,7 @@ A modular plugin ecosystem where plugins build on each other:
 4. **Plugin generator** — Built into task-planner: `/plugin:create` and `/plugin:build`
 5. **Plugin versioning** — Built into task-planner: `/plugin:version` and `/plugin:migrate`
 6. **Brainstorm & discovery** — Built into task-planner: `/brainstorm:start` and `/brainstorm:decide`
-7. **dev** — Full agency development team: agents, framework packs, project init/scan, knowledge system (brainstorm complete, ready for `/plugin:create dev --brainstorm dev-claude-plugin`)
+7. **dev** — Full agency development team: agents, framework packs, project init/scan, knowledge system (brainstorm complete, ready for `/plugin-create dev --brainstorm dev-claude-plugin`)
 8. Future plugins (website-builder, content-engine, etc.) — created via the generator
 
 ## Architecture Rules (ALWAYS follow these)
