@@ -88,6 +88,15 @@ verification_types:
       - "Sitemap.xml generated"
     tool: seo_checker
 
+  code_quality_gate:
+    description: "Verify agent output is production-ready — build, lint, and related tests pass"
+    registered_by: dev
+    checks:
+      - "Project builds successfully (command from dev-config.yml commands.build)"
+      - "Linting passes with zero errors (command from dev-config.yml commands.lint)"
+      - "Tests for changed files pass (command from dev-config.yml commands.test_related)"
+    tool: shell_command
+
 # ──────────────────────────────────────────────
 # Verification Profiles
 # ──────────────────────────────────────────────
@@ -105,3 +114,20 @@ seo_plugin_profile:
     - "keyword relevance and search intent alignment"
     - "actionability of recommendations"
     - "competitive differentiation"
+
+# ──────────────────────────────────────────────
+# Registered by: dev
+# ──────────────────────────────────────────────
+dev_profile:
+  after_each_wave:
+    - data_validation
+    - code_quality_gate
+  final:
+    - code_quality_gate
+    - data_validation
+  qa_frequency: "every_wave"
+  qa_focus:
+    - "agent output builds and passes lint"
+    - "related tests pass for all changed files"
+    - "file ownership respected — no cross-agent conflicts"
+    - "model tier appropriate for task complexity"

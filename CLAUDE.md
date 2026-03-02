@@ -8,7 +8,7 @@ A modular plugin ecosystem where plugins build on each other:
 4. **Plugin generator** — Built into task-planner: `/plugin:create` and `/plugin:build`
 5. **Plugin versioning** — Built into task-planner: `/plugin:version` and `/plugin:migrate`
 6. **Brainstorm & discovery** — Built into task-planner: `/brainstorm:start` and `/brainstorm:decide`
-7. **dev** — Full agency development team: agents, framework packs, project init/scan, knowledge system (brainstorm complete, ready for `/plugin-create dev --brainstorm dev-claude-plugin`)
+7. **dev** — Full agency development team: agents, framework packs, project init/scan, knowledge system (designed, scaffolded, ready for `/plugin:build dev`)
 8. Future plugins (website-builder, content-engine, etc.) — created via the generator
 
 ## Architecture Rules (ALWAYS follow these)
@@ -104,6 +104,20 @@ plugins/
       check-wave-complete.sh       # SEO-specific completion gate
       validate-plugin.sh           # Plugin structure validator
     CHANGELOG.md
+  dev/                             # Dev team plugin (scaffolded, ready for /plugin:build)
+    .claude-plugin/plugin.json     # version: "1.0.0", includes hooks
+    commands/                      # init, build, scan, status
+    skills/                        # 11 skills (project-scanner through delta-scanner)
+    agents/                        # 15 agents (5 leadership + 10 specialist)
+    migrations/                    # MIGRATION-REGISTRY.yml
+    resources/
+      templates/                   # dev-config-schema, team-state-schema, knowledge-entry-schema
+      examples/
+      schemas/archive/
+    scripts/
+      session-recovery.sh          # Dev-specific session recovery
+      check-wave-complete.sh       # Dev-specific completion gate
+    CHANGELOG.md
 shared/
   brand-context-loader/            # Shared skill — loads brand data for any plugin
                                    # Calls version-compatibility-checker before loading
@@ -116,6 +130,9 @@ docs/
   seo-plugin-implementation-plan.md
   seo-plugin-addendum.md
   seo-plugin-execution-guide.md
+  dev-implementation-plan.md
+  dev-addendum.md
+  dev-execution-guide.md
 ```
 
 ## Progress
@@ -261,6 +278,27 @@ Reference: plugins/task-planner/resources/plugin-blueprint.md Sections 8, 13
 
 ### Two-Stage Verification ✅ Complete
 
+### Part 7: dev Plugin (in progress)
+- [x] Step 55: dev design interview (via /plugin:create with --brainstorm)
+- [x] Step 56: dev scaffold + plugin.json
+- [ ] Step 57: YAML schema + document templates
+- [ ] Step 58: Skill — project-scanner
+- [ ] Step 59: Skill — config-generator
+- [ ] Step 60: Skill — knowledge-initializer
+- [ ] Step 61: Skill — tier-assigner
+- [ ] Step 62: Skill — feature-decomposer
+- [ ] Step 63: Skill — team-planner
+- [ ] Step 64: Skill — agent-dispatcher
+- [ ] Step 65: Skill — completion-gate
+- [ ] Step 66: Skill — code-review
+- [ ] Step 67: Skill — qa-validation
+- [ ] Step 68: Skill — delta-scanner
+- [ ] Step 69: Command — /dev:init
+- [ ] Step 70: Command — /dev:build
+- [ ] Step 71: Command — /dev:scan
+- [ ] Step 72: Command — /dev:status
+- [ ] Step 73: End-to-end test
+
 ### Subagent-Driven Execution ✅
 
 Upgrades plan-execute to dispatch each task as an isolated subagent via Task()
@@ -298,5 +336,8 @@ Read the relevant spec BEFORE implementing. Do NOT try to build everything at on
 | docs/seo-plugin-addendum.md | SEO domain knowledge, quality standards, common mistakes |
 | docs/seo-plugin-execution-guide.md | Step-by-step SEO plugin build guide (15 steps) |
 <!-- execution guide and planning analysis are maintained in claude.ai sessions, not yet committed to repo -->
+| docs/dev-implementation-plan.md | Dev plugin skills, commands, YAML schemas (dev-config, team-state, knowledge), agent roster, build order |
+| docs/dev-addendum.md | Multi-agent development, scanning, knowledge systems, tier economics, 4-phase model |
+| docs/dev-execution-guide.md | Step-by-step dev plugin build guide (18 steps) |
 | docs/subagent-execution-plan.md | Subagent dispatch architecture, prompt templates, schema changes, model tier mapping, parallel dispatch, integration tests |
 | plugins/task-planner/resources/plugin-blueprint.md | Plugin structure rules, file layout, checklist, verification profiles, versioning, hooks & context engineering (Section 13), brainstorm integration (Section 14) |

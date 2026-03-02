@@ -1,0 +1,34 @@
+{
+  "commands": ["dev:init", "dev:build", "dev:scan", "dev:status"],
+  "skills": [
+    "project-scanner",
+    "config-generator",
+    "knowledge-initializer",
+    "feature-decomposer",
+    "team-planner",
+    "agent-dispatcher",
+    "tier-assigner",
+    "completion-gate",
+    "code-review",
+    "qa-validation",
+    "delta-scanner"
+  ],
+  "agents": [
+    "project-manager",
+    "software-architect",
+    "product-owner",
+    "frontend-tech-lead",
+    "backend-tech-lead",
+    "frontend-worker",
+    "backend-worker",
+    "mobile-developer",
+    "code-reviewer",
+    "qa-expert",
+    "e2e-test-expert",
+    "security-expert",
+    "seo-expert",
+    "devops",
+    "designer"
+  ],
+  "dependencies": ["task-planner"]
+}
