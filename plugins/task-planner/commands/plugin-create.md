@@ -1,7 +1,7 @@
 ---
 name: plugin-create
 command: "/plugin:create"
-description: "Design, spec, and scaffold a new plugin through the full creation pipeline"
+description: "(plugin) Design, spec, and scaffold a new plugin through the full creation pipeline"
 arguments:
   - name: plugin-name
     type: string

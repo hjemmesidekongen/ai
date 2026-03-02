@@ -1,7 +1,7 @@
 ---
 name: plan-execute
 command: "/plan:execute"
-description: "Execute a wave plan, running tasks with verification and QA gates"
+description: "(plan) Execute a wave plan, running tasks with verification and QA gates"
 arguments:
   - name: plan_file
     type: string

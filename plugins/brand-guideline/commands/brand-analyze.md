@@ -1,7 +1,7 @@
 ---
 name: brand-analyze
 command: "/brand:analyze"
-description: "Reverse-engineer brand guidelines from existing materials — websites, documents, or social profiles"
+description: "(brand) Reverse-engineer brand guidelines from existing materials — websites, documents, or social profiles"
 arguments:
   - name: url
     type: string

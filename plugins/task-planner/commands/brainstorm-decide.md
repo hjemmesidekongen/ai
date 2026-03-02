@@ -1,7 +1,7 @@
 ---
 name: brainstorm-decide
 command: "/brainstorm:decide"
-description: "Extract and co-author structured decisions from the current brainstorm session"
+description: "(brainstorm) Extract and co-author structured decisions from the current brainstorm session"
 arguments:
   - name: project-name
     type: string

@@ -1,7 +1,7 @@
 ---
-name: strategy
+name: seo-strategy
 command: "/seo:strategy"
-description: "Generate a complete SEO strategy through guided interview and automated analysis"
+description: "(seo) Generate a complete SEO strategy through guided interview and automated analysis"
 arguments:
   - name: project-name
     type: string

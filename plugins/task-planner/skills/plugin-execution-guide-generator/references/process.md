@@ -341,7 +341,12 @@ For EACH command in design.yml, generate a complete prompt:
 Read `docs/[plugin-name]-implementation-plan.md` (the "/[plugin]:[command-name]" section under Commands).
 Read `plugins/task-planner/resources/plugin-blueprint.md` (Section 3: How Commands Work).
 
-Create `plugins/[plugin-name]/commands/[command-name].md`
+Create `plugins/[plugin-name]/commands/[plugin-prefix]-[command-name].md`
+
+The command file frontmatter must use:
+- `name:` → `[plugin-prefix]-[command-name]` (e.g., `seo-strategy`)
+- `command:` → `/[plugin]:[command-name]` (e.g., `/seo:strategy`) — unchanged slash syntax
+- `description:` → `"([plugin-prefix]) Original description text"` (e.g., `"(seo) Generate a complete SEO strategy..."`)
 
 This command:
 1. [Purpose — from implementation plan]

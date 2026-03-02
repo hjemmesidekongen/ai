@@ -1,7 +1,7 @@
 ---
-name: scan
+name: dev-scan
 command: "/dev:scan"
-description: "Delta scan — detect file changes since last init/scan, update knowledge with maturity lifecycle"
+description: "(dev) Delta scan — detect file changes since last init/scan, update knowledge with maturity lifecycle"
 arguments:
   - name: verbose
     type: boolean

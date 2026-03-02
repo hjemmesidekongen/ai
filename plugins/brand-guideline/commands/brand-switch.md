@@ -1,7 +1,7 @@
 ---
 name: brand-switch
 command: "/brand:switch"
-description: "Set the active brand context for all brand-aware plugins, or list available brands"
+description: "(brand) Set the active brand context for all brand-aware plugins, or list available brands"
 arguments:
   - name: brand_name
     type: string

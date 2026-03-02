@@ -48,10 +48,10 @@ EXPECTED_FILES=(
   "skills/content-strategy/SKILL.md"
   "skills/link-building/SKILL.md"
   "skills/compile-and-export/SKILL.md"
-  "commands/strategy.md"
-  "commands/audit.md"
-  "commands/content-brief.md"
-  "commands/export.md"
+  "commands/seo-strategy.md"
+  "commands/seo-audit.md"
+  "commands/seo-content-brief.md"
+  "commands/seo-export.md"
 )
 
 for f in "${EXPECTED_FILES[@]}"; do
@@ -310,60 +310,60 @@ section "6. Command Cross-References"
 # ─────────────────────────────────────────────────
 
 # strategy.md should reference all 8 skills
-STRATEGY_CMD="$PLUGIN_DIR/commands/strategy.md"
+STRATEGY_CMD="$PLUGIN_DIR/commands/seo-strategy.md"
 STRATEGY_SKILLS=("project-interview" "keyword-research" "competitor-analysis" "technical-seo" "on-page-optimization" "content-strategy" "link-building" "compile-and-export")
 
 for skill in "${STRATEGY_SKILLS[@]}"; do
   if grep -qi "$skill" "$STRATEGY_CMD"; then
-    pass "strategy.md references skill '$skill'"
+    pass "seo-strategy.md references skill '$skill'"
   else
-    fail "strategy.md does NOT reference skill '$skill'"
+    fail "seo-strategy.md does NOT reference skill '$skill'"
   fi
 done
 
 # strategy.md should reference /plan:create and /plan:execute
 for plan_cmd in "/plan:create" "/plan:execute"; do
   if grep -q "$plan_cmd" "$STRATEGY_CMD"; then
-    pass "strategy.md references '$plan_cmd'"
+    pass "seo-strategy.md references '$plan_cmd'"
   else
-    fail "strategy.md does NOT reference '$plan_cmd'"
+    fail "seo-strategy.md does NOT reference '$plan_cmd'"
   fi
 done
 
 # strategy.md should reference seo_plugin_profile
 if grep -q "seo_plugin_profile" "$STRATEGY_CMD"; then
-  pass "strategy.md references verification profile 'seo_plugin_profile'"
+  pass "seo-strategy.md references verification profile 'seo_plugin_profile'"
 else
-  fail "strategy.md does NOT reference verification profile 'seo_plugin_profile'"
+  fail "seo-strategy.md does NOT reference verification profile 'seo_plugin_profile'"
 fi
 
 # audit.md should reference seo-strategy.yml sections
-AUDIT_CMD="$PLUGIN_DIR/commands/audit.md"
+AUDIT_CMD="$PLUGIN_DIR/commands/seo-audit.md"
 for section_check in "title" "meta" "heading" "schema" "HTTPS"; do
   if grep -qi "$section_check" "$AUDIT_CMD"; then
-    pass "audit.md covers '$section_check'"
+    pass "seo-audit.md covers '$section_check'"
   else
-    fail "audit.md does NOT cover '$section_check'"
+    fail "seo-audit.md does NOT cover '$section_check'"
   fi
 done
 
 # content-brief.md should reference content types
-BRIEF_CMD="$PLUGIN_DIR/commands/content-brief.md"
+BRIEF_CMD="$PLUGIN_DIR/commands/seo-content-brief.md"
 for content_type in "guide" "how-to" "listicle" "case study" "comparison" "tutorial"; do
   if grep -qi "$content_type" "$BRIEF_CMD"; then
-    pass "content-brief.md references content type '$content_type'"
+    pass "seo-content-brief.md references content type '$content_type'"
   else
-    fail "content-brief.md does NOT reference content type '$content_type'"
+    fail "seo-content-brief.md does NOT reference content type '$content_type'"
   fi
 done
 
 # export.md should reference pandoc and format options
-EXPORT_CMD="$PLUGIN_DIR/commands/export.md"
+EXPORT_CMD="$PLUGIN_DIR/commands/seo-export.md"
 for export_check in "pandoc" "docx" "seo-strategy.yml"; do
   if grep -qi "$export_check" "$EXPORT_CMD"; then
-    pass "export.md references '$export_check'"
+    pass "seo-export.md references '$export_check'"
   else
-    fail "export.md does NOT reference '$export_check'"
+    fail "seo-export.md does NOT reference '$export_check'"
   fi
 done
 

@@ -1,7 +1,7 @@
 ---
 name: plan-create
 command: "/plan:create"
-description: "Generate a wave-based execution plan from a description of work"
+description: "(plan) Generate a wave-based execution plan from a description of work"
 arguments:
   - name: description
     type: string

@@ -1185,7 +1185,7 @@ Then update CLAUDE.md: check off this step in the Progress section and set "Next
 Read `docs/dev-implementation-plan.md` (the "/dev:init" section under Commands).
 Read `plugins/task-planner/resources/plugin-blueprint.md` (Section 3: How Commands Work).
 
-Create `plugins/dev/commands/init.md`
+Create `plugins/dev/commands/dev-init.md`
 
 This command:
 1. **Purpose:** Scan project, detect frameworks, produce dev-config.yml and initial knowledge files
@@ -1212,7 +1212,7 @@ This command:
 
 Checkpoint type: data_validation
 Required checks:
-- Command file exists at `plugins/dev/commands/init.md`
+- Command file exists at `plugins/dev/commands/dev-init.md`
 - Contains all 6 sections: purpose, prerequisites, input, execution strategy, output, recovery
 - Execution strategy references skills in correct order: project-scanner → config-generator → knowledge-initializer
 - Input section documents --force and --brand flags
@@ -1233,7 +1233,7 @@ Then update CLAUDE.md: check off this step in the Progress section and set "Next
 Read `docs/dev-implementation-plan.md` (the "/dev:build" section under Commands).
 Read `plugins/task-planner/resources/plugin-blueprint.md` (Section 3: How Commands Work).
 
-Create `plugins/dev/commands/build.md`
+Create `plugins/dev/commands/dev-build.md`
 
 This command:
 1. **Purpose:** Take a feature description, decompose it, plan it, execute with parallel agents, and review
@@ -1270,7 +1270,7 @@ This command:
 
 Checkpoint type: data_validation
 Required checks:
-- Command file exists at `plugins/dev/commands/build.md`
+- Command file exists at `plugins/dev/commands/dev-build.md`
 - Contains all 6 sections: purpose, prerequisites, input, execution strategy, output, recovery
 - Execution strategy covers all 4 phases (decompose, plan, execute, review)
 - Execution strategy includes /plan:create with dev_profile and every_wave frequency
@@ -1293,7 +1293,7 @@ Then update CLAUDE.md: check off this step in the Progress section and set "Next
 Read `docs/dev-implementation-plan.md` (the "/dev:scan" section under Commands).
 Read `plugins/task-planner/resources/plugin-blueprint.md` (Section 3: How Commands Work).
 
-Create `plugins/dev/commands/scan.md`
+Create `plugins/dev/commands/dev-scan.md`
 
 This command:
 1. **Purpose:** Lightweight re-scan — detect file changes since last init/scan, update knowledge with maturity lifecycle
@@ -1316,7 +1316,7 @@ This command:
 
 Checkpoint type: data_validation
 Required checks:
-- Command file exists at `plugins/dev/commands/scan.md`
+- Command file exists at `plugins/dev/commands/dev-scan.md`
 - Contains all 6 sections: purpose, prerequisites, input, execution strategy, output, recovery
 - Execution strategy references delta-scanner skill
 - Input section documents --verbose flag
@@ -1337,7 +1337,7 @@ Then update CLAUDE.md: check off this step in the Progress section and set "Next
 Read `docs/dev-implementation-plan.md` (the "/dev:status" section under Commands).
 Read `plugins/task-planner/resources/plugin-blueprint.md` (Section 3: How Commands Work).
 
-Create `plugins/dev/commands/status.md`
+Create `plugins/dev/commands/dev-status.md`
 
 This command:
 1. **Purpose:** Display current team state — active tasks, agent assignments, wave progress, blockers
@@ -1381,7 +1381,7 @@ This command:
 
 Checkpoint type: data_validation
 Required checks:
-- Command file exists at `plugins/dev/commands/status.md`
+- Command file exists at `plugins/dev/commands/dev-status.md`
 - Contains all 6 sections: purpose, prerequisites, input, execution strategy, output, recovery
 - Execution strategy reads team-state.yml and dev-config.yml
 - Status display includes: project name, phase, wave progress, task table, blockers, build health

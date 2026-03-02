@@ -1,9 +1,9 @@
 {
   "commands": [
-    "strategy",
-    "audit",
-    "content-brief",
-    "export"
+    "seo-strategy",
+    "seo-audit",
+    "seo-content-brief",
+    "seo-export"
   ],
   "skills": [
     "project-interview",

@@ -1,7 +1,7 @@
 ---
 name: brainstorm-status
 command: "/brainstorm:status"
-description: "Show brainstorm session history and decision summary for a project"
+description: "(brainstorm) Show brainstorm session history and decision summary for a project"
 arguments:
   - name: project-name
     type: string

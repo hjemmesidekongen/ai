@@ -1,7 +1,7 @@
 ---
 name: brainstorm-start
 command: "/brainstorm:start"
-description: "Start an open-ended brainstorm session where Claude acts as a sparring partner"
+description: "(brainstorm) Start an open-ended brainstorm session where Claude acts as a sparring partner"
 arguments:
   - name: project-name
     type: string

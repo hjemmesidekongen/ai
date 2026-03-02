@@ -1,7 +1,7 @@
 ---
 name: plugin-version
 command: "/plugin:version"
-description: "Manage plugin versions: bump version numbers, archive schemas, generate migrations, and view version status"
+description: "(plugin) Manage plugin versions: bump version numbers, archive schemas, generate migrations, and view version status"
 arguments:
   - name: plugin-name
     type: string

@@ -1,7 +1,7 @@
 ---
-name: export
+name: seo-export
 command: "/seo:export"
-description: "Export the SEO strategy as a formatted report in Markdown or DOCX format"
+description: "(seo) Export the SEO strategy as a formatted report in Markdown or DOCX format"
 arguments:
   - name: project-name
     type: string

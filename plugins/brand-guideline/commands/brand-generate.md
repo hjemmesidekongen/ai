@@ -1,7 +1,7 @@
 ---
 name: brand-generate
 command: "/brand:generate"
-description: "Generate a complete brand guideline through guided interview and automated asset creation"
+description: "(brand) Generate a complete brand guideline through guided interview and automated asset creation"
 arguments:
   - name: brand_name
     type: string

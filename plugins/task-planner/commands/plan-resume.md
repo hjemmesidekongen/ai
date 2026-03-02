@@ -1,7 +1,7 @@
 ---
 name: plan-resume
 command: "/plan:resume"
-description: "Resume an interrupted plan from where it left off"
+description: "(plan) Resume an interrupted plan from where it left off"
 arguments:
   - name: plan_file
     type: string

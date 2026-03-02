@@ -1,7 +1,7 @@
 ---
 name: plan-status
 command: "/plan:status"
-description: "Show the current state of a plan: progress, failures, and next steps"
+description: "(plan) Show the current state of a plan: progress, failures, and next steps"
 arguments:
   - name: plan_file
     type: string

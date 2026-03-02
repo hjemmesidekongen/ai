@@ -1,7 +1,7 @@
 ---
-name: init
+name: dev-init
 command: "/dev:init"
-description: "Scan a project, detect frameworks and conventions, produce dev-config.yml and initial knowledge files"
+description: "(dev) Scan a project, detect frameworks and conventions, produce dev-config.yml and initial knowledge files"
 arguments:
   - name: force
     type: boolean

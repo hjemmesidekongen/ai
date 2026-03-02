@@ -1,7 +1,7 @@
 ---
 name: plugin-migrate
 command: "/plugin:migrate"
-description: "Migrate a project's data files from an older plugin version to the current version"
+description: "(plugin) Migrate a project's data files from an older plugin version to the current version"
 arguments:
   - name: plugin-name
     type: string

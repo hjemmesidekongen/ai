@@ -1,7 +1,7 @@
 ---
-name: content-brief
+name: seo-content-brief
 command: "/seo:content-brief"
-description: "Generate a detailed content brief for a specific keyword or topic with outline, SEO requirements, and internal linking suggestions"
+description: "(seo) Generate a detailed content brief for a specific keyword or topic with outline, SEO requirements, and internal linking suggestions"
 arguments:
   - name: keyword
     type: string

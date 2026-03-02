@@ -1,7 +1,7 @@
 ---
-name: audit
+name: seo-audit
 command: "/seo:audit"
-description: "Audit an existing website or page against SEO best practices and report issues with fix recommendations"
+description: "(seo) Audit an existing website or page against SEO best practices and report issues with fix recommendations"
 arguments:
   - name: url
     type: string

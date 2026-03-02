@@ -1,7 +1,7 @@
 ---
-name: status
+name: dev-status
 command: "/dev:status"
-description: "Show current team state — active tasks, agent assignments, wave progress, blockers"
+description: "(dev) Show current team state — active tasks, agent assignments, wave progress, blockers"
 arguments: []
 ---
 

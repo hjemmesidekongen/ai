@@ -528,7 +528,7 @@ Read `docs/seo-plugin-implementation-plan.md` (the "/seo:strategy" section under
 Read `plugins/task-planner/resources/plugin-blueprint.md` (Section 3: How Commands Work).
 Read `plugins/brand-guideline/commands/brand-generate.md` as a reference for command file structure.
 
-Create `plugins/seo-plugin/commands/strategy.md`
+Create `plugins/seo-plugin/commands/seo-strategy.md`
 
 This command:
 1. Purpose: Generates a full SEO strategy through an interactive process with keyword research, competitor analysis, and actionable recommendations
@@ -550,7 +550,7 @@ This command:
 
 Checkpoint type: data_validation
 Required checks:
-- Command file exists at `plugins/seo-plugin/commands/strategy.md`
+- Command file exists at `plugins/seo-plugin/commands/seo-strategy.md`
 - Contains all 6 sections: purpose, prerequisites, input, execution strategy, output, recovery
 - Execution strategy references correct skills in correct wave order (project-interview → keyword-research → competitor-analysis+technical-seo → on-page-optimization → content-strategy → link-building → compile-and-export)
 - /plan:create call specifies verification profile "seo_plugin_profile" and QA frequency "every_wave"
@@ -572,7 +572,7 @@ Then update CLAUDE.md: check off this step in the Progress section and set "Next
 Read `docs/seo-plugin-implementation-plan.md` (the "/seo:audit" section under Commands).
 Read `plugins/task-planner/resources/plugin-blueprint.md` (Section 3: How Commands Work).
 
-Create `plugins/seo-plugin/commands/audit.md`
+Create `plugins/seo-plugin/commands/seo-audit.md`
 
 This command:
 1. Purpose: Audits an existing website or page against SEO best practices and reports issues with fix recommendations
@@ -591,7 +591,7 @@ This command:
 
 Checkpoint type: data_validation
 Required checks:
-- Command file exists at `plugins/seo-plugin/commands/audit.md`
+- Command file exists at `plugins/seo-plugin/commands/seo-audit.md`
 - Contains all 6 sections: purpose, prerequisites, input, execution strategy, output, recovery
 - Execution strategy covers both on-page and technical audit checks
 
@@ -612,7 +612,7 @@ Then update CLAUDE.md: check off this step in the Progress section and set "Next
 Read `docs/seo-plugin-implementation-plan.md` (the "/seo:content-brief" section under Commands).
 Read `plugins/task-planner/resources/plugin-blueprint.md` (Section 3: How Commands Work).
 
-Create `plugins/seo-plugin/commands/content-brief.md`
+Create `plugins/seo-plugin/commands/seo-content-brief.md`
 
 This command:
 1. Purpose: Generates a detailed content brief for a specific keyword or topic
@@ -631,7 +631,7 @@ This command:
 
 Checkpoint type: data_validation
 Required checks:
-- Command file exists at `plugins/seo-plugin/commands/content-brief.md`
+- Command file exists at `plugins/seo-plugin/commands/seo-content-brief.md`
 - Contains all 6 sections: purpose, prerequisites, input, execution strategy, output, recovery
 - Interactive phases ask about content type and angle
 
@@ -652,7 +652,7 @@ Then update CLAUDE.md: check off this step in the Progress section and set "Next
 Read `docs/seo-plugin-implementation-plan.md` (the "/seo:export" section under Commands).
 Read `plugins/task-planner/resources/plugin-blueprint.md` (Section 3: How Commands Work).
 
-Create `plugins/seo-plugin/commands/export.md`
+Create `plugins/seo-plugin/commands/seo-export.md`
 
 This command:
 1. Purpose: Exports the SEO strategy as a formatted report in Markdown or DOCX format
@@ -670,7 +670,7 @@ This command:
 
 Checkpoint type: data_validation
 Required checks:
-- Command file exists at `plugins/seo-plugin/commands/export.md`
+- Command file exists at `plugins/seo-plugin/commands/seo-export.md`
 - Contains all 6 sections: purpose, prerequisites, input, execution strategy, output, recovery
 - Execution strategy handles both md and docx format options
 

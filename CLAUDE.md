@@ -100,7 +100,7 @@ plugins/
     CHANGELOG.md
   seo-plugin/                      # SEO plugin (complete)
     .claude-plugin/plugin.json     # version: "1.0.0", includes hooks
-    commands/                      # strategy, audit, content-brief, export (invoked as /seo:strategy etc.)
+    commands/                      # seo-strategy, seo-audit, seo-content-brief, seo-export (invoked as /seo:strategy etc.)
     skills/                        # 8 skills (project-interview through compile-and-export, plus link-building)
     migrations/                    # MIGRATION-REGISTRY.yml
     resources/
@@ -114,7 +114,7 @@ plugins/
     CHANGELOG.md
   dev/                             # Dev team plugin (scaffolded, ready for /plugin:build)
     .claude-plugin/plugin.json     # version: "1.0.0", includes hooks
-    commands/                      # init, build, scan, status
+    commands/                      # dev-init, dev-build, dev-scan, dev-status
     skills/                        # 11 skills (project-scanner through delta-scanner)
     agents/                        # 15 agents (5 leadership + 10 specialist)
     migrations/                    # MIGRATION-REGISTRY.yml

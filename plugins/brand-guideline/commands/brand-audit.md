@@ -1,7 +1,7 @@
 ---
 name: brand-audit
 command: "/brand:audit"
-description: "Audit an existing brand-reference.yml and its assets for gaps, inconsistencies, and accessibility issues"
+description: "(brand) Audit an existing brand-reference.yml and its assets for gaps, inconsistencies, and accessibility issues"
 arguments:
   - name: brand
     type: string

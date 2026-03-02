@@ -1,7 +1,7 @@
 ---
-name: build
+name: dev-build
 command: "/dev:build"
-description: "Decompose a feature, plan agent assignments, execute with parallel agents, and review the result"
+description: "(dev) Decompose a feature, plan agent assignments, execute with parallel agents, and review the result"
 arguments:
   - name: feature-description
     type: string

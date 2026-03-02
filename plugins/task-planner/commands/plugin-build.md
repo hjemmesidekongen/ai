@@ -1,7 +1,7 @@
 ---
 name: plugin-build
 command: "/plugin:build"
-description: "Guided step-by-step build of a plugin from its execution guide"
+description: "(plugin) Guided step-by-step build of a plugin from its execution guide"
 arguments:
   - name: plugin-name
     type: string

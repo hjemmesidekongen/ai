@@ -210,7 +210,7 @@ Create `plugins/[plugin-name]/.claude-plugin/ecosystem.json` with ecosystem meta
 }
 ```
 
-**Command name extraction:** Commands in design.yml use the format `plugin:command` (e.g., `seo:strategy`). In ecosystem.json, store only the command part without the plugin prefix (e.g., `strategy`). If the command name already excludes the prefix, use it as-is.
+**Command name extraction:** Commands in design.yml use the format `plugin:command` (e.g., `seo:strategy`). In ecosystem.json, use `[plugin-prefix]-[command-name]` format (e.g., `seo:strategy` → `seo-strategy`). This matches the prefixed filename convention (`commands/seo-strategy.md`).
 
 **Dependency rules:**
 - `dependencies` ALWAYS includes `"task-planner"`
@@ -480,7 +480,7 @@ on_pass: >
 1. **design.yml is the source of truth.** Every value in plugin.json, ecosystem.json, and README.md comes from design.yml. Never invent names, descriptions, or dependencies.
 2. **No placeholder text in output.** The final plugin.json and README.md must contain real values, not template variables like `[plugin-name]`.
 3. **Blueprint compliance.** The directory structure must exactly match `plugin-blueprint.md` Section 2. No extra directories, no missing directories.
-4. **Command names are stripped.** In plugin.json, commands use the short form (e.g., `"strategy"`) not the prefixed form (e.g., `"seo:strategy"`).
+4. **Command names use prefixed kebab form.** In ecosystem.json, `seo:strategy` → `seo-strategy`. This matches the filename (`commands/seo-strategy.md`) and the frontmatter `name:` field.
 5. **Dependencies are minimal.** Only `task-planner` and optionally `brand-guideline`. Never add other plugins as dependencies.
 6. **Empty directories stay empty.** No .gitkeep files, no placeholder READMEs inside empty directories. Git tracks them when files are added later.
 7. **README is actionable.** A developer reading the README should understand what the plugin does, what it needs, and what commands are available — without reading any other file.
