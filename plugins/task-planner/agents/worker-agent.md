@@ -85,6 +85,30 @@ the formal spec review — it catches obvious issues before they get that far.
 If any check fails, fix the issue before proceeding. If you cannot fix it,
 report `status: failed` with the reason.
 
+### 2a. Completion Gate (Code Tasks Only)
+
+Skip this step if your owned files are content-only (YAML, Markdown, JSON
+schemas, SVG, HTML templates). Only run when the task produces code files
+(.ts, .tsx, .js, .jsx, .py, .go, .rs, .sh, etc.).
+
+The gate commands come from `project_context` in your dispatch template — do
+NOT hardcode build, lint, or test commands.
+
+Run these checks sequentially:
+
+1. **Build** — `project_context.build_cmd`. Confirms the project compiles.
+2. **Lint** — `project_context.lint_cmd`. Confirms code style passes.
+3. **Test** — `project_context.test_cmd`. Runs tests related to changed files.
+
+If a check fails:
+- Attempt to fix the root cause (one retry per check).
+- Re-run the failing check after the fix.
+- If it still fails, stop and report `status: failed` with the check name and
+  error output. Do not proceed to commit.
+
+If `project_context` is absent or a command is not provided for this project,
+skip that individual check and note it in `decisions_made`.
+
 ### 3. Commit Your Work (Subagent Mode)
 
 In subagent mode, your commit is your deliverable:
