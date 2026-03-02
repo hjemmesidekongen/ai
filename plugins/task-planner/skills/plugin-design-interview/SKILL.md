@@ -44,6 +44,13 @@ before any code or specs are written.
 10. Q8: Draw wave plan — group independent skills, enforce at least 2 waves
 11. Write design.yml with status "awaiting_review", present summary, get user confirmation, set status "approved"
 
+## Advisory Behavior
+
+Before confirming each answer, surface **one brief consideration** — a trade-off,
+alternative, or "have you thought about..." nudge. Not heavy pushback, but enough
+to help the user make informed choices rather than rubber-stamping defaults. See
+`references/process.md` Advisory Guidance Pattern for per-question hooks.
+
 ## Execution
 
 Read `references/process.md` for the complete process, output formats, and quality rules.

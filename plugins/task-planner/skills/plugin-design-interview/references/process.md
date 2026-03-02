@@ -454,6 +454,40 @@ on_pass: >
   Report: "Design approved. Ready for /plugin:create Step 2 — spec generation."
 ```
 
+## Advisory Guidance Pattern
+
+Before confirming each answer, surface **one brief advisory note** — a consideration,
+trade-off, or alternative the user might not have thought of. This is NOT heavy pushback.
+It's a 1-3 sentence nudge that helps the user make informed decisions.
+
+**Format:** After presenting a proposal but before asking for confirmation:
+
+```
+"One thing to consider: [brief trade-off or alternative].
+[Optional: Short pro/con or consequence].
+Does this still feel right, or want to adjust?"
+```
+
+**Per-question advisory hooks:**
+
+| Question | What to surface |
+|----------|----------------|
+| Q1 (scope) | Is this too ambitious for v1? Could a subset ship faster and expand later? |
+| Q2 (persona) | Does the technical level match the plugin complexity? Non-technical users need more guardrails. |
+| Q3 (brand) | If YES: loading all brand data is slow — only pull sections you actually use. If NO: will the plugin ever need brand context? Retrofitting is harder than planning for it. |
+| Q4 (commands) | More commands = more maintenance. Could any be combined? Is there a command that could be a flag instead? |
+| Q5 (skills) | Flag skills that seem too broad ("generates everything") or too narrow (could merge). Note if skill count suggests high build effort. |
+| Q6 (output) | DOCX adds complexity (styles, templates). Is Markdown enough for v1? Will anyone actually consume the YAML, or is it speculative? |
+| Q7 (verification) | More verification = slower builds. Which checks actually catch real bugs vs. ceremony? |
+| Q8 (waves) | More parallelism = faster but harder to debug. Sequential is simpler for v1. |
+
+**Rules:**
+- One advisory per question max — don't overwhelm
+- Keep it brief (1-3 sentences)
+- Frame as consideration, not objection ("One thing to consider..." not "You shouldn't...")
+- If the user's answer is genuinely solid, say so: "That's well-scoped, no concerns here."
+- Never block on advisory — user can always proceed with their original answer
+
 ## Quality Rules
 
 1. **One question at a time.** Never ask Q2 before Q1 is confirmed.
@@ -464,3 +498,4 @@ on_pass: >
 6. **Respect the ordering principle.** Skills that inform later decisions come first.
 7. **Brand sections are explicit.** If a skill needs brand data, name the exact sections — no "all of it."
 8. **No forward references.** design.yml is self-contained. Downstream skills read it; this skill reads nothing from the new plugin.
+9. **Advise before confirming.** Surface one brief trade-off or alternative per question using the Advisory Guidance Pattern above. Don't just ask "is this correct?" — add value.
