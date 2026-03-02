@@ -36,11 +36,31 @@ fi
 STATUS=$(grep '^status:' "$STATE_FILE" 2>/dev/null | head -1 | awk '{print $2}' | tr -d '"')
 SKILL=$(grep '^current_phase:' "$STATE_FILE" 2>/dev/null | head -1 | awk '{print $2}' | tr -d '"')
 
-if [ "$STATUS" != "completed" ] && [ "$STATUS" != "verified" ]; then
-  echo "Current skill '$SKILL' is not complete (status: $STATUS)."
-  echo "Please complete the current skill and run verification before stopping."
-  exit 1
+# No current phase → no active skill, safe to stop
+if [ -z "$SKILL" ]; then
+  echo "No active skill. Safe to stop."
+  exit 0
 fi
 
-echo "Current skill complete. Safe to stop."
-exit 0
+# Empty status → not started yet, safe to stop
+if [ -z "$STATUS" ]; then
+  echo "No status set. Safe to stop."
+  exit 0
+fi
+
+# Only block on active/incomplete statuses
+case "$STATUS" in
+  completed|verified)
+    echo "Current skill '$SKILL' complete. Safe to stop."
+    exit 0
+    ;;
+  blocked)
+    echo "Current skill '$SKILL' is blocked. Safe to stop."
+    exit 0
+    ;;
+  *)
+    echo "Current skill '$SKILL' is not complete (status: $STATUS)."
+    echo "Please complete the current skill and run verification before stopping."
+    exit 1
+    ;;
+esac
