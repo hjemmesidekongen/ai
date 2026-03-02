@@ -284,7 +284,7 @@ Reference: plugins/task-planner/resources/plugin-blueprint.md Sections 8, 13
 - [x] Step 57: YAML schema + document templates
 - [x] Step 58: Skill — project-scanner
 - [x] Step 59: Skill — config-generator
-- [ ] Step 60: Skill — knowledge-initializer
+- [x] Step 60: Skill — knowledge-initializer
 - [ ] Step 61: Skill — tier-assigner
 - [ ] Step 62: Skill — feature-decomposer
 - [ ] Step 63: Skill — team-planner
