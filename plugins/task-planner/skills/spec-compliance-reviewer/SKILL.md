@@ -20,8 +20,7 @@ checkpoint:
 
 # Spec Compliance Reviewer
 
-Stage 1 of two-stage verification. Runs fast, mechanical checks that don't
-require judgment. If any check fails, Stage 2 (quality review) is skipped
+Stage 1 of two-stage verification. Runs fast, mechanical checks requiring only technical validation. If any check fails, Stage 2 (quality review) is skipped
 and the skill is marked `failed_spec`.
 
 ## Context

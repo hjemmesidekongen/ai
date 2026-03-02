@@ -26,7 +26,7 @@ checkpoint_type: data_validation
 
 Autonomous skill that reads the spec documents produced by the plugin-spec-generator
 and produces a complete, step-by-step execution guide. The guide contains ONE FULL
-PROMPT per skill — never "repeat this pattern."
+PROMPT per skill — create a fully self-contained prompt for each skill instead of repeating patterns.
 
 ## Context
 

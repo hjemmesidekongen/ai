@@ -26,7 +26,7 @@ checkpoint:
       verify: "Every decision has id, domain (list), decision (non-empty), confidence, context"
       fail_action: "Fix missing fields and re-validate"
     - name: "prior_decisions_preserved"
-      verify: "If prior decisions existed, they are preserved — not overwritten"
+      verify: "If prior decisions existed, they are preserved in the output"
       fail_action: "Reload prior decisions and merge with new ones"
     - name: "state_updated"
       verify: "brainstorm-state.yml has decisions_extracted: true for this session"
@@ -34,13 +34,13 @@ checkpoint:
     - name: "source_sessions_tracked"
       verify: "source_sessions list in decisions.yml includes current transcript"
       fail_action: "Add current transcript path to source_sessions"
-  on_fail: "Fix the failing check and re-validate. Do NOT report success."
+  on_fail: "Fix the failing check and re-validate. Report only after all checks pass."
   on_pass: "Report decision count and suggest next steps."
 ---
 
 # Brainstorm Decision Writer
 
-Co-authors decisions.yml from brainstorm transcripts — every decision is user-confirmed, never auto-extracted.
+Co-authors decisions.yml from brainstorm transcripts — every decision is user-confirmed through interactive review before extraction.
 
 ## Context
 - Reads: brainstorm-state.yml, brainstorm-transcript-[date].md
