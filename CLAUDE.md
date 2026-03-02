@@ -293,7 +293,7 @@ Reference: plugins/task-planner/resources/plugin-blueprint.md Sections 8, 13
 - [x] Step 66: Skill — code-review
 - [x] Step 67: Skill — qa-validation
 - [x] Step 68: Skill — delta-scanner
-- [ ] Step 69: Command — /dev:init
+- [x] Step 69: Command — /dev:init
 - [ ] Step 70: Command — /dev:build
 - [ ] Step 71: Command — /dev:scan
 - [ ] Step 72: Command — /dev:status
