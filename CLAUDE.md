@@ -296,7 +296,7 @@ Reference: plugins/task-planner/resources/plugin-blueprint.md Sections 8, 13
 - [x] Step 69: Command — /dev:init
 - [x] Step 70: Command — /dev:build
 - [x] Step 71: Command — /dev:scan
-- [ ] Step 72: Command — /dev:status
+- [x] Step 72: Command — /dev:status
 - [ ] Step 73: End-to-end test
 
 ### Subagent-Driven Execution ✅
