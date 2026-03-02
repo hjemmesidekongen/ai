@@ -37,6 +37,45 @@ Previous attempt failed. Do NOT repeat the same approach.
 No previous errors for this task.
 {{/if}}
 
+## Completion Gate
+{{#if project_context}}
+This project has a completion gate. After your work passes self-review,
+run these checks before committing (code files only — skip for YAML/Markdown/SVG):
+
+- Build: `{{project_context.build_cmd}}`
+- Lint: `{{project_context.lint_cmd}}`
+- Test: `{{project_context.test_cmd}}`
+
+If a check fails, attempt one fix. If still failing, report `status: failed`.
+If `project_context` commands are empty, skip that individual check.
+{{else}}
+No completion gate configured for this project. Proceed to commit after self-review.
+{{/if}}
+
+## Self-Tier Assessment
+{{#if self_tier}}
+Your model_tier is "self". Before starting work, assess the task complexity:
+
+| Dimension | junior | senior | principal |
+|-----------|--------|--------|-----------|
+| Scope | Single file | Multi-file | System-wide |
+| Ambiguity | Clear spec | Some choices | Open-ended |
+| Risk | Isolated | Affects features | Critical path |
+| Domain | Basic | Moderate | Deep specialist |
+
+Declare your tier (take the highest from any dimension) and include in your report:
+```yaml
+self_tier_assessment:
+  declared_tier: "<junior|senior|principal>"
+  reasoning: "<why>"
+```
+
+If execution fails: report `status: failed` with your tier. The orchestrator
+will re-dispatch at the next tier up (junior→senior→principal→blocked).
+{{else}}
+Your model_tier is "{{model_tier}}" — no self-assessment needed.
+{{/if}}
+
 ## Commit Your Work
 
 When implementation is complete:
