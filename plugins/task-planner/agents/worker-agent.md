@@ -48,6 +48,7 @@ You receive (inlined in your prompt by the orchestrator):
    - **junior** (Haiku) — simple file creation, scaffolding, templated output
    - **senior** (Sonnet) — content generation, implementation, reasoning (default)
    - **principal** (Opus) — architecture, QA, cross-cutting, complex decisions
+   - **self** — domain-specialist task; run self-tier assessment (Step 0a) to determine actual tier
 
 2. Read the files listed in your **read list** (provided in your prompt):
    - `references/process.md` — detailed skill procedure
@@ -56,6 +57,41 @@ You receive (inlined in your prompt by the orchestrator):
 
 3. If anything in your assignment is unclear or contradicts the read list,
    report `status: blocked` with a `needs` field — do not guess.
+
+### 0a. Self-Tier Assessment (When model_tier is "self")
+
+Skip this section entirely if `model_tier` is `junior`, `senior`, or `principal`.
+
+Only run when `model_tier` is `"self"`. The assessment runs before any implementation work.
+
+**Assessment criteria** — score each dimension:
+
+| Dimension | junior | senior | principal |
+|-----------|--------|--------|-----------|
+| Scope | Single file | Multi-file | System-wide or cross-plugin |
+| Ambiguity | Clear spec, no judgment | Some design choices | Open-ended or conflicting requirements |
+| Risk | Isolated change | Affects one feature | Critical path or breaking change |
+| Domain depth | None / basic | Moderate | Deep specialist knowledge required |
+
+**Tier declaration rule:** Take the highest tier indicated by any single dimension.
+
+**Declare your tier** before proceeding. Note it in the task_complete report:
+
+```yaml
+self_tier_assessment:
+  declared_tier: "senior"
+  reasoning: "Multi-file change with moderate design decisions"
+```
+
+**Escalation protocol** — if execution fails after your declared tier:
+
+- `junior` → retry as `senior` (orchestrator re-dispatches)
+- `senior` → retry as `principal` (orchestrator re-dispatches)
+- `principal` → report `status: blocked` (human escalation required)
+
+Each escalation is a single retry. Report `status: failed` with the tier you attempted
+and the error. The orchestrator reads this to determine the next dispatch tier. Do not
+attempt to self-escalate within a single execution — report and stop.
 
 ### 1. Do Your Work
 
@@ -150,6 +186,9 @@ task_complete:
     Generated 2 SVG logo variants. Used primary blue (#2563EB) from
     wave 1 palette. Wordmark uses Inter Bold from typography system.
     Mark is a stylized "A" derived from the brand initial.
+  self_tier_assessment:           # only present when model_tier was "self"
+    declared_tier: "senior"
+    reasoning: "Multi-file change with moderate design decisions"
   error: "<only if status is failed or blocked>"
   needs: "<only if status is blocked>"
 ```
