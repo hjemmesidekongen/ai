@@ -282,7 +282,7 @@ Reference: plugins/task-planner/resources/plugin-blueprint.md Sections 8, 13
 - [x] Step 55: dev design interview (via /plugin:create with --brainstorm)
 - [x] Step 56: dev scaffold + plugin.json
 - [x] Step 57: YAML schema + document templates
-- [ ] Step 58: Skill — project-scanner
+- [x] Step 58: Skill — project-scanner
 - [ ] Step 59: Skill — config-generator
 - [ ] Step 60: Skill — knowledge-initializer
 - [ ] Step 61: Skill — tier-assigner
