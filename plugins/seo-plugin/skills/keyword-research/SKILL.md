@@ -36,7 +36,7 @@ checkpoint:
     - name: "no_duplicates"
       verify: "No duplicate keywords across primary, secondary, and long_tail arrays"
       fail_action: "Remove duplicate keywords, keeping the one in the highest-priority category"
-  on_fail: "Fix issues and re-run checkpoint. Do NOT advance to next phase."
+  on_fail: "Fix issues and re-run checkpoint. Advance to next phase only after all checks pass."
   on_pass: "Update state.yml, write recovery_notes, advance to next phase."
 ---
 

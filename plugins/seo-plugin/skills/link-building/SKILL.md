@@ -30,7 +30,7 @@ checkpoint:
     - name: "content_promotion_channels"
       verify: "link_building.content_promotion has at least 3 channels, each with channel (string) and tactics (array with at least 2 entries)"
       fail_action: "Add more content promotion channels with specific tactics"
-  on_fail: "Fix issues and re-run checkpoint. Do NOT advance to next phase."
+  on_fail: "Fix issues and re-run checkpoint. Advance to next phase only after all checks pass."
   on_pass: "Update state.yml, write recovery_notes, advance to next phase."
 ---
 

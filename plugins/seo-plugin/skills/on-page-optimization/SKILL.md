@@ -31,7 +31,7 @@ checkpoint:
     - name: "schema_markup_types"
       verify: "on_page.schema_markup has at least 2 entries, each with type (string), required_properties (array), and use_case (string)"
       fail_action: "Add schema markup recommendations based on the project's industry and content types"
-  on_fail: "Fix issues and re-run checkpoint. Do NOT advance to next phase."
+  on_fail: "Fix issues and re-run checkpoint. Advance to next phase only after all checks pass."
   on_pass: "Update state.yml, write recovery_notes, advance to next phase."
 ---
 

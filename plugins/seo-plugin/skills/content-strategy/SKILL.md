@@ -44,7 +44,7 @@ checkpoint:
     - name: "calendar_schedule"
       verify: "content_plan.calendar.schedule has entries for all planned months with content arrays"
       fail_action: "Add content entries for months missing from the schedule"
-  on_fail: "Fix issues and re-run checkpoint. Do NOT advance to next phase."
+  on_fail: "Fix issues and re-run checkpoint. Advance to next phase only after all checks pass."
   on_pass: "Update state.yml, write recovery_notes, advance to next phase."
 ---
 

@@ -28,7 +28,7 @@ checkpoint:
     - name: "content_gaps"
       verify: "content_gaps has at least 5 entries, each with keyword (string), gap_type (missing|thin|outdated), opportunity_score (0-100), and recommended_action (string)"
       fail_action: "Cross-reference competitor weaknesses to identify more content gap opportunities"
-  on_fail: "Fix issues and re-run checkpoint. Do NOT advance to next phase."
+  on_fail: "Fix issues and re-run checkpoint. Advance to next phase only after all checks pass."
   on_pass: "Update state.yml, write recovery_notes, advance to next phase."
 ---
 

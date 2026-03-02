@@ -30,7 +30,7 @@ checkpoint:
     - name: "mobile_requirements"
       verify: "technical.mobile_requirements has at least 4 entries"
       fail_action: "Add mobile requirements: viewport, touch targets, scrolling, font size"
-  on_fail: "Fix issues and re-run checkpoint. Do NOT advance to next phase."
+  on_fail: "Fix issues and re-run checkpoint. Advance to next phase only after all checks pass."
   on_pass: "Update state.yml, write recovery_notes, advance to next phase."
 ---
 

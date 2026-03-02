@@ -25,7 +25,7 @@ checkpoint:
     - name: "project_directory_exists"
       verify: "~/.claude/projects/[project-name]/ directory exists"
       fail_action: "Create the project directory"
-  on_fail: "Fix the failing check and re-validate. Do NOT mark session as complete."
+  on_fail: "Fix the failing check and re-validate. Mark session complete only after all checks pass."
   on_pass: "Update brainstorm-state.yml with session details."
 ---
 
