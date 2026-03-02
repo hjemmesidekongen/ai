@@ -319,6 +319,30 @@ Config looks good? [Y/n]
 - Confirmed at: [timestamp]
 ```
 
+## Step 10b: MCP Readiness Check
+
+After writing and confirming dev-config.yml, report which MCPs the confirmed
+stack will activate. This gives the user early visibility into API key
+requirements before Step 3b of `/dev:init` runs the full validation.
+
+List each relevant MCP based on the confirmed frameworks:
+
+```
+### MCP Preview for This Stack
+
+Based on confirmed frameworks:
+  - [framework] → [mcp-name] (key required: [VAR_NAME or "none"])
+  ...
+
+Full key validation runs in /dev:init Step 3b.
+```
+
+This note is informational only. Config generation is already complete at this
+point. No action required unless the user wants to set up API keys before
+continuing.
+
+**Save MCP preview to findings.md (2-Action Rule checkpoint).**
+
 ## Error Handling
 
 When errors occur during config generation:

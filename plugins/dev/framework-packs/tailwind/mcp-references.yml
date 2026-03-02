@@ -1,0 +1,10 @@
+# MCP servers relevant to the Tailwind CSS framework pack
+# Agents load this to know which MCPs to call for this domain
+
+relevant_mcps:
+  - name: "tailwind"
+    purpose: "Tailwind CSS utility class reference and design system integration"
+    when_to_use: "When building or debugging Tailwind CSS styles, composing utility classes, accessing class documentation, or integrating design tokens"
+  - name: "pencil"
+    purpose: "Untitled UI design tool for translating visual designs and design systems into Tailwind classes"
+    when_to_use: "When converting design mockups into Tailwind components, building responsive layouts from designs, or ensuring design-to-code consistency"

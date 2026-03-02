@@ -1,0 +1,76 @@
+project: "dev-hardening"
+created_at: "2026-03-02"
+updated_at: "2026-03-02"
+source_sessions:
+  - "brainstorm-transcript-2026-03-02.md"
+
+decisions:
+  - id: "d1"
+    domain: ["technical"]
+    decision: "Fork external skills locally, track origin in frontmatter. External skills from skills.sh are copied into the dev plugin's framework-packs directory, trimmed to what we need, and maintained as our own. Each forked skill has frontmatter with origin, origin_version, and forked_date fields for upstream update tracking. A /dev:skills check command diffs against upstream sources. Before adding any skill, verify it doesn't duplicate or contradict guidance in existing skills — each skill covers its own domain exclusively. If overlap is found, consolidate into one skill."
+    confidence: "high"
+    context: "User wants single source of truth with full control over skill content. External skills often contain more than needed and are hard to trim when managed externally. Origin tracking enables periodic upstream update checks without losing local customizations."
+    session_date: "2026-03-02"
+
+  - id: "d2"
+    domain: ["technical"]
+    decision: "All MCP servers declared in plugin.json, always available. MCP servers (Pencil/Untitled UI, Neon Postgres, Railway, Next devtools, ESLint, Tailwind CSS) are all declared in the dev plugin's plugin.json and always running when the plugin is active. Framework pack skills reference which MCPs are relevant for their domain — agents only call MCPs when the loaded skill tells them to. /dev:init validates that required API keys exist for the MCPs the detected stack needs."
+    confidence: "high"
+    context: "Unused MCPs have minimal overhead — agents only call them when relevant skills are loaded. Conditional activation is not natively supported in plugin.json and adds unnecessary complexity. API key validation at init time catches configuration issues early."
+    session_date: "2026-03-02"
+
+  - id: "d3"
+    domain: ["technical"]
+    decision: "Self-tiering agent model — tech lead picks model tier, not agent identity. The dev plugin uses self-tiering: one frontend-worker agent, one backend-worker agent. The tech lead assesses task risk and assigns a model tier (Haiku/Sonnet/Opus) rather than dispatching separate junior/senior/principal agents. Global agents from ~/.claude/agents/ move into this repo (claude-local-workspace). Useful content (risk tables, checklists, quality constraints) is distilled into worker prompts and tech lead dispatch logic. Global agents are removed from ~/.claude/agents/ after migration to prevent duplicate agent definitions."
+    confidence: "high"
+    context: "Original dev brainstorm (D9) already chose self-tiering. Global agents exist with useful content but create duplication. Migration consolidates into one system. Removing global agents after migration prevents confusion about which agent definitions are active."
+    session_date: "2026-03-02"
+
+  - id: "d4"
+    domain: ["technical"]
+    decision: "Framework packs with code examples for conventions. Each framework pack (react-nextjs, vue-nuxt, backend, generic) includes an examples/ directory with reference implementations showing how WE structure code. Agents receive relevant examples by tag alongside skills at dispatch time. Examples override AI defaults for component structure, data fetching patterns, API routes, etc."
+    confidence: "high"
+    context: "Abstract convention descriptions in YAML are weak — agents interpret them however they want. Concrete code examples are much stronger at enforcing team patterns. Tag-based loading ensures agents only see examples relevant to their current task."
+    session_date: "2026-03-02"
+
+  - id: "d5"
+    domain: ["technical"]
+    decision: "Capability-based plugin ecosystem. Plugins are organized by capability, not domain. Brand plugin (identity — exists), Design plugin (all visual creation — new), Content plugin (all written creation — new), Dev plugin (all code creation — exists), SEO plugin (strategy and analysis — exists). Each plugin is a specialist team. Cross-domain tasks (e.g., social media campaign needing both visuals and copy) are orchestrated by the task-planner across plugins."
+    confidence: "high"
+    context: "Domain-based organization (marketing plugin with both designers and writers) duplicates capability across plugins. Capability-based keeps each plugin focused on one type of output. Cross-plugin orchestration handles multi-capability tasks without duplication."
+    session_date: "2026-03-02"
+
+  - id: "d6"
+    domain: ["technical"]
+    decision: "Design plugin — visual creation specialist with Pencil + Untitled UI. A new Design plugin handles all visual creation: web design (prototypes/mockups), logo design (moves from brand plugin), social media graphics, marketing collateral. Uses Pencil MCP + Untitled UI Pro component library. Takes brand identity from the brand plugin as input. Produces finished, approved designs before dev plugin implements them. The dev plugin's designer agent is NOT a creative — it reads designs and translates them to implementation specs."
+    confidence: "high"
+    context: "Mirrors real agency workflow: design is approved before implementation. Frontend developers should not make design decisions — they implement finished designs. Pencil MCP enables AI-driven visual creation. Untitled UI Pro provides the component library for consistent, professional output."
+    session_date: "2026-03-02"
+
+  - id: "d7"
+    domain: ["technical"]
+    decision: "Content plugin — written creation specialist. A new Content plugin handles all written output: copywriting (product/UI copy, taglines), blog writing (articles, thought leadership), social media writing (captions, threads), technical writing (docs, guides, changelogs). Pulls brand voice from brand plugin, SEO keywords from SEO plugin. Separate from design plugin — content produces words, design produces visuals."
+    confidence: "high"
+    context: "Written content is a distinct capability from visual design. Separating them allows each plugin to excel at its specialty. Content plugin consumes brand voice and SEO data as inputs, producing text that is on-brand and SEO-aware."
+    session_date: "2026-03-02"
+
+  - id: "d8"
+    domain: ["technical"]
+    decision: "Media plugins — orchestrating external AI (non-Claude). Future Videographer and Photographer plugins use external AI models (e.g., Nano Banana 2, Runway, Midjourney) rather than Claude for generation. These plugins are orchestrators — they handle creative briefs, prompt engineering for the specific AI model, quality review, and asset management. Establishes the architectural pattern that not all plugin agents use Claude as the execution engine."
+    confidence: "high"
+    context: "Video and image generation require specialized AI models, not LLMs. The plugin layer handles orchestration (briefs, prompts, review, asset management) while external AI handles generation. This pattern extends the ecosystem beyond Claude-only workflows."
+    session_date: "2026-03-02"
+
+  - id: "d9"
+    domain: ["technical"]
+    decision: "/dev:refactor command — production-safe code reshaping. The dev plugin gets a /dev:refactor command for reshaping existing code to match conventions without breaking functionality. Stricter than /dev:build: writes tests FIRST if coverage is missing, smaller waves (one component at a time), per-component commits with rollback points, test after every change (not just per wave), mandatory full regression and QA validation, conservative tier assignment (one level higher than equivalent feature task). Never changes behavior — only structure."
+    confidence: "high"
+    context: "Refactoring production code is high-stakes — the value is zero if something breaks. Existing /dev:build is optimized for feature creation, not behavior-preserving restructuring. Refactoring needs stricter safety: test-first, smaller blast radius, mandatory regression, and conservative model selection."
+    session_date: "2026-03-02"
+
+  - id: "d10"
+    domain: ["technical"]
+    decision: "Execution sequence: (1) Harden dev plugin — skills, MCPs, agents, framework packs, examples, /dev:refactor. This is the current plan. (2) Design plugin, (3) Content plugin, and (4) Media plugins are each separate future projects requiring their own dedicated brainstorm session, design process, and build plan — not part of the dev hardening work. Each follows the full /brainstorm:start, /brainstorm:decide, /plugin:create, /plugin:build pipeline independently. Don't build all before using any — ship and use each before starting the next."
+    confidence: "high"
+    context: "Building all plugins before using any delays value delivery. Each plugin is a self-contained project with its own brainstorm, spec, and build cycle. Dev hardening is the immediate priority — it's the foundation the others build on."
+    session_date: "2026-03-02"

@@ -1,0 +1,13 @@
+# MCP servers relevant to the React/Next.js framework pack
+# Agents load this to know which MCPs to call for this domain
+
+relevant_mcps:
+  - name: "pencil"
+    purpose: "Untitled UI design-to-code translation for converting visual designs into React components"
+    when_to_use: "When building UI components from design mockups, creating visual layouts, or translating design systems into code"
+  - name: "next-devtools"
+    purpose: "Framework-specific development assistance for Next.js projects (routing, API routes, optimization)"
+    when_to_use: "When working with Next.js-specific features like file-based routing, API routes, server components, middleware, or performance optimization"
+  - name: "eslint"
+    purpose: "Code quality and linting for JavaScript/TypeScript projects"
+    when_to_use: "When reviewing code quality, enforcing coding standards, identifying bugs, or fixing linting violations in React/Next.js code"

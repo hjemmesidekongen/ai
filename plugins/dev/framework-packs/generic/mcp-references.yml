@@ -1,0 +1,10 @@
+# MCP servers relevant to the Generic framework pack
+# Agents load this to know which MCPs to call for this domain
+
+relevant_mcps:
+  - name: "pencil"
+    purpose: "Design tool for implementing accessibility standards and translating design guidelines"
+    when_to_use: "When building accessible UI components, reviewing WCAG compliance, or translating design systems with accessibility requirements"
+  - name: "eslint"
+    purpose: "Code quality and linting for general JavaScript/TypeScript projects"
+    when_to_use: "When enforcing code quality standards, catching bugs, improving code consistency, or enforcing general best practices"

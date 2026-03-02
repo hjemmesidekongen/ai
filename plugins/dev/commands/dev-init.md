@@ -82,6 +82,59 @@ This skill:
 - Asks about conventions not auto-detectable
 - Produces `.ai/dev/[project-name]/dev-config.yml`
 
+### Step 3b: Validate MCP API Keys
+
+Read the confirmed `dev-config.yml` at `.ai/dev/[project-name]/dev-config.yml` and check which MCPs the detected stack requires. Map frameworks to MCPs using the table below, then validate each MCP that needs an environment variable.
+
+**Framework → MCP mapping:**
+
+| Framework (in dev-config.yml) | MCP | Env var required |
+|-------------------------------|-----|-----------------|
+| Next.js (runtime) | next-devtools | none |
+| Prisma, Drizzle, TypeORM, etc. (database) | neon | `NEON_API_KEY` |
+| Tailwind (build or conventions) | tailwind | none |
+| Any frontend runtime (Next.js, Nuxt, SvelteKit, Remix) | pencil | none |
+| Any frontend runtime | eslint | none |
+| Deployment target: railway | railway | `RAILWAY_TOKEN` |
+
+**For each MCP that requires an env var:**
+
+```
+Check: process.env[VAR_NAME] or shell: echo ${VAR_NAME}
+```
+
+- If the variable is set and non-empty: mark as READY
+- If the variable is missing or empty: mark as MISSING — warn user with setup instructions
+
+**Warning format for missing keys:**
+
+```
+WARNING: [MCP_NAME] MCP requires [VAR_NAME] but it is not set.
+To set it:
+  export [VAR_NAME]="your-key-here"
+  # or add to your shell profile / .env file
+
+You can still continue — [MCP_NAME] will not be available until the key is set.
+```
+
+**Do NOT block init on missing keys — warn only and continue.**
+
+**Report validation summary before proceeding:**
+
+```
+## MCP Readiness
+
+Active MCPs for this stack:
+  - next-devtools    [READY] (no key required)
+  - neon             [READY / MISSING: NEON_API_KEY]
+  - tailwind         [READY] (no key required)
+  - pencil           [READY] (no key required)
+  - eslint           [READY] (no key required)
+  - railway          [READY / MISSING: RAILWAY_TOKEN]
+
+[N] of [total] MCPs ready. [warnings if any]
+```
+
 ### Step 4: Run knowledge-initializer
 
 Read SKILL.md at `plugins/dev/skills/knowledge-initializer/SKILL.md`, follow its process.

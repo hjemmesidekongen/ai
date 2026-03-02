@@ -41,7 +41,16 @@ Prompt includes:
      - id, description, component
      - Acceptance criteria (from decomposition)
   2. Agent role and responsibilities:
-     - assigned_agent name (e.g., "frontend-worker", "backend-worker")
+     - assigned_agent name from team-planner output.
+       Consolidated agent names: frontend-worker, backend-worker,
+       project-manager, software-architect, frontend-tech-lead,
+       backend-tech-lead, qa-lead, security-reviewer, devops,
+       ux-qa, design-ux, documentation-specialist
+     - The model_tier field (junior/senior/principal) on the task
+       determines WHICH model the agent runs at — not which agent file
+       to use. All domain variants (junior/senior/principal frontend,
+       backend, etc.) are served by the two consolidated worker agents:
+       frontend-worker and backend-worker.
      - Agent capabilities and constraints
   3. File ownership:
      - "You MUST only write to these paths:" [files_owned list]
@@ -68,16 +77,25 @@ Prompt includes:
 ## Step 3: Map Model Tiers to Dispatch Parameters
 
 ```
-Tier mapping:
-  junior  → model: "haiku"   (cheapest, simple tasks)
-  senior  → model: "sonnet"  (standard, most tasks)
-  principal → model: "opus"  (complex, architectural tasks)
+Tier mapping (from task.model_tier field set by tech lead during team-planner):
+  junior    → model: "haiku"   (cheapest, simple/repetitive tasks)
+  senior    → model: "sonnet"  (standard, most feature work)
+  principal → model: "opus"    (complex, architectural decisions)
 
-Self-tiering flow (for agents that assess their own tier):
-  1. Dispatch at Haiku with tier-assigner skill context
-  2. Agent evaluates complexity factors and declares tier
+The tech lead (frontend-tech-lead or backend-tech-lead) assigns model_tier
+during Wave 0 planning using the risk assessment heuristics in team-planner.
+Workers receive their assigned tier in the dispatch prompt and run at that tier.
+
+Self-tiering flow (workers that perform their own risk assessment):
+  1. Dispatch at Haiku with tier-assigner skill context included in prompt
+  2. Agent evaluates task complexity factors and declares required tier
   3. If declared tier > junior: re-dispatch at declared tier
   4. If declared tier == junior: task is already running at correct tier
+
+Note: There are NO separate junior-frontend, senior-backend, etc. agent files.
+All frontend execution uses agents/frontend-worker.md; all backend execution
+uses agents/backend-worker.md. Tier is a runtime dispatch parameter, not an
+agent identity.
 ```
 
 ## Step 4: Execute Waves
@@ -314,3 +332,108 @@ Only after Stage 1 passes. Checks:
 
 If FAIL: address quality issues.
 If PASS_WITH_NOTES: review notes, decide whether to address.
+
+## Example Loading Protocol
+
+This section covers how to load tag-filtered code examples from framework packs
+when building dispatch prompts in Step 2 (after loading knowledge entries).
+
+### 1. Determine Relevant Framework Packs
+
+Read `dev-config.yml` to identify which framework packs are active. Then map
+the current task's domain to relevant packs:
+
+```
+If task involves frontend (UI components, pages, styling):
+  Relevant packs: react-nextjs, typescript, tailwind, generic
+
+If task involves backend (API routes, services, database):
+  Relevant packs: typescript, prisma, generic
+
+If task involves testing (unit, integration, E2E):
+  Relevant packs: testing, generic
+
+If task involves both frontend and backend:
+  Relevant packs: all active packs
+```
+
+Framework pack examples live at:
+`plugins/dev/framework-packs/[pack-name]/examples/`
+
+Available packs: react-nextjs, typescript, tailwind, prisma, testing, generic
+
+### 2. Scan and Parse Example Headers
+
+For each example file in the relevant packs, read the comment header and
+extract the Tags line:
+
+```
+Example header format:
+  /**
+   * Example: [title]
+   * Pack: [pack-name]
+   * Tags: react, nextjs, server-component, data-fetching
+   * ...
+   */
+
+Parse Tags line → split on comma + trim whitespace → tag set
+```
+
+### 3. Match Examples to Task
+
+Extract matching signals from the task definition:
+- Keywords from task description (e.g. "server component", "data fetching")
+- Component name (e.g. "ProductList", "AuthForm")
+- Framework hints from dev-config.yml conventions
+
+Match rule: include an example when 2 or more of its tags match the task
+context (description keywords + component name + framework conventions).
+
+```
+Example: task description = "Build a server-side data fetching component"
+  component = "ProductList"
+  Tags [react, nextjs, server-component, data-fetching] → 2+ matches → INCLUDE
+  Tags [prisma, schema, migration] → 0 matches → SKIP
+```
+
+### 4. Include Matched Examples in Dispatch Prompt
+
+Add a "## Reference Examples" section to each dispatch prompt that has
+matched examples:
+
+```
+## Reference Examples
+
+The following examples are from the project's framework packs. Follow their
+patterns for the relevant areas of this task.
+
+### [example-filename.tsx] (pack: react-nextjs)
+
+[full file content]
+
+Note: Follow this pattern for server-component work in this project.
+
+---
+
+### [example-filename.ts] (pack: prisma)
+
+[full file content]
+
+Note: Follow this pattern for data-fetching work in this project.
+```
+
+Include the full file content of each matched example. Examples are designed
+to be 50-100 lines each, keeping prompt overhead manageable.
+
+### 5. Limit and Priority Rules
+
+- **Maximum 3 examples per dispatch** to control prompt size.
+- **Priority order** when more than 3 examples match:
+  1. Most specific match first (highest number of matching tags)
+  2. Most relevant pack second (pack whose domain most closely matches the
+     task type — e.g. react-nextjs for frontend tasks)
+  3. generic pack examples are lowest priority (used only as fallback when
+     fewer than 3 domain-specific examples are available)
+
+If no examples match (0 examples with 2+ tag matches), omit the
+"## Reference Examples" section entirely. Do not include partial matches.

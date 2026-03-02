@@ -2,11 +2,12 @@
 name: agent-dispatcher
 user-invocable: false
 description: >
-  Phase 3 of /dev:build — dispatch specialist agents via Task() for isolated
-  parallel execution, manage wave sequencing, map model tiers to dispatch params,
-  collect structured reports, and update execution state. Use when dispatching
-  agents, running /dev:build phase 3, executing wave plans, managing parallel
-  task dispatch, or collecting subagent reports.
+  Phase 3 of /dev:build — dispatch consolidated specialist agents (frontend-worker,
+  backend-worker, project-manager, etc.) via Task() for isolated parallel execution,
+  manage wave sequencing, map model_tier values to dispatch params (junior→Haiku,
+  senior→Sonnet, principal→Opus), collect structured reports, and update execution
+  state. Use when dispatching agents, running /dev:build phase 3, executing wave
+  plans, managing parallel task dispatch, or collecting subagent reports.
 phase: 3
 depends_on: [team-planner]
 writes:

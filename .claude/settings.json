@@ -2,6 +2,7 @@
   "enabledPlugins": {
     "task-planner@local-workspace": true,
     "brand-guideline@local-workspace": false,
-    "seo-plugin@local-workspace": false
+    "seo-plugin@local-workspace": false,
+    "dev@local-workspace": true
   }
 }
