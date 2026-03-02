@@ -221,7 +221,14 @@ If any task reports status == "failed" or "blocked":
        - result: "unresolved"
        - next_approach: [recovery_notes from task_complete, if any]
   3. Check if the failed task blocks later waves:
-     - If blocking: mark wave as failed, fall through to Step 5 (fix-and-retry)
+     - If blocking:
+       a. Run cascading failure analysis (see Step 5: Cascading Failure Analysis):
+          - Walk dependency graph forward to find direct and transitive dependents
+          - Identify tasks with no dependency path from the failed task
+       b. Log the full impact chain to the error entry in state.yml:
+            blocked_tasks: [all blocked task IDs — direct + transitive]
+            independent_tasks: [task IDs that can still proceed safely]
+       c. Mark wave as failed, fall through to Step 5 (fix-and-retry)
      - If non-blocking: continue with remaining tasks, report failure at wave end
   4. Update state.yml updated_at
 ```
@@ -399,6 +406,39 @@ if round > 3:
   Run manual_approval verification type:
   - Present unresolved issues to user
   - User decides: fix manually, skip wave, or abort plan
+```
+
+#### Cascading Failure Analysis
+
+When escalation to human occurs (`round > 3`), OR when a task fails and blocks later waves:
+
+```
+1. Walk the dependency graph forward from the failed task:
+   - Direct dependents: tasks where failed_task_id is in their depends_on
+   - Transitive dependents: tasks that depend on direct dependents (recursively)
+
+2. Identify independent work:
+   - Tasks in current and future waves that have NO path from the failed task
+   - These can proceed safely
+
+3. Present cascading impact to user:
+   "Task [id] failed. Impact analysis:
+    - Directly blocked: [list of task names]
+    - Transitively blocked: [list of task names]
+    - Independent (can proceed): [list of task names]
+
+   Options:
+   a) Continue with independent tasks only (skip [N] blocked tasks)
+   b) Full halt — stop execution, preserve state for /plan:resume
+   c) Propose alternative — describe a workaround for the blocked path"
+
+4. Log the user's choice and full impact chain to state.yml:
+   - blocked_tasks: [list of all blocked task IDs]
+   - independent_tasks: [list of safe task IDs]
+   - user_choice: "continue_independent" | "full_halt" | "alternative"
+
+5. The orchestrator NEVER silently skips a blocked task. Every skip must be
+   user-approved and logged in state.yml.
 ```
 
 ### Step 6: Plan Completion
