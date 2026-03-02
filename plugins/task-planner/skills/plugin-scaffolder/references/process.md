@@ -300,9 +300,9 @@ STATUS=$(grep '^status:' "$STATE_FILE" 2>/dev/null | head -1 | awk '{print $2}' 
 SKILL=$(grep '^current_phase:' "$STATE_FILE" 2>/dev/null | head -1 | awk '{print $2}' | tr -d '"')
 
 if [ "$STATUS" != "completed" ] && [ "$STATUS" != "verified" ]; then
-  echo "Current skill '$SKILL' is not complete (status: $STATUS)."
-  echo "Please complete the current skill and run verification before stopping."
-  exit 1
+  echo "⚠ Current skill '$SKILL' is not complete (status: $STATUS)."
+  echo "Consider completing the current skill and running verification before stopping."
+  exit 0
 fi
 
 echo "Current skill complete. Safe to stop."

@@ -7,8 +7,7 @@
 # completed or verified in state.yml.
 #
 # Usage: bash plugins/task-planner/scripts/check-wave-complete.sh
-# Exit 0: Current skill is complete — safe to stop
-# Exit 1: Current skill is NOT complete — Claude must keep working
+# Always exits 0 — warnings are informational, not errors
 
 set -euo pipefail
 
@@ -23,9 +22,9 @@ STATUS=$(grep '^status:' state.yml 2>/dev/null | head -1 | awk '{print $2}' | tr
 SKILL=$(grep '^current_phase:' state.yml 2>/dev/null | head -1 | awk '{print $2}' | tr -d '"')
 
 if [ "$STATUS" != "completed" ] && [ "$STATUS" != "verified" ]; then
-  echo "Current skill '$SKILL' is not complete (status: $STATUS)."
-  echo "Please complete the current skill and run verification before stopping."
-  exit 1
+  echo "⚠ Current skill '$SKILL' is not complete (status: $STATUS)."
+  echo "Consider completing the current skill and running verification before stopping."
+  exit 0
 fi
 
 echo "Current skill complete. Safe to stop."

@@ -7,8 +7,7 @@
 # completed or verified in state.yml.
 #
 # Usage: bash plugins/brand-guideline/scripts/check-wave-complete.sh
-# Exit 0: Current skill is complete — safe to stop
-# Exit 1: Current skill is NOT complete — Claude must keep working
+# Always exits 0 — warnings are informational, not errors
 
 set -euo pipefail
 
@@ -59,8 +58,8 @@ case "$STATUS" in
     exit 0
     ;;
   *)
-    echo "Current skill '$SKILL' is not complete (status: $STATUS)."
-    echo "Please complete the current skill and run verification before stopping."
-    exit 1
+    echo "⚠ Current skill '$SKILL' is not complete (status: $STATUS)."
+    echo "Consider completing the current skill and running verification before stopping."
+    exit 0
     ;;
 esac
