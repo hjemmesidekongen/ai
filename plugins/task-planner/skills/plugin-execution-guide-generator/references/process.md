@@ -176,6 +176,12 @@ Stage 2 — Quality Review (Opus):
   Run qa-reviewer against this skill's outputs for content quality, brand coherence, and completeness.
   If FAIL: address quality issues. If PASS_WITH_NOTES: review notes, decide whether to address.
 
+Completion Gate (Code Tasks Only):
+If this skill produces code files (.ts, .js, .py, etc.), the worker agent runs
+a completion gate before committing: build, lint, and test commands from
+project_context. Content-only skills (YAML, Markdown, SVG) skip the gate.
+The orchestrator provides project_context in the dispatch template.
+
 Then update CLAUDE.md: check off this step in the Progress section and set "Next step" to the following step. Commit everything.
 
 ---
@@ -188,10 +194,11 @@ Then update CLAUDE.md: check off this step in the Progress section and set "Next
 3. **Brand data is explicit.** List exact section names; reference the brand-reference.yml schema location.
 4. **Checkpoints are copied verbatim** from the implementation plan's skill section, then made measurable if vague. Minimum 2 checks per skill, aim for 3-5.
 5. **No placeholder patterns.** Each prompt is fully self-contained.
-6. **Model tier is assigned.** Use `model_tier` from task plan if provided, otherwise: junior (Haiku) for scaffolding/template-copying; senior (Sonnet) for interview/research/content generation (DEFAULT); principal (Opus) for QA/verification/architecture. See `plugin-blueprint.md` Section 11a.
+6. **Model tier is assigned.** Use `model_tier` from task plan if provided, otherwise: junior (Haiku) for scaffolding/template-copying; senior (Sonnet) for interview/research/content generation (DEFAULT); principal (Opus) for QA/verification/architecture. See `plugin-blueprint.md` Section 11a. If the skill is domain-specialist work (SEO, DevOps, security, design), consider model_tier: "self" — the worker self-assesses complexity at Haiku cost.
 7. **Progressive disclosure is respected.** If a skill will need more than 80 lines in its SKILL.md, the prompt instructs creation of a `references/process.md`. See `plugin-blueprint.md` Section 4.
 8. **Context engineering is mandatory.** Every skill prompt MUST include findings persistence (path, what to save, 2-Action Rule, format template) and error logging (4 standard rules) placed BEFORE the main process steps.
 9. **Two-stage verification is mandatory.** Every skill prompt MUST include the two-stage verification block after the checkpoint section: Stage 1 (spec-compliance-reviewer, Haiku) gates Stage 2 (qa-reviewer, Opus). Stage 1 failure skips Stage 2 and marks `failed_spec`. Stage 2 failure marks `failed_quality`.
+10. **Positive framing is used.** Instructions use "advance only after checks pass" instead of "do not advance until checks pass". See plugin-blueprint.md Section 4.
 
 ---
 
@@ -632,3 +639,4 @@ on_pass: >
 9. **The guide is self-contained.** Someone with access to the repo and the spec documents should be able to follow the guide from Step 1 to completion without any additional context.
 10. **No forward references between prompts.** Each prompt stands alone. It may reference spec documents, but never another prompt in the guide.
 11. **Context engineering is baked in.** Every skill prompt includes findings persistence (with 2-Action Rule) and error logging sections. The scaffold prompt generates hooks in plugin.json and hook scripts in scripts/. No plugin should ship without these patterns.
+12. **Positive framing in instructions.** Generated skill prompts use positive instructions ("advance only after checks pass") rather than negative ones ("do not advance until checks pass"). See plugin-blueprint.md Section 4.

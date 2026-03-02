@@ -39,7 +39,7 @@ PROMPT per skill — create a fully self-contained prompt for each skill instead
 
 1. Collect inputs — index all data from design.yml, implementation plan, addendum, and asset manifest
 2. Determine step numbering — scaffold (1), schema (2), skills in build order (3–N), commands (N+1–M-1), end-to-end test (M)
-3. Generate per-skill prompts — one fully self-contained prompt per skill with spec reference, model tier, findings persistence, error logging, process steps, checkpoint, two-stage verification, and CLAUDE.md update
+3. Generate per-skill prompts — one fully self-contained prompt per skill with spec reference, model tier, findings persistence, error logging, process steps, checkpoint, two-stage verification, completion gate awareness, self-tiering support, and CLAUDE.md update
 4. Generate scaffold prompt (Step 1) — directory structure, plugin.json with hooks, session-recovery.sh, check-wave-complete.sh, README
 5. Generate schema + templates prompt (Step 2) — YAML schema, markdown template, DOCX styles if needed
 6. Generate command prompts — one per command with purpose, prerequisites, execution strategy, output, recovery

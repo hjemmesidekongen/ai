@@ -113,6 +113,7 @@ checkpoint_type: [from design.yml]
 
 ## Process Summary
 
+<!-- Use positive framing: "advance only after checks pass" instead of "do not advance until checks pass" -->
 1. [Step one placeholder]
 2. [Step two placeholder]
 3. [Step three placeholder]
