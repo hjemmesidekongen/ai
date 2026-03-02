@@ -286,7 +286,7 @@ Reference: plugins/task-planner/resources/plugin-blueprint.md Sections 8, 13
 - [x] Step 59: Skill — config-generator
 - [x] Step 60: Skill — knowledge-initializer
 - [x] Step 61: Skill — tier-assigner
-- [ ] Step 62: Skill — feature-decomposer
+- [x] Step 62: Skill — feature-decomposer
 - [ ] Step 63: Skill — team-planner
 - [ ] Step 64: Skill — agent-dispatcher
 - [ ] Step 65: Skill — completion-gate
