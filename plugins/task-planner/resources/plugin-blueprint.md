@@ -271,6 +271,16 @@ Before finalizing any SKILL.md frontmatter, verify:
 - [ ] Is it **under 1024 characters**?
 - [ ] Does it mention relevant **file types, commands, or workflow positions**?
 
+### Positive Prompt Framing
+
+SKILL.md instructions use positive framing — state what to do, not what to
+avoid. Instead of "do not advance until checks pass", write "advance only after
+all checks pass". Positive instructions are clearer and more effective for LLM
+execution.
+
+**Exception:** Brand domain language (e.g., "what the brand never says") is
+content, not instruction — leave it as-is.
+
 ### Skill Rules
 
 - Every skill has a checkpoint — no exceptions
@@ -773,6 +783,7 @@ These apply to EVERY plugin:
 17. **All errors are persisted in state.yml.** Failed approaches are logged with what was tried and what to try next. Claude reads errors before retrying.
 18. **Never repeat failed approaches.** Check state.yml errors before attempting anything. If the same approach already failed, mutate the strategy.
 19. **Session recovery runs at startup.** The SessionStart hook detects resumed sessions and reports what may have been lost since last state.yml update.
+20. **Completion gates for code tasks.** Worker agents run build, lint, and test checks before committing code files. Content-only tasks (YAML, Markdown, SVG) skip the gate. Commands come from `project_context` in the dispatch template — workers never hardcode them.
 
 ---
 
@@ -798,6 +809,25 @@ The wave-decomposer should assign `model_tier` based on these rules:
 - **principal**: difficulty=high OR risk=high OR task is QA/verification OR task is cross-cutting
 
 When `model_tier` is omitted, it defaults to `senior`.
+
+### Self-Tiering Protocol
+
+When `model_tier` is `"self"`, the worker agent self-assesses before executing.
+This is used for domain-specialist tasks (SEO, DevOps, security, design, data
+science) where the orchestrator lacks context to pre-assign difficulty.
+
+- The wave-decomposer assigns `self` to tasks in specialist domains
+- The worker agent scores four dimensions (scope, ambiguity, risk, domain depth)
+  and declares a tier before doing any implementation work
+- On failure, automatic escalation: junior -> senior -> principal -> blocked (human)
+- Each escalation is a single retry — the worker reports failure, and the
+  orchestrator re-dispatches at the next tier
+
+> **Schema note:** `plan-schema.yml` needs `self` added to the `model_tier`
+> enum to support this value.
+
+See `worker-agent.md` Step 0a for the full assessment table and escalation
+protocol.
 
 ---
 
@@ -1103,6 +1133,24 @@ In subagent mode, each task commits before reporting. This enables:
 - **Audit trail:** Every task has a commit SHA in the plan
 
 The commit message format is: `<plan_name>: <task_name> [<task_id>]`
+
+### Cascading Failure Handling
+
+When a task fails after all retry attempts, the orchestrator performs a
+dependency-graph analysis before presenting options to the user:
+
+1. **Walk forward** from the failed task to find all transitively blocked tasks
+   (direct dependents and their dependents, recursively)
+2. **Identify independent tasks** that have no dependency path from the failed
+   task — these can still proceed safely
+3. **Present three options** to the user:
+   - Continue with independent tasks only (skip blocked tasks)
+   - Full halt — stop execution, preserve state for `/plan:resume`
+   - Propose alternative — describe a workaround for the blocked path
+
+The orchestrator never silently skips blocked tasks — every skip requires user
+approval and is logged in state.yml. See `plan-execute.md` Step 5 (Cascading
+Failure Analysis) for the full algorithm.
 
 ### Execution Modes
 
