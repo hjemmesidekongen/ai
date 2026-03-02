@@ -1,0 +1,72 @@
+# ============================================================
+# KNOWLEDGE ENTRY SCHEMA
+# Each file in ~/.claude/dev/[project-name]/knowledge/ follows this structure.
+# Knowledge files are tag-indexed, maturity-tracked, and content-hashed
+# for deduplication.
+# ============================================================
+
+tags:
+  type: array
+  required: true
+  description: "Topic tags for indexing (e.g., 'api', 'auth', 'database', 'frontend', 'testing')"
+  items:
+    type: string
+
+maturity:
+  type: string
+  required: true
+  enum: ["candidate", "established", "proven", "deprecated"]
+  description: >
+    Knowledge maturity lifecycle:
+    - candidate: newly observed, needs confirmation
+    - established: confirmed by multiple observations or user
+    - proven: actively used in builds with positive outcomes
+    - deprecated: no longer accurate or relevant
+
+created_at:
+  type: string
+  format: iso8601
+  required: true
+  description: "When this knowledge file was first created"
+
+updated_at:
+  type: string
+  format: iso8601
+  required: true
+  description: "Last time any entry was added or modified"
+
+source:
+  type: string
+  required: true
+  enum: ["init-scan", "delta-scan", "manual", "build-learning"]
+  description: "How this knowledge was acquired"
+
+hash:
+  type: string
+  required: true
+  description: "Content hash for deduplication (Jaccard similarity check)"
+
+entries:
+  type: array
+  required: true
+  description: "Individual knowledge facts"
+  items:
+    fact:
+      type: string
+      required: true
+      description: "Concise statement of the knowledge"
+    confidence:
+      type: string
+      required: true
+      enum: ["high", "medium", "low"]
+      description: "Confidence level based on evidence strength"
+    evidence:
+      type: string
+      required: true
+      description: "Where this was observed (file path, pattern, commit)"
+    related_tags:
+      type: array
+      required: false
+      description: "Additional tags for cross-referencing"
+      items:
+        type: string
