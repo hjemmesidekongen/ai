@@ -28,9 +28,48 @@ None. A brainstorm can happen before any plugin exists.
 
 ## Execution Steps
 
-### Step 1: Create Project Directory
+### Step 1: Validate Project Name Uniqueness
 
-Create `~/.claude/projects/[project-name]/` if it doesn't exist.
+Check if `~/.claude/projects/[project-name]/` already exists.
+
+**If it exists with `brainstorm-state.yml`:**
+
+This is an existing brainstorm project — proceed to Step 2 (resume logic).
+
+**If a directory exists but has NO `brainstorm-state.yml`:**
+
+The name is taken by something else. Prompt the user:
+
+```
+"A project called [project-name] already exists but isn't a brainstorm.
+ Suggested alternative: [project-name]-2
+
+ Use [project-name]-2, or pick a different name?"
+```
+
+**If it doesn't exist:**
+
+Check all other `~/.claude/projects/*/brainstorm-state.yml` files to ensure
+no other brainstorm has the same project name inside its state file (the
+`project:` field). The project name acts as a unique ID for decision lookup
+via `--brainstorm` flag.
+
+If a collision is found, prompt:
+
+```
+"A brainstorm called [project-name] already exists at [path].
+ Suggested alternative: [project-name]-2
+
+ Use [project-name]-2, or pick a different name?"
+```
+
+Increment the suffix (`-2`, `-3`, etc.) until a unique name is found.
+
+If no collision, create the directory:
+
+```bash
+mkdir -p ~/.claude/projects/[project-name]/
+```
 
 ---
 
