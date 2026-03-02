@@ -291,7 +291,7 @@ Reference: plugins/task-planner/resources/plugin-blueprint.md Sections 8, 13
 - [x] Step 64: Skill — agent-dispatcher
 - [x] Step 65: Skill — completion-gate
 - [x] Step 66: Skill — code-review
-- [ ] Step 67: Skill — qa-validation
+- [x] Step 67: Skill — qa-validation
 - [ ] Step 68: Skill — delta-scanner
 - [ ] Step 69: Command — /dev:init
 - [ ] Step 70: Command — /dev:build
