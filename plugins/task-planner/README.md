@@ -92,7 +92,7 @@ Generic wave-based task planning plugin for Claude Code. Any plugin that needs t
 
 ## How Other Plugins Use This
 
-Consuming plugins declare `"dependencies": ["task-planner"]` in their manifest, then call the planner with their task list and a verification profile:
+Consuming plugins declare `"dependencies": ["task-planner"]` in their `ecosystem.json`, then call the planner with their task list and a verification profile:
 
 ```yaml
 # Example: brand-guideline calling the planner

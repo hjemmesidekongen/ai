@@ -307,10 +307,16 @@ task-planner/
 ### Plugin Manifest
 
 ```json
+// plugin.json (Claude Code schema)
 {
   "name": "task-planner",
   "version": "1.0.0",
   "description": "Generic wave-based task planning with verification and QA. Used by other plugins to plan and execute complex work.",
+  "hooks": { ... }
+}
+
+// ecosystem.json (ecosystem metadata)
+{
   "commands": ["plan-create", "plan-execute", "plan-status", "plan-resume"],
   "skills": ["wave-decomposer", "file-ownership", "verification-runner", "qa-reviewer"],
   "agents": ["qa-agent", "worker-agent"],
@@ -854,17 +860,17 @@ execution_mode:
 ### Dependency Chain
 
 ```json
-// brand-guideline/plugin.json
+// brand-guideline/ecosystem.json
 {
   "dependencies": ["task-planner"]
 }
 
-// website-builder/plugin.json
+// website-builder/ecosystem.json
 {
   "dependencies": ["task-planner", "brand-guideline"]
 }
 
-// seo-plugin/plugin.json
+// seo-plugin/ecosystem.json
 {
   "dependencies": ["task-planner", "brand-guideline"]
 }

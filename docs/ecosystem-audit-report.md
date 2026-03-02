@@ -148,9 +148,9 @@ All other multi-step commands have explicit Recovery sections. `plugin-version` 
 | Version semver | ✅ 1.0.0 | ✅ 1.0.0 | ✅ 1.0.0 |
 | Hooks section | ✅ all 4 | ✅ all 4 | ✅ all 4 |
 | Hook scripts exist | ✅ | ✅ | ✅ |
-| shared_skills (if needed) | N/A | ✅ [brand-context-loader] | ✅ [brand-context-loader] |
-| brand_directory (if needed) | N/A | ✅ | ✅ |
-| data_directory | N/A | N/A | ✅ |
+| shared_skills (ecosystem.json) | N/A | ✅ [brand-context-loader] | ✅ [brand-context-loader] |
+| brand_directory (ecosystem.json) | N/A | ✅ | ✅ |
+| data_directory (ecosystem.json) | N/A | N/A | ✅ |
 
 ---
 

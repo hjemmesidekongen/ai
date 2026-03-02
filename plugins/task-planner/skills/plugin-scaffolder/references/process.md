@@ -133,40 +133,56 @@ For simple skills without `references/`, replace the Execution section with inli
 
 ---
 
-### Step 3 — Generate plugin.json
+### Step 3a — Generate plugin.json
 
-Create `plugins/[plugin-name]/.claude-plugin/plugin.json` with this exact structure:
+Create `plugins/[plugin-name]/.claude-plugin/plugin.json` with only Claude Code schema fields:
 
 ```json
 {
   "name": "[design.yml → name]",
   "version": "1.0.0",
   "description": "[design.yml → description]",
-  "commands": ["[design.yml → commands[].name, stripped of plugin prefix]"],
-  "skills": ["[design.yml → skills[].name]"],
-  "agents": ["[design.yml → agents if any, else empty array]"],
-  "dependencies": ["task-planner"],
   "hooks": {
     "PreToolUse": [
       {
         "matcher": "Write|Edit|Bash",
-        "command": "cat state.yml 2>/dev/null | head -20 || true"
+        "hooks": [
+          {
+            "type": "command",
+            "command": "cat state.yml 2>/dev/null | head -20 || true"
+          }
+        ]
       }
     ],
     "PostToolUse": [
       {
         "matcher": "Write|Edit",
-        "command": "echo '[plugin-name] File updated. If this completes a phase, update state.yml.'"
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo '[plugin-name] File updated. If this completes a phase, update state.yml.'"
+          }
+        ]
       }
     ],
     "SessionStart": [
       {
-        "command": "bash plugins/[plugin-name]/scripts/session-recovery.sh"
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash ${CLAUDE_PLUGIN_ROOT}/scripts/session-recovery.sh"
+          }
+        ]
       }
     ],
     "Stop": [
       {
-        "command": "bash plugins/[plugin-name]/scripts/check-wave-complete.sh"
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash ${CLAUDE_PLUGIN_ROOT}/scripts/check-wave-complete.sh"
+          }
+        ]
       }
     ]
   }
@@ -174,12 +190,26 @@ Create `plugins/[plugin-name]/.claude-plugin/plugin.json` with this exact struct
 ```
 
 **Hook rules:**
-- Replace `[plugin-name]` with the actual plugin name in all hook commands
-- The PostToolUse echo message uses the plugin name as a prefix (e.g., `[seo-plugin]`)
-- SessionStart and Stop hooks reference the plugin's own scripts/ directory
-- See Step 3b for the script contents
+- Replace `[plugin-name]` with the actual plugin name in the PostToolUse echo message prefix (e.g., `[seo-plugin]`)
+- Use `${CLAUDE_PLUGIN_ROOT}` for script paths — Claude Code resolves this at runtime
+- See Step 3c for the script contents
 
-**Command name extraction:** Commands in design.yml use the format `plugin:command` (e.g., `seo:strategy`). In plugin.json, store only the command part without the plugin prefix (e.g., `strategy`). If the command name already excludes the prefix, use it as-is.
+---
+
+### Step 3b — Generate ecosystem.json
+
+Create `plugins/[plugin-name]/.claude-plugin/ecosystem.json` with ecosystem metadata:
+
+```json
+{
+  "commands": ["[design.yml → commands[].name, stripped of plugin prefix]"],
+  "skills": ["[design.yml → skills[].name]"],
+  "agents": ["[design.yml → agents if any, else empty array]"],
+  "dependencies": ["task-planner"]
+}
+```
+
+**Command name extraction:** Commands in design.yml use the format `plugin:command` (e.g., `seo:strategy`). In ecosystem.json, store only the command part without the plugin prefix (e.g., `strategy`). If the command name already excludes the prefix, use it as-is.
 
 **Dependency rules:**
 - `dependencies` ALWAYS includes `"task-planner"`
@@ -193,7 +223,7 @@ Create `plugins/[plugin-name]/.claude-plugin/plugin.json` with this exact struct
 
 ---
 
-### Step 3b — Generate Hook Scripts
+### Step 3c — Generate Hook Scripts
 
 Create two scripts in `plugins/[plugin-name]/scripts/`:
 
@@ -299,7 +329,7 @@ Create `plugins/[plugin-name]/README.md` with this structure:
 
 **What it does:** [description, expanded to 2-3 sentences using context from design.yml]
 **Who it's for:** [persona.role] ([persona.technical_level]) — cares about [persona.cares_about]
-**Dependencies:** [list from plugin.json dependencies]
+**Dependencies:** [list from ecosystem.json dependencies]
 
 ## Prerequisites
 
@@ -389,7 +419,7 @@ Record the data storage convention for this plugin:
 - The `[project-name]` is provided at runtime when the user runs the main command
 - State file: `[storage_path]state.yml`
 
-This information is already captured in plugin.json's `data_directory` field and in the README. No additional files are created — this step documents the convention for downstream skills.
+This information is already captured in ecosystem.json's `data_directory` field and in the README. No additional files are created — this step documents the convention for downstream skills.
 
 ---
 
@@ -409,12 +439,13 @@ If the checklist exists:
 type: file_validation
 required_checks:
   - plugins/[plugin-name]/.claude-plugin/plugin.json exists and is valid JSON
-  - plugin.json contains all required fields: name, version, description,
-    commands, skills, dependencies
+  - plugin.json contains only Claude Code fields: name, version, description, hooks
   - plugin.json "name" matches design.yml "name"
-  - plugin.json "dependencies" includes "task-planner"
-  - If needs_brand is true: plugin.json "dependencies" includes "brand-guideline"
-  - If needs_brand is true: plugin.json contains "shared_skills" with "brand-context-loader"
+  - plugins/[plugin-name]/.claude-plugin/ecosystem.json exists and is valid JSON
+  - ecosystem.json contains: commands, skills, dependencies
+  - ecosystem.json "dependencies" includes "task-planner"
+  - If needs_brand is true: ecosystem.json "dependencies" includes "brand-guideline"
+  - If needs_brand is true: ecosystem.json contains "shared_skills" with "brand-context-loader"
   - plugins/[plugin-name]/commands/ directory exists
   - plugins/[plugin-name]/skills/ directory exists with one subdirectory per skill from design.yml
   - Each skill directory contains a lean SKILL.md (≤80 lines) using the template format
@@ -445,7 +476,7 @@ on_pass: >
 
 ## Quality Rules
 
-1. **design.yml is the source of truth.** Every value in plugin.json and README.md comes from design.yml. Never invent names, descriptions, or dependencies.
+1. **design.yml is the source of truth.** Every value in plugin.json, ecosystem.json, and README.md comes from design.yml. Never invent names, descriptions, or dependencies.
 2. **No placeholder text in output.** The final plugin.json and README.md must contain real values, not template variables like `[plugin-name]`.
 3. **Blueprint compliance.** The directory structure must exactly match `plugin-blueprint.md` Section 2. No extra directories, no missing directories.
 4. **Command names are stripped.** In plugin.json, commands use the short form (e.g., `"strategy"`) not the prefixed form (e.g., `"seo:strategy"`).

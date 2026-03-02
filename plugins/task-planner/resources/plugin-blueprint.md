@@ -38,7 +38,8 @@ Every plugin follows this exact structure. No exceptions.
 ```
 plugins/[plugin-name]/
 ├── .claude-plugin/
-│   └── plugin.json              # Manifest — name, version, dependencies, commands, skills, hooks
+│   ├── plugin.json              # Claude Code manifest — name, version, description, hooks
+│   └── ecosystem.json           # Ecosystem metadata — commands, skills, agents, dependencies
 ├── commands/
 │   └── [command-name].md        # One file per slash command
 ├── skills/
@@ -63,36 +64,54 @@ plugins/[plugin-name]/
 
 ### plugin.json Format
 
+This file follows the Claude Code plugin schema. Only these fields are allowed:
+
 ```json
 {
   "name": "[plugin-name]",
   "version": "1.0.0",
   "description": "[One sentence — what it does]",
-  "commands": ["[list of command names without plugin prefix]"],
-  "skills": ["[list of skill directory names]"],
-  "agents": ["[list of agent filenames without .md]"],
-  "dependencies": ["task-planner"],
   "hooks": {
     "PreToolUse": [
       {
         "matcher": "Write|Edit|Bash",
-        "command": "cat state.yml 2>/dev/null | head -20 || true"
+        "hooks": [
+          {
+            "type": "command",
+            "command": "cat state.yml 2>/dev/null | head -20 || true"
+          }
+        ]
       }
     ],
     "PostToolUse": [
       {
         "matcher": "Write|Edit",
-        "command": "echo '[plugin-name] File updated. If this completes a phase, update state.yml.'"
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo '[plugin-name] File updated. If this completes a phase, update state.yml.'"
+          }
+        ]
       }
     ],
     "SessionStart": [
       {
-        "command": "scripts/session-recovery.sh"
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash ${CLAUDE_PLUGIN_ROOT}/scripts/session-recovery.sh"
+          }
+        ]
       }
     ],
     "Stop": [
       {
-        "command": "scripts/check-wave-complete.sh"
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash ${CLAUDE_PLUGIN_ROOT}/scripts/check-wave-complete.sh"
+          }
+        ]
       }
     ]
   }
@@ -100,10 +119,31 @@ plugins/[plugin-name]/
 ```
 
 **Rules:**
-- `dependencies` ALWAYS includes `task-planner` — every plugin uses it for planning and verification
-- If the plugin needs brand data, add `brand-guideline` to dependencies
 - The `name` field must be kebab-case
 - `hooks` section is required for all plugins (see Section 13: Hooks & Context Engineering)
+- Do NOT put `commands`, `skills`, `agents`, or `dependencies` in plugin.json — those go in ecosystem.json
+
+### ecosystem.json Format
+
+This file holds ecosystem-specific metadata that Claude Code does not need:
+
+```json
+{
+  "commands": ["[list of command names without plugin prefix]"],
+  "skills": ["[list of skill directory names]"],
+  "agents": ["[list of agent filenames without .md]"],
+  "dependencies": ["task-planner"]
+}
+```
+
+**Conditional fields** (add only when applicable):
+- `"shared_skills": ["brand-context-loader"]` — when `needs_brand` is true
+- `"brand_directory": "~/.claude/brands/"` — when `needs_brand` is true
+- `"data_directory": "~/.claude/[domain]/[project-name]/"` — when the plugin stores project-specific data
+
+**Rules:**
+- `dependencies` ALWAYS includes `task-planner` — every plugin uses it for planning and verification
+- If the plugin needs brand data, add `brand-guideline` to dependencies
 
 ---
 
@@ -365,7 +405,7 @@ human-formatted text. The document is what the user shares with their team.
 
 If the plugin needs brand data (colors, voice, audience, logo, etc.):
 
-1. Add `brand-guideline` to `dependencies` in plugin.json
+1. Add `brand-guideline` to `dependencies` in ecosystem.json
 2. In every skill that needs brand data, start with:
    ```
    Read brand-reference.yml via the brand-context-loader skill.

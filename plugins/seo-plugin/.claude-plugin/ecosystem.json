@@ -1,0 +1,28 @@
+{
+  "commands": [
+    "strategy",
+    "audit",
+    "content-brief",
+    "export"
+  ],
+  "skills": [
+    "project-interview",
+    "keyword-research",
+    "competitor-analysis",
+    "technical-seo",
+    "on-page-optimization",
+    "content-strategy",
+    "link-building",
+    "compile-and-export"
+  ],
+  "agents": [],
+  "dependencies": [
+    "task-planner",
+    "brand-guideline"
+  ],
+  "shared_skills": [
+    "brand-context-loader"
+  ],
+  "brand_directory": "~/.claude/brands/",
+  "data_directory": "~/.claude/seo/[project-name]/"
+}

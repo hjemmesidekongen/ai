@@ -1,0 +1,27 @@
+{
+  "commands": [
+    "brand-generate",
+    "brand-analyze",
+    "brand-audit",
+    "brand-switch"
+  ],
+  "skills": [
+    "identity-interview",
+    "audience-personas",
+    "tone-of-voice",
+    "typography-color",
+    "visual-identity",
+    "logo-design",
+    "content-rules",
+    "social-media",
+    "compile-and-export"
+  ],
+  "agents": [],
+  "dependencies": [
+    "task-planner"
+  ],
+  "shared_skills": [
+    "brand-context-loader"
+  ],
+  "brand_directory": "~/.claude/brands/"
+}

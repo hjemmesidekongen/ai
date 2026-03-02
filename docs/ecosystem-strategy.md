@@ -491,7 +491,7 @@ No plugin directly invokes another plugin's commands.
 
 ### Pattern: A plugin that works with OR without brand data
 ```markdown
-# In plugin.json:
+# In ecosystem.json:
 "dependencies": ["task-planner"]  # brand-guideline is NOT required
 "optional_dependencies": ["brand-guideline"]
 

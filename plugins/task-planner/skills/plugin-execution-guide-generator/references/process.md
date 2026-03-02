@@ -225,22 +225,28 @@ Create the plugin scaffold:
    └── README.md
    ```
 
-2. Write `plugins/[plugin-name]/.claude-plugin/plugin.json` (including hooks):
+2. Write `plugins/[plugin-name]/.claude-plugin/plugin.json` (Claude Code schema only):
    ```json
    {
      "name": "[plugin-name]",
      "version": "1.0.0",
      "description": "[description from design.yml]",
+     "hooks": {
+       "PreToolUse": [{ "matcher": "Write|Edit|Bash", "hooks": [{ "type": "command", "command": "cat state.yml 2>/dev/null | head -20 || true" }] }],
+       "PostToolUse": [{ "matcher": "Write|Edit", "hooks": [{ "type": "command", "command": "echo '[plugin-name] File updated. If this completes a phase, update state.yml.'" }] }],
+       "SessionStart": [{ "hooks": [{ "type": "command", "command": "bash ${CLAUDE_PLUGIN_ROOT}/scripts/session-recovery.sh" }] }],
+       "Stop": [{ "hooks": [{ "type": "command", "command": "bash ${CLAUDE_PLUGIN_ROOT}/scripts/check-wave-complete.sh" }] }]
+     }
+   }
+   ```
+
+   Write `plugins/[plugin-name]/.claude-plugin/ecosystem.json` (ecosystem metadata):
+   ```json
+   {
      "commands": [list all command names from design.yml],
      "skills": [list all skill names from design.yml],
      "agents": [],
-     "dependencies": ["task-planner"[, "brand-guideline" if needs_brand]],
-     "hooks": {
-       "PreToolUse": [{ "matcher": "Write|Edit|Bash", "command": "cat state.yml 2>/dev/null | head -20 || true" }],
-       "PostToolUse": [{ "matcher": "Write|Edit", "command": "echo '[plugin-name] File updated. If this completes a phase, update state.yml.'" }],
-       "SessionStart": [{ "command": "bash plugins/[plugin-name]/scripts/session-recovery.sh" }],
-       "Stop": [{ "command": "bash plugins/[plugin-name]/scripts/check-wave-complete.sh" }]
-     }
+     "dependencies": ["task-planner"[, "brand-guideline" if needs_brand]]
    }
    ```
 
@@ -260,8 +266,9 @@ Required checks:
 - scripts/session-recovery.sh exists and is executable
 - scripts/check-wave-complete.sh exists and is executable
 - README.md exists and lists all commands
-- plugin.json dependencies includes "task-planner"
-[If needs_brand:] - plugin.json dependencies includes "brand-guideline"
+- ecosystem.json exists and is valid JSON
+- ecosystem.json dependencies includes "task-planner"
+[If needs_brand:] - ecosystem.json dependencies includes "brand-guideline"
 
 Then update CLAUDE.md: check off this step in the Progress section and set "Next step" to the following step. Commit everything.
 
@@ -593,7 +600,7 @@ required_checks:
   - Every checkpoint has at least 2 measurable checks
     (quantities, thresholds, existence checks — not "looks good")
   - Scaffold prompt (Step 1) generates correct directory structure
-    and plugin.json with accurate dependencies
+    and plugin.json and ecosystem.json with accurate dependencies
   - Schema prompt (Step 2) references the full YAML schema
     from the implementation plan
   - Command prompts reference the correct skills and execution order

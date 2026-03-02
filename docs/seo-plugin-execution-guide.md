@@ -52,12 +52,19 @@ Create the plugin scaffold:
    └── README.md
    ```
 
-2. Write `plugins/seo-plugin/.claude-plugin/plugin.json`:
+2. Write `plugins/seo-plugin/.claude-plugin/plugin.json` (Claude Code schema only):
    ```json
    {
      "name": "seo-plugin",
      "version": "1.0.0",
      "description": "Generates a comprehensive SEO strategy with keyword research, on-page optimization, technical SEO audits, competitive analysis, and content recommendations tailored to a project's goals and target audience.",
+     "hooks": { ... }
+   }
+   ```
+
+   Write `plugins/seo-plugin/.claude-plugin/ecosystem.json` (ecosystem metadata):
+   ```json
+   {
      "commands": ["strategy", "audit", "content-brief", "export"],
      "skills": ["project-interview", "keyword-research", "competitor-analysis", "on-page-optimization", "technical-seo", "content-strategy", "link-building", "compile-and-export"],
      "agents": [],
@@ -83,10 +90,11 @@ Create the plugin scaffold:
 Checkpoint type: file_validation
 Required checks:
 - `plugins/seo-plugin/.claude-plugin/plugin.json` exists and is valid JSON
-- plugin.json contains all required fields: name, version, description, commands, skills, dependencies
+- plugin.json contains Claude Code fields: name, version, description, hooks
 - plugin.json "name" matches "seo-plugin"
-- plugin.json "dependencies" includes "task-planner" and "brand-guideline"
-- plugin.json contains "shared_skills" with "brand-context-loader"
+- ecosystem.json contains: commands, skills, dependencies
+- ecosystem.json "dependencies" includes "task-planner" and "brand-guideline"
+- ecosystem.json contains "shared_skills" with "brand-context-loader"
 - `plugins/seo-plugin/commands/` directory exists
 - `plugins/seo-plugin/skills/` directory exists
 - `plugins/seo-plugin/resources/templates/` directory exists

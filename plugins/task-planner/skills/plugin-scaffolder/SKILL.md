@@ -43,7 +43,7 @@ on disk and is ready for schema creation and skill implementation.
 
 1. Validate prerequisites — design.yml status must be "approved"; implementation-plan.md, addendum.md, execution-guide.md must all exist
 2. Create directory structure — .claude-plugin/, commands/, skills/ (with per-skill subdirs using progressive disclosure: lean SKILL.md + references/ for complex skills), resources/templates/, resources/examples/, scripts/; agents/ only if design.yml defines agents
-3. Generate plugin.json — name/version/description/commands/skills from design.yml; hooks (PreToolUse, PostToolUse, SessionStart, Stop); dependencies include task-planner and brand-guideline if needs_brand; command names stripped of plugin prefix
+3. Generate plugin.json and ecosystem.json — plugin.json has name/version/description/hooks only (Claude Code schema); ecosystem.json has commands/skills/agents/dependencies from design.yml; dependencies include task-planner and brand-guideline if needs_brand; command names stripped of plugin prefix
 4. Generate hook scripts — session-recovery.sh (reports state.yml phase, status, errors, findings, git diff) and check-wave-complete.sh (blocks stop if current skill not completed); both chmod +x
 5. Generate README.md — overview, prerequisites (Required tools only), commands table, output, how it works (wave structure), brand data usage if needs_brand, installation, data storage
 6. Verify brand context loader exists if needs_brand — STOP if shared/brand-context-loader/SKILL.md is missing

@@ -145,7 +145,7 @@ Other plugins access brand data through the shared `brand-context-loader` skill 
 - **Version checking** — calls `version-compatibility-checker` before loading to ensure data is compatible with the consuming plugin
 - **State recovery** — reads `state.yml` to detect incomplete runs and resume from the right point
 
-Consuming plugins declare their dependency:
+Consuming plugins declare their dependency in their `ecosystem.json`:
 
 ```json
 {

@@ -29,7 +29,7 @@ plugins:
     agents:
       - qa-agent
       - worker-agent
-    dependencies: []
+    dependencies: []  # Source: ecosystem.json
     tags:
       - foundation
       - planning
@@ -49,6 +49,7 @@ plugins:
       - brand-switch
     skills: 9
     agents: []
+    # Source: ecosystem.json
     dependencies:
       - task-planner
     shared_skills:
@@ -71,6 +72,7 @@ plugins:
       - export
     skills: 8
     agents: []
+    # Source: ecosystem.json
     dependencies:
       - task-planner
       - brand-guideline

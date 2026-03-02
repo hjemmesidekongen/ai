@@ -34,6 +34,7 @@ section "1. File Existence"
 
 EXPECTED_FILES=(
   ".claude-plugin/plugin.json"
+  ".claude-plugin/ecosystem.json"
   "README.md"
   "design.yml"
   "resources/templates/seo-strategy-schema.yml"
@@ -62,17 +63,27 @@ for f in "${EXPECTED_FILES[@]}"; do
 done
 
 # ─────────────────────────────────────────────────
-section "2. Plugin.json Integrity"
+section "2. Manifest Integrity (plugin.json + ecosystem.json)"
 # ─────────────────────────────────────────────────
 
 PLUGIN_JSON="$PLUGIN_DIR/.claude-plugin/plugin.json"
+ECOSYSTEM_JSON="$PLUGIN_DIR/.claude-plugin/ecosystem.json"
 
-# Check required top-level keys
-for key in name version description commands skills dependencies; do
+# Check plugin.json required keys (Claude Code schema)
+for key in name version description hooks; do
   if grep -q "\"$key\"" "$PLUGIN_JSON"; then
     pass "plugin.json has '$key'"
   else
     fail "plugin.json missing '$key'"
+  fi
+done
+
+# Check ecosystem.json required keys (ecosystem metadata)
+for key in commands skills dependencies; do
+  if grep -q "\"$key\"" "$ECOSYSTEM_JSON"; then
+    pass "ecosystem.json has '$key'"
+  else
+    fail "ecosystem.json missing '$key'"
   fi
 done
 
@@ -85,7 +96,7 @@ fi
 
 # Check dependencies include task-planner and brand-guideline
 for dep in task-planner brand-guideline; do
-  if grep -q "\"$dep\"" "$PLUGIN_JSON"; then
+  if grep -q "\"$dep\"" "$ECOSYSTEM_JSON"; then
     pass "dependency '$dep' declared"
   else
     fail "dependency '$dep' missing"
@@ -93,40 +104,40 @@ for dep in task-planner brand-guideline; do
 done
 
 # Check shared_skills includes brand-context-loader
-if grep -q '"brand-context-loader"' "$PLUGIN_JSON"; then
+if grep -q '"brand-context-loader"' "$ECOSYSTEM_JSON"; then
   pass "shared skill 'brand-context-loader' declared"
 else
   fail "shared skill 'brand-context-loader' missing"
 fi
 
-# Verify every skill in plugin.json has a SKILL.md
+# Verify every skill in ecosystem.json has a SKILL.md
 # Use python for JSON parsing (available on macOS)
-SKILLS_IN_JSON=$(python3 -c "import json; d=json.load(open('$PLUGIN_JSON')); print('\n'.join(d.get('skills',[])))")
+SKILLS_IN_JSON=$(python3 -c "import json; d=json.load(open('$ECOSYSTEM_JSON')); print('\n'.join(d.get('skills',[])))")
 for skill in $SKILLS_IN_JSON; do
   if [[ -f "$PLUGIN_DIR/skills/$skill/SKILL.md" ]]; then
     pass "skill '$skill' has SKILL.md"
   else
-    fail "skill '$skill' listed in plugin.json but no SKILL.md found"
+    fail "skill '$skill' listed in ecosystem.json but no SKILL.md found"
   fi
 done
 
-# Verify every command in plugin.json has a command file
-COMMANDS_IN_JSON=$(python3 -c "import json; d=json.load(open('$PLUGIN_JSON')); print('\n'.join(d.get('commands',[])))")
+# Verify every command in ecosystem.json has a command file
+COMMANDS_IN_JSON=$(python3 -c "import json; d=json.load(open('$ECOSYSTEM_JSON')); print('\n'.join(d.get('commands',[])))")
 for cmd in $COMMANDS_IN_JSON; do
   if [[ -f "$PLUGIN_DIR/commands/$cmd.md" ]]; then
     pass "command '$cmd' has $cmd.md"
   else
-    fail "command '$cmd' listed in plugin.json but no $cmd.md found"
+    fail "command '$cmd' listed in ecosystem.json but no $cmd.md found"
   fi
 done
 
-# Verify no orphan skills (SKILL.md exists but not in plugin.json)
+# Verify no orphan skills (SKILL.md exists but not in ecosystem.json)
 for skill_dir in "$PLUGIN_DIR"/skills/*/; do
   skill_name=$(basename "$skill_dir")
   if echo "$SKILLS_IN_JSON" | grep -qx "$skill_name"; then
-    pass "skill '$skill_name' registered in plugin.json"
+    pass "skill '$skill_name' registered in ecosystem.json"
   else
-    fail "skill '$skill_name' has SKILL.md but is NOT in plugin.json"
+    fail "skill '$skill_name' has SKILL.md but is NOT in ecosystem.json"
   fi
 done
 
@@ -134,9 +145,9 @@ done
 for cmd_file in "$PLUGIN_DIR"/commands/*.md; do
   cmd_name=$(basename "$cmd_file" .md)
   if echo "$COMMANDS_IN_JSON" | grep -qx "$cmd_name"; then
-    pass "command '$cmd_name' registered in plugin.json"
+    pass "command '$cmd_name' registered in ecosystem.json"
   else
-    fail "command '$cmd_name' has file but is NOT in plugin.json"
+    fail "command '$cmd_name' has file but is NOT in ecosystem.json"
   fi
 done
 
