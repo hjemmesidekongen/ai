@@ -169,7 +169,7 @@ The SKILL.md must include these context engineering sections:
 **Findings Persistence:**
 During project scanning, write intermediate discoveries to the findings file:
 
-`~/.claude/dev/[project-name]/findings.md`
+`.ai/dev/[project-name]/findings.md`
 
 **What to save:** detected frameworks with confidence levels, config file locations, ambiguous detections that need user confirmation
 
@@ -258,7 +258,7 @@ The SKILL.md must include these context engineering sections:
 **Findings Persistence:**
 During config generation, write intermediate discoveries to:
 
-`~/.claude/dev/[project-name]/findings.md`
+`.ai/dev/[project-name]/findings.md`
 
 **What to save:** user confirmations, corrected detections, manually provided values, convention choices
 
@@ -284,7 +284,7 @@ When errors occur during config generation (validation failures, schema mismatch
 4. The verification-runner logs checkpoint failures automatically
 
 This skill:
-1. Read scan results from `~/.claude/dev/[project-name]/findings.md` — extract detected frameworks, config files, conventions
+1. Read scan results from `.ai/dev/[project-name]/findings.md` — extract detected frameworks, config files, conventions
 2. Transform scan results into dev-config.yml schema format using `plugins/dev/resources/templates/dev-config-schema.yml` as the template
 3. For each detected framework, present to user — one at a time: "Detected [name] [version] (from [source]). Correct? [Y/n]". If user corrects: update the entry
 4. Ask about conventions not auto-detectable — one question at a time, offer examples:
@@ -293,14 +293,14 @@ This skill:
    - "Target test coverage threshold? (suggest: 80%)"
 5. Populate `commands` section by reading package.json `scripts` — map to build, dev, test, lint, format, typecheck
 6. For any missing command, ask: "No [type] command detected. What command runs your [type]? (or press Enter to skip)"
-7. Write the completed dev-config.yml to `~/.claude/dev/[project-name]/dev-config.yml`
+7. Write the completed dev-config.yml to `.ai/dev/[project-name]/dev-config.yml`
 8. Present final config summary to user and wait for explicit confirmation: "Config looks good? [Y/n]"
 
-Output: writes `~/.claude/dev/[project-name]/dev-config.yml`
+Output: writes `.ai/dev/[project-name]/dev-config.yml`
 
 Checkpoint type: data_validation
 Required checks:
-- dev-config.yml exists at `~/.claude/dev/[project-name]/dev-config.yml`
+- dev-config.yml exists at `.ai/dev/[project-name]/dev-config.yml`
 - `meta` section has all required fields: plugin_name ("dev"), project_name, created_at, version
 - `frameworks` section has at least the `runtime` array (can be empty but must exist)
 - `conventions.language` is populated
@@ -351,7 +351,7 @@ The SKILL.md must include these context engineering sections:
 **Findings Persistence:**
 During knowledge initialization, write intermediate discoveries to:
 
-`~/.claude/dev/[project-name]/findings.md`
+`.ai/dev/[project-name]/findings.md`
 
 **What to save:** identified modules, import relationships, detected patterns, architecture observations
 
@@ -376,37 +376,37 @@ When errors occur during knowledge initialization (file parse failures, circular
 4. The verification-runner logs checkpoint failures automatically
 
 This skill:
-1. Read `~/.claude/dev/[project-name]/dev-config.yml` to understand project structure, frameworks, conventions
+1. Read `.ai/dev/[project-name]/dev-config.yml` to understand project structure, frameworks, conventions
 2. Read the `structure.key_directories` section to know where source code lives
 3. Analyze source structure — for each key directory, read representative files and map imports to identify module boundaries and data flow
-4. Generate `~/.claude/dev/[project-name]/knowledge/architecture.md`:
+4. Generate `.ai/dev/[project-name]/knowledge/architecture.md`:
    - Mermaid diagram showing module boundaries and data flow between them
    - Text descriptions of each module's responsibility
    - External integrations (APIs, databases, third-party services) identified from imports
-5. Generate `~/.claude/dev/[project-name]/knowledge/patterns.yml`:
+5. Generate `.ai/dev/[project-name]/knowledge/patterns.yml`:
    - Detected design patterns (repository, service layer, middleware chain, factory, observer)
    - State management patterns (if frontend: Redux, Zustand, Context, Jotai, etc.)
    - Error handling patterns (try/catch conventions, error boundary usage)
    - Each entry tagged with relevant tags from: api, auth, database, frontend, backend, testing
-6. Generate `~/.claude/dev/[project-name]/knowledge/conventions.yml`:
+6. Generate `.ai/dev/[project-name]/knowledge/conventions.yml`:
    - Naming conventions (camelCase vs snake_case, component naming, file naming)
    - File organization patterns (by feature, by type, barrel exports)
    - Import ordering patterns (external → internal → relative)
    - Each entry tagged with relevant tags
 7. Set `maturity: candidate` for all entries (promoted to `established` after first successful build)
 8. Compute SHA-256 content hashes for each knowledge entry (for Jaccard dedup in future delta scans)
-9. Write all knowledge files to `~/.claude/dev/[project-name]/knowledge/`
+9. Write all knowledge files to `.ai/dev/[project-name]/knowledge/`
 10. Update `dev-config.yml` `scan` section: set `last_scan_at`, compute and store `file_hashes` for all tracked files, record `files_tracked` count
 
 Output:
-- `~/.claude/dev/[project-name]/knowledge/architecture.md`
-- `~/.claude/dev/[project-name]/knowledge/patterns.yml`
-- `~/.claude/dev/[project-name]/knowledge/conventions.yml`
-- Updated `~/.claude/dev/[project-name]/dev-config.yml` scan section
+- `.ai/dev/[project-name]/knowledge/architecture.md`
+- `.ai/dev/[project-name]/knowledge/patterns.yml`
+- `.ai/dev/[project-name]/knowledge/conventions.yml`
+- Updated `.ai/dev/[project-name]/dev-config.yml` scan section
 
 Checkpoint type: file_validation
 Required checks:
-- At least 1 knowledge file created in `~/.claude/dev/[project-name]/knowledge/`
+- At least 1 knowledge file created in `.ai/dev/[project-name]/knowledge/`
 - All knowledge files have frontmatter with `tags` array (at least 1 tag per file)
 - All knowledge files have `maturity` field set to `candidate`
 - `architecture.md` contains at least 1 mermaid code block (```mermaid)
@@ -457,7 +457,7 @@ The SKILL.md must include these context engineering sections:
 **Findings Persistence:**
 During tier assessment, write assessment details to:
 
-`~/.claude/dev/[project-name]/findings.md`
+`.ai/dev/[project-name]/findings.md`
 
 **What to save:** complexity factors assessed, tier decision reasoning, model floor checks
 
@@ -535,7 +535,7 @@ The SKILL.md must include these context engineering sections:
 **Findings Persistence:**
 During feature decomposition, write intermediate discoveries to:
 
-`~/.claude/dev/[project-name]/findings.md`
+`.ai/dev/[project-name]/findings.md`
 
 **What to save:** PM's feature understanding, Architect's component breakdown, Designer's visual specs, PO's scope validation, user feedback at each stage
 
@@ -566,19 +566,19 @@ When errors occur during decomposition (agent dispatch failures, user rejection,
 This skill:
 1. Receive the user's feature description (from /dev:build argument)
 2. PM presents initial understanding to user: "Here's what I understand you want to build: [summary]. Does this capture your intent? [Y/n]" — one question at a time, offer examples of clarifying questions if the description is vague
-3. Read `~/.claude/dev/[project-name]/dev-config.yml` — extract `structure`, `frameworks`, `conventions` sections to understand the project context
-4. Read `~/.claude/dev/[project-name]/knowledge/*.yml` — load architecture and patterns knowledge (tag-filtered for relevant context)
+3. Read `.ai/dev/[project-name]/dev-config.yml` — extract `structure`, `frameworks`, `conventions` sections to understand the project context
+4. Read `.ai/dev/[project-name]/knowledge/*.yml` — load architecture and patterns knowledge (tag-filtered for relevant context)
 5. Dispatch Architect agent (as a subagent) with: feature description, project structure, existing architecture knowledge. Architect produces: component list with boundaries, new modules needed, contracts between components, files_affected per component
 6. Present Architect's component breakdown to user for feedback: "The Architect proposes [N] components: [summary]. Does this decomposition make sense? [Y/n/adjust]"
 7. If UI components are identified: dispatch Designer agent with component list, brand context (if available via brand-context-loader). Designer produces: visual specs per frontend component, responsive behavior, interaction patterns
 8. Present Designer's specs to user for feedback (if applicable)
 9. Dispatch PO agent with: original feature description, final component list, designer specs. PO validates: does decomposition achieve the goal? missing components? scope appropriate?
 10. Present PO assessment to user: "PO assessment: [approved/concerns]. Proceed with this decomposition? [Y/n]"
-11. Write decomposition to `~/.claude/dev/[project-name]/team-state.yml` `decomposition` section: components array, designer_specs array, po_validation object
+11. Write decomposition to `.ai/dev/[project-name]/team-state.yml` `decomposition` section: components array, designer_specs array, po_validation object
 
 Brand data sections needed (optional): identity, audience (for PO context), colors, typography, visual, logo (for Designer)
 
-Output: writes `decomposition` section of `~/.claude/dev/[project-name]/team-state.yml`
+Output: writes `decomposition` section of `.ai/dev/[project-name]/team-state.yml`
 
 Checkpoint type: data_validation
 Required checks:
@@ -631,7 +631,7 @@ The SKILL.md must include these context engineering sections:
 **Findings Persistence:**
 During team planning, write intermediate discoveries to:
 
-`~/.claude/dev/[project-name]/findings.md`
+`.ai/dev/[project-name]/findings.md`
 
 **What to save:** work packages created, TL assignments, tier decisions, file overlap checks, user adjustments to wave plan
 
@@ -658,7 +658,7 @@ When errors occur during planning (file ownership conflicts, TL disagreement, in
 4. The verification-runner logs checkpoint failures automatically
 
 This skill:
-1. Read `~/.claude/dev/[project-name]/team-state.yml` `decomposition` section — get component list with boundaries and files_affected
+1. Read `.ai/dev/[project-name]/team-state.yml` `decomposition` section — get component list with boundaries and files_affected
 2. PM creates initial work packages: each component becomes 1+ tasks. For components with many files_affected, split into smaller tasks (each touching ≤ 5 files)
 3. Dispatch Frontend TL agent (subagent) with frontend tasks: assign each to a specialist (Frontend Worker, Designer, E2E Test Expert), assess risk per task, assign model tier using tier-assigner logic, identify exact files each task will create/modify
 4. Dispatch Backend TL agent (subagent) with backend tasks: assign each to a specialist (Backend Worker, DevOps, Security Expert), assess risk per task, assign model tier, identify exact files per task
@@ -669,7 +669,7 @@ This skill:
 9. User confirms or adjusts the plan. If adjustments: update and re-check file ownership
 10. Write wave plan to `team-state.yml` `wave_plan` section: waves array with tasks, file_ownership array
 
-Output: writes `wave_plan` section of `~/.claude/dev/[project-name]/team-state.yml`
+Output: writes `wave_plan` section of `.ai/dev/[project-name]/team-state.yml`
 
 Checkpoint type: data_validation
 Required checks:
@@ -723,7 +723,7 @@ The SKILL.md must include these context engineering sections:
 **Findings Persistence:**
 During agent dispatch, write intermediate results to:
 
-`~/.claude/dev/[project-name]/findings.md`
+`.ai/dev/[project-name]/findings.md`
 
 **What to save:** dispatch timestamps, subagent reports, tier adjustments, failure details
 
@@ -749,14 +749,14 @@ When errors occur during dispatch (Task() failure, agent timeout, unexpected rep
 4. The verification-runner logs checkpoint failures automatically
 
 This skill:
-1. Read `~/.claude/dev/[project-name]/team-state.yml` `wave_plan` section — get all waves with tasks, assignments, tiers, file ownership
+1. Read `.ai/dev/[project-name]/team-state.yml` `wave_plan` section — get all waves with tasks, assignments, tiers, file ownership
 2. For each wave in sequence (wave 1, then wave 2, ...):
    a. Record base_sha by running `git rev-parse HEAD`
    b. For each task in the wave, build the dispatch prompt:
       - Task description and acceptance criteria
       - Agent role and responsibilities (from agent roster in implementation plan)
       - File ownership list (only these files may be modified)
-      - Relevant knowledge (load from `~/.claude/dev/[project-name]/knowledge/` filtered by task-relevant tags)
+      - Relevant knowledge (load from `.ai/dev/[project-name]/knowledge/` filtered by task-relevant tags)
       - Brand context snippet (if available and relevant, via brand-context-loader)
       - Dev-config conventions (from dev-config.yml `conventions` section)
       - Commit protocol: stage only owned files, commit with message format
@@ -769,7 +769,7 @@ This skill:
 3. After all tasks in a wave complete: record wave commit range (base_sha → current HEAD)
 4. Update `team-state.yml` `execution.current_wave` and `execution.commit_range`
 
-Output: writes `execution` section of `~/.claude/dev/[project-name]/team-state.yml`
+Output: writes `execution` section of `.ai/dev/[project-name]/team-state.yml`
 
 Checkpoint type: data_validation
 Required checks:
@@ -822,7 +822,7 @@ The SKILL.md must include these context engineering sections:
 **Findings Persistence:**
 During gate checks, write results to:
 
-`~/.claude/dev/[project-name]/findings.md`
+`.ai/dev/[project-name]/findings.md`
 
 **What to save:** per-task gate results (build/lint/test), failure details, fix attempts
 
@@ -836,8 +836,8 @@ When errors occur during gate checks (command not found, timeout, permission den
 4. The verification-runner logs checkpoint failures automatically
 
 This skill:
-1. Read `~/.claude/dev/[project-name]/dev-config.yml` `commands` section — get build, lint, test_related commands
-2. Read `~/.claude/dev/[project-name]/team-state.yml` `execution.dispatched_tasks` — get list of completed tasks with their `files_changed`
+1. Read `.ai/dev/[project-name]/dev-config.yml` `commands` section — get build, lint, test_related commands
+2. Read `.ai/dev/[project-name]/team-state.yml` `execution.dispatched_tasks` — get list of completed tasks with their `files_changed`
 3. For each completed task:
    a. Run build command: execute `commands.build` (e.g., `npm run build`). Record exit code.
    b. Run lint command: execute `commands.lint` (e.g., `npx eslint .`). Record exit code.
@@ -899,7 +899,7 @@ The SKILL.md must include these context engineering sections:
 **Findings Persistence:**
 During code review, write findings to:
 
-`~/.claude/dev/[project-name]/findings.md`
+`.ai/dev/[project-name]/findings.md`
 
 **What to save:** each file reviewed, findings with severity, patterns observed, security concerns
 
@@ -924,10 +924,10 @@ When errors occur during code review (git diff failure, file not accessible):
 4. The verification-runner logs checkpoint failures automatically
 
 This skill:
-1. Read `~/.claude/dev/[project-name]/team-state.yml` `execution.commit_range` to get base_sha and head_sha
+1. Read `.ai/dev/[project-name]/team-state.yml` `execution.commit_range` to get base_sha and head_sha
 2. Run `git diff [base_sha]..[head_sha]` to get the full wave diff
-3. Read `~/.claude/dev/[project-name]/dev-config.yml` `conventions` section for project-specific rules
-4. Read `~/.claude/dev/[project-name]/knowledge/conventions.yml` for detected patterns
+3. Read `.ai/dev/[project-name]/dev-config.yml` `conventions` section for project-specific rules
+4. Read `.ai/dev/[project-name]/knowledge/conventions.yml` for detected patterns
 5. For each changed file in the diff, review for:
    a. Code quality — readability, naming conventions, function size (<50 lines), nesting depth (<4 levels)
    b. Pattern adherence — does the code follow patterns from conventions.yml? Repository pattern, service layer, error handling conventions?
@@ -938,7 +938,7 @@ This skill:
 7. Write findings to `team-state.yml` `review.code_review` section: status, reviewer_tier, findings array, completed_at
 8. If critical findings exist: set `review.code_review.status` to "failed" — this blocks qa-validation until remediated
 
-Output: writes `review.code_review` section of `~/.claude/dev/[project-name]/team-state.yml`
+Output: writes `review.code_review` section of `.ai/dev/[project-name]/team-state.yml`
 
 Checkpoint type: data_validation
 Required checks:
@@ -991,7 +991,7 @@ The SKILL.md must include these context engineering sections:
 **Findings Persistence:**
 During QA validation, write assessment details to:
 
-`~/.claude/dev/[project-name]/findings.md`
+`.ai/dev/[project-name]/findings.md`
 
 **What to save:** spec alignment analysis per component, PO assessment, build report draft
 
@@ -1018,9 +1018,9 @@ When errors occur during QA validation (missing team-state sections, incomplete 
 4. The verification-runner logs checkpoint failures automatically
 
 This skill:
-1. Read `~/.claude/dev/[project-name]/team-state.yml` `decomposition` section — this is the original spec (components, boundaries, files_affected, PO validation)
-2. Read `~/.claude/dev/[project-name]/team-state.yml` `execution.dispatched_tasks` — all subagent reports (files_changed, gate results)
-3. Read `~/.claude/dev/[project-name]/team-state.yml` `review.code_review` — findings and status
+1. Read `.ai/dev/[project-name]/team-state.yml` `decomposition` section — this is the original spec (components, boundaries, files_affected, PO validation)
+2. Read `.ai/dev/[project-name]/team-state.yml` `execution.dispatched_tasks` — all subagent reports (files_changed, gate results)
+3. Read `.ai/dev/[project-name]/team-state.yml` `review.code_review` — findings and status
 4. Read the user's original feature description from `team-state.yml` `build.feature_description`
 5. QA Assessment — for each component in `decomposition.components`:
    a. Check if corresponding tasks in `execution.dispatched_tasks` exist and are completed
@@ -1042,17 +1042,17 @@ This skill:
    g. Blockers Encountered: from team-state.yml errors array
    h. Commit Range: base_sha to head_sha
 8. Write QA report to `team-state.yml` `review.qa_validation` section: status, spec_alignment score, po_signoff, notes
-9. Write build report to `~/.claude/dev/[project-name]/build-report.md`
+9. Write build report to `.ai/dev/[project-name]/build-report.md`
 
 Output:
-- `~/.claude/dev/[project-name]/team-state.yml` `review.qa_validation` section
-- `~/.claude/dev/[project-name]/build-report.md`
+- `.ai/dev/[project-name]/team-state.yml` `review.qa_validation` section
+- `.ai/dev/[project-name]/build-report.md`
 
 Checkpoint type: data_validation
 Required checks:
 - QA report has `spec_alignment` score (number 0-100)
 - PO sign-off recorded in `review.qa_validation.po_signoff` (one of: approved, revisions_needed)
-- Build report exists at `~/.claude/dev/[project-name]/build-report.md` with at least 8 sections
+- Build report exists at `.ai/dev/[project-name]/build-report.md` with at least 8 sections
 - If `spec_alignment` < 70: `review.qa_validation.status` is "failed" with specific gaps listed in notes
 - `review.qa_validation.completed_at` is set
 
@@ -1098,7 +1098,7 @@ The SKILL.md must include these context engineering sections:
 **Findings Persistence:**
 During delta scanning, write intermediate results to:
 
-`~/.claude/dev/[project-name]/findings.md`
+`.ai/dev/[project-name]/findings.md`
 
 **What to save:** changed files detected, curation decisions (kept/discarded), maturity transitions
 
@@ -1123,8 +1123,8 @@ When errors occur during delta scanning (hash computation failure, knowledge fil
 4. The verification-runner logs checkpoint failures automatically
 
 This skill:
-1. Read `~/.claude/dev/[project-name]/dev-config.yml` `scan.file_hashes` — get previous hash entries (path + SHA-256 hash)
-2. Read `~/.claude/dev/[project-name]/knowledge/*.yml` — get existing knowledge entries with their hashes and maturity levels
+1. Read `.ai/dev/[project-name]/dev-config.yml` `scan.file_hashes` — get previous hash entries (path + SHA-256 hash)
+2. Read `.ai/dev/[project-name]/knowledge/*.yml` — get existing knowledge entries with their hashes and maturity levels
 3. Compute current SHA-256 hashes for all files listed in `scan.file_hashes`
 4. Compare hashes — identify: changed files (hash mismatch), new files (in tracked dirs but no previous hash), deleted files (hash exists but file missing)
 5. For each changed/new file:
@@ -1138,12 +1138,12 @@ This skill:
    - `established` entries stable for 3+ consecutive scans → promote to `proven`
    - Any entry contradicted by new evidence (e.g., pattern no longer exists in code) → set to `deprecated`
    - Any entry not referenced/confirmed in 90 days (compare `updated_at` with current date) → set to `deprecated`
-7. Update all affected knowledge files in `~/.claude/dev/[project-name]/knowledge/`
+7. Update all affected knowledge files in `.ai/dev/[project-name]/knowledge/`
 8. Update `dev-config.yml` `scan` section: new file_hashes, updated `last_scan_at`, new `files_tracked` count, `scan_duration_ms`
 
 Output:
-- Updated `~/.claude/dev/[project-name]/knowledge/*.yml`
-- Updated `~/.claude/dev/[project-name]/dev-config.yml` scan section
+- Updated `.ai/dev/[project-name]/knowledge/*.yml`
+- Updated `.ai/dev/[project-name]/dev-config.yml` scan section
 
 Checkpoint type: data_validation
 Required checks:
@@ -1196,17 +1196,17 @@ This command:
    - Interactive prompts: confirms detected frameworks, asks about auto-undetectable conventions
 4. **Execution Strategy:**
    This command does NOT use the task-planner — it runs sequentially:
-   a. Check if `~/.claude/dev/[project-name]/dev-config.yml` already exists. If yes and no `--force`: ask user "Project already initialized. Re-scan? [Y/n]"
-   b. Create project directory: `mkdir -p ~/.claude/dev/[project-name]`
+   a. Check if `.ai/dev/[project-name]/dev-config.yml` already exists. If yes and no `--force`: ask user "Project already initialized. Re-scan? [Y/n]"
+   b. Create project directory: `mkdir -p .ai/dev/[project-name]`
    c. Run `project-scanner` skill — read SKILL.md at `plugins/dev/skills/project-scanner/SKILL.md`, follow its process
    d. Run `config-generator` skill — read SKILL.md at `plugins/dev/skills/config-generator/SKILL.md`, follow its process
    e. Run `knowledge-initializer` skill — read SKILL.md at `plugins/dev/skills/knowledge-initializer/SKILL.md`, follow its process
    f. If `--brand` flag provided: run brand-context-loader to load brand data, store in findings.md for future agent reference
 5. **Output:**
-   - `~/.claude/dev/[project-name]/dev-config.yml` — project configuration
-   - `~/.claude/dev/[project-name]/knowledge/*.yml` — tagged knowledge files
-   - `~/.claude/dev/[project-name]/knowledge/architecture.md` — mermaid diagrams
-   - `~/.claude/dev/[project-name]/state.yml` — initialized with init phase complete
+   - `.ai/dev/[project-name]/dev-config.yml` — project configuration
+   - `.ai/dev/[project-name]/knowledge/*.yml` — tagged knowledge files
+   - `.ai/dev/[project-name]/knowledge/architecture.md` — mermaid diagrams
+   - `.ai/dev/[project-name]/state.yml` — initialized with init phase complete
 6. **Recovery:**
    Idempotent — re-run `/dev:init` to overwrite. Use `--force` to bypass "already initialized" prompt.
 
@@ -1244,8 +1244,8 @@ This command:
    - Interactive prompts: confirms decomposition (Phase 1), reviews wave plan (Phase 2)
 4. **Execution Strategy:**
    Interactive phases (cannot be parallelized):
-   a. Validate prerequisites: read `~/.claude/dev/[project-name]/dev-config.yml`. If missing, error: "Run /dev:init first"
-   b. Initialize team-state.yml: create `~/.claude/dev/[project-name]/team-state.yml` with build metadata (feature_description, status: "decomposing", started_at)
+   a. Validate prerequisites: read `.ai/dev/[project-name]/dev-config.yml`. If missing, error: "Run /dev:init first"
+   b. Initialize team-state.yml: create `.ai/dev/[project-name]/team-state.yml` with build metadata (feature_description, status: "decomposing", started_at)
    c. Run `feature-decomposer` skill — Phase 1: PM + Architect + Designer + PO decompose the feature
    d. Run `team-planner` skill — Phase 2: PM + TLs assign tasks, verify overlap, build wave plan
    e. If `--dry-run`: present the wave plan and stop. Write plan to team-state.yml but don't execute.
@@ -1263,8 +1263,8 @@ This command:
    If `--wave [N]`: skip to /plan:resume at wave N (reads existing team-state.yml)
 5. **Output:**
    - Code committed to repository (by specialist agents)
-   - `~/.claude/dev/[project-name]/team-state.yml` — full execution record
-   - `~/.claude/dev/[project-name]/build-report.md` — human-readable build report
+   - `.ai/dev/[project-name]/team-state.yml` — full execution record
+   - `.ai/dev/[project-name]/build-report.md` — human-readable build report
 6. **Recovery:**
    Check `team-state.yml` `build.status` field. Resume with `/dev:build --wave N` where N is the last incomplete wave. Task-planner's /plan:resume handles wave-level recovery.
 
@@ -1304,13 +1304,13 @@ This command:
    - Interactive prompts: none (fully autonomous)
 4. **Execution Strategy:**
    Single skill, no planner needed:
-   a. Validate prerequisites: read `~/.claude/dev/[project-name]/dev-config.yml`. Check `scan.file_hashes` exists and is non-empty. If missing: error "Run /dev:init first"
+   a. Validate prerequisites: read `.ai/dev/[project-name]/dev-config.yml`. Check `scan.file_hashes` exists and is non-empty. If missing: error "Run /dev:init first"
    b. Run `delta-scanner` skill — read SKILL.md at `plugins/dev/skills/delta-scanner/SKILL.md`, follow its process
    c. If `--verbose`: display all changes detected (not just curated ones)
    d. Present summary: "[N] files changed, [M] knowledge entries updated, [K] entries deprecated"
 5. **Output:**
-   - Updated `~/.claude/dev/[project-name]/knowledge/*.yml` — new/modified/deprecated entries
-   - Updated `~/.claude/dev/[project-name]/dev-config.yml` — refreshed scan section
+   - Updated `.ai/dev/[project-name]/knowledge/*.yml` — new/modified/deprecated entries
+   - Updated `.ai/dev/[project-name]/dev-config.yml` — refreshed scan section
 6. **Recovery:**
    Idempotent — re-run if interrupted.
 
@@ -1348,8 +1348,8 @@ This command:
    - Interactive prompts: none (read-only)
 4. **Execution Strategy:**
    No skills needed — reads team-state.yml and presents formatted output:
-   a. Read `~/.claude/dev/[project-name]/team-state.yml`. If missing: "No active build. Run /dev:init to set up or /dev:build to start."
-   b. Read `~/.claude/dev/[project-name]/dev-config.yml` for project context
+   a. Read `.ai/dev/[project-name]/team-state.yml`. If missing: "No active build. Run /dev:init to set up or /dev:build to start."
+   b. Read `.ai/dev/[project-name]/dev-config.yml` for project context
    c. Display formatted status:
       ```
       Project: [project-name]
@@ -1443,7 +1443,7 @@ Dry-run test of /dev:init and /dev:build with a fictional project.
 
 7. **Clean up:**
    - Remove the test project directory
-   - Remove the test ~/.claude/dev/test-dev-plugin/ directory
+   - Remove the test .ai/dev/test-dev-plugin/ directory
 
 Checkpoint type: manual_approval
 Required checks:

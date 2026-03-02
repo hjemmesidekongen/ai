@@ -26,7 +26,7 @@ Generates a comprehensive SEO strategy with keyword research, on-page optimizati
 
 This plugin produces:
 
-1. **seo-strategy.yml** — Machine-readable YAML stored at `~/.claude/seo/[project-name]/`
+1. **seo-strategy.yml** — Machine-readable YAML stored at `.ai/seo/[project-name]/`
 2. **SEO strategy document** — Human-readable Markdown document
 
 ## How It Works
@@ -54,9 +54,9 @@ Also requires `brand-guideline` to be installed and at least one brand generated
 
 ## Data Storage
 
-- YAML output: `~/.claude/seo/[project-name]/seo-strategy.yml`
-- Documents: `~/.claude/seo/[project-name]/seo-strategy.md`
-- State tracking: `~/.claude/seo/[project-name]/state.yml`
+- YAML output: `.ai/seo/[project-name]/seo-strategy.yml`
+- Documents: `.ai/seo/[project-name]/seo-strategy.md`
+- State tracking: `.ai/seo/[project-name]/state.yml`
 
 ## Hooks
 
@@ -70,7 +70,7 @@ Also requires `brand-guideline` to be installed and at least one brand generated
 
 ### findings.md
 
-Research-heavy skills store intermediate findings in `~/.claude/seo/[project-name]/findings.md`:
+Research-heavy skills store intermediate findings in `.ai/seo/[project-name]/findings.md`:
 
 - **keyword-research** — seed keywords, search volume estimates, difficulty scores, long-tail variants
 - **competitor-analysis** — competitor URLs, ranking keywords, backlink profiles, content gaps

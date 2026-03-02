@@ -118,9 +118,9 @@ Scan the plugin's data directories for projects and read their versions:
 
 | Plugin | Data directory |
 |--------|---------------|
-| `brand-guideline` | `~/.claude/brands/` |
-| `seo-plugin` | `~/.claude/seo/` |
-| Other plugins | `~/.claude/[domain]/` where `[domain]` is derived from the plugin name (strip `-plugin` suffix if present) |
+| `brand-guideline` | `.ai/brands/` |
+| `seo-plugin` | `.ai/seo/` |
+| Other plugins | `.ai/[domain]/` where `[domain]` is derived from the plugin name (strip `-plugin` suffix if present) |
 
 For each subdirectory (project) found:
 1. Find the main data file (same logic as `/plugin:migrate` Step 1.2)

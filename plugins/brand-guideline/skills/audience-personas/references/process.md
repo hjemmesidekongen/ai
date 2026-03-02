@@ -42,7 +42,7 @@ decisions_applied: [d2, d6]
 During the interview, write intermediate discoveries to the findings file:
 
 ```
-~/.claude/brands/[brand-name]/findings.md
+.ai/brands/[brand-name]/findings.md
 ```
 
 **What to save:** User responses about market type, segment descriptions, persona details as they're captured, channel preferences, decision factors, and any industry research done to suggest options.
@@ -317,7 +317,7 @@ audience:
 
 For each persona, create a standalone markdown file in the brand directory:
 
-**Path:** `~/.claude/brands/[brand]/persona-card-[N].md` (where N = 1, 2, 3...)
+**Path:** `.ai/brands/[brand]/persona-card-[N].md` (where N = 1, 2, 3...)
 
 **Format:**
 

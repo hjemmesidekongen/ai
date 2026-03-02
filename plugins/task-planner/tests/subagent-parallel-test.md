@@ -11,7 +11,7 @@ file conflicts, and records a unified commit_range for the wave.
 ### Parallel Wave Plan
 
 ```yaml
-# .plans/se12-parallel-test.yml
+# .ai/plans/se12-parallel-test/plan.yml
 plan:
   name: "se12-parallel-test"
   created_at: "2026-03-01T10:00:00Z"
@@ -82,7 +82,7 @@ plan:
 ### Ownership Registry
 
 ```yaml
-# .plans/se12-parallel-test.ownership.yml
+# .ai/plans/se12-parallel-test/ownership.yml
 t1:
   owns:
     - colors.yml
@@ -104,7 +104,7 @@ t3:
 ### Initial State
 
 ```yaml
-# .plans/se12-parallel-test.state.yml
+# .ai/plans/se12-parallel-test/state.yml
 command: "plan:execute"
 project: "se12-parallel-test"
 started_at: null
@@ -129,7 +129,7 @@ errors: []
 
 ### Execution
 
-Run: `/plan:execute .plans/se12-parallel-test.yml --mode subagent`
+Run: `/plan:execute .ai/plans/se12-parallel-test/plan.yml --mode subagent`
 
 ### Expected Behavior — Wave 1 (Parallel)
 

@@ -14,10 +14,10 @@ set -euo pipefail
 
 # Determine brand directory from active-brand.yml or current directory
 STATE_FILE=""
-if [ -f ~/.claude/active-brand.yml ]; then
-  BRAND_NAME=$(grep '^brand_name:' ~/.claude/active-brand.yml 2>/dev/null | head -1 | awk '{print $2}' | tr -d '"' || true)
-  if [ -n "$BRAND_NAME" ] && [ -f "$HOME/.claude/brands/$BRAND_NAME/state.yml" ]; then
-    STATE_FILE="$HOME/.claude/brands/$BRAND_NAME/state.yml"
+if [ -f .ai/active-brand.yml ]; then
+  BRAND_NAME=$(grep '^brand_name:' .ai/active-brand.yml 2>/dev/null | head -1 | awk '{print $2}' | tr -d '"' || true)
+  if [ -n "$BRAND_NAME" ] && [ -f ".ai/brands/$BRAND_NAME/state.yml" ]; then
+    STATE_FILE=".ai/brands/$BRAND_NAME/state.yml"
   fi
 fi
 

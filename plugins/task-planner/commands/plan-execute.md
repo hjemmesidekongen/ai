@@ -6,7 +6,7 @@ arguments:
   - name: plan_file
     type: string
     required: true
-    description: "Path to the plan YAML file (e.g., .plans/brand-generate-acme-corp.yml)"
+    description: "Path to the plan YAML file (e.g., .ai/plans/brand-generate-acme-corp/plan.yml)"
   - name: mode
     type: string
     required: false
@@ -31,10 +31,10 @@ Executes a wave plan produced by `/plan:create`. Runs tasks wave by wave with ve
 ## Usage
 
 ```
-/plan:execute .plans/brand-generate-acme-corp.yml
-/plan:execute .plans/site-build.yml --mode single    # inline, no subagents
-/plan:execute .plans/brand-generate-acme-corp.yml --start-wave 3
-/plan:execute .plans/brand-generate-acme-corp.yml --dry-run
+/plan:execute .ai/plans/brand-generate-acme-corp/plan.yml
+/plan:execute .ai/plans/site-build/plan.yml --mode single    # inline, no subagents
+/plan:execute .ai/plans/brand-generate-acme-corp/plan.yml --start-wave 3
+/plan:execute .ai/plans/brand-generate-acme-corp/plan.yml --dry-run
 ```
 
 ## Execution Steps
@@ -42,8 +42,8 @@ Executes a wave plan produced by `/plan:create`. Runs tasks wave by wave with ve
 ### Step 1: Load and Validate Plan
 
 1. Read the plan file. If it doesn't exist or is invalid YAML, abort with error.
-2. Read the ownership registry (`[plan-name].ownership.yml`). If missing, re-generate it by calling the file-ownership skill.
-3. Read the state file (`[plan-name].state.yml`). If missing, create it.
+2. Read the ownership registry (`ownership.yml` in the same directory as the plan). If missing, re-generate it by calling the file-ownership skill.
+3. Read the state file (`state.yml` in the same directory as the plan). If missing, create it.
 4. Run `scripts/check-file-conflicts.sh` as a pre-flight check. If conflicts found, abort.
 5. Display the plan summary to the user (same format as `/plan:create` output).
 
@@ -327,7 +327,7 @@ Skill completes
 
 After each wave completes (pass or pass_with_warnings), write recovery context to **both** files:
 
-**State file** (`[plan-name].state.yml`) — the resume point:
+**State file** (`state.yml` in the plan directory) — the resume point:
 
 ```yaml
 current_wave: [wave number]
@@ -354,7 +354,7 @@ phases:
       head_sha: "[wave_head_sha from step 4b]"
 ```
 
-**Plan file** (`[plan-name].yml`) — the persistent record:
+**Plan file** (`plan.yml` in the plan directory) — the persistent record:
 
 ```yaml
 recovery_notes: <same content as above>

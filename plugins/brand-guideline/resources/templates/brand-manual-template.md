@@ -860,7 +860,7 @@ PNG assets are generated from SVG masters using the included script:
 #   Linux:  apt-get install imagemagick
 
 # Generate all PNGs from SVG masters:
-./scripts/generate-assets.sh ~/.claude/brands/{{meta.brand_slug}}
+./scripts/generate-assets.sh .ai/brands/{{meta.brand_slug}}
 ```
 
 ### Web Integration
@@ -868,7 +868,7 @@ PNG assets are generated from SVG masters using the included script:
 Copy the contents of `html-head-snippet.html` into your site's `<head>`:
 
 ```bash
-cat ~/.claude/brands/{{meta.brand_slug}}/html-head-snippet.html
+cat .ai/brands/{{meta.brand_slug}}/html-head-snippet.html
 ```
 
 ---

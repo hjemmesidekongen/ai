@@ -8,7 +8,7 @@
 The `/brand:generate` command produces all assets below. They are saved to:
 
 ```
-~/.claude/brands/[brand-name]/
+.ai/brands/[brand-name]/
 ├── brand-reference.yml          # Machine-readable (plugins read this)
 ├── brand-manual.md              # Human-readable document
 ├── brand-manual.docx            # Human-readable document (formatted)
@@ -413,7 +413,7 @@ The plugin should include a `scripts/generate-assets.sh` that automates PNG gene
 # Requires: ImageMagick (convert) or sharp-cli
 # Run after SVG master files are finalized
 
-BRAND_DIR="$1"  # e.g., ~/.claude/brands/my-company
+BRAND_DIR="$1"  # e.g., .ai/brands/my-company
 
 # Check dependencies
 if ! command -v convert &> /dev/null; then

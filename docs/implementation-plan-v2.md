@@ -18,7 +18,7 @@ This means when you later run `/seo:report`, it doesn't ask "what's your brand v
 ## Architecture: How Plugins Share Brand Context
 
 ```
-~/.claude/brands/
+.ai/brands/
 ├── my-company/
 │   ├── brand-reference.yml        ← Machine-readable (all plugins read this)
 │   ├── brand-manual.docx          ← Human-readable (the polished document)
@@ -480,7 +480,7 @@ description: >
 ## How to load brand context
 
 1. Check if a --brand flag was provided
-2. If not, check ~/.claude/brands/ for available brands
+2. If not, check .ai/brands/ for available brands
 3. If only one brand exists, load it automatically
 4. If multiple exist, ask which brand to use
 5. Read brand-reference.yml and make all sections available
@@ -507,7 +507,7 @@ Once the brand guideline exists, every other plugin becomes simpler:
 
 ```
 ┌─────────────────────────────────────────────────────┐
-│                 ~/.claude/brands/                     │
+│                   .ai/brands/                         │
 │              brand-reference.yml                      │
 │                  (source of truth)                    │
 └──────────────────────┬──────────────────────────────┘

@@ -12,7 +12,7 @@ Phase 3 of SEO strategy generation (runs in parallel with competitor-analysis). 
 During checklist generation, write intermediate discoveries to the findings file:
 
 ```
-~/.claude/seo/[project-name]/findings.md
+.ai/seo/[project-name]/findings.md
 ```
 
 **What to save:** Known issues cross-referenced, industry-specific technical requirements, checklist item rationale, priority decisions.

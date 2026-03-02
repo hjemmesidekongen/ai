@@ -36,9 +36,9 @@ so that every plugin is built to the same depth as the original brand-guideline 
   — they communicate through shared data files
 
 **Data flow:**
-- Brand data: `~/.claude/brands/[brand-name]/brand-reference.yml`
-- Site data: `~/.claude/sites/[site-name]/site-config.yml`
-- SEO data: `~/.claude/seo/[project-name]/seo-strategy.yml`
+- Brand data: `.ai/brands/[brand-name]/brand-reference.yml`
+- Site data: `.ai/sites/[site-name]/site-config.yml`
+- SEO data: `.ai/seo/[project-name]/seo-strategy.yml`
 - Each plugin writes to its own domain directory
 - Plugins can READ other plugins' YAML files but never WRITE to them
 
@@ -301,7 +301,7 @@ design and must be maintained.
 - Claude plays devil's advocate: push back, challenge assumptions, explore trade-offs
 - `/brainstorm:decide` co-authors structured decisions.yml with the user when ready
 - Each decision tagged by domain (brand-identity, seo, technical, etc.) and confidence (high/medium/low)
-- Transcripts saved to ~/.claude/projects/[project]/brainstorm-transcript-[date].md
+- Transcripts saved to .ai/projects/[project]/brainstorm-transcript-[date].md
 - Plugin interview skills call the decision-reader to pre-fill from brainstorm decisions
 - High confidence → quick confirmation. Medium → starting point. Low → context hint.
 - No decisions file → interview runs normally (graceful fallback)
@@ -324,7 +324,7 @@ design and must be maintained.
 Any plugin that depends on brand-guideline gets access to:
 
 ```yaml
-# ~/.claude/brands/[brand-name]/brand-reference.yml
+# .ai/brands/[brand-name]/brand-reference.yml
 
 identity:
   name, tagline, industry, year_founded
@@ -471,7 +471,7 @@ the specs and execution guide from there without re-asking the 8 questions.
 # In a website-builder skill:
 1. Load brand data via brand-context-loader
    Sections needed: colors, typography, visual_identity, logo
-2. Load SEO data from ~/.claude/seo/[project]/seo-strategy.yml (if exists)
+2. Load SEO data from .ai/seo/[project]/seo-strategy.yml (if exists)
    Sections needed: keywords, meta_rules
 3. If SEO data doesn't exist, skip SEO integration and note it in output
 ```
@@ -480,7 +480,7 @@ the specs and execution guide from there without re-asking the 8 questions.
 The seo-plugin might audit a site built by website-builder:
 ```markdown
 # /seo:audit
-1. Read site-config.yml from ~/.claude/sites/[site]/
+1. Read site-config.yml from .ai/sites/[site]/
 2. Crawl the site pages listed in site-config.yml
 3. Produce seo-report.yml with per-page findings
 4. The website-builder can later read seo-report.yml to fix issues

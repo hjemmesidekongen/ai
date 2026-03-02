@@ -9,7 +9,7 @@ description: >
 interactive: false
 depends_on: []
 reads:
-  - "~/.claude/projects/[project-name]/decisions.yml"
+  - ".ai/brainstorm/[project-name]/decisions.yml"
 writes: []
 checkpoint:
   type: data_validation
@@ -27,7 +27,7 @@ checkpoint:
       verify: "Returns all matching decisions per domain, not just the first"
       fail_action: "Remove any early-return logic in domain filtering"
     - name: "priority_order"
-      verify: "Checks ~/.claude/projects/ before ~/.claude/brands/ and uses first found"
+      verify: "Checks .ai/brainstorm/ before .ai/brands/ and uses first found"
       fail_action: "Fix search order in Step 1"
   on_fail: "Fix the failing check and re-validate."
   on_pass: "Decision reader is working correctly."
@@ -44,7 +44,7 @@ Utility skill — reads and filters brainstorm decisions for calling interview s
 - Dependencies: none
 
 ## Process Summary
-1. Locate decisions.yml — check `~/.claude/projects/` then `~/.claude/brands/`; empty result if neither exists (not an error)
+1. Locate decisions.yml — check `.ai/brainstorm/` then `.ai/brands/`; empty result if neither exists (not an error)
 2. Parse YAML and filter decisions by requested domain(s)
 3. Group filtered decisions by confidence (high / medium / low)
 4. Return structured result to calling skill

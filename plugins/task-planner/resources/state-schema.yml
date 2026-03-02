@@ -1,7 +1,7 @@
 # State Schema
 # Canonical schema for state.yml files used by all plugins.
 # Every plugin that does multi-step work stores state at:
-#   ~/.claude/[domain]/[project-name]/state.yml
+#   .ai/[domain]/[project-name]/state.yml
 #
 # This schema defines the required structure. Plugins may add
 # domain-specific fields but MUST include these core fields.

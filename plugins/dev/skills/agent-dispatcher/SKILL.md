@@ -9,11 +9,11 @@ description: >
 phase: 3
 depends_on: [team-planner]
 writes:
-  - "~/.claude/dev/[project-name]/team-state.yml (execution section)"
+  - ".ai/dev/[project-name]/team-state.yml (execution section)"
 reads:
-  - "~/.claude/dev/[project-name]/team-state.yml (wave_plan section)"
-  - "~/.claude/dev/[project-name]/dev-config.yml"
-  - "~/.claude/dev/[project-name]/knowledge/*.yml (tag-filtered per task)"
+  - ".ai/dev/[project-name]/team-state.yml (wave_plan section)"
+  - ".ai/dev/[project-name]/dev-config.yml"
+  - ".ai/dev/[project-name]/knowledge/*.yml (tag-filtered per task)"
 model_tier: senior
 interactive: false
 checkpoint:
@@ -68,7 +68,7 @@ Phase 3 of /dev:build. Reads the wave plan, dispatches specialist agents via Tas
 
 ## Findings Persistence
 
-Write dispatch records to `~/.claude/dev/[project-name]/findings.md`.
+Write dispatch records to `.ai/dev/[project-name]/findings.md`.
 **2-Action Rule:** After every 2 Task() dispatches, save dispatch records and reports immediately.
 
 ## Error Logging — Log errors to state.yml errors array. Check errors before retrying.

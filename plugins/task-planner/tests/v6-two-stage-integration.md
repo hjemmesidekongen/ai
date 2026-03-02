@@ -10,7 +10,7 @@ Tests that the verification-runner correctly handles both Stage 1 FAIL
 ### Minimal Test Plan
 
 ```yaml
-# .plans/v6-test.yml
+# .ai/plans/v6-test/plan.yml
 plan:
   name: "v6-two-stage-test"
   version: "1.0.0"
@@ -56,7 +56,7 @@ checkpoint:
 ### File Ownership Map
 
 ```yaml
-# .plans/v6-test.ownership.yml
+# .ai/plans/v6-test/ownership.yml
 task-01:
   owns:
     - echo-data.yml
@@ -201,7 +201,7 @@ Stage 1 returns status: pass
   → Check Stage 2 gate:
       wave.qa_review is true → run Stage 2
   → Dispatch qa-agent (model_tier: principal) with:
-      plan: ".plans/v6-test.yml"
+      plan: ".ai/plans/v6-test/plan.yml"
       wave: 1
       working_directory: "."
       stage_1_report: [compliance report above]

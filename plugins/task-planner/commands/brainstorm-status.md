@@ -25,7 +25,7 @@ a project. Useful for reviewing what was decided before starting new work.
 
 ### Step 1: Load Project State
 
-Read `~/.claude/projects/[project-name]/brainstorm-state.yml`.
+Read `.ai/brainstorm/[project-name]/brainstorm-state.yml`.
 
 If it doesn't exist:
 ```
@@ -61,7 +61,7 @@ Session 2 — [date]
 
 ### Step 3: Show Decision Summary
 
-Read `~/.claude/projects/[project-name]/decisions.yml`.
+Read `.ai/brainstorm/[project-name]/decisions.yml`.
 
 If it doesn't exist:
 ```

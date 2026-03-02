@@ -52,14 +52,14 @@ This command does NOT use the task-planner — it runs sequentially because each
 
 ### Step 1: Check Existing Config
 
-Check if `~/.claude/dev/[project-name]/dev-config.yml` already exists.
+Check if `.ai/dev/[project-name]/dev-config.yml` already exists.
 
 - If exists and no `--force`: ask user "Project already initialized. Re-scan? [Y/n]"
 - If user declines: exit with message showing `/dev:status` for current config
 - If exists and `--force`: proceed (will overwrite)
 - If not exists: proceed
 
-Create project directory: `mkdir -p ~/.claude/dev/[project-name]`
+Create project directory: `mkdir -p .ai/dev/[project-name]`
 
 ### Step 2: Run project-scanner
 
@@ -80,7 +80,7 @@ This skill:
 - Takes raw scan data from project-scanner
 - Presents detected configuration to user for confirmation
 - Asks about conventions not auto-detectable
-- Produces `~/.claude/dev/[project-name]/dev-config.yml`
+- Produces `.ai/dev/[project-name]/dev-config.yml`
 
 ### Step 4: Run knowledge-initializer
 
@@ -96,13 +96,13 @@ This skill:
 ### Step 5: Load Brand Context (if --brand)
 
 If `--brand` flag provided:
-- Run brand-context-loader to load brand data from `~/.claude/brands/[brand-name]/`
+- Run brand-context-loader to load brand data from `.ai/brands/[brand-name]/`
 - Store brand context in findings.md for future agent reference (design decisions, color palette, typography)
 - This enables design-aware knowledge entries and agent guidance
 
 ### Step 6: Initialize State
 
-Write `~/.claude/dev/[project-name]/state.yml`:
+Write `.ai/dev/[project-name]/state.yml`:
 
 ```yaml
 status: "initialized"
@@ -118,11 +118,11 @@ meta:
 
 ## Output
 
-- `~/.claude/dev/[project-name]/dev-config.yml` — project configuration (framework, conventions, key directories)
-- `~/.claude/dev/[project-name]/knowledge/*.yml` — tagged knowledge files (patterns.yml, conventions.yml)
-- `~/.claude/dev/[project-name]/knowledge/architecture.md` — mermaid diagrams of project architecture
-- `~/.claude/dev/[project-name]/state.yml` — initialized state with errors array
-- `~/.claude/dev/[project-name]/findings.md` — intermediate scan findings
+- `.ai/dev/[project-name]/dev-config.yml` — project configuration (framework, conventions, key directories)
+- `.ai/dev/[project-name]/knowledge/*.yml` — tagged knowledge files (patterns.yml, conventions.yml)
+- `.ai/dev/[project-name]/knowledge/architecture.md` — mermaid diagrams of project architecture
+- `.ai/dev/[project-name]/state.yml` — initialized state with errors array
+- `.ai/dev/[project-name]/findings.md` — intermediate scan findings
 
 ## Recovery
 

@@ -2,7 +2,7 @@
 # Defines the structure of seo-strategy.yml — the machine-readable
 # SEO strategy data file.
 #
-# Location: ~/.claude/seo/[project-name]/seo-strategy.yml
+# Location: .ai/seo/[project-name]/seo-strategy.yml
 # Producer: /seo:strategy
 # Consumer: /seo:audit, /seo:content-brief, /seo:export, other plugins
 

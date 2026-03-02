@@ -166,7 +166,7 @@ Create the link-building section:
 
 ### Step 9: Assemble the Document
 
-Combine all sections into `seo-strategy.md` at `~/.claude/seo/[project-name]/seo-strategy.md`.
+Combine all sections into `seo-strategy.md` at `.ai/seo/[project-name]/seo-strategy.md`.
 
 Use the template from `plugins/seo-plugin/resources/templates/seo-strategy-template.md` as the structural guide:
 
@@ -204,7 +204,7 @@ After assembling the document, present a summary:
 ```
 ## SEO Strategy Document Generated
 
-File: ~/.claude/seo/[project-name]/seo-strategy.md
+File: .ai/seo/[project-name]/seo-strategy.md
 
 Document sections:
 1. Executive Summary (2-3 paragraphs)
@@ -217,7 +217,7 @@ Document sections:
 
 Estimated word count: [count]
 
-Data file: ~/.claude/seo/[project-name]/seo-strategy.yml (validated, [N]/8 sections present)
+Data file: .ai/seo/[project-name]/seo-strategy.yml (validated, [N]/8 sections present)
 ```
 
 Update `state.yml`:

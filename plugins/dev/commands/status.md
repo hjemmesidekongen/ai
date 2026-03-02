@@ -21,7 +21,7 @@ Displays the current state of a `/dev:build` execution or project initialization
 
 ## Prerequisites
 
-- `/dev:init` must have been run (dev-config.yml must exist at `~/.claude/dev/[project-name]/`)
+- `/dev:init` must have been run (dev-config.yml must exist at `.ai/dev/[project-name]/`)
 - For build status: a `/dev:build` must be in progress or completed (team-state.yml must exist)
 
 ## Input
@@ -36,7 +36,7 @@ No skills needed — reads state files and presents formatted output.
 
 ### Step 1: Read Project State
 
-Read `~/.claude/dev/[project-name]/dev-config.yml` for project context (name, framework, tech stack).
+Read `.ai/dev/[project-name]/dev-config.yml` for project context (name, framework, tech stack).
 
 If missing:
 - Error: "Project not initialized. Run `/dev:init` first."
@@ -44,7 +44,7 @@ If missing:
 
 ### Step 2: Read Team State
 
-Read `~/.claude/dev/[project-name]/team-state.yml`.
+Read `.ai/dev/[project-name]/team-state.yml`.
 
 If missing:
 - Display project info from dev-config.yml only:

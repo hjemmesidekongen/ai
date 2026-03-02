@@ -13,7 +13,7 @@ Phase 1 of SEO strategy generation. This is the first skill that runs — everyt
 During the interview, write intermediate discoveries to the findings file:
 
 ```
-~/.claude/seo/[project-name]/findings.md
+.ai/seo/[project-name]/findings.md
 ```
 
 **What to save:** User responses about website, industry, business model, SEO goals, audience segments, current SEO status, any research done to suggest options, brand context loaded.
@@ -121,7 +121,7 @@ Collect project identifiers and initialize the data file.
 
 1. "What's the name of this project?"
    - Must be usable as a directory name (kebab-case). If they give "My Cool Project", suggest "my-cool-project"
-   - This becomes the project_name in meta and the directory name at `~/.claude/seo/[project-name]/`
+   - This becomes the project_name in meta and the directory name at `.ai/seo/[project-name]/`
 
 2. "What's your website URL?"
    - Validate: must start with `http://` or `https://`
@@ -141,7 +141,7 @@ meta:
   brand_name: "[brand name if loaded, or empty]"
 ```
 
-Initialize the seo-strategy.yml file at `~/.claude/seo/[project-name]/` with the meta section.
+Initialize the seo-strategy.yml file at `.ai/seo/[project-name]/` with the meta section.
 
 ### Stage 2: Industry & Business Model -> `project_context.industry`
 
@@ -309,11 +309,11 @@ Does this look right? I can adjust anything before we save.
 
 Only write to disk after the user confirms.
 
-Write to `~/.claude/seo/[project-name]/seo-strategy.yml`:
+Write to `.ai/seo/[project-name]/seo-strategy.yml`:
 - `meta` section (all fields)
 - `project_context` section (all sub-sections)
 
-Also initialize `~/.claude/seo/[project-name]/state.yml`:
+Also initialize `.ai/seo/[project-name]/state.yml`:
 
 ```yaml
 command: "seo:strategy"

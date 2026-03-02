@@ -11,7 +11,7 @@ writes:
 reads:
   - "Task brief (description, scope, files_affected)"
   - "Agent role definition (model floor, capabilities)"
-  - "~/.claude/dev/[project-name]/state.yml (errors array for escalation)"
+  - ".ai/dev/[project-name]/state.yml (errors array for escalation)"
 model_tier: junior
 interactive: false
 checkpoint:
@@ -73,7 +73,7 @@ escalated_from: null | "junior" | "senior"
 
 ## Findings Persistence
 
-Write assessment details to `~/.claude/dev/[project-name]/findings.md`.
+Write assessment details to `.ai/dev/[project-name]/findings.md`.
 **2-Action Rule:** After every 2 assessment evaluations, save findings immediately.
 
 ## Error Logging — Log errors to state.yml errors array. Check errors before retrying.

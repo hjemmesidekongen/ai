@@ -10,7 +10,7 @@ final quality gate before the build is considered complete.
 ## Prerequisites
 
 Before starting, verify:
-1. `~/.claude/dev/[project-name]/team-state.yml` has `review.code_review.status == "passed"` (no critical findings)
+1. `.ai/dev/[project-name]/team-state.yml` has `review.code_review.status == "passed"` (no critical findings)
 2. `decomposition` section exists with components and boundaries
 3. `execution.dispatched_tasks` has completed tasks with reports
 4. `build.feature_description` has the user's original request
@@ -145,7 +145,7 @@ build report. Fill in all template variables from team-state.yml data:
    - Duration: completed_at - started_at
    - Total commits: git rev-list --count base_sha..head_sha
    - Pass rates: (passed_gates / total_gates) × 100
-4. Write completed report to ~/.claude/dev/[project-name]/build-report.md
+4. Write completed report to .ai/dev/[project-name]/build-report.md
 ```
 
 ## Step 6: Write QA Report to team-state.yml
@@ -171,7 +171,7 @@ review:
     notes: |
       Overall build achieves the stated goal. Two warnings
       from code review on function length — non-blocking.
-    build_report_path: "~/.claude/dev/[project-name]/build-report.md"
+    build_report_path: ".ai/dev/[project-name]/build-report.md"
     completed_at: "2025-01-15T11:00:00Z"
 ```
 

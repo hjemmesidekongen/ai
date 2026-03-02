@@ -23,8 +23,8 @@ Shared skill that loads brand context from disk. Every brand-aware plugin calls 
 Before doing ANY brand-related work:
 
 1. Check if `--brand` flag was provided → use that brand
-2. If not, check if `~/.claude/active-brand.yml` exists → use the active brand
-3. If not, scan `~/.claude/brands/` for available brands
+2. If not, check if `.ai/active-brand.yml` exists → use the active brand
+3. If not, scan `.ai/brands/` for available brands
 4. If only one brand exists, load it automatically
 5. If multiple exist, ask which brand to use
 6. Read `brand-reference.yml` and `state.yml`
@@ -35,19 +35,19 @@ Before doing ANY brand-related work:
 
 ```
 function load_brand(brand_flag):
-  brands_dir = "~/.claude/brands/"
+  brands_dir = ".ai/brands/"
 
   # Priority 1: Explicit --brand flag
   if brand_flag is provided:
     brand_path = brands_dir + brand_flag
     if not exists(brand_path):
-      ERROR: "Brand '[brand_flag]' not found in ~/.claude/brands/"
+      ERROR: "Brand '[brand_flag]' not found in .ai/brands/"
       list available brands
       STOP
     return load_from(brand_path)
 
   # Priority 2: Active brand set by /brand:switch
-  active_brand_path = "~/.claude/active-brand.yml"
+  active_brand_path = ".ai/active-brand.yml"
   if exists(active_brand_path):
     active_config = read_yaml(active_brand_path)
     brand_slug = active_config.active_brand
@@ -58,7 +58,7 @@ function load_brand(brand_flag):
     else:
       warn: "Active brand '[brand_slug]' no longer exists. Falling back to discovery."
 
-  # Priority 3: Auto-discover from ~/.claude/brands/
+  # Priority 3: Auto-discover from .ai/brands/
   brands = list_directories(brands_dir)
 
   if brands is empty:
@@ -80,7 +80,7 @@ When a brand directory is found, load two files:
 ### 1. brand-reference.yml (the data)
 
 ```
-path: ~/.claude/brands/[brand]/brand-reference.yml
+path: .ai/brands/[brand]/brand-reference.yml
 
 if file exists:
   Read and parse YAML
@@ -95,7 +95,7 @@ if file does not exist:
 ### 2. state.yml (the execution state)
 
 ```
-path: ~/.claude/brands/[brand]/state.yml
+path: .ai/brands/[brand]/state.yml
 
 if file exists:
   Read and parse YAML
@@ -221,7 +221,7 @@ When used in agent teams, brand-reference.yml and state.yml ARE the shared state
 
 | Error | Action |
 |-------|--------|
-| `~/.claude/brands/` doesn't exist | Create it. Report: "No brands directory found. Created ~/.claude/brands/" |
+| `.ai/brands/` doesn't exist | Create it. Report: "No brands directory found. Created .ai/brands/" |
 | Brand directory is empty | Report: "Brand directory exists but is empty. Run /brand:generate to start." |
 | brand-reference.yml is malformed YAML | Report parse error with line number. Do not proceed. |
 | state.yml references a phase that doesn't exist | Warn user. Suggest re-running /brand:generate. |

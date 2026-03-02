@@ -30,7 +30,7 @@ None. A brainstorm can happen before any plugin exists.
 
 ### Step 1: Validate Project Name Uniqueness
 
-Check if `~/.claude/projects/[project-name]/` already exists.
+Check if `.ai/brainstorm/[project-name]/` already exists.
 
 **If it exists with `brainstorm-state.yml`:**
 
@@ -49,7 +49,7 @@ The name is taken by something else. Prompt the user:
 
 **If it doesn't exist:**
 
-Check all other `~/.claude/projects/*/brainstorm-state.yml` files to ensure
+Check all other `.ai/brainstorm/*/brainstorm-state.yml` files to ensure
 no other brainstorm has the same project name inside its state file (the
 `project:` field). The project name acts as a unique ID for decision lookup
 via `--brainstorm` flag.
@@ -68,14 +68,14 @@ Increment the suffix (`-2`, `-3`, etc.) until a unique name is found.
 If no collision, create the directory:
 
 ```bash
-mkdir -p ~/.claude/projects/[project-name]/
+mkdir -p .ai/brainstorm/[project-name]/
 ```
 
 ---
 
 ### Step 2: Check Existing State
 
-Read `~/.claude/projects/[project-name]/brainstorm-state.yml` if it exists.
+Read `.ai/brainstorm/[project-name]/brainstorm-state.yml` if it exists.
 
 **If it exists with `active: true`:**
 
@@ -156,7 +156,7 @@ Open with:
 
 When the user says they're done (or calls `/brainstorm:decide`):
 
-1. **Save transcript** to `~/.claude/projects/[project-name]/brainstorm-transcript-[date].md`:
+1. **Save transcript** to `.ai/brainstorm/[project-name]/brainstorm-transcript-[date].md`:
 
    ```markdown
    # Brainstorm Session — [project-name]

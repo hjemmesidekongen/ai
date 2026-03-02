@@ -9,7 +9,7 @@ and convention compliance. Critical findings block QA until fixed.
 ## Prerequisites
 
 Before starting, verify:
-1. `~/.claude/dev/[project-name]/team-state.yml` has `execution.commit_range` with both `base_sha` and `head_sha`
+1. `.ai/dev/[project-name]/team-state.yml` has `execution.commit_range` with both `base_sha` and `head_sha`
 2. All tasks in the wave have completion-gate status `passed` (build/lint/test passed)
 3. `dev-config.yml` exists with a conventions section
 4. If commit_range is missing, report error and suggest running agent-dispatcher first

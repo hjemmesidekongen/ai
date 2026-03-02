@@ -12,14 +12,14 @@ subsequent scans.
 ## Prerequisites
 
 Before starting, verify:
-1. `~/.claude/dev/[project-name]/dev-config.yml` exists with confirmed config
+1. `.ai/dev/[project-name]/dev-config.yml` exists with confirmed config
 2. If dev-config.yml is missing, report error and suggest re-running config-generator
 3. Read `structure.key_directories` — if empty, use `structure.src_root` as fallback
 
 ## Step 1: Load Project Config
 
 ```
-Read ~/.claude/dev/[project-name]/dev-config.yml
+Read .ai/dev/[project-name]/dev-config.yml
 Extract:
   - structure.src_root → where source code lives
   - structure.key_directories → directories to analyze
@@ -30,7 +30,7 @@ Extract:
   - conventions.style.state_management → state management library
 ```
 
-Also read `~/.claude/dev/[project-name]/findings.md` for any additional
+Also read `.ai/dev/[project-name]/findings.md` for any additional
 context from the scanning phase.
 
 **Save to findings.md after this step (2-Action Rule checkpoint).**
@@ -78,7 +78,7 @@ For each flow:
 
 ## Step 4: Generate architecture.md
 
-Create `~/.claude/dev/[project-name]/knowledge/architecture.md`:
+Create `.ai/dev/[project-name]/knowledge/architecture.md`:
 
 ```markdown
 ---
@@ -175,7 +175,7 @@ Analyze source code for common patterns:
 
 ## Step 6: Generate patterns.yml
 
-Create `~/.claude/dev/[project-name]/knowledge/patterns.yml`:
+Create `.ai/dev/[project-name]/knowledge/patterns.yml`:
 
 ```yaml
 ---
@@ -230,7 +230,7 @@ Analyze source code for naming and organization patterns:
 
 ## Step 8: Generate conventions.yml
 
-Create `~/.claude/dev/[project-name]/knowledge/conventions.yml`:
+Create `.ai/dev/[project-name]/knowledge/conventions.yml`:
 
 ```yaml
 ---
@@ -281,7 +281,7 @@ For tracked source files:
 
 ## Step 10: Update dev-config.yml Scan Section
 
-Update the `scan` section in `~/.claude/dev/[project-name]/dev-config.yml`:
+Update the `scan` section in `.ai/dev/[project-name]/dev-config.yml`:
 
 ```yaml
 scan:
@@ -330,7 +330,7 @@ When errors occur during knowledge initialization:
 
 **Stage 1 — Spec Compliance (Haiku):**
 Run spec-compliance-reviewer. Checks:
-- Knowledge files exist in `~/.claude/dev/[project-name]/knowledge/`
+- Knowledge files exist in `.ai/dev/[project-name]/knowledge/`
 - All files have frontmatter with `tags` array (non-empty)
 - All files have `maturity: candidate`
 - architecture.md contains at least 1 ` ```mermaid ` block

@@ -204,7 +204,7 @@ skills:
 output:
   yaml:
     name: "seo-strategy.yml"
-    storage_path: "~/.claude/seo/[project-name]/"
+    storage_path: ".ai/seo/[project-name]/"
     description: "Complete SEO strategy data including keywords, competitors, on-page rules, technical checklist, content plan, and link-building strategy"
   document:
     format: "md"

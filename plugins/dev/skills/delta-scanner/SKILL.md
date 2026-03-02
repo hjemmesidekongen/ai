@@ -10,11 +10,11 @@ description: >
 phase: null
 depends_on: []
 writes:
-  - "~/.claude/dev/[project-name]/knowledge/*.yml (new/updated entries)"
-  - "~/.claude/dev/[project-name]/dev-config.yml (scan section: file_hashes, last_scan_at)"
+  - ".ai/dev/[project-name]/knowledge/*.yml (new/updated entries)"
+  - ".ai/dev/[project-name]/dev-config.yml (scan section: file_hashes, last_scan_at)"
 reads:
-  - "~/.claude/dev/[project-name]/dev-config.yml (scan.file_hashes)"
-  - "~/.claude/dev/[project-name]/knowledge/*.yml (existing entries)"
+  - ".ai/dev/[project-name]/dev-config.yml (scan.file_hashes)"
+  - ".ai/dev/[project-name]/knowledge/*.yml (existing entries)"
   - "Project source files (for hash computation)"
 model_tier: junior
 interactive: false
@@ -66,7 +66,7 @@ Lightweight re-scan for /dev:scan. Compares file hashes to detect changes since 
 
 ## Findings Persistence
 
-Write scan findings to `~/.claude/dev/[project-name]/findings.md`.
+Write scan findings to `.ai/dev/[project-name]/findings.md`.
 **2-Action Rule:** After every 2 file hash comparisons, save detected changes to findings.md immediately.
 
 ## Error Logging — Log errors to state.yml errors array. Check errors before retrying.

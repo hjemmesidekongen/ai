@@ -64,9 +64,9 @@ Resolve the project's data directory based on the plugin name:
 
 | Plugin | Data directory |
 |--------|---------------|
-| `brand-guideline` | `~/.claude/brands/[project-name]/` |
-| `seo-plugin` | `~/.claude/seo/[project-name]/` |
-| Other plugins | `~/.claude/[domain]/[project-name]/` where `[domain]` is derived from the plugin name (strip `-plugin` suffix if present) |
+| `brand-guideline` | `.ai/brands/[project-name]/` |
+| `seo-plugin` | `.ai/seo/[project-name]/` |
+| Other plugins | `.ai/[domain]/[project-name]/` where `[domain]` is derived from the plugin name (strip `-plugin` suffix if present) |
 
 1. Verify the directory exists. If not:
    ```

@@ -27,7 +27,7 @@ In the calling skill's SKILL.md, add a step before the checkpoint:
 Before writing [output-file] to disk, call the version-meta-stamper:
 
   stamp_meta(
-    file_path:   "~/.claude/brands/[brand]/brand-reference.yml",
+    file_path:   ".ai/brands/[brand]/brand-reference.yml",
     plugin_path: "plugins/brand-guideline"
   )
 

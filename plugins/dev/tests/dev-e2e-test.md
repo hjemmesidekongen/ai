@@ -146,7 +146,7 @@ scan:
 **Skill path:** `plugins/dev/skills/config-generator/SKILL.md` → `references/process.md`
 
 **Checkpoint (data_validation):**
-- [x] dev-config.yml created at `~/.claude/dev/test-dev-plugin/dev-config.yml` ✓
+- [x] dev-config.yml created at `.ai/dev/test-dev-plugin/dev-config.yml` ✓
 - [x] All required fields populated (meta, frameworks, conventions, commands, structure) ✓
 - [x] Schema matches `resources/templates/dev-config-schema.yml` ✓
 - [x] Detected frameworks match project fixtures ✓
@@ -176,7 +176,7 @@ scan:
 ### 1d: State after /dev:init
 
 ```yaml
-# ~/.claude/dev/test-dev-plugin/state.yml
+# .ai/dev/test-dev-plugin/state.yml
 status: "initialized"
 current_skill: null
 current_phase: null

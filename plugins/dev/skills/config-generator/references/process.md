@@ -10,13 +10,13 @@ file becomes the central contract that all downstream dev skills consume.
 ## Prerequisites
 
 Before starting, verify:
-1. `~/.claude/dev/[project-name]/findings.md` exists with scan results
+1. `.ai/dev/[project-name]/findings.md` exists with scan results
 2. If findings.md is missing or empty, report error and suggest re-running project-scanner
 
 ## Step 1: Load Scan Results
 
 ```
-Read ~/.claude/dev/[project-name]/findings.md
+Read .ai/dev/[project-name]/findings.md
 Extract:
   - Detected Frameworks section → list of (name, version, confidence, source)
   - Language section → primary language
@@ -269,7 +269,7 @@ scanner skills during execution.
 
 ## Step 10: Write and Confirm
 
-1. Write the completed dev-config.yml to `~/.claude/dev/[project-name]/dev-config.yml`
+1. Write the completed dev-config.yml to `.ai/dev/[project-name]/dev-config.yml`
 
 2. Present the full config summary to the user in a readable format:
 
@@ -315,7 +315,7 @@ Config looks good? [Y/n]
 ```markdown
 ## Config Generation — Final
 - Status: confirmed
-- Config path: ~/.claude/dev/[project-name]/dev-config.yml
+- Config path: .ai/dev/[project-name]/dev-config.yml
 - Confirmed at: [timestamp]
 ```
 

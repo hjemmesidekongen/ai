@@ -11,7 +11,7 @@ fresh without expensive full scans.
 ## Prerequisites
 
 Before starting, verify:
-1. `~/.claude/dev/[project-name]/dev-config.yml` exists with a `scan` section
+1. `.ai/dev/[project-name]/dev-config.yml` exists with a `scan` section
 2. `scan.file_hashes` has at least one entry (from initial project-scanner run)
 3. If no `scan` section exists, report error — run /dev:init first
 4. If `file_hashes` is empty, this is effectively a first scan — defer to project-scanner
@@ -171,7 +171,7 @@ Each knowledge entry should have a `scan_count` field:
 
 ## Step 7: Update Knowledge Files
 
-Write updated entries to `~/.claude/dev/[project-name]/knowledge/*.yml`:
+Write updated entries to `.ai/dev/[project-name]/knowledge/*.yml`:
 
 ```yaml
 entries:

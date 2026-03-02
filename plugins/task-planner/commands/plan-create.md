@@ -18,7 +18,7 @@ arguments:
   - name: output
     type: string
     required: false
-    default: ".plans/"
+    default: ".ai/plans/"
     description: "Directory to save the plan file"
 ---
 
@@ -102,21 +102,22 @@ Pass the generated plan to the `file-ownership` skill for validation:
 Write two files to the output directory:
 
 ```
-.plans/
-├── [plan-name].yml                     # The plan file
-└── [plan-name].ownership.yml           # The file-ownership registry
+.ai/plans/
+└── [plan-name]/
+    ├── plan.yml                        # The plan file
+    └── ownership.yml                   # The file-ownership registry
 ```
 
-Create the `.plans/` directory if it doesn't exist.
+Create the `.ai/plans/[plan-name]/` directory if it doesn't exist.
 
 ### Step 6: Initialize State
 
 Create the initial state file:
 
 ```yaml
-# .plans/[plan-name].state.yml
+# .ai/plans/[plan-name]/state.yml
 plan: "[plan-name]"
-plan_file: ".plans/[plan-name].yml"
+plan_file: ".ai/plans/[plan-name]/plan.yml"
 started_at: null                    # set on first wave execution
 updated_at: "[now]"
 status: "created"                   # created → in_progress → completed → failed
@@ -162,8 +163,8 @@ Show the user a clear overview of the plan:
 ### File Ownership
   No conflicts detected. All parallel tasks write to separate paths.
 
-Plan saved to: .plans/brand-generate-acme-corp.yml
-Run `/plan:execute .plans/brand-generate-acme-corp.yml` to start.
+Plan saved to: .ai/plans/brand-generate-acme-corp/plan.yml
+Run `/plan:execute .ai/plans/brand-generate-acme-corp/plan.yml` to start.
 ```
 
 ## Error Handling

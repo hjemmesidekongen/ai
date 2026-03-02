@@ -6,7 +6,7 @@ arguments:
   - name: plan_file
     type: string
     required: false
-    description: "Path to a specific plan file. If omitted, shows all plans in .plans/"
+    description: "Path to a specific plan file. If omitted, shows all plans in .ai/plans/"
   - name: verbose
     type: boolean
     required: false
@@ -21,9 +21,9 @@ Displays the current state of one or all plans. Shows wave progress, task comple
 ## Usage
 
 ```
-/plan:status                                          # all plans
-/plan:status .plans/brand-generate-acme-corp.yml      # specific plan
-/plan:status .plans/brand-generate-acme-corp.yml --verbose
+/plan:status                                                        # all plans
+/plan:status .ai/plans/brand-generate-acme-corp/plan.yml            # specific plan
+/plan:status .ai/plans/brand-generate-acme-corp/plan.yml --verbose
 ```
 
 ## Execution Steps
@@ -32,7 +32,7 @@ Displays the current state of one or all plans. Shows wave progress, task comple
 
 **If plan_file provided:** Read that plan and its state file.
 
-**If no plan_file:** Scan `.plans/` for all `*.state.yml` files. If no `.plans/` directory or no state files found:
+**If no plan_file:** Scan `.ai/plans/` for all `*/state.yml` files. If no `.ai/plans/` directory or no state files found:
 
 ```
 No plans found. Run `/plan:create` to generate a plan.
@@ -41,13 +41,13 @@ No plans found. Run `/plan:create` to generate a plan.
 ### Step 2: Read State
 
 For each plan, read:
-1. The state file (`[plan-name].state.yml`) — execution progress
-2. The plan file (`[plan-name].yml`) — wave and task definitions
+1. The state file (`state.yml` in the plan directory) — execution progress
+2. The plan file (`plan.yml` in the plan directory) — wave and task definitions
 
 If the state file is missing but the plan file exists, report:
 ```
 Plan exists but has not been executed yet.
-Run `/plan:execute .plans/[name].yml` to start.
+Run `/plan:execute .ai/plans/[name]/plan.yml` to start.
 ```
 
 ### Step 3: Display Status
@@ -63,7 +63,7 @@ Run `/plan:execute .plans/[name].yml` to start.
 | site-build-marketing | completed | 5/5 waves | — | 2 hours ago |
 | seo-audit-homepage | failed | 1/3 waves | Wave 2 (failed) | 1 hour ago |
 
-Run `/plan:status .plans/[name].yml` for details.
+Run `/plan:status .ai/plans/[name]/plan.yml` for details.
 ```
 
 #### Single Plan Detail
@@ -125,8 +125,8 @@ When a plan has failures, show them prominently:
       Fix attempted: 2 of 3 rounds
 
 ### Recovery Options
-  - `/plan:resume .plans/seo-audit-homepage.yml` — retry from wave 2
-  - `/plan:execute .plans/seo-audit-homepage.yml --start-wave 2` — restart wave 2
+  - `/plan:resume .ai/plans/seo-audit-homepage/plan.yml` — retry from wave 2
+  - `/plan:execute .ai/plans/seo-audit-homepage/plan.yml --start-wave 2` — restart wave 2
 ```
 
 ### Step 4: Verbose Output (--verbose)

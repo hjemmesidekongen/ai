@@ -11,7 +11,7 @@ records commit SHAs, and advances through a 2-wave plan.
 ### Minimal 2-Wave Plan
 
 ```yaml
-# .plans/se11-sequential-test.yml
+# .ai/plans/se11-sequential-test/plan.yml
 plan:
   name: "se11-sequential-test"
   created_at: "2026-03-01T10:00:00Z"
@@ -72,7 +72,7 @@ plan:
 ### Ownership Registry
 
 ```yaml
-# .plans/se11-sequential-test.ownership.yml
+# .ai/plans/se11-sequential-test/ownership.yml
 t1:
   owns:
     - config-data.yml
@@ -134,7 +134,7 @@ root key that references the config name and version.
 ## Initial State
 
 ```yaml
-# .plans/se11-sequential-test.state.yml
+# .ai/plans/se11-sequential-test/state.yml
 command: "plan:execute"
 project: "se11-sequential-test"
 started_at: null
@@ -159,7 +159,7 @@ errors: []
 
 ### Execution
 
-Run: `/plan:execute .plans/se11-sequential-test.yml --mode subagent`
+Run: `/plan:execute .ai/plans/se11-sequential-test/plan.yml --mode subagent`
 
 ### Expected Behavior — Wave 1
 
@@ -390,7 +390,7 @@ Execute SE11 plan but simulate interruption after wave 1 completes
 
 ### Execution
 
-Run: `/plan:execute .plans/se11-sequential-test.yml`
+Run: `/plan:execute .ai/plans/se11-sequential-test/plan.yml`
 
 ### Expected Behavior
 

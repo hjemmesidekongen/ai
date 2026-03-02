@@ -13,7 +13,7 @@ Phase 2 of SEO strategy generation. This skill builds on the project context fro
 During research, write intermediate discoveries to the findings file:
 
 ```
-~/.claude/seo/[project-name]/findings.md
+.ai/seo/[project-name]/findings.md
 ```
 
 **What to save:** Seed keyword rationale, search volume estimates, difficulty assessments, intent classifications, user feedback on keyword selections, any industry research done to inform suggestions.

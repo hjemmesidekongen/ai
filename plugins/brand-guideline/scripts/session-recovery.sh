@@ -15,10 +15,10 @@ echo "=== Brand Session Recovery Check ==="
 
 # Determine brand directory from active-brand.yml or current directory
 BRAND_DIR=""
-if [ -f ~/.claude/active-brand.yml ]; then
-  BRAND_NAME=$(grep '^brand_name:' ~/.claude/active-brand.yml 2>/dev/null | head -1 | awk '{print $2}' | tr -d '"' || true)
+if [ -f .ai/active-brand.yml ]; then
+  BRAND_NAME=$(grep '^brand_name:' .ai/active-brand.yml 2>/dev/null | head -1 | awk '{print $2}' | tr -d '"' || true)
   if [ -n "$BRAND_NAME" ]; then
-    BRAND_DIR="$HOME/.claude/brands/$BRAND_NAME"
+    BRAND_DIR=".ai/brands/$BRAND_NAME"
   fi
 fi
 

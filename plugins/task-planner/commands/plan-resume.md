@@ -16,8 +16,8 @@ Resumes execution of a plan that was interrupted — by a session end, crash, co
 ## Usage
 
 ```
-/plan:resume                                          # resume most recent active plan
-/plan:resume .plans/brand-generate-acme-corp.yml      # resume specific plan
+/plan:resume                                                       # resume most recent active plan
+/plan:resume .ai/plans/brand-generate-acme-corp/plan.yml           # resume specific plan
 ```
 
 ## When to Use
@@ -33,10 +33,10 @@ Resumes execution of a plan that was interrupted — by a session end, crash, co
 
 **If plan_file provided:** Use that plan.
 
-**If no plan_file:** Scan `.plans/` for all `*.state.yml` files. Find the most recently updated one with `status: "in_progress"`:
+**If no plan_file:** Scan `.ai/plans/` for all `*/state.yml` files. Find the most recently updated one with `status: "in_progress"`:
 
 ```
-for each state file in .plans/:
+for each state file in .ai/plans/:
   if status == "in_progress":
     candidates.append(file, updated_at)
 
@@ -63,19 +63,19 @@ Which plan should I resume?
 
 Load three files:
 
-1. **State file** (`[plan-name].state.yml`) — primary resume source:
+1. **State file** (`state.yml` in the plan directory) — primary resume source:
    - `current_wave` — which wave was in progress
    - `completed_waves` — which waves are done
    - `status` — should be `in_progress`
    - `recovery_notes` — free-text context about where things stand
    - `last_session_id` — which session last touched this plan
 
-2. **Plan file** (`[plan-name].yml`) — backup and full definitions:
+2. **Plan file** (`plan.yml` in the plan directory) — backup and full definitions:
    - Full task and wave definitions
    - Task statuses (which tasks completed, which were in progress)
    - `recovery_notes` — fallback if state file recovery_notes are missing
 
-3. **Ownership registry** (`[plan-name].ownership.yml`):
+3. **Ownership registry** (`ownership.yml` in the plan directory):
    - File ownership assignments
    - Any conflict resolutions from plan creation
 
@@ -209,8 +209,8 @@ The `recovery_notes` are preserved until new notes are written after the next wa
 Plan "brand-generate-acme-corp" is already completed (finished 2 hours ago).
 
   Options:
-  1. View results: `/plan:status .plans/brand-generate-acme-corp.yml --verbose`
-  2. Re-run the entire plan: `/plan:execute .plans/brand-generate-acme-corp.yml`
+  1. View results: `/plan:status .ai/plans/brand-generate-acme-corp/plan.yml --verbose`
+  2. Re-run the entire plan: `/plan:execute .ai/plans/brand-generate-acme-corp/plan.yml`
 ```
 
 ### Plan Failed (Not Interrupted)
@@ -224,8 +224,8 @@ Blocking issues:
   ✗ Structured data missing @type field in 3 entries
 
 Options:
-  1. Retry from wave 2: `/plan:execute .plans/seo-audit-homepage.yml --start-wave 2`
-  2. View full status: `/plan:status .plans/seo-audit-homepage.yml --verbose`
+  1. Retry from wave 2: `/plan:execute .ai/plans/seo-audit-homepage/plan.yml --start-wave 2`
+  2. View full status: `/plan:status .ai/plans/seo-audit-homepage/plan.yml --verbose`
 ```
 
 ### No State File
@@ -234,7 +234,7 @@ If the plan file exists but no state file:
 
 ```
 Plan "brand-generate-acme-corp" exists but has never been executed.
-Run `/plan:execute .plans/brand-generate-acme-corp.yml` to start.
+Run `/plan:execute .ai/plans/brand-generate-acme-corp/plan.yml` to start.
 ```
 
 ### Stale Recovery Notes

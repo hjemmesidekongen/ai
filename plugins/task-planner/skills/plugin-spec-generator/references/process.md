@@ -86,7 +86,7 @@ Draw an ASCII diagram showing how this plugin fits into the ecosystem.
            │
     ┌──────▼──────────────────┐
     │   brand-reference.yml    │
-    │   ~/.claude/brands/[x]/  │
+    │   .ai/brands/[x]/        │
     └─────────────────────────┘
 ```
 

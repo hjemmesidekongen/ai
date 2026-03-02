@@ -48,6 +48,14 @@ Or use `/plugin:create [name]` and `/plugin:build [name]` to automate.
 
 ## Project Structure
 ```
+.ai/                               # Project-specific generated data (committed)
+  plans/                           # Wave execution plans (dir-per-plan: plan.yml, state.yml, ownership.yml)
+  brands/                          # Brand guideline output (brand-reference.yml, assets/, state.yml)
+  seo/                             # SEO strategy output per project
+  dev/                             # Dev plugin project data
+  brainstorm/                      # Brainstorm sessions and decisions
+  active-brand.yml                 # Currently active brand pointer
+  active-seo-project.yml           # Currently active SEO project pointer
 plugins/
   task-planner/                    # Foundation plugin (complete)
     .claude-plugin/plugin.json     # includes hooks: PreToolUse, PostToolUse, SessionStart, Stop

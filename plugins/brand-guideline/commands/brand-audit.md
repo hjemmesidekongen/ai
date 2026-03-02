@@ -6,7 +6,7 @@ arguments:
   - name: brand
     type: string
     required: false
-    description: "Brand slug to audit. Defaults to the currently active brand (from ~/.claude/active-brand.yml)."
+    description: "Brand slug to audit. Defaults to the currently active brand (from .ai/active-brand.yml)."
 ---
 
 # /brand:audit
@@ -33,7 +33,7 @@ Use brand-context-loader to resolve the target brand:
   1. If --brand flag provided → use that brand
   2. Otherwise → follow the standard fallback chain (active-brand.yml → auto-discover → ask)
 
-brand_dir = "~/.claude/brands/[brand]/"
+brand_dir = ".ai/brands/[brand]/"
 ref_path = brand_dir + "brand-reference.yml"
 assets_dir = brand_dir + "assets/"
 
@@ -586,7 +586,7 @@ else:
 
 #### Report: brand-audit-report.md
 
-Write to `~/.claude/brands/[brand]/brand-audit-report.md`:
+Write to `.ai/brands/[brand]/brand-audit-report.md`:
 
 ```markdown
 # Brand Audit Report: [brand_name]
@@ -650,7 +650,7 @@ Brand: [brand_slug] (v[ref.meta.version])
 
 #### Report: brand-audit-report.yml
 
-Write to `~/.claude/brands/[brand]/brand-audit-report.yml`:
+Write to `.ai/brands/[brand]/brand-audit-report.yml`:
 
 ```yaml
 meta:
@@ -722,8 +722,8 @@ assets:
 
 | File | Location | Purpose |
 |------|----------|---------|
-| `brand-audit-report.md` | `~/.claude/brands/[brand]/` | Human-readable audit report |
-| `brand-audit-report.yml` | `~/.claude/brands/[brand]/` | Machine-readable audit data |
+| `brand-audit-report.md` | `.ai/brands/[brand]/` | Human-readable audit report |
+| `brand-audit-report.yml` | `.ai/brands/[brand]/` | Machine-readable audit data |
 
 ---
 
@@ -765,7 +765,7 @@ for each issue in all_issues:
 
 | Error | Action |
 |-------|--------|
-| `~/.claude/brands/` doesn't exist | Create it. Report: "No brands found." |
+| `.ai/brands/` doesn't exist | Create it. Report: "No brands found." |
 | Brand slug not found | Show error + list available brands. |
 | `brand-reference.yml` missing | ERROR and stop — nothing to audit. |
 | `brand-reference.yml` is malformed YAML | Show parse error with line number. Do not proceed. |

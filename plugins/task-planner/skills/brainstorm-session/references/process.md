@@ -6,7 +6,7 @@ When the user invokes `/brainstorm:start [project-name]`:
 
 1. Create the project directory if it doesn't exist:
    ```
-   ~/.claude/projects/[project-name]/
+   .ai/brainstorm/[project-name]/
    ```
 
 2. Check for existing `brainstorm-state.yml`:
@@ -123,7 +123,7 @@ When ending:
 
 1. Save the conversation as a clean transcript:
    ```
-   ~/.claude/projects/[project-name]/brainstorm-transcript-[date].md
+   .ai/brainstorm/[project-name]/brainstorm-transcript-[date].md
    ```
 
    Transcript format:
@@ -172,7 +172,7 @@ When ending:
 Multiple brainstorm sessions for the same project append — they never overwrite.
 
 ```
-~/.claude/projects/my-saas/
+.ai/brainstorm/my-saas/
   brainstorm-state.yml           # tracks all sessions
   brainstorm-transcript-2026-03-01.md
   brainstorm-transcript-2026-03-05.md
@@ -185,8 +185,8 @@ Each session gets its own entry in the `sessions` array in `brainstorm-state.yml
 
 ## Output
 
-- `~/.claude/projects/[project-name]/brainstorm-state.yml` — session tracking
-- `~/.claude/projects/[project-name]/brainstorm-transcript-[date].md` — conversation record
+- `.ai/brainstorm/[project-name]/brainstorm-state.yml` — session tracking
+- `.ai/brainstorm/[project-name]/brainstorm-transcript-[date].md` — conversation record
 
 ## Checkpoint (full detail)
 
@@ -195,7 +195,7 @@ type: data_validation
 required_checks:
   - brainstorm-state.yml exists with a session entry for today's date
   - Transcript file exists at the path recorded in brainstorm-state.yml
-  - Project directory ~/.claude/projects/[project-name]/ exists
+  - Project directory .ai/brainstorm/[project-name]/ exists
   - topics_explored has at least 1 entry
 on_fail: Fix the failing check and re-validate.
 on_pass: Report session saved. Suggest /brainstorm:decide when ready.

@@ -2,7 +2,7 @@
 # Defines the structure of state.yml — the execution state file that
 # tracks where brand generation is and enables cross-session resume.
 #
-# Location: ~/.claude/brands/[brand]/state.yml
+# Location: .ai/brands/[brand]/state.yml
 # Producer: /brand:generate, /brand:analyze
 # Consumer: brand-context-loader skill, /plan:resume
 
@@ -17,7 +17,7 @@ command:
 brand:
   type: string
   required: true
-  description: "Brand slug (directory name under ~/.claude/brands/)"
+  description: "Brand slug (directory name under .ai/brands/)"
 
 started_at:
   type: string

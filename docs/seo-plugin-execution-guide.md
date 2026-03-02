@@ -70,8 +70,8 @@ Create the plugin scaffold:
      "agents": [],
      "dependencies": ["task-planner", "brand-guideline"],
      "shared_skills": ["brand-context-loader"],
-     "brand_directory": "~/.claude/brands/",
-     "data_directory": "~/.claude/seo/[project-name]/"
+     "brand_directory": ".ai/brands/",
+     "data_directory": ".ai/seo/[project-name]/"
    }
    ```
 
@@ -170,7 +170,7 @@ Create `plugins/seo-plugin/skills/project-interview/SKILL.md`
 
 This skill:
 1. Load brand context if available — call brand-context-loader to read `identity.mission`, `identity.values`, `identity.positioning`, and `audience.segments` from brand-reference.yml
-2. Initialize seo-strategy.yml at `~/.claude/seo/[project-name]/` with the `meta` section containing plugin_name ("seo-plugin"), project_name, created_at (ISO 8601), version ("1.0"), generated_by ("seo-plugin v1.0.0"), and brand_name
+2. Initialize seo-strategy.yml at `.ai/seo/[project-name]/` with the `meta` section containing plugin_name ("seo-plugin"), project_name, created_at (ISO 8601), version ("1.0"), generated_by ("seo-plugin v1.0.0"), and brand_name
 3. Ask the user for their website URL — validate it matches a URL pattern (starts with http:// or https://)
 4. Ask about their industry and business model — offer examples: "SaaS, E-commerce, Agency, B2B Services, Media, Education." If brand identity is loaded, suggest based on identity.positioning
 5. Ask about 2-3 primary SEO goals — present goal-metric pairs as examples: "Increase organic traffic → monthly_organic_sessions", "Improve keyword rankings → average_position", "Grow backlink profile → referring_domains", "Increase conversions from organic → organic_conversion_rate". Each goal needs a target value and timeframe
@@ -497,7 +497,7 @@ This skill:
 7. Generate Technical SEO Checklist section — create table of checklist items sorted by priority (critical first) with columns: item, priority, category, status. Highlight Core Web Vitals targets
 8. Generate Content Plan section — for each topic cluster, show pillar page and supporting pages in an indented list. Present content calendar as a month-by-month table
 9. Generate Link-Building Strategy section — create strategy summary table with columns: name, effort, impact, timeline. List outreach target categories and content promotion channels
-10. Assemble all sections into seo-strategy.md at `~/.claude/seo/[project-name]/seo-strategy.md` with a table of contents at the top
+10. Assemble all sections into seo-strategy.md at `.ai/seo/[project-name]/seo-strategy.md` with a table of contents at the top
 11. Update seo-strategy.yml `meta.updated_at` to current ISO 8601 timestamp and `meta.version` to "1.0"
 12. Run checkpoint validation
 
@@ -545,8 +545,8 @@ This command:
      - Verification profile: seo_plugin_profile
      - QA frequency: every_wave
      Then call /plan:execute to run the plan
-5. Output: seo-strategy.yml + seo-strategy.md at `~/.claude/seo/[project-name]/`
-6. Recovery: If interrupted, check state.yml at `~/.claude/seo/[project-name]/` and resume from the last completed wave via /plan:resume
+5. Output: seo-strategy.yml + seo-strategy.md at `.ai/seo/[project-name]/`
+6. Recovery: If interrupted, check state.yml at `.ai/seo/[project-name]/` and resume from the last completed wave via /plan:resume
 
 Checkpoint type: data_validation
 Required checks:
@@ -580,7 +580,7 @@ This command:
 3. Input: `url` (required string — URL to audit), `--project [name]` (optional — use existing strategy as baseline)
 4. Execution Strategy:
    - No interactive phases. Single-pass autonomous execution:
-     a. If `--project` provided, load seo-strategy.yml from `~/.claude/seo/[project-name]/` for baseline rules
+     a. If `--project` provided, load seo-strategy.yml from `.ai/seo/[project-name]/` for baseline rules
      b. Fetch target URL and analyze HTML structure
      c. Check on-page elements: title tag (length, keyword presence), meta description (length, CTA), H1 (exists, unique), heading hierarchy (logical nesting), image alt tags, canonical URL, schema markup
      d. Check technical elements: HTTPS, mobile viewport, robots.txt reference, sitemap reference
@@ -626,7 +626,7 @@ This command:
    - Autonomous execution:
      d. Research competing content for the target keyword (analyze top-ranking pages)
      e. Generate content brief with: title suggestion, target word count, outline (H2/H3 headings), target keyword + secondary keywords to include, internal linking suggestions (if project strategy exists), SEO requirements (meta description template, schema markup type)
-5. Output: Content brief printed to stdout; if `--project` provided, also saved to `~/.claude/seo/[project-name]/briefs/[keyword-slug].md`
+5. Output: Content brief printed to stdout; if `--project` provided, also saved to `.ai/seo/[project-name]/briefs/[keyword-slug].md`
 6. Recovery: Not needed — single-pass command
 
 Checkpoint type: data_validation
@@ -660,12 +660,12 @@ This command:
 3. Input: `project-name` (required string), `--format [md|docx|both]` (optional, default: md)
 4. Execution Strategy:
    - No interactive phases. Single-pass execution:
-     a. Read seo-strategy.yml from `~/.claude/seo/[project-name]/`
+     a. Read seo-strategy.yml from `.ai/seo/[project-name]/`
      b. Validate all required sections are present and non-empty (meta, project_context, keywords, competitors, on_page, technical, content_plan, link_building)
      c. If format is "md" or "both": generate/regenerate seo-strategy.md using the compile-and-export skill's document generation logic
      d. If format is "docx" or "both": convert seo-strategy.md to seo-strategy.docx using pandoc with professional styling
      e. Report output file paths
-5. Output: seo-strategy.md and/or seo-strategy.docx at `~/.claude/seo/[project-name]/`
+5. Output: seo-strategy.md and/or seo-strategy.docx at `.ai/seo/[project-name]/`
 6. Recovery: Not needed — single-pass command
 
 Checkpoint type: data_validation
@@ -692,7 +692,7 @@ Dry-run test of /seo:strategy with a fictional project.
 
 1. Create a test scenario:
    - Project name: "test-seo-plugin"
-   - Brand: Use an existing brand from `~/.claude/brands/` or create a minimal test brand-reference.yml with identity, audience, voice, and content sections
+   - Brand: Use an existing brand from `.ai/brands/` or create a minimal test brand-reference.yml with identity, audience, voice, and content sections
    - Website: "https://test-project.example.com"
    - Industry: "SaaS — project management tools"
    - Goals: increase organic traffic + improve keyword rankings
@@ -708,7 +708,7 @@ Dry-run test of /seo:strategy with a fictional project.
    - Run skill compile-and-export: verify seo-strategy.md exists and has all 7 sections
 
 3. Verify final output:
-   - seo-strategy.yml exists at `~/.claude/seo/test-seo-plugin/` and validates against schema (all 8 top-level sections populated)
+   - seo-strategy.yml exists at `.ai/seo/test-seo-plugin/` and validates against schema (all 8 top-level sections populated)
    - seo-strategy.md exists and has all 7 document sections with content (at least 2000 words)
    - state.yml shows all phases completed
    - No placeholder text in any output file

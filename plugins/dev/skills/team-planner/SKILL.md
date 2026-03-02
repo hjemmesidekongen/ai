@@ -9,10 +9,10 @@ description: >
 phase: 2
 depends_on: [feature-decomposer]
 writes:
-  - "~/.claude/dev/[project-name]/team-state.yml (wave_plan section)"
+  - ".ai/dev/[project-name]/team-state.yml (wave_plan section)"
 reads:
-  - "~/.claude/dev/[project-name]/team-state.yml (decomposition section)"
-  - "~/.claude/dev/[project-name]/dev-config.yml"
+  - ".ai/dev/[project-name]/team-state.yml (decomposition section)"
+  - ".ai/dev/[project-name]/dev-config.yml"
 model_tier: principal
 interactive: true
 checkpoint:
@@ -66,7 +66,7 @@ Phase 2 of /dev:build. PM creates work packages from decomposition, dispatches F
 
 ## Findings Persistence
 
-Write intermediate discoveries to `~/.claude/dev/[project-name]/findings.md`.
+Write intermediate discoveries to `.ai/dev/[project-name]/findings.md`.
 **2-Action Rule:** After every 2 planning operations (work package creation, TL dispatch, file ownership check), save findings immediately.
 
 ## Error Logging — Log errors to state.yml errors array. Check errors before retrying.

@@ -8,11 +8,11 @@ description: >
 phase: 1
 depends_on: [config-generator]
 writes:
-  - "~/.claude/dev/[project-name]/team-state.yml (decomposition section)"
+  - ".ai/dev/[project-name]/team-state.yml (decomposition section)"
 reads:
   - "User's feature description (from /dev:build argument)"
-  - "~/.claude/dev/[project-name]/dev-config.yml"
-  - "~/.claude/dev/[project-name]/knowledge/*.yml (tag-filtered)"
+  - ".ai/dev/[project-name]/dev-config.yml"
+  - ".ai/dev/[project-name]/knowledge/*.yml (tag-filtered)"
   - "brand-reference.yml (optional, via brand-context-loader)"
 model_tier: principal
 interactive: true
@@ -63,7 +63,7 @@ Phase 1 of /dev:build. Receives a feature description, orchestrates Architect (b
 
 ## Findings Persistence
 
-Write intermediate discoveries to `~/.claude/dev/[project-name]/findings.md`.
+Write intermediate discoveries to `.ai/dev/[project-name]/findings.md`.
 **2-Action Rule:** After every 2 agent dispatches or user interactions, save findings immediately.
 
 ## Error Logging — Log errors to state.yml errors array. Check errors before retrying.

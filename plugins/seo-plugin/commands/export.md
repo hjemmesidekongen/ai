@@ -33,7 +33,7 @@ Exports the SEO strategy as a formatted report in Markdown or DOCX format. Usefu
 ## Prerequisites
 
 - task-planner plugin installed
-- A completed SEO strategy at `~/.claude/seo/[project-name]/`
+- A completed SEO strategy at `.ai/seo/[project-name]/`
 - For DOCX output: pandoc must be installed
 
 ## Input
@@ -47,7 +47,7 @@ No interactive phases. Single-pass execution:
 
 ### Step 1: Load and Validate Strategy
 
-1. Read `~/.claude/seo/[project-name]/seo-strategy.yml`
+1. Read `.ai/seo/[project-name]/seo-strategy.yml`
 2. Validate all 8 required top-level sections are present and non-empty:
    - `meta` — project metadata
    - `project_context` — project basics
@@ -78,7 +78,7 @@ Use the compile-and-export skill's document generation logic:
    - Technical SEO Checklist (CWV targets, checklist table, mobile requirements)
    - Content Plan (topic clusters, content calendar)
    - Link-Building Strategy (strategies, outreach, promotion)
-4. Write to `~/.claude/seo/[project-name]/seo-strategy.md`
+4. Write to `.ai/seo/[project-name]/seo-strategy.md`
 5. Update `seo-strategy.yml` meta.updated_at
 
 ### Step 3: Generate DOCX (if format is "docx" or "both")
@@ -117,13 +117,13 @@ Files:
   [✓] seo-strategy.md — [word count] words
   [✓/✗] seo-strategy.docx — [generated / pandoc not available]
 
-Location: ~/.claude/seo/[project-name]/
+Location: .ai/seo/[project-name]/
 ```
 
 ## Output
 
-- `seo-strategy.md` at `~/.claude/seo/[project-name]/` (if format includes md)
-- `seo-strategy.docx` at `~/.claude/seo/[project-name]/` (if format includes docx and pandoc available)
+- `seo-strategy.md` at `.ai/seo/[project-name]/` (if format includes md)
+- `seo-strategy.docx` at `.ai/seo/[project-name]/` (if format includes docx and pandoc available)
 
 ## Recovery
 

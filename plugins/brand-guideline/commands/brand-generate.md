@@ -61,8 +61,8 @@ Before starting anything, check if this is a resume:
 
 **If `--resume` flag is set:**
 
-1. Scan `~/.claude/brands/` for `state.yml` files with `command: "brand:generate"` and `status != "completed"`
-2. If `--brand` is specified, look only in `~/.claude/brands/[brand]/state.yml`
+1. Scan `.ai/brands/` for `state.yml` files with `command: "brand:generate"` and `status != "completed"`
+2. If `--brand` is specified, look only in `.ai/brands/[brand]/state.yml`
 3. If found: jump to **Step 7: Resume** (below)
 4. If not found:
    ```
@@ -72,7 +72,7 @@ Before starting anything, check if this is a resume:
 
 **If no resume flag:** Check anyway for an active generation:
 
-1. Scan `~/.claude/brands/*/state.yml` for `command: "brand:generate"` with `status: "in_progress"`
+1. Scan `.ai/brands/*/state.yml` for `command: "brand:generate"` with `status: "in_progress"`
 2. If found, ask the user:
    ```
    Found an in-progress brand generation for "[brand_name]" (phase [N] of 9).
@@ -86,7 +86,7 @@ Before starting anything, check if this is a resume:
 Create the brand directory structure:
 
 ```
-~/.claude/brands/[brand-slug]/
+.ai/brands/[brand-slug]/
 ├── brand-reference.yml     # written incrementally by each skill
 ├── state.yml               # execution state (created now)
 ├── assets/
@@ -398,14 +398,14 @@ The exact wave structure depends on the decomposer's analysis. The key constrain
 - `logo-design` needs both colors and visual identity
 - `compile-and-export` is always last and has mandatory QA
 
-Save the plan to `~/.claude/brands/[brand-slug]/.plans/`.
+Save the plan to `.ai/plans/brand-generate-[brand-slug]/`.
 
 ### Step 6: Execute the Plan
 
 Call `/plan:execute` with the generated plan:
 
 ```
-/plan:execute ~/.claude/brands/[brand-slug]/.plans/brand-generate-[brand-slug].yml
+/plan:execute .ai/plans/brand-generate-[brand-slug]/plan.yml
 ```
 
 The plan executor handles:
@@ -431,8 +431,8 @@ This keeps `state.yml` (brand-specific state) and the plan's state file (task-pl
 
 When resuming a previously interrupted brand generation:
 
-1. Read `~/.claude/brands/[brand]/state.yml`
-2. Read `~/.claude/brands/[brand]/brand-reference.yml`
+1. Read `.ai/brands/[brand]/state.yml`
+2. Read `.ai/brands/[brand]/brand-reference.yml`
 3. Determine where execution stopped:
 
 ```
@@ -477,7 +477,7 @@ Re-read brand-reference.yml to see what data exists. The skill's checkpoint will
 
 **If stopped during an automated phase (4-9):**
 
-Check if a plan file exists in `~/.claude/brands/[brand]/.plans/`:
+Check if a plan file exists in `.ai/plans/brand-generate-[brand]/`:
 - If yes: call `/plan:resume` with that plan file
 - If no: jump to **Step 5** (create the plan) and continue from there
 
@@ -525,7 +525,7 @@ All 9 phases completed. QA approved.
   preview/brand-preview.html — interactive brand preview (open in browser)
 
 ### Location
-  ~/.claude/brands/[brand-slug]/
+  .ai/brands/[brand-slug]/
 
 ### Next steps
   - Open preview/brand-preview.html in your browser to review

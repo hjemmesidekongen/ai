@@ -1,6 +1,6 @@
 # ============================================================
 # KNOWLEDGE ENTRY SCHEMA
-# Each file in ~/.claude/dev/[project-name]/knowledge/ follows this structure.
+# Each file in .ai/dev/[project-name]/knowledge/ follows this structure.
 # Knowledge files are tag-indexed, maturity-tracked, and content-hashed
 # for deduplication.
 # ============================================================

@@ -31,7 +31,7 @@ Audits an existing website or page against SEO best practices and reports issues
 ## Prerequisites
 
 - task-planner plugin installed
-- For `--project` mode: a completed SEO strategy at `~/.claude/seo/[project-name]/`
+- For `--project` mode: a completed SEO strategy at `.ai/seo/[project-name]/`
 
 ## Input
 
@@ -45,7 +45,7 @@ No interactive phases. Single-pass autonomous execution:
 ### Step 1: Load Baseline (if --project provided)
 
 If `--project` is specified:
-1. Read `~/.claude/seo/[project-name]/seo-strategy.yml`
+1. Read `.ai/seo/[project-name]/seo-strategy.yml`
 2. Extract baseline rules:
    - `on_page.title_tag` — title tag pattern and rules
    - `on_page.meta_description` — meta description rules

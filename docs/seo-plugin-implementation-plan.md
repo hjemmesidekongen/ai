@@ -31,7 +31,7 @@
            │
     ┌──────▼──────────────────────┐
     │    brand-reference.yml       │
-    │    ~/.claude/brands/[x]/     │
+    │    .ai/brands/[x]/           │
     └─────────────────────────────┘
 ```
 
@@ -46,7 +46,7 @@ Processing:
   project-interview → keywords → competitors + technical → on-page → content → link-building → compile
 
 Output:
-  ~/.claude/seo/[project-name]/
+  .ai/seo/[project-name]/
   ├── seo-strategy.yml        ← Machine-readable (consumed by other plugins)
   ├── seo-strategy.md         ← Human-readable strategy document
   └── state.yml               ← Wave progress tracking
@@ -334,12 +334,12 @@ After interactive phases, call /plan:create with:
 Then call /plan:execute to run the plan.
 
 **Output:**
-- `seo-strategy.yml` — written to `~/.claude/seo/[project-name]/`
-- `seo-strategy.md` — written to `~/.claude/seo/[project-name]/`
+- `seo-strategy.yml` — written to `.ai/seo/[project-name]/`
+- `seo-strategy.md` — written to `.ai/seo/[project-name]/`
 - `state.yml` — wave progress tracking
 
 **Recovery:**
-If interrupted, check state.yml at `~/.claude/seo/[project-name]/` and resume from the last completed wave via /plan:resume.
+If interrupted, check state.yml at `.ai/seo/[project-name]/` and resume from the last completed wave via /plan:resume.
 
 ---
 
@@ -391,7 +391,7 @@ Autonomous execution:
 5. Generate content brief with outline, target word count, SEO requirements, and internal linking suggestions
 
 **Output:**
-- Content brief printed to stdout and optionally saved to `~/.claude/seo/[project-name]/briefs/[keyword-slug].md`
+- Content brief printed to stdout and optionally saved to `.ai/seo/[project-name]/briefs/[keyword-slug].md`
 
 **Recovery:**
 Not needed — single-pass command.
@@ -410,13 +410,13 @@ Not needed — single-pass command.
 **Execution Strategy:**
 
 No interactive phases. Single-pass execution:
-1. Read `seo-strategy.yml` from `~/.claude/seo/[project-name]/`
+1. Read `seo-strategy.yml` from `.ai/seo/[project-name]/`
 2. Validate all required sections are present and non-empty
 3. Format the strategy into the requested document format
 4. If DOCX requested, apply professional styling
 
 **Output:**
-- `seo-strategy.md` and/or `seo-strategy.docx` at `~/.claude/seo/[project-name]/`
+- `seo-strategy.md` and/or `seo-strategy.docx` at `.ai/seo/[project-name]/`
 
 **Recovery:**
 Not needed — single-pass command.

@@ -59,7 +59,7 @@ Project Source Files
 └───────────────────────┬──────────────────────┘
                         │
                         ▼
-        ~/.claude/dev/[project-name]/
+        .ai/dev/[project-name]/
         ├── dev-config.yml          ← frameworks, conventions, choices
         ├── team-state.yml          ← agent assignments, commit SHAs
         └── knowledge/
@@ -356,7 +356,7 @@ blockers:
 
 ### YAML Schema: knowledge file format
 
-Each file in `~/.claude/dev/[project-name]/knowledge/` follows this structure:
+Each file in `.ai/dev/[project-name]/knowledge/` follows this structure:
 
 ```yaml
 # Knowledge file frontmatter
@@ -402,9 +402,9 @@ Interactive phases (cannot be parallelized):
 This command does NOT use the task-planner — it runs sequentially because each step is fast and depends on the previous.
 
 **Output:**
-- `~/.claude/dev/[project-name]/dev-config.yml` — project configuration
-- `~/.claude/dev/[project-name]/knowledge/*.yml` — tagged knowledge files
-- `~/.claude/dev/[project-name]/knowledge/architecture.md` — mermaid diagrams
+- `.ai/dev/[project-name]/dev-config.yml` — project configuration
+- `.ai/dev/[project-name]/knowledge/*.yml` — tagged knowledge files
+- `.ai/dev/[project-name]/knowledge/architecture.md` — mermaid diagrams
 
 **Recovery:**
 If interrupted, re-run `/dev:init`. It's idempotent — will overwrite existing config. Use `--force` to bypass "already initialized" check.
@@ -440,11 +440,11 @@ Then call /plan:execute to run the plan:
 
 **Output:**
 - Code committed to repository (by specialist agents)
-- `~/.claude/dev/[project-name]/team-state.yml` — full execution record
+- `.ai/dev/[project-name]/team-state.yml` — full execution record
 - Build report in team-state.yml review section
 
 **Recovery:**
-If interrupted, check `team-state.yml` at `~/.claude/dev/[project-name]/`. Resume with `/dev:build --wave N` where N is the last incomplete wave. The task-planner's `/plan:resume` handles wave-level recovery.
+If interrupted, check `team-state.yml` at `.ai/dev/[project-name]/`. Resume with `/dev:build --wave N` where N is the last incomplete wave. The task-planner's `/plan:resume` handles wave-level recovery.
 
 ---
 
@@ -464,8 +464,8 @@ Single skill, no planner needed:
 1. Run `delta-scanner` — compares file hashes, detects changes, curates knowledge updates
 
 **Output:**
-- Updated `~/.claude/dev/[project-name]/knowledge/*.yml` — new/modified/deprecated entries
-- Updated `~/.claude/dev/[project-name]/dev-config.yml` — scan.last_scan_at and file_hashes refreshed
+- Updated `.ai/dev/[project-name]/knowledge/*.yml` — new/modified/deprecated entries
+- Updated `.ai/dev/[project-name]/dev-config.yml` — scan.last_scan_at and file_hashes refreshed
 
 **Recovery:**
 Idempotent — re-run if interrupted.
@@ -484,7 +484,7 @@ Idempotent — re-run if interrupted.
 **Execution Strategy:**
 
 No skills needed — reads team-state.yml and presents a formatted summary:
-1. Read `~/.claude/dev/[project-name]/team-state.yml`
+1. Read `.ai/dev/[project-name]/team-state.yml`
 2. Format current phase, wave progress, agent assignments, any blockers
 3. If blockers exist, show impact analysis (directly and transitively blocked tasks)
 4. Show commit range and test/lint/build status per completed task
@@ -558,11 +558,11 @@ Not applicable — read-only command.
    - "Target test coverage threshold?" (suggest 80% as default)
 5. Populate the `commands` section by reading package.json scripts — map `build`, `dev`, `test`, `lint`, `format`, `typecheck`
 6. If any commands are missing, ask the user: "No test command detected. What command runs your tests?"
-7. Write dev-config.yml to `~/.claude/dev/[project-name]/dev-config.yml`
+7. Write dev-config.yml to `.ai/dev/[project-name]/dev-config.yml`
 8. Present final summary and get user confirmation
 
 **Output:**
-- `~/.claude/dev/[project-name]/dev-config.yml` — the central project contract
+- `.ai/dev/[project-name]/dev-config.yml` — the central project contract
 
 **Checkpoint:**
 - Type: data_validation
@@ -585,7 +585,7 @@ Not applicable — read-only command.
 **Model tier:** Senior (Sonnet) — needs to reason about architecture and produce useful knowledge
 
 **Inputs:**
-- Reads: `~/.claude/dev/[project-name]/dev-config.yml`
+- Reads: `.ai/dev/[project-name]/dev-config.yml`
 - Reads: project source files (for architecture analysis)
 
 **Process:**
@@ -606,13 +606,13 @@ Not applicable — read-only command.
 6. Tag each knowledge file with relevant tags from: `api`, `auth`, `database`, `frontend`, `backend`, `testing`, `devops`, `architecture`, `patterns`, `conventions`
 7. Set initial maturity to `candidate` for all entries (promoted to `established` after first successful build)
 8. Compute content hashes for Jaccard dedup in future delta scans
-9. Write all knowledge files to `~/.claude/dev/[project-name]/knowledge/`
+9. Write all knowledge files to `.ai/dev/[project-name]/knowledge/`
 10. Update dev-config.yml `scan` section with file hashes and timestamp
 
 **Output:**
-- `~/.claude/dev/[project-name]/knowledge/architecture.md` — mermaid diagrams
-- `~/.claude/dev/[project-name]/knowledge/patterns.yml` — detected design patterns
-- `~/.claude/dev/[project-name]/knowledge/conventions.yml` — naming and organization conventions
+- `.ai/dev/[project-name]/knowledge/architecture.md` — mermaid diagrams
+- `.ai/dev/[project-name]/knowledge/patterns.yml` — detected design patterns
+- `.ai/dev/[project-name]/knowledge/conventions.yml` — naming and organization conventions
 - Additional knowledge files as detected
 
 **Checkpoint:**
@@ -636,8 +636,8 @@ Not applicable — read-only command.
 
 **Inputs:**
 - Reads: user's feature description (from /dev:build argument)
-- Reads: `~/.claude/dev/[project-name]/dev-config.yml` — project structure and frameworks
-- Reads: `~/.claude/dev/[project-name]/knowledge/*.yml` — existing architecture and patterns
+- Reads: `.ai/dev/[project-name]/dev-config.yml` — project structure and frameworks
+- Reads: `.ai/dev/[project-name]/knowledge/*.yml` — existing architecture and patterns
 - Reads: brand-reference.yml (optional, via brand-context-loader)
 
 **Process:**
@@ -662,7 +662,7 @@ Not applicable — read-only command.
 9. Present final summary with all components, boundaries, and visual specs
 
 **Output:**
-- `~/.claude/dev/[project-name]/team-state.yml` — decomposition section populated
+- `.ai/dev/[project-name]/team-state.yml` — decomposition section populated
 
 **Checkpoint:**
 - Type: data_validation
@@ -684,8 +684,8 @@ Not applicable — read-only command.
 **Model tier:** Principal (Opus) — planning, tier assignment, conflict resolution
 
 **Inputs:**
-- Reads: `~/.claude/dev/[project-name]/team-state.yml` — decomposition section
-- Reads: `~/.claude/dev/[project-name]/dev-config.yml` — project structure
+- Reads: `.ai/dev/[project-name]/team-state.yml` — decomposition section
+- Reads: `.ai/dev/[project-name]/dev-config.yml` — project structure
 
 **Process:**
 1. PM creates initial work packages from decomposition: each component becomes 1+ tasks
@@ -709,7 +709,7 @@ Not applicable — read-only command.
 9. Register file ownership in team-state.yml `wave_plan.file_ownership`
 
 **Output:**
-- `~/.claude/dev/[project-name]/team-state.yml` — wave_plan section populated with tasks, tiers, ownership
+- `.ai/dev/[project-name]/team-state.yml` — wave_plan section populated with tasks, tiers, ownership
 
 **Checkpoint:**
 - Type: data_validation
@@ -732,8 +732,8 @@ Not applicable — read-only command.
 **Model tier:** Senior (Sonnet) — orchestration, report collection, error handling
 
 **Inputs:**
-- Reads: `~/.claude/dev/[project-name]/team-state.yml` — wave_plan section
-- Reads: `~/.claude/dev/[project-name]/knowledge/*.yml` — tag-filtered per task context
+- Reads: `.ai/dev/[project-name]/team-state.yml` — wave_plan section
+- Reads: `.ai/dev/[project-name]/knowledge/*.yml` — tag-filtered per task context
 
 **Process:**
 1. Read the wave plan from team-state.yml
@@ -751,7 +751,7 @@ Not applicable — read-only command.
 4. Pass to completion-gate for verification
 
 **Output:**
-- `~/.claude/dev/[project-name]/team-state.yml` — execution section updated with dispatched tasks, reports, commit SHAs
+- `.ai/dev/[project-name]/team-state.yml` — execution section updated with dispatched tasks, reports, commit SHAs
 
 **Checkpoint:**
 - Type: data_validation
@@ -810,7 +810,7 @@ Not applicable — read-only command.
 
 **Inputs:**
 - Reads: subagent reports from agent-dispatcher (files changed per task)
-- Reads: `~/.claude/dev/[project-name]/dev-config.yml` — build, lint, test commands
+- Reads: `.ai/dev/[project-name]/dev-config.yml` — build, lint, test commands
 
 **Process:**
 1. For each completed task's changed files:
@@ -850,8 +850,8 @@ Not applicable — read-only command.
 
 **Inputs:**
 - Reads: git diff for the wave (execution.commit_range: base_sha..head_sha)
-- Reads: `~/.claude/dev/[project-name]/dev-config.yml` — conventions section
-- Reads: `~/.claude/dev/[project-name]/knowledge/conventions.yml` — project patterns
+- Reads: `.ai/dev/[project-name]/dev-config.yml` — conventions section
+- Reads: `.ai/dev/[project-name]/knowledge/conventions.yml` — project patterns
 
 **Process:**
 1. Get the wave's commit range from team-state.yml
@@ -867,7 +867,7 @@ Not applicable — read-only command.
 6. If critical findings exist: report back to PM for remediation before QA
 
 **Output:**
-- `~/.claude/dev/[project-name]/team-state.yml` — review.code_review populated
+- `.ai/dev/[project-name]/team-state.yml` — review.code_review populated
 
 **Checkpoint:**
 - Type: data_validation
@@ -888,7 +888,7 @@ Not applicable — read-only command.
 **Model tier:** Principal (Opus) — judgment-heavy, spec interpretation, holistic assessment
 
 **Inputs:**
-- Reads: `~/.claude/dev/[project-name]/team-state.yml` — decomposition (original spec), code review findings, execution reports
+- Reads: `.ai/dev/[project-name]/team-state.yml` — decomposition (original spec), code review findings, execution reports
 - Reads: user's original feature description
 
 **Process:**
@@ -912,7 +912,7 @@ Not applicable — read-only command.
 6. Write QA report and build report to team-state.yml review section
 
 **Output:**
-- `~/.claude/dev/[project-name]/team-state.yml` — review.qa_validation populated, build report in review section
+- `.ai/dev/[project-name]/team-state.yml` — review.qa_validation populated, build report in review section
 
 **Checkpoint:**
 - Type: data_validation
@@ -933,8 +933,8 @@ Not applicable — read-only command.
 **Model tier:** Junior (Haiku) — hash comparison, maturity state machine
 
 **Inputs:**
-- Reads: `~/.claude/dev/[project-name]/dev-config.yml` — scan.file_hashes (previous hashes)
-- Reads: `~/.claude/dev/[project-name]/knowledge/*.yml` — existing knowledge entries
+- Reads: `.ai/dev/[project-name]/dev-config.yml` — scan.file_hashes (previous hashes)
+- Reads: `.ai/dev/[project-name]/knowledge/*.yml` — existing knowledge entries
 - Reads: project source files (for new hash computation)
 
 **Process:**
@@ -957,7 +957,7 @@ Not applicable — read-only command.
 7. Update scan.last_scan_at timestamp
 
 **Output:**
-- Updated knowledge files in `~/.claude/dev/[project-name]/knowledge/`
+- Updated knowledge files in `.ai/dev/[project-name]/knowledge/`
 - Updated dev-config.yml scan section
 
 **Checkpoint:**

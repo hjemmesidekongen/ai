@@ -2,7 +2,7 @@
 # Defines the structure of state.yml — the execution state file that
 # tracks where SEO strategy generation is and enables cross-session resume.
 #
-# Location: ~/.claude/seo/[project-name]/state.yml
+# Location: .ai/seo/[project-name]/state.yml
 # Producer: /seo:strategy
 # Consumer: /plan:resume, seo-plugin skills
 
@@ -17,7 +17,7 @@ command:
 project_name:
   type: string
   required: true
-  description: "Project slug (directory name under ~/.claude/seo/)"
+  description: "Project slug (directory name under .ai/seo/)"
 
 brand_name:
   type: string

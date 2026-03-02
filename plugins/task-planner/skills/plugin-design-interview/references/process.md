@@ -208,7 +208,7 @@ Define the dual output:
 
 **a) Machine-readable YAML:**
 - Schema name (e.g., `seo-strategy.yml`)
-- Storage path (e.g., `~/.claude/seo/[project-name]/`)
+- Storage path (e.g., `.ai/seo/[project-name]/`)
 - Brief description of what it contains
 
 **b) Human-readable document:**

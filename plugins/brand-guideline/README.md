@@ -117,7 +117,7 @@ Logo variants (SVG, PNG), color swatches, typography specimens, social media tem
 All brand data lives at:
 
 ```
-~/.claude/brands/[brand-name]/
+.ai/brands/[brand-name]/
 ├── brand-reference.yml          # Main data file (all sections)
 ├── state.yml                    # Progress tracking and recovery
 ├── brand-manual.md              # Human-readable document
@@ -140,7 +140,7 @@ All brand data lives at:
 
 Other plugins access brand data through the shared `brand-context-loader` skill (located at `shared/brand-context-loader/`). It handles:
 
-- **Brand discovery** — finds the active brand via `--brand` flag, `~/.claude/active-brand.yml`, or interactive selection
+- **Brand discovery** — finds the active brand via `--brand` flag, `.ai/active-brand.yml`, or interactive selection
 - **Section loading** — plugins declare which sections they need (e.g., `identity`, `colors`, `voice`); the loader returns only those
 - **Version checking** — calls `version-compatibility-checker` before loading to ensure data is compatible with the consuming plugin
 - **State recovery** — reads `state.yml` to detect incomplete runs and resume from the right point

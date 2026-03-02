@@ -40,7 +40,7 @@ Determine which project to extract decisions for:
 1. If `project-name` argument is provided, use it
 2. If not, check if a brainstorm session is active in the current conversation
    — use that project
-3. If neither, scan `~/.claude/projects/` for any brainstorm-state.yml with
+3. If neither, scan `.ai/brainstorm/` for any brainstorm-state.yml with
    `active: true`
 4. If multiple active sessions exist, ask which one
 5. If none found, report the error and stop
@@ -53,7 +53,7 @@ If a brainstorm was running in the current conversation, save the transcript
 before starting decision extraction:
 
 1. Write the brainstorm conversation to
-   `~/.claude/projects/[project-name]/brainstorm-transcript-[date].md`
+   `.ai/brainstorm/[project-name]/brainstorm-transcript-[date].md`
 
 2. Update `brainstorm-state.yml` with session details:
    - `duration_minutes` — estimated from conversation length
@@ -105,7 +105,7 @@ After the decision writer completes:
 
    ```
    "Wrote [N] decisions ([X] high confidence, [Y] medium, [Z] low).
-    Stored at ~/.claude/projects/[project-name]/decisions.yml
+    Stored at .ai/brainstorm/[project-name]/decisions.yml
 
     These will be picked up automatically when you run:
     - /brand:generate (reads brand-* domains)

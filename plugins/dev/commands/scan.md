@@ -27,7 +27,7 @@ Lightweight re-scan that keeps project knowledge fresh without expensive full sc
 
 ## Prerequisites
 
-- `/dev:init` must have been run (dev-config.yml must exist at `~/.claude/dev/[project-name]/`)
+- `/dev:init` must have been run (dev-config.yml must exist at `.ai/dev/[project-name]/`)
 - `dev-config.yml` must have a `scan` section with `file_hashes` (populated by project-scanner during init)
 
 ## Input
@@ -42,7 +42,7 @@ Single skill execution — no task-planner needed.
 
 ### Step 1: Validate Prerequisites
 
-Read `~/.claude/dev/[project-name]/dev-config.yml`. Check that:
+Read `.ai/dev/[project-name]/dev-config.yml`. Check that:
 - The file exists
 - `scan.file_hashes` exists and is non-empty
 
@@ -81,9 +81,9 @@ Knowledge updates: [created] created, [updated] updated, [deprecated] deprecated
 
 ## Output
 
-- Updated `~/.claude/dev/[project-name]/knowledge/*.yml` — new, modified, and deprecated entries
-- Updated `~/.claude/dev/[project-name]/dev-config.yml` — refreshed `scan` section (file_hashes, last_scan_at, changes_detected, knowledge_updates)
-- `~/.claude/dev/[project-name]/findings.md` — intermediate scan findings
+- Updated `.ai/dev/[project-name]/knowledge/*.yml` — new, modified, and deprecated entries
+- Updated `.ai/dev/[project-name]/dev-config.yml` — refreshed `scan` section (file_hashes, last_scan_at, changes_detected, knowledge_updates)
+- `.ai/dev/[project-name]/findings.md` — intermediate scan findings
 
 ## Recovery
 

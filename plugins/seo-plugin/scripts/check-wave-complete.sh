@@ -14,10 +14,10 @@ set -euo pipefail
 
 # Determine project directory from active-seo-project.yml or current directory
 STATE_FILE=""
-if [ -f ~/.claude/active-seo-project.yml ]; then
-  PROJECT_NAME=$(grep '^project_name:' ~/.claude/active-seo-project.yml 2>/dev/null | head -1 | awk '{print $2}' | tr -d '"' || true)
-  if [ -n "$PROJECT_NAME" ] && [ -f "$HOME/.claude/seo/$PROJECT_NAME/state.yml" ]; then
-    STATE_FILE="$HOME/.claude/seo/$PROJECT_NAME/state.yml"
+if [ -f .ai/active-seo-project.yml ]; then
+  PROJECT_NAME=$(grep '^project_name:' .ai/active-seo-project.yml 2>/dev/null | head -1 | awk '{print $2}' | tr -d '"' || true)
+  if [ -n "$PROJECT_NAME" ] && [ -f ".ai/seo/$PROJECT_NAME/state.yml" ]; then
+    STATE_FILE=".ai/seo/$PROJECT_NAME/state.yml"
   fi
 fi
 

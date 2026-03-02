@@ -68,7 +68,7 @@ The output uses the **same brand-reference.yml schema** as `/brand:generate`, so
 
    You can combine multiple sources for better results.
    ```
-3. If `--merge` is set, verify that `~/.claude/brands/[brand]/brand-reference.yml` exists
+3. If `--merge` is set, verify that `.ai/brands/[brand]/brand-reference.yml` exists
 4. If `--url` is provided, validate it's a well-formed URL
 
 Report to user:
@@ -471,8 +471,8 @@ Custom Font X — @font-face from example.com ⚠ Verify you have the license
 ### Step 6: Finalize & Save
 
 1. Remove all `_confidence` and `_evidence` markers from the final `brand-reference.yml` (they go in the analysis report instead)
-2. Write the clean `brand-reference.yml` to `~/.claude/brands/[brand-slug]/brand-reference.yml`
-3. Write the analysis report to `~/.claude/brands/[brand-slug]/brand-analysis-report.md`
+2. Write the clean `brand-reference.yml` to `.ai/brands/[brand-slug]/brand-reference.yml`
+3. Write the analysis report to `.ai/brands/[brand-slug]/brand-analysis-report.md`
 
 If `--merge` was specified:
 - Read the existing `brand-reference.yml`
@@ -540,7 +540,7 @@ Generated: [date]
 **Directory structure created:**
 
 ```
-~/.claude/brands/[brand-slug]/
+.ai/brands/[brand-slug]/
 ├── brand-reference.yml         # Clean, schema-compliant
 ├── brand-analysis-report.md    # Full analysis with evidence
 ├── assets/                     # Empty (no assets generated — use /brand:generate for that)
@@ -568,7 +568,7 @@ Generated: [date]
   [N] of [total] fields filled (high: X, medium: Y, low: Z, missing: W)
 
 ### Location
-  ~/.claude/brands/[brand-slug]/
+  .ai/brands/[brand-slug]/
 
 ### Accessibility
   [N] color pairs checked

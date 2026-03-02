@@ -15,10 +15,10 @@ echo "=== SEO Session Recovery Check ==="
 
 # Determine project directory from active-seo-project.yml or current directory
 PROJECT_DIR=""
-if [ -f ~/.claude/active-seo-project.yml ]; then
-  PROJECT_NAME=$(grep '^project_name:' ~/.claude/active-seo-project.yml 2>/dev/null | head -1 | awk '{print $2}' | tr -d '"' || true)
+if [ -f .ai/active-seo-project.yml ]; then
+  PROJECT_NAME=$(grep '^project_name:' .ai/active-seo-project.yml 2>/dev/null | head -1 | awk '{print $2}' | tr -d '"' || true)
   if [ -n "$PROJECT_NAME" ]; then
-    PROJECT_DIR="$HOME/.claude/seo/$PROJECT_NAME"
+    PROJECT_DIR=".ai/seo/$PROJECT_NAME"
   fi
 fi
 

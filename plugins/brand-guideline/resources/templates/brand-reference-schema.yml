@@ -2,7 +2,7 @@
 # Defines the structure of brand-reference.yml — the machine-readable
 # brand data file that all plugins consume.
 #
-# Location: ~/.claude/brands/[brand]/brand-reference.yml
+# Location: .ai/brands/[brand]/brand-reference.yml
 # Producer: /brand:generate or /brand:analyze
 # Consumer: Any plugin via brand-context-loader skill
 

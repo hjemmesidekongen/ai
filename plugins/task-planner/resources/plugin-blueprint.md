@@ -138,8 +138,8 @@ This file holds ecosystem-specific metadata that Claude Code does not need:
 
 **Conditional fields** (add only when applicable):
 - `"shared_skills": ["brand-context-loader"]` — when `needs_brand` is true
-- `"brand_directory": "~/.claude/brands/"` — when `needs_brand` is true
-- `"data_directory": "~/.claude/[domain]/[project-name]/"` — when the plugin stores project-specific data
+- `"brand_directory": ".ai/brands/"` — when `needs_brand` is true
+- `"data_directory": ".ai/[domain]/[project-name]/"` — when the plugin stores project-specific data
 
 **Rules:**
 - `dependencies` ALWAYS includes `task-planner` — every plugin uses it for planning and verification
@@ -427,7 +427,7 @@ If the plugin needs brand data (colors, voice, audience, logo, etc.):
 ### Accessing Brand Data
 
 ```
-Brand directory: ~/.claude/brands/[brand-name]/
+Brand directory: .ai/brands/[brand-name]/
 Main file: brand-reference.yml
 Available sections:
   - identity (name, mission, values, positioning)
@@ -449,12 +449,12 @@ Available sections:
 Every plugin that does multi-step work stores state at:
 
 ```
-~/.claude/[domain]/[project-name]/state.yml
+.ai/[domain]/[project-name]/state.yml
 ```
 
-For brand: `~/.claude/brands/[brand-name]/state.yml`
-For a website: `~/.claude/sites/[site-name]/state.yml`
-For SEO: `~/.claude/seo/[project-name]/state.yml`
+For brand: `.ai/brands/[brand-name]/state.yml`
+For a website: `.ai/sites/[site-name]/state.yml`
+For SEO: `.ai/seo/[project-name]/state.yml`
 
 ### State File Format
 
@@ -514,11 +514,11 @@ During research-heavy skills (interviews, competitor analysis, keyword
 research), intermediate discoveries are written to a findings file:
 
 ```
-~/.claude/[domain]/[project-name]/findings.md
+.ai/[domain]/[project-name]/findings.md
 ```
 
-For brand: `~/.claude/brands/[brand-name]/findings.md`
-For SEO: `~/.claude/seo/[project-name]/findings.md`
+For brand: `.ai/brands/[brand-name]/findings.md`
+For SEO: `.ai/seo/[project-name]/findings.md`
 
 **findings.md** stores:
 - Research discoveries and source URLs
@@ -964,7 +964,7 @@ Plugins can add hooks beyond the required set. Examples:
 "PreToolUse": [
   {
     "matcher": "Write|Edit|Bash",
-    "command": "cat ~/.claude/brands/$(cat ~/.claude/active-brand.yml 2>/dev/null)/state.yml 2>/dev/null | head -20 || true"
+    "command": "cat .ai/brands/$(cat .ai/active-brand.yml 2>/dev/null)/state.yml 2>/dev/null | head -20 || true"
   }
 ]
 ```

@@ -11,8 +11,8 @@ interactive: true
 depends_on: []
 reads: []
 writes:
-  - "~/.claude/projects/[project-name]/brainstorm-state.yml"
-  - "~/.claude/projects/[project-name]/brainstorm-transcript-[date].md"
+  - ".ai/brainstorm/[project-name]/brainstorm-state.yml"
+  - ".ai/brainstorm/[project-name]/brainstorm-transcript-[date].md"
 checkpoint:
   type: data_validation
   required_checks:
@@ -23,7 +23,7 @@ checkpoint:
       verify: "Transcript file path is recorded in brainstorm-state.yml"
       fail_action: "Write the transcript and update brainstorm-state.yml"
     - name: "project_directory_exists"
-      verify: "~/.claude/projects/[project-name]/ directory exists"
+      verify: ".ai/brainstorm/[project-name]/ directory exists"
       fail_action: "Create the project directory"
   on_fail: "Fix the failing check and re-validate. Mark session complete only after all checks pass."
   on_pass: "Update brainstorm-state.yml with session details."
@@ -40,7 +40,7 @@ Open-ended thinking partner skill — no predefined questions, no structured out
 - Dependencies: none
 
 ## Process Summary
-1. Create project directory (`~/.claude/projects/[project-name]/`) if absent
+1. Create project directory (`.ai/brainstorm/[project-name]/`) if absent
 2. Check brainstorm-state.yml — resume if active, start fresh otherwise
 3. Initialize or append session entry in brainstorm-state.yml
 4. Run brainstorm — act as sparring partner, follow user's lead, no premature formalization

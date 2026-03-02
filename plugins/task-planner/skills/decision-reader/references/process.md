@@ -37,8 +37,8 @@ domains: ["brand-identity"]
 
 Search for decisions in priority order:
 
-1. `~/.claude/projects/[project-name]/decisions.yml`
-2. `~/.claude/brands/[project-name]/decisions.yml`
+1. `.ai/brainstorm/[project-name]/decisions.yml`
+2. `.ai/brands/[project-name]/decisions.yml`
 
 Use the first file found. If neither exists, return an empty result
 immediately — this is NOT an error. Many projects won't have brainstorm
@@ -87,7 +87,7 @@ Within each bucket, preserve the original order (by id).
 
 ```yaml
 project: "[project-name]"
-source: "~/.claude/projects/[project-name]/decisions.yml"
+source: ".ai/brainstorm/[project-name]/decisions.yml"
 decisions_found: true
 total: 5
 by_confidence:
@@ -244,7 +244,7 @@ required_checks:
     verify: "Returns all matching decisions per domain, not just the first"
     fail_action: "Remove any early-return logic in domain filtering"
   - name: "priority_order"
-    verify: "Checks ~/.claude/projects/ before ~/.claude/brands/ and uses the first found"
+    verify: "Checks .ai/brainstorm/ before .ai/brands/ and uses the first found"
     fail_action: "Fix search order in Step 1"
 on_fail: "Fix the failing check and re-validate."
 on_pass: "Decision reader is working correctly."

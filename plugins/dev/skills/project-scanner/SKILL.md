@@ -9,7 +9,7 @@ description: >
 phase: 1
 depends_on: []
 writes:
-  - "~/.claude/dev/[project-name]/findings.md#project-scan"
+  - ".ai/dev/[project-name]/findings.md#project-scan"
 reads:
   - "package.json"
   - "tsconfig.json, go.mod, Cargo.toml, pyproject.toml"
@@ -31,7 +31,7 @@ checkpoint:
       verify: "At least 3 config file paths were checked (even if not found)"
       fail_action: "Run additional Glob checks for standard config files"
     - name: "findings_exist"
-      verify: "findings.md exists at ~/.claude/dev/[project-name]/findings.md with scan results"
+      verify: "findings.md exists at .ai/dev/[project-name]/findings.md with scan results"
       fail_action: "Write current scan results to findings.md immediately"
   on_fail: "Fix issues and re-run checkpoint. Do not advance until all checks pass."
   on_pass: "Update state.yml, write recovery_notes, advance to next phase."
@@ -65,7 +65,7 @@ Phase 1 of /dev:init. Performs autonomous static analysis of the project to dete
 
 ## Findings Persistence
 
-Write intermediate discoveries to `~/.claude/dev/[project-name]/findings.md`.
+Write intermediate discoveries to `.ai/dev/[project-name]/findings.md`.
 
 **2-Action Rule:** After every 2 file reads or Glob/Grep operations, IMMEDIATELY save key findings to findings.md before continuing. This protects against context loss during /compact.
 

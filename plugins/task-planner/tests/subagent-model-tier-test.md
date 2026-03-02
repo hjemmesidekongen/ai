@@ -12,7 +12,7 @@ as haiku, quality review as opus).
 ### Multi-Tier Plan
 
 ```yaml
-# .plans/se14-model-tier-test.yml
+# .ai/plans/se14-model-tier-test/plan.yml
 plan:
   name: "se14-model-tier-test"
   created_at: "2026-03-01T10:00:00Z"
@@ -69,7 +69,7 @@ plan:
 ### Ownership Registry
 
 ```yaml
-# .plans/se14-model-tier-test.ownership.yml
+# .ai/plans/se14-model-tier-test/ownership.yml
 t1:
   owns:
     - template.yml
@@ -89,7 +89,7 @@ t3:
 ### Initial State
 
 ```yaml
-# .plans/se14-model-tier-test.state.yml
+# .ai/plans/se14-model-tier-test/state.yml
 command: "plan:execute"
 project: "se14-model-tier-test"
 started_at: null
@@ -108,7 +108,7 @@ errors: []
 
 ### Execution
 
-Run: `/plan:execute .plans/se14-model-tier-test.yml --mode subagent`
+Run: `/plan:execute .ai/plans/se14-model-tier-test/plan.yml --mode subagent`
 
 ### Expected Task Dispatches
 

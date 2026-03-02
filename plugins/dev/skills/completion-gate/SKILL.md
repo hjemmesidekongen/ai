@@ -9,10 +9,10 @@ description: >
 phase: 3
 depends_on: [agent-dispatcher]
 writes:
-  - "~/.claude/dev/[project-name]/team-state.yml (execution.dispatched_tasks[].report)"
+  - ".ai/dev/[project-name]/team-state.yml (execution.dispatched_tasks[].report)"
 reads:
-  - "~/.claude/dev/[project-name]/team-state.yml (execution.dispatched_tasks)"
-  - "~/.claude/dev/[project-name]/dev-config.yml (commands section)"
+  - ".ai/dev/[project-name]/team-state.yml (execution.dispatched_tasks)"
+  - ".ai/dev/[project-name]/dev-config.yml (commands section)"
 model_tier: junior
 interactive: false
 checkpoint:
@@ -64,7 +64,7 @@ Phase 3 quality gate for /dev:build. Runs build, lint, and related tests per com
 
 ## Findings Persistence
 
-Write gate results to `~/.claude/dev/[project-name]/findings.md`.
+Write gate results to `.ai/dev/[project-name]/findings.md`.
 **2-Action Rule:** After every 2 gate check runs, save results to findings.md immediately.
 
 ## Error Logging

@@ -482,7 +482,7 @@ Create `scripts/generate-assets.sh` — a comprehensive shell script that conver
 #   npm:    npm install -g sharp-cli (alternative)
 #
 # Usage: ./scripts/generate-assets.sh [brand-directory]
-# Example: ./scripts/generate-assets.sh ~/.claude/brands/my-company
+# Example: ./scripts/generate-assets.sh .ai/brands/my-company
 # ============================================================
 
 set -euo pipefail

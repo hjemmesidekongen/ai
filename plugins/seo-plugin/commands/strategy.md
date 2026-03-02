@@ -82,7 +82,7 @@ Before starting anything, check if this is a resume:
 
 **If `--resume` flag is set:**
 
-1. Scan `~/.claude/seo/[project-name]/state.yml` for `command: "seo:strategy"` and `status != "completed"`
+1. Scan `.ai/seo/[project-name]/state.yml` for `command: "seo:strategy"` and `status != "completed"`
 2. If found: jump to **Step 7: Resume** (below)
 3. If not found:
    ```
@@ -92,7 +92,7 @@ Before starting anything, check if this is a resume:
 
 **If no resume flag:** Check anyway for an active generation:
 
-1. Check `~/.claude/seo/[project-name]/state.yml` for `command: "seo:strategy"` with `status: "in_progress"`
+1. Check `.ai/seo/[project-name]/state.yml` for `command: "seo:strategy"` with `status: "in_progress"`
 2. If found, ask the user:
    ```
    Found an in-progress strategy generation for "[project-name]" (phase [N] of 7).
@@ -106,7 +106,7 @@ Before starting anything, check if this is a resume:
 Create the project directory structure:
 
 ```
-~/.claude/seo/[project-name]/
+.ai/seo/[project-name]/
 ├── seo-strategy.yml     # written incrementally by each skill
 ├── state.yml            # execution state (created now)
 └── seo-strategy.md      # final document (created by compile-and-export)
@@ -370,14 +370,14 @@ Wave 6: compile-and-export (depends on everything, QA mandatory)
 Verification profile: `seo_plugin_profile`
 QA frequency: `every_wave`
 
-Save the plan to `~/.claude/seo/[project-name]/.plans/`.
+Save the plan to `.ai/plans/seo-strategy-[project-name]/`.
 
 ### Step 5: Execute the Plan
 
 Call `/plan:execute` with the generated plan:
 
 ```
-/plan:execute ~/.claude/seo/[project-name]/.plans/seo-strategy-[project-name].yml
+/plan:execute .ai/plans/seo-strategy-[project-name]/seo-strategy-[project-name].yml
 ```
 
 The plan executor handles:
@@ -432,7 +432,7 @@ All 7 phases completed. QA approved.
   Content calendar: [N] months
 
 ### Location
-  ~/.claude/seo/[project-name]/
+  .ai/seo/[project-name]/
 
 ### Next steps
   - Review seo-strategy.md for the complete strategy
@@ -445,8 +445,8 @@ All 7 phases completed. QA approved.
 
 When resuming a previously interrupted strategy generation:
 
-1. Read `~/.claude/seo/[project-name]/state.yml`
-2. Read `~/.claude/seo/[project-name]/seo-strategy.yml`
+1. Read `.ai/seo/[project-name]/state.yml`
+2. Read `.ai/seo/[project-name]/seo-strategy.yml`
 3. Determine where execution stopped:
 
 ```
@@ -490,19 +490,19 @@ Re-read seo-strategy.yml to see what data exists. The skill's checkpoint will te
 
 **If stopped during an automated phase (3-7):**
 
-Check if a plan file exists in `~/.claude/seo/[project-name]/.plans/`:
+Check if a plan file exists in `.ai/plans/seo-strategy-[project-name]/`:
 - If yes: call `/plan:resume` with that plan file
 - If no: jump to **Step 4** (create the plan) and continue from there
 
 ## Output
 
-- `seo-strategy.yml` — machine-readable strategy data at `~/.claude/seo/[project-name]/`
-- `seo-strategy.md` — human-readable strategy document at `~/.claude/seo/[project-name]/`
-- `state.yml` — execution state and recovery notes at `~/.claude/seo/[project-name]/`
+- `seo-strategy.yml` — machine-readable strategy data at `.ai/seo/[project-name]/`
+- `seo-strategy.md` — human-readable strategy document at `.ai/seo/[project-name]/`
+- `state.yml` — execution state and recovery notes at `.ai/seo/[project-name]/`
 
 ## Recovery
 
-If interrupted, check state.yml at `~/.claude/seo/[project-name]/` and resume from the last completed wave via `/seo:strategy [project-name] --resume`.
+If interrupted, check state.yml at `.ai/seo/[project-name]/` and resume from the last completed wave via `/seo:strategy [project-name] --resume`.
 
 ## Error Handling
 

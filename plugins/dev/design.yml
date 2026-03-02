@@ -79,7 +79,7 @@ skills:
     reads:
       - "scan-results from project-scanner"
     writes:
-      - "~/.claude/dev/[project-name]/dev-config.yml"
+      - ".ai/dev/[project-name]/dev-config.yml"
     checkpoint:
       type: "data_validation"
       checks:
@@ -93,11 +93,11 @@ skills:
     depends_on:
       - "config-generator"
     reads:
-      - "~/.claude/dev/[project-name]/dev-config.yml"
+      - ".ai/dev/[project-name]/dev-config.yml"
       - "project source files"
     writes:
-      - "~/.claude/dev/[project-name]/knowledge/*.yml"
-      - "~/.claude/dev/[project-name]/knowledge/architecture.md"
+      - ".ai/dev/[project-name]/knowledge/*.yml"
+      - ".ai/dev/[project-name]/knowledge/architecture.md"
     checkpoint:
       type: "file_validation"
       checks:
@@ -112,8 +112,8 @@ skills:
     depends_on:
       - "config-generator"
     reads:
-      - "~/.claude/dev/[project-name]/dev-config.yml"
-      - "~/.claude/dev/[project-name]/knowledge/*.yml"
+      - ".ai/dev/[project-name]/dev-config.yml"
+      - ".ai/dev/[project-name]/knowledge/*.yml"
       - "brand-reference.yml (optional, via brand-context-loader)"
     writes:
       - "decomposition document (components, boundaries, visual specs)"
@@ -132,7 +132,7 @@ skills:
       - "feature-decomposer"
     reads:
       - "decomposition document from feature-decomposer"
-      - "~/.claude/dev/[project-name]/dev-config.yml"
+      - ".ai/dev/[project-name]/dev-config.yml"
     writes:
       - "wave plan with task assignments, tiers, and file ownership"
     checkpoint:
@@ -151,10 +151,10 @@ skills:
       - "team-planner"
     reads:
       - "wave plan from team-planner"
-      - "~/.claude/dev/[project-name]/knowledge/*.yml (tag-filtered per task)"
+      - ".ai/dev/[project-name]/knowledge/*.yml (tag-filtered per task)"
     writes:
       - "subagent reports (per task)"
-      - "~/.claude/dev/[project-name]/team-state.yml"
+      - ".ai/dev/[project-name]/team-state.yml"
     checkpoint:
       type: "data_validation"
       checks:
@@ -169,7 +169,7 @@ skills:
       - "agent-dispatcher"
     reads:
       - "subagent reports from agent-dispatcher"
-      - "~/.claude/dev/[project-name]/dev-config.yml (build/lint/test commands)"
+      - ".ai/dev/[project-name]/dev-config.yml (build/lint/test commands)"
     writes:
       - "gate results (pass/fail per agent, failure details)"
     checkpoint:
@@ -188,7 +188,7 @@ skills:
       - "completion-gate"
     reads:
       - "git diff for the wave (BASE_SHA..HEAD_SHA)"
-      - "~/.claude/dev/[project-name]/dev-config.yml (conventions)"
+      - ".ai/dev/[project-name]/dev-config.yml (conventions)"
     writes:
       - "code review report (findings, severity, file annotations)"
     checkpoint:
@@ -222,11 +222,11 @@ skills:
     interactive: false
     depends_on: []
     reads:
-      - "~/.claude/dev/[project-name]/dev-config.yml"
-      - "~/.claude/dev/[project-name]/knowledge/*.yml (existing hashes)"
+      - ".ai/dev/[project-name]/dev-config.yml"
+      - ".ai/dev/[project-name]/knowledge/*.yml (existing hashes)"
       - "project source files"
     writes:
-      - "~/.claude/dev/[project-name]/knowledge/*.yml (updated)"
+      - ".ai/dev/[project-name]/knowledge/*.yml (updated)"
     checkpoint:
       type: "data_validation"
       checks:
@@ -253,7 +253,7 @@ skills:
 output:
   yaml:
     name: "dev-config.yml"
-    storage_path: "~/.claude/dev/[project-name]/"
+    storage_path: ".ai/dev/[project-name]/"
     description: "Project configuration, framework declarations, knowledge files, and team state"
   document:
     format: "md"

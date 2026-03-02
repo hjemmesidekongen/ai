@@ -11,7 +11,7 @@ No prior brand data exists — this is the starting point for the entire brand p
 During the interview, write intermediate discoveries to the findings file:
 
 ```
-~/.claude/brands/[brand-name]/findings.md
+.ai/brands/[brand-name]/findings.md
 ```
 
 **What to save:** User responses verbatim, industry context gathered, competitive landscape notes, any research done to suggest options, rationale for positioning choices.

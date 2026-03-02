@@ -31,7 +31,7 @@ and display the migration message to the user.
 
 The calling skill provides (implicitly via context):
 
-- **Data file path** — the YAML file being loaded (e.g., `~/.claude/seo/my-project/seo-strategy.yml`)
+- **Data file path** — the YAML file being loaded (e.g., `.ai/seo/my-project/seo-strategy.yml`)
 - **Plugin directory** — the `plugins/[plugin-name]/` directory containing `.claude-plugin/plugin.json`
 
 ## Process

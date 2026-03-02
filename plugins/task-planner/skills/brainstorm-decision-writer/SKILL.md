@@ -11,11 +11,11 @@ interactive: true
 depends_on:
   - brainstorm-session
 reads:
-  - "~/.claude/projects/[project-name]/brainstorm-state.yml"
-  - "~/.claude/projects/[project-name]/brainstorm-transcript-[date].md"
+  - ".ai/brainstorm/[project-name]/brainstorm-state.yml"
+  - ".ai/brainstorm/[project-name]/brainstorm-transcript-[date].md"
 writes:
-  - "~/.claude/projects/[project-name]/decisions.yml"
-  - "~/.claude/projects/[project-name]/brainstorm-state.yml"
+  - ".ai/brainstorm/[project-name]/decisions.yml"
+  - ".ai/brainstorm/[project-name]/brainstorm-state.yml"
 checkpoint:
   type: data_validation
   required_checks:

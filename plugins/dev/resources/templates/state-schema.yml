@@ -2,7 +2,7 @@
 # DEV PLUGIN STATE SCHEMA
 # Standard state.yml for the dev plugin, following the canonical
 # schema at plugins/task-planner/resources/state-schema.yml.
-# Stored at: ~/.claude/dev/[project-name]/state.yml
+# Stored at: .ai/dev/[project-name]/state.yml
 # ============================================================
 
 state:

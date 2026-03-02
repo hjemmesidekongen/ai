@@ -28,7 +28,7 @@ Every plugin command runs through a state machine. No phase advances until its c
    updated                               updated                              updated
 ```
 
-### State File: `~/.claude/brands/[brand]/state.yml`
+### State File: `.ai/brands/[brand]/state.yml`
 
 ```yaml
 # State file — source of truth for where we are
@@ -174,7 +174,7 @@ This is enforced in the brand-context-loader skill:
 ## Session Start Protocol (MANDATORY)
 
 Before doing ANY work:
-1. Check if `~/.claude/brands/[brand]/state.yml` exists
+1. Check if `.ai/brands/[brand]/state.yml` exists
 2. If yes: read it, report status to user, resume from current_phase
 3. If no: this is a fresh brand, start from phase 1
 4. NEVER skip this check. NEVER start a phase that has already been completed.
@@ -237,7 +237,7 @@ When using agent teams, each teammate gets its own context window. They share NO
 
 1. **Task files on disk** (`~/.claude/tasks/[team]/`)
 2. **SendMessage** (direct messages between agents)
-3. **The brand directory itself** (`~/.claude/brands/[brand]/`)
+3. **The brand directory itself** (`.ai/brands/[brand]/`)
 
 This means the brand-reference.yml and state.yml ARE the shared state. Agents read them, do their work, write their output, update state. No complex memory synchronization needed.
 

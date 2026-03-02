@@ -23,6 +23,6 @@
   "shared_skills": [
     "brand-context-loader"
   ],
-  "brand_directory": "~/.claude/brands/",
-  "data_directory": "~/.claude/seo/[project-name]/"
+  "brand_directory": ".ai/brands/",
+  "data_directory": ".ai/seo/[project-name]/"
 }

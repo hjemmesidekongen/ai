@@ -28,7 +28,7 @@ A utility command that sets the active brand context. Once set, all brand-aware 
 
 ## How It Works
 
-This is a configuration command, not a generation command. It reads and writes a single config file (`~/.claude/active-brand.yml`) and does no brand data processing.
+This is a configuration command, not a generation command. It reads and writes a single config file (`.ai/active-brand.yml`) and does no brand data processing.
 
 ## Execution
 
@@ -45,10 +45,10 @@ else:
 
 ### Step 2a — LIST MODE
 
-Scan `~/.claude/brands/` for brand directories and display a summary table.
+Scan `.ai/brands/` for brand directories and display a summary table.
 
 ```
-brands_dir = "~/.claude/brands/"
+brands_dir = ".ai/brands/"
 
 if not exists(brands_dir):
   create brands_dir
@@ -63,8 +63,8 @@ if brands is empty:
 
 # Determine which brand is currently active
 active_brand = null
-if exists("~/.claude/active-brand.yml"):
-  active_config = read_yaml("~/.claude/active-brand.yml")
+if exists(".ai/active-brand.yml"):
+  active_config = read_yaml(".ai/active-brand.yml")
   active_brand = active_config.active_brand
 
 # Build the table
@@ -121,11 +121,11 @@ after displaying table:
 
 ### Step 2b — SWITCH MODE
 
-Activate a specific brand by writing `~/.claude/active-brand.yml`.
+Activate a specific brand by writing `.ai/active-brand.yml`.
 
 ```
 brand_name = provided brand slug
-brands_dir = "~/.claude/brands/"
+brands_dir = ".ai/brands/"
 brand_path = brands_dir + brand_name
 
 # 1. Verify brand exists
@@ -149,7 +149,7 @@ else:
 
 # 3. Warn if incomplete (but don't block)
 if not has_reference:
-  warn: "⚠ No brand-reference.yml found in ~/.claude/brands/[brand_name]/."
+  warn: "⚠ No brand-reference.yml found in .ai/brands/[brand_name]/."
   warn: "Some plugins may fail if required brand sections are missing."
   warn: "Run /brand:generate or /brand:analyze to populate brand data."
   print ""
@@ -159,9 +159,9 @@ elif completeness < 50:
   print ""
 
 # 4. Write active-brand.yml
-write_yaml("~/.claude/active-brand.yml"):
+write_yaml(".ai/active-brand.yml"):
   active_brand: "[brand_name]"
-  brand_path: "~/.claude/brands/[brand_name]"
+  brand_path: ".ai/brands/[brand_name]"
   switched_at: "[ISO 8601 timestamp]"
 
 # 5. Confirm
@@ -176,10 +176,10 @@ if has_reference:
 ## active-brand.yml Schema
 
 ```yaml
-# ~/.claude/active-brand.yml
+# .ai/active-brand.yml
 # Written by /brand:switch. Read by brand-context-loader.
 active_brand: "acme-corp"
-brand_path: "~/.claude/brands/acme-corp"
+brand_path: ".ai/brands/acme-corp"
 switched_at: "2026-03-01T14:30:00Z"
 ```
 
@@ -194,17 +194,17 @@ This file is the single source of truth for "which brand is active." It is:
 
 | Error | Action |
 |-------|--------|
-| `~/.claude/brands/` doesn't exist | Create it. Show "no brands found" message. |
+| `.ai/brands/` doesn't exist | Create it. Show "no brands found" message. |
 | Brand slug not found | Show error + list available brands. |
 | `brand-reference.yml` missing | Warn but allow switch. Note which plugins may fail. |
 | `brand-reference.yml` is malformed YAML | Show parse error. Do not switch. |
-| `active-brand.yml` write fails | Report permission error. Suggest checking `~/.claude/` permissions. |
+| `active-brand.yml` write fails | Report permission error. Suggest checking `.ai/` permissions. |
 
 ---
 
 ## Integration with brand-context-loader
 
-This command writes `~/.claude/active-brand.yml`. The `brand-context-loader` shared skill reads it as part of its brand discovery fallback chain (see updated brand-context-loader SKILL.md for details).
+This command writes `.ai/active-brand.yml`. The `brand-context-loader` shared skill reads it as part of its brand discovery fallback chain (see updated brand-context-loader SKILL.md for details).
 
 ---
 

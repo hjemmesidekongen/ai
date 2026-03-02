@@ -9,12 +9,12 @@ description: >
 phase: 3
 depends_on: [config-generator]
 writes:
-  - "~/.claude/dev/[project-name]/knowledge/architecture.md"
-  - "~/.claude/dev/[project-name]/knowledge/patterns.yml"
-  - "~/.claude/dev/[project-name]/knowledge/conventions.yml"
+  - ".ai/dev/[project-name]/knowledge/architecture.md"
+  - ".ai/dev/[project-name]/knowledge/patterns.yml"
+  - ".ai/dev/[project-name]/knowledge/conventions.yml"
 reads:
-  - "~/.claude/dev/[project-name]/dev-config.yml"
-  - "~/.claude/dev/[project-name]/findings.md"
+  - ".ai/dev/[project-name]/dev-config.yml"
+  - ".ai/dev/[project-name]/findings.md"
   - "Project source files (for architecture analysis)"
 model_tier: senior
 interactive: false
@@ -22,7 +22,7 @@ checkpoint:
   type: file_validation
   required_checks:
     - name: "knowledge_files_exist"
-      verify: "At least 1 knowledge file created in ~/.claude/dev/[project-name]/knowledge/"
+      verify: "At least 1 knowledge file created in .ai/dev/[project-name]/knowledge/"
       fail_action: "Generate minimum architecture.md from dev-config.yml structure section"
     - name: "tags_present"
       verify: "All knowledge files have frontmatter with tags array (at least 1 tag per file)"
@@ -69,7 +69,7 @@ Phase 3 of /dev:init. Reads dev-config.yml and project source files to generate 
 
 ## Findings Persistence
 
-Write intermediate discoveries to `~/.claude/dev/[project-name]/findings.md`.
+Write intermediate discoveries to `.ai/dev/[project-name]/findings.md`.
 **2-Action Rule:** After every 2 source file reads or Grep operations, IMMEDIATELY save discoveries to findings.md before continuing.
 
 ## Error Logging

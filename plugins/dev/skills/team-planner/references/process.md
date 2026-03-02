@@ -10,9 +10,9 @@ and assembles the final wave plan with user confirmation.
 ## Prerequisites
 
 Before starting, verify:
-1. `~/.claude/dev/[project-name]/team-state.yml` exists with a populated `decomposition` section
+1. `.ai/dev/[project-name]/team-state.yml` exists with a populated `decomposition` section
 2. `decomposition.components` has at least 1 component (feature-decomposer must have run)
-3. `~/.claude/dev/[project-name]/dev-config.yml` exists with project structure
+3. `.ai/dev/[project-name]/dev-config.yml` exists with project structure
 4. If decomposition is missing, report error and suggest running feature-decomposer first
 
 ## Step 1: Load Decomposition and Create Work Packages
@@ -261,7 +261,7 @@ Does this wave plan look right? [Y/adjust]"
 
 ## Step 8: Write Wave Plan to team-state.yml
 
-Write the `wave_plan` section of `~/.claude/dev/[project-name]/team-state.yml`:
+Write the `wave_plan` section of `.ai/dev/[project-name]/team-state.yml`:
 
 ```yaml
 wave_plan:

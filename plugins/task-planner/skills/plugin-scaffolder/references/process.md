@@ -219,7 +219,7 @@ Create `plugins/[plugin-name]/.claude-plugin/ecosystem.json` with ecosystem meta
 - Do NOT add other plugins as dependencies — plugins communicate through shared data files, not direct dependencies
 
 **Additional fields (if applicable):**
-- If `needs_brand` is true: add `"brand_directory": "~/.claude/brands/"`
+- If `needs_brand` is true: add `"brand_directory": ".ai/brands/"`
 - Add `"data_directory"` using the storage path from `design.yml → output.yaml.storage_path`
 
 ---
@@ -238,7 +238,7 @@ echo "=== [Plugin Name] Session Recovery Check ==="
 
 # Find state.yml — check plugin-specific data directory first, then current directory
 STATE_FILE=""
-# [Plugin-specific logic: for brand plugins, check ~/.claude/active-brand.yml;
+# [Plugin-specific logic: for brand plugins, check .ai/active-brand.yml;
 #  for project-based plugins, check the plugin's active-project file;
 #  fallback to state.yml in current directory]
 if [ -f state.yml ]; then
@@ -311,8 +311,8 @@ exit 0
 
 **Customization rules:**
 - Replace `[Plugin Name]` in the echo header with the actual plugin name
-- If the plugin uses a project-specific data directory (like `~/.claude/seo/[project-name]/`), add lookup logic to find state.yml via an active-project file (see `plugins/seo-plugin/scripts/session-recovery.sh` for an example)
-- If the plugin uses brand data directory (`~/.claude/brands/[brand-name]/`), add lookup logic via `~/.claude/active-brand.yml` (see `plugins/brand-guideline/scripts/session-recovery.sh` for an example)
+- If the plugin uses a project-specific data directory (like `.ai/seo/[project-name]/`), add lookup logic to find state.yml via an active-project file (see `plugins/seo-plugin/scripts/session-recovery.sh` for an example)
+- If the plugin uses brand data directory (`.ai/brands/[brand-name]/`), add lookup logic via `.ai/active-brand.yml` (see `plugins/brand-guideline/scripts/session-recovery.sh` for an example)
 - Make both scripts executable: `chmod +x plugins/[plugin-name]/scripts/session-recovery.sh plugins/[plugin-name]/scripts/check-wave-complete.sh`
 
 ---
@@ -409,14 +409,14 @@ If `needs_brand` is `false`: skip this step entirely.
 Record the data storage convention for this plugin:
 
 **If needs_brand is true:**
-- Data directory: `~/.claude/brands/[brand-name]/` (shared with brand-guideline)
+- Data directory: `.ai/brands/[brand-name]/` (shared with brand-guideline)
 - Plugin-specific data: stored as sections within brand-reference.yml or as separate YAML files in the same directory
-- State file: `~/.claude/brands/[brand-name]/state.yml`
+- State file: `.ai/brands/[brand-name]/state.yml`
 
 **If needs_brand is false:**
 - Data directory: derived from `design.yml → output.yaml.storage_path`
-  - Pattern: `~/.claude/[domain]/[project-name]/`
-  - Example: `~/.claude/seo/my-project/` or `~/.claude/sites/my-site/`
+  - Pattern: `.ai/[domain]/[project-name]/`
+  - Example: `.ai/seo/my-project/` or `.ai/sites/my-site/`
 - The `[project-name]` is provided at runtime when the user runs the main command
 - State file: `[storage_path]state.yml`
 

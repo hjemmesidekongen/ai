@@ -12,7 +12,7 @@ error context, and respects the two-stage verification retry behavior
 ### Plan With Deliberate Failure Point
 
 ```yaml
-# .plans/se13-failure-test.yml
+# .ai/plans/se13-failure-test/plan.yml
 plan:
   name: "se13-failure-test"
   created_at: "2026-03-01T10:00:00Z"
@@ -74,7 +74,7 @@ plan:
 ### Ownership Registry
 
 ```yaml
-# .plans/se13-failure-test.ownership.yml
+# .ai/plans/se13-failure-test/ownership.yml
 t1:
   owns:
     - profile.yml
@@ -90,7 +90,7 @@ t2:
 ### Initial State
 
 ```yaml
-# .plans/se13-failure-test.state.yml
+# .ai/plans/se13-failure-test/state.yml
 command: "plan:execute"
 project: "se13-failure-test"
 started_at: null

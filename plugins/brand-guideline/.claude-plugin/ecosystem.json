@@ -23,5 +23,5 @@
   "shared_skills": [
     "brand-context-loader"
   ],
-  "brand_directory": "~/.claude/brands/"
+  "brand_directory": ".ai/brands/"
 }

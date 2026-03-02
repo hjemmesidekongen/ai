@@ -110,7 +110,7 @@ The SKILL.md must include these context engineering sections:
 ```
 During [skill activity], write intermediate discoveries to the findings file:
 
-~/.claude/[domain]/[project-name]/findings.md
+.ai/[domain]/[project-name]/findings.md
 
 **What to save:** [skill-specific items — e.g., user responses, research results, generation rationale]
 

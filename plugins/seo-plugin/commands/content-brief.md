@@ -31,7 +31,7 @@ Generates a detailed content brief for a specific keyword or topic, including ou
 ## Prerequisites
 
 - task-planner plugin installed
-- Recommended: an existing SEO strategy at `~/.claude/seo/[project-name]/` for richer briefs
+- Recommended: an existing SEO strategy at `.ai/seo/[project-name]/` for richer briefs
 
 ## Input
 
@@ -45,7 +45,7 @@ Generates a detailed content brief for a specific keyword or topic, including ou
 #### Step 1: Load Context (if --project provided)
 
 If `--project` is specified:
-1. Read `~/.claude/seo/[project-name]/seo-strategy.yml`
+1. Read `.ai/seo/[project-name]/seo-strategy.yml`
 2. Extract relevant context:
    - Check if the keyword exists in `keywords.primary`, `keywords.secondary`, or `keywords.long_tail` — if found, use its `search_volume`, `difficulty`, and `search_intent`
    - Check if the keyword is a `target_keyword` in any `content_plan.topic_clusters` — if found, use the planned `word_count`, `content_type`, and related cluster pages for internal linking
@@ -158,7 +158,7 @@ Max length: 155 characters
 ## Output
 
 - Content brief printed to stdout
-- If `--project` provided: also saved to `~/.claude/seo/[project-name]/briefs/[keyword-slug].md`
+- If `--project` provided: also saved to `.ai/seo/[project-name]/briefs/[keyword-slug].md`
   - `keyword-slug` is the keyword in kebab-case (e.g., "project-management-for-remote-teams")
 
 ## Recovery

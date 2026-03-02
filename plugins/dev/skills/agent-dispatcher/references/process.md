@@ -11,7 +11,7 @@ collects, and updates state.
 ## Prerequisites
 
 Before starting, verify:
-1. `~/.claude/dev/[project-name]/team-state.yml` has a populated `wave_plan` section
+1. `.ai/dev/[project-name]/team-state.yml` has a populated `wave_plan` section
 2. `wave_plan.waves` has at least 1 wave with assigned tasks
 3. Every task has: id, description, assigned_agent, model_tier, files_owned
 4. If wave_plan is missing, report error and suggest running team-planner first
@@ -194,7 +194,7 @@ When a wave is partially failed:
 
 ## Step 7: Update Execution State
 
-Write the `execution` section of `~/.claude/dev/[project-name]/team-state.yml`:
+Write the `execution` section of `.ai/dev/[project-name]/team-state.yml`:
 
 ```yaml
 execution:

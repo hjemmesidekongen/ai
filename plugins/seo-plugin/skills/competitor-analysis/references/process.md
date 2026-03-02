@@ -12,7 +12,7 @@ Phase 3 of SEO strategy generation (runs in parallel with technical-seo). This s
 During analysis, write intermediate discoveries to the findings file:
 
 ```
-~/.claude/seo/[project-name]/findings.md
+.ai/seo/[project-name]/findings.md
 ```
 
 **What to save:** Competitor identification rationale, DA estimates with reasoning, content strength/weakness observations, backlink profile estimates, content gap discoveries, any industry research done.

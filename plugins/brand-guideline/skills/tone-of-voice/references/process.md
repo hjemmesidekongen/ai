@@ -42,7 +42,7 @@ decisions_applied: [d2, d7]
 During the interview, write intermediate voice decisions to the findings file:
 
 ```
-~/.claude/brands/[brand-name]/findings.md
+.ai/brands/[brand-name]/findings.md
 ```
 
 **What to save:** Spectrum positions with user reasoning, personality attribute choices, channel variation decisions, vocabulary preferences, and messaging drafts.

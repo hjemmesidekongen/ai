@@ -12,7 +12,7 @@
 
 When the user invokes `/brainstorm:decide [project-name]`:
 
-1. Load `~/.claude/projects/[project-name]/brainstorm-state.yml`
+1. Load `.ai/brainstorm/[project-name]/brainstorm-state.yml`
 2. Find the most recent session (or the session with `active: true`)
 3. Read the transcript file for that session
 4. Check if `decisions.yml` already exists (for merge handling)
@@ -194,7 +194,7 @@ active: false                   # ← brainstorm complete
 
 ```
 Wrote [N] decisions ([X] high confidence, [Y] medium, [Z] low).
-Stored at ~/.claude/projects/[project-name]/decisions.yml
+Stored at .ai/brainstorm/[project-name]/decisions.yml
 
 These will be picked up automatically when you run:
 - /brand:generate (reads brand-* domains)
@@ -208,8 +208,8 @@ To brainstorm more later: /brainstorm:start [project-name]
 
 ## Output
 
-- `~/.claude/projects/[project-name]/decisions.yml` — structured decisions
-- `~/.claude/projects/[project-name]/brainstorm-state.yml` — updated state
+- `.ai/brainstorm/[project-name]/decisions.yml` — structured decisions
+- `.ai/brainstorm/[project-name]/brainstorm-state.yml` — updated state
 
 ## Checkpoint (full detail)
 

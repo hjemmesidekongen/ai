@@ -9,11 +9,11 @@ description: >
 phase: 4
 depends_on: [code-review]
 writes:
-  - "~/.claude/dev/[project-name]/team-state.yml (review.qa_validation section)"
-  - "~/.claude/dev/[project-name]/build-report.md"
+  - ".ai/dev/[project-name]/team-state.yml (review.qa_validation section)"
+  - ".ai/dev/[project-name]/build-report.md"
 reads:
-  - "~/.claude/dev/[project-name]/team-state.yml (decomposition, execution, review.code_review)"
-  - "~/.claude/dev/[project-name]/dev-config.yml"
+  - ".ai/dev/[project-name]/team-state.yml (decomposition, execution, review.code_review)"
+  - ".ai/dev/[project-name]/dev-config.yml"
   - "plugins/dev/resources/templates/build-report-template.md"
 model_tier: principal
 interactive: false
@@ -66,7 +66,7 @@ Phase 4b of /dev:build. QA Expert validates the build against the original spec,
 
 ## Findings Persistence
 
-Write QA findings to `~/.claude/dev/[project-name]/findings.md`.
+Write QA findings to `.ai/dev/[project-name]/findings.md`.
 **2-Action Rule:** After every 2 component assessments, save findings to findings.md immediately.
 
 ## Error Logging — Log errors to state.yml errors array. Check errors before retrying.

@@ -45,7 +45,7 @@ Orchestrates the full 4-phase build lifecycle:
 
 ## Prerequisites
 
-- `/dev:init` must have been run (dev-config.yml must exist at `~/.claude/dev/[project-name]/`)
+- `/dev:init` must have been run (dev-config.yml must exist at `.ai/dev/[project-name]/`)
 - Task-planner plugin must be active
 - For `--brand`: brand-guideline plugin installed with generated brand data
 
@@ -66,7 +66,7 @@ Interactive prompts during execution:
 
 #### Phase 0: Validate Prerequisites
 
-Read `~/.claude/dev/[project-name]/dev-config.yml`. If missing:
+Read `.ai/dev/[project-name]/dev-config.yml`. If missing:
 - Error: "Project not initialized. Run `/dev:init` first."
 - Exit
 
@@ -74,7 +74,7 @@ If `--wave [N]` provided: skip to Phase 3 Resume below.
 
 #### Phase 1: Initialize + Decompose
 
-1. Create `~/.claude/dev/[project-name]/team-state.yml` with build metadata:
+1. Create `.ai/dev/[project-name]/team-state.yml` with build metadata:
 
 ```yaml
 build:
@@ -117,14 +117,14 @@ Call `/plan:execute` to run the plan:
 After all execution waves complete:
 - `code-review` skill audits the full diff (base_sha to HEAD)
 - `qa-validation` skill validates the build against the original spec
-- Build report generated and written to `~/.claude/dev/[project-name]/build-report.md`
+- Build report generated and written to `.ai/dev/[project-name]/build-report.md`
 
 Present the build report to the user.
 
 #### Phase 3 Resume (--wave N)
 
 When `--wave [N]` is provided:
-1. Read existing `~/.claude/dev/[project-name]/team-state.yml`
+1. Read existing `.ai/dev/[project-name]/team-state.yml`
 2. Verify decomposition and wave_plan sections exist
 3. Call `/plan:resume` at wave N — task-planner handles wave-level recovery
 4. Continue with Phase 4 review after execution completes
@@ -132,12 +132,12 @@ When `--wave [N]` is provided:
 ## Output
 
 - Code committed to repository (by specialist agents during Phase 3)
-- `~/.claude/dev/[project-name]/team-state.yml` — full execution record (decomposition, wave plan, agent reports, review results)
-- `~/.claude/dev/[project-name]/build-report.md` — human-readable build report with spec alignment score and PO sign-off
+- `.ai/dev/[project-name]/team-state.yml` — full execution record (decomposition, wave plan, agent reports, review results)
+- `.ai/dev/[project-name]/build-report.md` — human-readable build report with spec alignment score and PO sign-off
 
 ## Recovery
 
-Check `team-state.yml` at `~/.claude/dev/[project-name]/`. The `build.status` field indicates where the build stopped:
+Check `team-state.yml` at `.ai/dev/[project-name]/`. The `build.status` field indicates where the build stopped:
 
 | Status | Recovery |
 |--------|----------|

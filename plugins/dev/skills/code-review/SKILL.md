@@ -9,11 +9,11 @@ description: >
 phase: 4
 depends_on: [completion-gate]
 writes:
-  - "~/.claude/dev/[project-name]/team-state.yml (review.code_review section)"
+  - ".ai/dev/[project-name]/team-state.yml (review.code_review section)"
 reads:
-  - "~/.claude/dev/[project-name]/team-state.yml (execution.commit_range)"
-  - "~/.claude/dev/[project-name]/dev-config.yml (conventions section)"
-  - "~/.claude/dev/[project-name]/knowledge/conventions.yml"
+  - ".ai/dev/[project-name]/team-state.yml (execution.commit_range)"
+  - ".ai/dev/[project-name]/dev-config.yml (conventions section)"
+  - ".ai/dev/[project-name]/knowledge/conventions.yml"
 model_tier: senior
 interactive: false
 checkpoint:
@@ -62,7 +62,7 @@ Phase 4a of /dev:build. Audits the full wave diff for quality, patterns, securit
 
 ## Findings Persistence
 
-Write review findings to `~/.claude/dev/[project-name]/findings.md`.
+Write review findings to `.ai/dev/[project-name]/findings.md`.
 **2-Action Rule:** After every 2 files reviewed, save findings to findings.md immediately.
 
 ## Error Logging — Log errors to state.yml errors array. Check errors before retrying.

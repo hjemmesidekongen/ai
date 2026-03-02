@@ -9,9 +9,9 @@ description: >
 phase: 2
 depends_on: [project-scanner]
 writes:
-  - "~/.claude/dev/[project-name]/dev-config.yml"
+  - ".ai/dev/[project-name]/dev-config.yml"
 reads:
-  - "~/.claude/dev/[project-name]/findings.md#project-scan"
+  - ".ai/dev/[project-name]/findings.md#project-scan"
   - "plugins/dev/resources/templates/dev-config-schema.yml"
   - "package.json (for scripts mapping)"
 model_tier: senior
@@ -20,7 +20,7 @@ checkpoint:
   type: data_validation
   required_checks:
     - name: "config_exists"
-      verify: "dev-config.yml exists at ~/.claude/dev/[project-name]/dev-config.yml"
+      verify: "dev-config.yml exists at .ai/dev/[project-name]/dev-config.yml"
       fail_action: "Write current config state to dev-config.yml immediately"
     - name: "meta_complete"
       verify: "meta section has plugin_name, project_name, created_at, version"
@@ -67,7 +67,7 @@ Phase 2 of /dev:init. Reads project-scanner findings, transforms them into the d
 
 ## Findings Persistence
 
-Write confirmed values to `~/.claude/dev/[project-name]/findings.md`.
+Write confirmed values to `.ai/dev/[project-name]/findings.md`.
 
 **2-Action Rule:** After every 2 user interactions (questions asked and answered), IMMEDIATELY save confirmed values to findings.md before continuing.
 

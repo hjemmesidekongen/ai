@@ -10,9 +10,9 @@ each contribute analysis, with user checkpoints between each stage.
 ## Prerequisites
 
 Before starting, verify:
-1. `~/.claude/dev/[project-name]/dev-config.yml` exists with confirmed config
+1. `.ai/dev/[project-name]/dev-config.yml` exists with confirmed config
 2. If dev-config.yml is missing, report error and suggest running `/dev:init` first
-3. `~/.claude/dev/[project-name]/team-state.yml` exists (create from schema if not)
+3. `.ai/dev/[project-name]/team-state.yml` exists (create from schema if not)
 
 ## Step 1: Receive and Clarify Feature Description
 
@@ -189,7 +189,7 @@ Proceed with this decomposition? [Y/n]"
 
 ## Step 8: Write Decomposition to team-state.yml
 
-Write the `decomposition` section of `~/.claude/dev/[project-name]/team-state.yml`:
+Write the `decomposition` section of `.ai/dev/[project-name]/team-state.yml`:
 
 ```yaml
 decomposition:
