@@ -31,7 +31,7 @@ checkpoint:
       verify: "No placeholder text remains in any output file — no '[project-name]', no 'TODO', no '[from design]'"
       fail_action: "Replace all placeholder text with actual data from seo-strategy.yml"
   qa_review: mandatory
-  on_fail: "Fix issues and re-run checkpoint. Do NOT mark strategy generation as complete."
+  on_fail: "Fix issues and re-run checkpoint. Mark strategy generation complete only after all checks pass."
   on_pass: "Update state.yml → mark phase 7 complete. Trigger QA agent review of all outputs."
 ---
 
@@ -43,7 +43,7 @@ Phase 7 -- the final skill in SEO strategy generation. Compiles phases 1-6 into 
 
 - **Reads:** seo-strategy.yml (all sections), state.yml
 - **Writes:** seo-strategy.md, seo-strategy.yml#meta
-- **Checkpoint:** file_validation -- document exists (2000+ words), all 7 sections, YAML complete (8 sections), no placeholders
+- **Checkpoint:** file_validation -- document exists (2000+ words), all 7 sections, YAML complete (8 sections), all placeholder text replaced with actual data
 - **QA Review:** Mandatory -- implementing agent never self-grades
 - **Dependencies:** all 6 previous phases must be complete
 

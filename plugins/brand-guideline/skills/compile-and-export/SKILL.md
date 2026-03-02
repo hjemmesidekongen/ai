@@ -41,8 +41,8 @@ Phase 9 — the final skill in the brand generation pipeline. Takes everything p
 by phases 1-8 and creates finished deliverables: validated brand reference, professional
 documentation, asset tooling, and an interactive preview.
 
-**This is the only skill with a mandatory QA review.** The implementing agent never
-self-grades — a dedicated QA agent reviews all outputs before the brand is marked complete.
+**This is the only skill with a mandatory QA review.** A dedicated QA agent reviews all outputs
+before the brand is marked complete; the implementing agent does not self-grade.
 
 ## Context
 

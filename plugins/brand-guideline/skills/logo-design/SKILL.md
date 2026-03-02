@@ -33,7 +33,7 @@ checkpoint:
     - name: "svg_file_size"
     - name: "preview_html"
     - name: "logo_mark_small_size"
-  on_fail: "Fix issues and re-run checkpoint. Do NOT advance to next phase."
+  on_fail: "Fix issues and re-run checkpoint. Advance to next phase only after all checks pass."
   on_pass: "Update state.yml, write recovery_notes, advance to next phase."
 ---
 
@@ -61,7 +61,7 @@ The visual-identity skill (Phase 5) already defined the visual rules the logo mu
 5. **Phase 4 — Finalization:** Generate 6 logo SVG variants (full-light, full-dark, wordmark-light, wordmark-dark, mark, mark-mono) → generate 4 brand icon variants → define clear space and minimum size → document misuse rules → update preview with final logo system section → present summary for confirmation; write all files only after confirmation
 6. **Phase 5 — Optional professional refinement:** Inform user about Figma/Illustrator import, print production (CMYK, Pantone), and trademark search; note in brand reference
 7. Write brand-reference.yml sections (visual.logo, assets.logo, assets.brand_icon)
-8. Run file_validation checkpoint (6 checks); fix failures; do not advance until all pass
+8. Run file_validation checkpoint (6 checks); fix failures; advance only after all checks pass
 9. Write recovery notes to state.yml
 
 ## Execution

@@ -23,7 +23,7 @@ checkpoint:
     - name: "colorblind_notes"
     - name: "dark_mode"
     - name: "font_weights"
-  on_fail: "Fix issues and re-run checkpoint. Do NOT advance to next phase."
+  on_fail: "Fix issues and re-run checkpoint. Advance to next phase only after all checks pass."
   on_pass: "Update state.yml, write recovery_notes, advance to next phase."
 ---
 
@@ -59,7 +59,7 @@ validated with an `accessibility_validation` checkpoint before advancing.
    - Step 12: Define type scale — 9 levels (H1–H6, Body, Body Small, Caption) with px/rem/weight/line-height
    - Step 13: Define font weights — max 4 per family, confirm licensing
 4. Present full summary for approval, write to disk only after confirmation
-5. Run accessibility_validation checkpoint (6 checks); fix failures, re-run; do not advance until all pass
+5. Run accessibility_validation checkpoint (6 checks); fix failures, re-run; advance only after all checks pass
 
 ## Execution
 
