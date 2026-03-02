@@ -823,9 +823,6 @@ science) where the orchestrator lacks context to pre-assign difficulty.
 - Each escalation is a single retry — the worker reports failure, and the
   orchestrator re-dispatches at the next tier
 
-> **Schema note:** `plan-schema.yml` needs `self` added to the `model_tier`
-> enum to support this value.
-
 See `worker-agent.md` Step 0a for the full assessment table and escalation
 protocol.
 

@@ -152,10 +152,9 @@ and risk may not be explicit inputs):
 - Tasks in SEO, DevOps, security, design, or data science domains → `self`
 - Tasks whose skill comes from a consuming plugin (not task-planner core) → consider `self`
 
-> **Schema note:** `plan-schema.yml` needs `self` added to the `model_tier` enum
-> to support this value. Tasks that reference a consuming-plugin skill (i.e., the
-> task comes from a plugin other than task-planner) should default to `self` unless
-> the consuming plugin explicitly specifies a tier in its task definition.
+Tasks that reference a consuming-plugin skill (i.e., the task comes from a
+plugin other than task-planner) should default to `self` unless the consuming
+plugin explicitly specifies a tier in its task definition.
 
 ### Step 6: Set QA Review Flag
 
