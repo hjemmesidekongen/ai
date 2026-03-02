@@ -2,43 +2,47 @@
   "name": "brand-guideline",
   "version": "1.0.0",
   "description": "Agency-grade brand guideline generator. Produces a machine-readable brand-reference.yml (for plugins) and a polished brand manual (for humans).",
-  "commands": ["brand-generate", "brand-analyze", "brand-audit", "brand-switch"],
-  "skills": [
-    "visual-identity",
-    "typography-color",
-    "tone-of-voice",
-    "audience-personas",
-    "content-rules",
-    "social-media",
-    "compile-and-export",
-    "identity-interview",
-    "logo-design"
-  ],
-  "agents": [],
-  "dependencies": ["task-planner"],
-  "shared_skills": ["brand-context-loader"],
-  "brand_directory": "~/.claude/brands/",
   "hooks": {
     "PreToolUse": [
       {
         "matcher": "Write|Edit|Bash",
-        "command": "cat state.yml 2>/dev/null | head -20 || true"
+        "hooks": [
+          {
+            "type": "command",
+            "command": "cat state.yml 2>/dev/null | head -20 || true"
+          }
+        ]
       }
     ],
     "PostToolUse": [
       {
         "matcher": "Write|Edit",
-        "command": "echo '[brand-guideline] File updated. If this completes a phase, update state.yml.'"
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo '[brand-guideline] File updated. If this completes a phase, update state.yml.'"
+          }
+        ]
       }
     ],
     "SessionStart": [
       {
-        "command": "bash plugins/brand-guideline/scripts/session-recovery.sh"
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash ${CLAUDE_PLUGIN_ROOT}/scripts/session-recovery.sh"
+          }
+        ]
       }
     ],
     "Stop": [
       {
-        "command": "bash plugins/brand-guideline/scripts/check-wave-complete.sh"
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash ${CLAUDE_PLUGIN_ROOT}/scripts/check-wave-complete.sh"
+          }
+        ]
       }
     ]
   }

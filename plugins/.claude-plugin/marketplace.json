@@ -1,0 +1,23 @@
+{
+  "name": "local-workspace",
+  "owner": {
+    "name": "mvn"
+  },
+  "plugins": [
+    {
+      "name": "task-planner",
+      "source": "./task-planner",
+      "description": "Foundation plugin for wave-based task planning with verification and QA"
+    },
+    {
+      "name": "brand-guideline",
+      "source": "./brand-guideline",
+      "description": "Agency-grade brand guideline generator"
+    },
+    {
+      "name": "seo-plugin",
+      "source": "./seo-plugin",
+      "description": "SEO strategy and audit based on brand positioning"
+    }
+  ]
+}

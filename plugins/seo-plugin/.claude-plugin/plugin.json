@@ -2,34 +2,47 @@
   "name": "seo-plugin",
   "version": "1.0.0",
   "description": "Generates a comprehensive SEO strategy with keyword research, on-page optimization, technical SEO audits, competitive analysis, and content recommendations tailored to a project's goals and target audience.",
-  "commands": ["strategy", "audit", "content-brief", "export"],
-  "skills": ["project-interview", "keyword-research", "competitor-analysis", "on-page-optimization", "technical-seo", "content-strategy", "link-building", "compile-and-export"],
-  "agents": [],
-  "dependencies": ["task-planner", "brand-guideline"],
-  "shared_skills": ["brand-context-loader"],
-  "brand_directory": "~/.claude/brands/",
-  "data_directory": "~/.claude/seo/[project-name]/",
   "hooks": {
     "PreToolUse": [
       {
         "matcher": "Write|Edit|Bash",
-        "command": "cat state.yml 2>/dev/null | head -20 || true"
+        "hooks": [
+          {
+            "type": "command",
+            "command": "cat state.yml 2>/dev/null | head -20 || true"
+          }
+        ]
       }
     ],
     "PostToolUse": [
       {
         "matcher": "Write|Edit",
-        "command": "echo '[seo-plugin] File updated. If this completes a phase, update state.yml.'"
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo '[seo-plugin] File updated. If this completes a phase, update state.yml.'"
+          }
+        ]
       }
     ],
     "SessionStart": [
       {
-        "command": "bash plugins/seo-plugin/scripts/session-recovery.sh"
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash ${CLAUDE_PLUGIN_ROOT}/scripts/session-recovery.sh"
+          }
+        ]
       }
     ],
     "Stop": [
       {
-        "command": "bash plugins/seo-plugin/scripts/check-wave-complete.sh"
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash ${CLAUDE_PLUGIN_ROOT}/scripts/check-wave-complete.sh"
+          }
+        ]
       }
     ]
   }

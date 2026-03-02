@@ -2,31 +2,47 @@
   "name": "task-planner",
   "version": "1.0.0",
   "description": "Generic wave-based task planning with verification and QA. Used by other plugins to plan and execute complex work.",
-  "commands": ["plan-create", "plan-execute", "plan-status", "plan-resume", "plugin-migrate", "plugin-version", "brainstorm-decide", "brainstorm-start", "brainstorm-status", "plugin-build", "plugin-create"],
-  "skills": ["wave-decomposer", "file-ownership", "verification-runner", "spec-compliance-reviewer", "version-meta-stamper", "version-compatibility-checker", "migration-guide-generator", "brainstorm-decision-writer", "brainstorm-session", "decision-reader", "plugin-design-interview", "plugin-execution-guide-generator", "plugin-scaffolder", "plugin-spec-generator"],
-  "agents": ["qa-agent", "worker-agent"],
-  "dependencies": [],
   "hooks": {
     "PreToolUse": [
       {
         "matcher": "Write|Edit|Bash",
-        "command": "cat state.yml 2>/dev/null | head -20 || true"
+        "hooks": [
+          {
+            "type": "command",
+            "command": "cat state.yml 2>/dev/null | head -20 || true"
+          }
+        ]
       }
     ],
     "PostToolUse": [
       {
         "matcher": "Write|Edit",
-        "command": "echo '[task-planner] File updated. If this completes a phase, update state.yml.'"
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo '[task-planner] File updated. If this completes a phase, update state.yml.'"
+          }
+        ]
       }
     ],
     "SessionStart": [
       {
-        "command": "bash plugins/task-planner/scripts/session-recovery.sh"
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash ${CLAUDE_PLUGIN_ROOT}/scripts/session-recovery.sh"
+          }
+        ]
       }
     ],
     "Stop": [
       {
-        "command": "bash plugins/task-planner/scripts/check-wave-complete.sh"
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash ${CLAUDE_PLUGIN_ROOT}/scripts/check-wave-complete.sh"
+          }
+        ]
       }
     ]
   }
