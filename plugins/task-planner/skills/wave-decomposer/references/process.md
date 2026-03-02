@@ -124,6 +124,10 @@ See `plugin-blueprint.md` Section 11a for the full mapping table.
 - **principal** (Opus) — when ANY of: difficulty is high, risk is high, the task
   is QA/verification, the task makes architecture decisions, or the task affects
   multiple plugins or cross-cutting concerns.
+- **self** — when: the task is domain-specialist work (SEO, DevOps, security,
+  design, data science) where the orchestrator lacks context to assess difficulty.
+  The worker agent self-assesses at Haiku cost, declares its tier, then executes.
+  Consuming plugins may override this default per-task.
 
 ```
 for each task T:
@@ -133,6 +137,8 @@ for each task T:
     T.model_tier = "principal"
   elif T.difficulty == "low" and T.risk == "low" and T.is_templated:
     T.model_tier = "junior"
+  elif T.is_domain_specialist:    # SEO, DevOps, security, design, data science
+    T.model_tier = "self"
   else:
     T.model_tier = "senior"   # default
 ```
@@ -143,6 +149,13 @@ and risk may not be explicit inputs):
 - Tasks named "Generate...", "Write...", "Build..." → senior
 - Tasks named "Compile...", "Review...", "Audit...", "Verify..." → principal
 - Final-wave compilation tasks → principal (they touch all prior outputs)
+- Tasks in SEO, DevOps, security, design, or data science domains → `self`
+- Tasks whose skill comes from a consuming plugin (not task-planner core) → consider `self`
+
+> **Schema note:** `plan-schema.yml` needs `self` added to the `model_tier` enum
+> to support this value. Tasks that reference a consuming-plugin skill (i.e., the
+> task comes from a plugin other than task-planner) should default to `self` unless
+> the consuming plugin explicitly specifies a tier in its task definition.
 
 ### Step 6: Set QA Review Flag
 
@@ -175,7 +188,7 @@ plan:
       files_written: [...]
       files_read: [...]
       estimated_minutes: 5
-      model_tier: senior          # junior | senior | principal
+      model_tier: senior          # junior | senior | principal | self
       status: pending
     # ... all tasks from input, with status: pending and model_tier added
 

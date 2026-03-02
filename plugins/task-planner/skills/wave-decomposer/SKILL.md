@@ -26,7 +26,7 @@ file-ownership constraints.
 3. **Set parallel flag** — `parallel: true` when wave has multiple conflict-free tasks
 4. **Compute wave dependencies** — `depends_on_waves` derived from task dependency graph
 5. **Assign verification** — pick type from profile or infer from `files_written` patterns; generate concrete checks
-6. **Assign model tier** — `junior` / `senior` / `principal` per task based on difficulty, risk, and name heuristics
+6. **Assign model tier** — `junior` / `senior` / `principal` / `self` per task based on difficulty, risk, domain-specialist signals, and name heuristics
 7. **Set QA review flag** — final wave always `qa_review: true`; profile may enable every-wave QA
 8. **Emit plan** — output full plan in `plan-schema.yml` format; all statuses `pending`
 
