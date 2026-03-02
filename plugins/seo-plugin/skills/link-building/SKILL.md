@@ -1,5 +1,6 @@
 ---
 name: link-building
+user-invocable: false
 description: >
   Develops a link-building strategy with outreach targets, content promotion
   tactics, and authority-building recommendations. Writes the link_building

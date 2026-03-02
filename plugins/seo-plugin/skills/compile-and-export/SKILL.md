@@ -1,5 +1,6 @@
 ---
 name: compile-and-export
+user-invocable: false
 description: >
   Compiles all strategy sections into a cohesive SEO strategy document in
   Markdown format and validates the complete seo-strategy.yml. Final skill

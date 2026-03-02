@@ -1,5 +1,6 @@
 ---
 name: code-review
+user-invocable: false
 description: >
   Phase 4a of /dev:build — audit the full wave diff for code quality, pattern
   adherence, convention compliance, security (OWASP top 10), and performance.

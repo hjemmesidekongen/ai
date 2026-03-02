@@ -1,5 +1,6 @@
 ---
 name: compile-and-export
+user-invocable: false
 description: >
   Final skill in the brand generation pipeline. Validates brand-reference.yml
   against the full schema, generates the brand manual (md + docx), creates the

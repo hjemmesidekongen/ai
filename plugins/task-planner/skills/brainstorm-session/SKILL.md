@@ -1,5 +1,6 @@
 ---
 name: brainstorm-session
+user-invocable: false
 description: >
   Runs an open-ended brainstorm session where Claude acts as a sparring partner,
   not an interviewer. Pushes back on weak reasoning, challenges assumptions,

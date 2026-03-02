@@ -1,5 +1,6 @@
 ---
 name: visual-identity
+user-invocable: false
 description: >
   Defines the brand's overall visual language: imagery direction, iconography
   rules, shape language, layout principles, and mood board description.

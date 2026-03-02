@@ -1,5 +1,6 @@
 ---
 name: file-ownership
+user-invocable: false
 description: >
   Assigns and enforces file-level and section-level ownership across tasks
   within a wave plan. Use when checking file conflicts, assigning ownership

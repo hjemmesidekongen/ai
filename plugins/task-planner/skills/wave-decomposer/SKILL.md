@@ -1,5 +1,6 @@
 ---
 name: wave-decomposer
+user-invocable: false
 description: >
   Converts a flat task list with dependencies into an optimized wave plan.
   Use when creating wave plans, decomposing tasks into waves, running

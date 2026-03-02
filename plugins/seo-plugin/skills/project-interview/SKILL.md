@@ -1,5 +1,6 @@
 ---
 name: project-interview
+user-invocable: false
 description: >
   Runs an interactive interview to gather project context for SEO strategy:
   website URL, industry, business model, SEO goals, target audience segments,

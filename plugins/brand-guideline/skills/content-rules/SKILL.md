@@ -1,5 +1,6 @@
 ---
 name: content-rules
+user-invocable: false
 description: >
   Defines writing standards, content type specifications, SEO guidelines, legal
   requirements, and a content review checklist. Builds on the brand's identity,

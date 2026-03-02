@@ -1,5 +1,6 @@
 ---
 name: project-scanner
+user-invocable: false
 description: >
   Static analysis of a project to detect frameworks, language, package manager,
   architecture patterns, testing tools, linting, and key directories. Produces

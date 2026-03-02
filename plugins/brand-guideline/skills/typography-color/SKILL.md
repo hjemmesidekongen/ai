@@ -1,5 +1,6 @@
 ---
 name: typography-color
+user-invocable: false
 description: >
   Guides the user through color palette selection and typography system design.
   Use when designing color palette, typography system, running /brand:generate

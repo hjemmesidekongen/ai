@@ -1,5 +1,6 @@
 ---
 name: config-generator
+user-invocable: false
 description: >
   Transforms project-scanner findings into a validated dev-config.yml contract.
   Presents detected frameworks, conventions, and commands to the user for

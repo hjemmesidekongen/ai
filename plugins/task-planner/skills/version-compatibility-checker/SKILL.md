@@ -1,5 +1,6 @@
 ---
 name: version-compatibility-checker
+user-invocable: false
 description: >
   Checks whether a project's data files are compatible with the current plugin
   version. Use when loading existing project data, checking version

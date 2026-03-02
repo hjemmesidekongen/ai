@@ -1,5 +1,6 @@
 ---
 name: knowledge-initializer
+user-invocable: false
 description: >
   Generates tagged knowledge files and mermaid architecture diagrams from confirmed
   project config and source analysis. Produces architecture.md, patterns.yml, and

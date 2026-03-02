@@ -1,5 +1,6 @@
 ---
 name: qa-validation
+user-invocable: false
 description: >
   Phase 4b of /dev:build — QA Expert validates build against original spec,
   PO checks end-goal alignment, calculates spec alignment score (0-100),

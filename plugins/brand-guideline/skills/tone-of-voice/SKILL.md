@@ -1,5 +1,6 @@
 ---
 name: tone-of-voice
+user-invocable: false
 description: >
   Defines how the brand speaks and writes. Builds a voice spectrum, personality
   attributes with do/don't examples, messaging framework, channel-specific tone

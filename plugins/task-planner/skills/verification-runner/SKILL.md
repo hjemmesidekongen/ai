@@ -1,5 +1,6 @@
 ---
 name: verification-runner
+user-invocable: false
 description: >
   Orchestrates two-stage verification for completed waves. Stage 1 dispatches
   spec-compliance-reviewer (junior) for mechanical checks. Stage 2 dispatches

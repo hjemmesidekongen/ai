@@ -1,5 +1,6 @@
 ---
 name: plugin-scaffolder
+user-invocable: false
 description: >
   Creates the physical directory structure, plugin.json manifest, hook scripts,
   and README.md for a new plugin based on design.yml. Produces the empty scaffold

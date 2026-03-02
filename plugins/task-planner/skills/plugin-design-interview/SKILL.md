@@ -1,5 +1,6 @@
 ---
 name: plugin-design-interview
+user-invocable: false
 description: >
   Walks the user through the 8 design questions every new plugin must answer
   before any code is written. Produces a structured design.yml that downstream

@@ -1,5 +1,6 @@
 ---
 name: tier-assigner
+user-invocable: false
 description: >
   Self-tiering logic for domain specialist agents — assesses task complexity at
   Haiku cost, declares appropriate model tier, and auto-escalates on failure.

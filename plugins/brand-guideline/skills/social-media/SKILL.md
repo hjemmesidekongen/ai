@@ -1,5 +1,6 @@
 ---
 name: social-media
+user-invocable: false
 description: >
   Defines social media presence, platform-specific voice adjustments, content
   pillars, hashtag strategy, visual rules, engagement guidelines, and generates

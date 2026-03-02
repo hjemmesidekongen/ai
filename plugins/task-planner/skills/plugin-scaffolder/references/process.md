@@ -89,6 +89,7 @@ plugins/[plugin-name]/
 ```yaml
 ---
 name: [skill-name]
+user-invocable: false
 description: >
   [One sentence purpose]. Use when [trigger phrase 1],
   [trigger phrase 2], or [trigger phrase 3].

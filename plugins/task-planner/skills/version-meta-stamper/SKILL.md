@@ -1,5 +1,6 @@
 ---
 name: version-meta-stamper
+user-invocable: false
 description: >
   Adds or updates the _meta version block in any plugin output YAML file.
   Use when stamping version metadata on YAML output, running compile-and-export

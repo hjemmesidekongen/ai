@@ -1,5 +1,6 @@
 ---
 name: feature-decomposer
+user-invocable: false
 description: >
   Phase 1 of /dev:build — PM orchestrates Architect, Designer, and PO agents to
   break a feature into components with boundaries, visual specs, and validated scope.

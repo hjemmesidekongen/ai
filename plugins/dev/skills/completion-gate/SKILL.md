@@ -1,5 +1,6 @@
 ---
 name: completion-gate
+user-invocable: false
 description: >
   Phase 3 quality gate for /dev:build — run build, lint, and related tests per
   completed task, return failures to agents while context is fresh, retry up to

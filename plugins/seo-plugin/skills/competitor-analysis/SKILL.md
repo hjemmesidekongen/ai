@@ -1,5 +1,6 @@
 ---
 name: competitor-analysis
+user-invocable: false
 description: >
   Analyzes top competitors for target keywords, identifying their strengths,
   weaknesses, content gaps, and backlink profiles. Writes the competitors

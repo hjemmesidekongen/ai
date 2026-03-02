@@ -1,5 +1,6 @@
 ---
 name: plugin-spec-generator
+user-invocable: false
 description: >
   Reads design.yml from the design interview and generates the full spec
   documents: implementation plan, domain addendum, asset manifest (if applicable),

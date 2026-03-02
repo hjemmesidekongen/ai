@@ -1,5 +1,6 @@
 ---
 name: content-strategy
+user-invocable: false
 description: >
   Creates a content plan with topic clusters, content calendar framework,
   content types, and SEO-optimized content guidelines aligned with brand voice.

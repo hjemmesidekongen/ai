@@ -1,5 +1,6 @@
 ---
 name: technical-seo
+user-invocable: false
 description: >
   Produces a technical SEO checklist covering site speed, mobile-friendliness,
   crawlability, indexation, structured data, and Core Web Vitals targets.

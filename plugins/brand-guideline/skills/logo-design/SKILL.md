@@ -1,5 +1,6 @@
 ---
 name: logo-design
+user-invocable: false
 description: >
   Runs a 5-phase logo design process: discovery, concept generation (20-25 SVG
   concepts), refinement, finalization, and optional professional refinement.

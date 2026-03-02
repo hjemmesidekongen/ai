@@ -1,5 +1,6 @@
 ---
 name: migration-guide-generator
+user-invocable: false
 description: >
   Utility skill called by /plugin:version to generate migration artifacts when
   bumping a plugin's minor or major version. Diffs old and new YAML schemas

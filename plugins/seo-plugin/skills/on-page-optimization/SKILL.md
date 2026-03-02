@@ -1,5 +1,6 @@
 ---
 name: on-page-optimization
+user-invocable: false
 description: >
   Generates on-page SEO rules including title tag patterns, meta description
   templates, heading structure, internal linking strategy, and schema markup

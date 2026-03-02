@@ -1,5 +1,6 @@
 ---
 name: spec-compliance-reviewer
+user-invocable: false
 description: >
   Runs mechanical verification checks after a skill completes. Validates file
   existence, YAML schema presence, required fields, file-ownership compliance,

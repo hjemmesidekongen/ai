@@ -1,5 +1,6 @@
 ---
 name: agent-dispatcher
+user-invocable: false
 description: >
   Phase 3 of /dev:build — dispatch specialist agents via Task() for isolated
   parallel execution, manage wave sequencing, map model tiers to dispatch params,

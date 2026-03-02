@@ -1,5 +1,6 @@
 ---
 name: plugin-execution-guide-generator
+user-invocable: false
 description: >
   Reads the spec documents (implementation plan, addendum, asset manifest) and
   design.yml for a plugin, then generates a complete execution guide with one

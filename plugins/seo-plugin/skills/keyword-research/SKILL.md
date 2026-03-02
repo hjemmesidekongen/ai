@@ -1,5 +1,6 @@
 ---
 name: keyword-research
+user-invocable: false
 description: >
   Conducts keyword research identifying primary, secondary, and long-tail
   keywords with search volume estimates, difficulty scores, and search intent

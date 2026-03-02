@@ -1,5 +1,6 @@
 ---
 name: audience-personas
+user-invocable: false
 description: >
   Identifies the target audience and creates detailed personas based on brand
   identity and positioning. Writes the audience section to brand-reference.yml

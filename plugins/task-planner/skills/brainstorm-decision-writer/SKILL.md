@@ -1,5 +1,6 @@
 ---
 name: brainstorm-decision-writer
+user-invocable: false
 description: >
   Extracts structured decisions from a brainstorm session. Walks through the
   conversation with the user, identifies landing points, and co-authors a

@@ -1,5 +1,6 @@
 ---
 name: delta-scanner
+user-invocable: false
 description: >
   Lightweight re-scan for /dev:scan — compare file hashes to detect changes
   since last scan, curate knowledge updates using maturity lifecycle

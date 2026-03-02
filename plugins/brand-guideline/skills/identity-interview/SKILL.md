@@ -1,5 +1,6 @@
 ---
 name: identity-interview
+user-invocable: false
 description: >
   Runs an interactive interview to capture the brand's foundation: name, tagline,
   industry, mission, vision, values, brand story, positioning, and competitive

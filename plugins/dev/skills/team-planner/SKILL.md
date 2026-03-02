@@ -1,5 +1,6 @@
 ---
 name: team-planner
+user-invocable: false
 description: >
   Phase 2 of /dev:build — PM creates work packages from decomposition, dispatches
   Frontend and Backend Tech Leads to assign specialists and model tiers, verifies

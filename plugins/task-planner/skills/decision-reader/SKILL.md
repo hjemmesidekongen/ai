@@ -1,5 +1,6 @@
 ---
 name: decision-reader
+user-invocable: false
 description: >
   Utility skill that reads brainstorm decisions and returns them to calling
   skills. Bridge between /brainstorm:decide and structured interview workflows.
