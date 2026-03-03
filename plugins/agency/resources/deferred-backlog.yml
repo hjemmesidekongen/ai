@@ -1,0 +1,363 @@
+_meta:
+  schema: "deferred-backlog"
+  version: "1.0.0"
+  plugin: "agency"
+  description: "Features not needed for Blik MVP. Each entry has a trigger condition for when it becomes relevant. Source plugin and skills are listed for reference during port work."
+  last_reviewed: "2026-03-03"
+  total_deferred: 20
+
+# ============================================================
+# HOW TO READ THIS FILE
+# ============================================================
+# Each entry represents a capability that exists in a reference
+# plugin but is not part of the agency MVP (Blik build).
+# When the trigger fires, port the listed skills into the
+# appropriate agency module subdirectory.
+#
+# Priority:
+#   high   — likely needed for the second real project
+#   medium — needed once the agency expands past Blik
+#   low    — specialist use case, defer indefinitely
+#
+# Effort:
+#   small  — 1 skill, straightforward port
+#   medium — 2-4 skills, some redesign
+#   large  — 5+ skills, significant new logic
+# ============================================================
+
+deferred:
+
+  # ──────────────────────────────────────────────────────────
+  # BRAND MODULE — generation pipeline
+  # Blik already has brand-reference.yml. Agency MVP only needs
+  # brand-loader (read path). Generation is deferred.
+  # ──────────────────────────────────────────────────────────
+
+  - id: "defer-01"
+    feature: "Brand generation pipeline"
+    module: "brand"
+    source_plugin: "brand-guideline"
+    source_skills:
+      - "identity-interview"
+      - "audience-personas"
+      - "tone-of-voice"
+      - "typography-color"
+      - "visual-identity"
+      - "logo-design"
+      - "content-rules"
+      - "social-media"
+      - "compile-and-export"
+    trigger: "New project created that has no existing brand-reference.yml — user needs to build a brand from scratch"
+    priority: "high"
+    effort: "large"
+    notes: |
+      9 skills total. Brand-loader handles the read path (already in MVP).
+      Generation needed when onboarding a client with no brand.
+      Port into agency/skills/brand/ alongside brand-loader.
+      identity-interview is the entry point; all other skills depend on it.
+      compile-and-export produces the human-readable brand manual PDF/DOCX.
+
+  - id: "defer-02"
+    feature: "Brand manual export (PDF/DOCX)"
+    module: "brand"
+    source_plugin: "brand-guideline"
+    source_skills:
+      - "compile-and-export"
+    trigger: "Client requests a formatted brand manual document to share with external teams or print vendors"
+    priority: "medium"
+    effort: "small"
+    notes: |
+      Subset of defer-01. Can be ported independently from the full generation pipeline
+      if a client has an existing brand-reference.yml and only needs the document output.
+      Uses brand-manual-template.md and brand-manual-template-docx-styles.yml.
+
+  - id: "defer-03"
+    feature: "Social media template system"
+    module: "brand"
+    source_plugin: "brand-guideline"
+    source_skills:
+      - "social-media"
+    trigger: "Project requires platform-specific social media post templates, cover images, or story assets"
+    priority: "medium"
+    effort: "small"
+    notes: |
+      Generates social media templates per platform (Instagram, LinkedIn, Twitter/X, Facebook).
+      Depends on brand identity data (colors, typography, logo assets) being present.
+      In the agency architecture this could also belong under the design module.
+
+  - id: "defer-04"
+    feature: "Content governance rules"
+    module: "brand"
+    source_plugin: "brand-guideline"
+    source_skills:
+      - "content-rules"
+    trigger: "Project needs a content governance system beyond in-app UX copy — editorial standards, prohibited terms, legal boilerplate rules"
+    priority: "medium"
+    effort: "small"
+    notes: |
+      Distinct from agency/skills/content/app-copy and ux-writing which handle in-product microcopy.
+      Content-rules covers editorial standards, brand voice enforcement, SEO writing rules,
+      accessibility language guidelines, and prohibited terminology lists.
+
+  # ──────────────────────────────────────────────────────────
+  # SEO MODULE — not built for Blik
+  # Blik is a product MVP and does not need SEO strategy yet.
+  # Full SEO module deferred until Blik launches and needs
+  # organic traffic growth.
+  # ──────────────────────────────────────────────────────────
+
+  - id: "defer-05"
+    feature: "SEO module — full pipeline"
+    module: "seo"
+    source_plugin: "seo-plugin"
+    source_skills:
+      - "project-interview"
+      - "keyword-research"
+      - "competitor-analysis"
+      - "on-page-optimization"
+      - "technical-seo"
+      - "content-strategy"
+      - "link-building"
+      - "compile-and-export"
+    trigger: "Project needs organic search strategy, keyword targeting, or SEO audit"
+    priority: "high"
+    effort: "large"
+    notes: |
+      8 skills total. This entire module is deferred — agency/skills/seo/ does not exist yet.
+      Port from seo-plugin/ into agency/skills/seo/ when the trigger fires.
+      keyword-research and competitor-analysis are the most complex (research-heavy, findings.md pattern).
+      compile-and-export produces the SEO strategy document.
+      Add /agency:seo command to commands/ when porting.
+
+  - id: "defer-06"
+    feature: "Keyword research"
+    module: "seo"
+    source_plugin: "seo-plugin"
+    source_skills:
+      - "keyword-research"
+    trigger: "Project needs keyword universe mapped before any SEO work or content strategy begins"
+    priority: "high"
+    effort: "medium"
+    notes: |
+      Can be ported standalone if only keyword mapping is needed without full SEO pipeline.
+      Uses findings.md pattern (2-Action Rule) — research-heavy skill.
+      Clusters keywords by intent: informational, navigational, transactional, commercial.
+
+  - id: "defer-07"
+    feature: "Competitor analysis"
+    module: "seo"
+    source_plugin: "seo-plugin"
+    source_skills:
+      - "competitor-analysis"
+    trigger: "Project needs competitive positioning data — who ranks for target keywords and what gaps exist"
+    priority: "medium"
+    effort: "medium"
+    notes: |
+      Research-heavy skill. Uses findings.md pattern (2-Action Rule).
+      Outputs competitor profiles, content gap matrix, and positioning opportunities.
+      Can run standalone or as part of full SEO pipeline.
+
+  - id: "defer-08"
+    feature: "Technical SEO audit"
+    module: "seo"
+    source_plugin: "seo-plugin"
+    source_skills:
+      - "technical-seo"
+    trigger: "Existing project needs a technical SEO health check — crawlability, Core Web Vitals, structured data, indexing issues"
+    priority: "medium"
+    effort: "small"
+    notes: |
+      Audit skill — requires an existing deployed URL to analyze.
+      Logs errors to state.yml errors array (technical checks can fail).
+      Distinct from on-page-optimization which handles content-level SEO.
+
+  - id: "defer-09"
+    feature: "Content strategy"
+    module: "seo"
+    source_plugin: "seo-plugin"
+    source_skills:
+      - "content-strategy"
+    trigger: "Project needs a content calendar and topic cluster strategy to build topical authority"
+    priority: "medium"
+    effort: "small"
+    notes: |
+      Downstream of keyword-research. Produces topic clusters, content pillars,
+      and a prioritized content calendar.
+      Coordinates with brand/content-rules for voice and tone guidelines.
+
+  - id: "defer-10"
+    feature: "Link building strategy"
+    module: "seo"
+    source_plugin: "seo-plugin"
+    source_skills:
+      - "link-building"
+    trigger: "Project has existing content and needs off-page SEO — backlink acquisition, digital PR, or partnership outreach strategy"
+    priority: "low"
+    effort: "small"
+    notes: |
+      Off-page SEO. Lowest priority in the SEO pipeline — requires content to already exist.
+      Outputs outreach targets, anchor text strategy, and link velocity targets.
+
+  # ──────────────────────────────────────────────────────────
+  # ANALYTICS MODULE — not built yet
+  # No analytics module exists in agency MVP.
+  # ──────────────────────────────────────────────────────────
+
+  - id: "defer-11"
+    feature: "Analytics and tracking setup"
+    module: "analytics"
+    source_plugin: null
+    source_skills: []
+    trigger: "Project needs tracking instrumentation — GA4, Mixpanel, Segment, or custom event taxonomy setup"
+    priority: "high"
+    effort: "medium"
+    notes: |
+      No reference implementation in existing plugins. Build fresh.
+      Skills needed: analytics-interview (goals, KPIs, events), tracker-config (snippet installation,
+      event schema), dashboard-spec (which metrics to surface).
+      Agency module directory: agency/skills/analytics/.
+      Add /agency:analytics command when building.
+
+  - id: "defer-12"
+    feature: "Conversion rate optimization (CRO)"
+    module: "analytics"
+    source_plugin: null
+    source_skills: []
+    trigger: "Project has live traffic and needs A/B test design, funnel analysis, or heatmap interpretation"
+    priority: "low"
+    effort: "medium"
+    notes: |
+      Requires analytics baseline (defer-11) to already exist.
+      Specialist skill — low priority until project is post-launch with measurable traffic.
+
+  # ──────────────────────────────────────────────────────────
+  # MEDIA MODULE — not built yet
+  # No media module exists in agency MVP.
+  # ──────────────────────────────────────────────────────────
+
+  - id: "defer-13"
+    feature: "Image and video asset pipeline"
+    module: "media"
+    source_plugin: null
+    source_skills: []
+    trigger: "Project needs structured management of photography, video, illustration, or icon asset variants across formats and resolutions"
+    priority: "medium"
+    effort: "large"
+    notes: |
+      No reference implementation in existing plugins. Build fresh.
+      Skills needed: media-interview (asset requirements), asset-pipeline-config
+      (transformation specs, CDN settings), asset-manifest (registry of all media assets).
+      Agency module directory: agency/skills/media/.
+      The design module's asset-registry handles metadata; this module handles the actual files.
+
+  - id: "defer-14"
+    feature: "Illustration and icon system"
+    module: "media"
+    source_plugin: null
+    source_skills: []
+    trigger: "Project needs a custom illustration style or icon library beyond standard icon packs"
+    priority: "low"
+    effort: "medium"
+    notes: |
+      Specialist use case. Most projects use Lucide, Heroicons, or Phosphor.
+      Only needed when brand identity requires fully custom iconography.
+      Coordinates with design/logo-assets for brand mark consistency.
+
+  # ──────────────────────────────────────────────────────────
+  # DEV MODULE — skills deferred from dev plugin
+  # Most dev plugin skills ARE in agency MVP. Three are deferred.
+  # ──────────────────────────────────────────────────────────
+
+  - id: "defer-15"
+    feature: "Knowledge initializer (multi-project shared knowledge base)"
+    module: "dev"
+    source_plugin: "dev"
+    source_skills:
+      - "knowledge-initializer"
+    trigger: "Workspace has multiple projects that share architectural decisions, reusable patterns, or team conventions that need a centralized knowledge base"
+    priority: "medium"
+    effort: "small"
+    notes: |
+      Deferred because Blik is a single-project build. Knowledge is embedded in
+      config-generator output (already in MVP) for the single-project case.
+      Needed when the agency workspace grows to 3+ active projects and ad-hoc
+      knowledge duplication becomes a friction point.
+      Port from dev/skills/knowledge-initializer/ into agency/skills/dev/knowledge-initializer/.
+
+  - id: "defer-16"
+    feature: "Tier assigner"
+    module: "dev"
+    source_plugin: "dev"
+    source_skills:
+      - "tier-assigner"
+    trigger: "Manual tier assignment becomes a bottleneck — when the team has grown to where automatic tier routing by task complexity saves meaningful time"
+    priority: "low"
+    effort: "small"
+    notes: |
+      The task-planner's model_tier system already handles tier assignment for wave tasks.
+      The agency plugin inherits this. The dev plugin's tier-assigner is a standalone
+      skill that assigns tiers outside of wave execution — overlap with task-planner.
+      Reassess need only if task-planner's system proves insufficient.
+
+  - id: "defer-17"
+    feature: "Delta scanner (incremental re-scan after changes)"
+    module: "dev"
+    source_plugin: "dev"
+    source_skills:
+      - "delta-scanner"
+    trigger: "Project has been through multiple build cycles and a full project-scanner run is too slow — only changed files need to be re-analyzed"
+    priority: "medium"
+    effort: "small"
+    notes: |
+      Optimization skill — only meaningful after project-scanner (MVP) has run at least once.
+      Port from dev/skills/delta-scanner/ into agency/skills/dev/delta-scanner/ when
+      full-scan time exceeds ~2 minutes or after 10+ build iterations on a project.
+
+  # ──────────────────────────────────────────────────────────
+  # DEVOPS MODULE — additional deploy capabilities
+  # Basic deploy-config and deploy-execute are in agency MVP.
+  # More advanced devops capabilities are deferred.
+  # ──────────────────────────────────────────────────────────
+
+  - id: "defer-18"
+    feature: "CI/CD pipeline configuration"
+    module: "devops"
+    source_plugin: null
+    source_skills: []
+    trigger: "Project needs automated build, test, and deployment pipelines beyond a single deploy command — multi-environment promotion, branch previews, or scheduled jobs"
+    priority: "high"
+    effort: "medium"
+    notes: |
+      No reference implementation in existing plugins. Build fresh.
+      Skills needed: cicd-interview (environments, triggers, gates), pipeline-config
+      (GitHub Actions / Railway pipelines YAML generation).
+      Deploy-config (MVP) handles the initial deployment target. CI/CD config is the
+      next step once the deploy is stable and needs automation.
+
+  - id: "defer-19"
+    feature: "Infrastructure as code (IaC)"
+    module: "devops"
+    source_plugin: null
+    source_skills: []
+    trigger: "Project outgrows Railway/Vercel and needs custom cloud infrastructure — VPCs, managed databases, CDN configuration, or multi-region deployment"
+    priority: "low"
+    effort: "large"
+    notes: |
+      Specialist use case. Most Blik-scale projects stay within managed PaaS.
+      Only needed when custom infra (AWS/GCP/Azure) is required.
+      Skills would cover: Terraform/Pulumi config generation, secrets management,
+      database provisioning (Neon MCP already available), network configuration.
+
+  - id: "defer-20"
+    feature: "Monitoring and alerting setup"
+    module: "devops"
+    source_plugin: null
+    source_skills: []
+    trigger: "Deployed project needs production observability — error tracking, uptime monitoring, performance budgets, or on-call alert routing"
+    priority: "medium"
+    effort: "medium"
+    notes: |
+      Post-launch concern. Skills needed: monitoring-interview (SLOs, alert thresholds),
+      monitoring-config (Sentry, Datadog, Uptime Robot, or Grafana configuration).
+      Coordinates with analytics module (defer-11) for unified observability picture.
+      Railway MCP (already in dev plugin) provides some deploy metrics natively.
