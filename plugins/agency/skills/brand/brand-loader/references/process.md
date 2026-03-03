@@ -73,6 +73,17 @@ tokens:
     tone_spectrum: "[from voice.tone_spectrum]"
 ```
 
+**Save extraction results to findings.md (2-Action Rule checkpoint):**
+
+```markdown
+## Brand Load Results
+- Brand name: [name]
+- Colors extracted: [count] (primary, secondary, accent, neutrals)
+- Typography: [heading_family], [body_family]
+- Spacing: [step count] steps
+- Loaded at: [timestamp]
+```
+
 ## Step 4: Register Assets
 
 Append entries to .ai/projects/{project_name}/asset-registry.yml:
@@ -120,3 +131,5 @@ Report:
 | Missing colors section | Warn, write empty tokens |
 | Missing typography section | Warn, use system defaults |
 | asset-registry.yml doesn't exist | Create it with just brand entries |
+
+Log all errors to `state.yml` errors array. Before retrying, check errors array for previous attempts — never repeat a failed approach.

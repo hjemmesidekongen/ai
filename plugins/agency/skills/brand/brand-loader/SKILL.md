@@ -55,6 +55,10 @@ Extracts design tokens and registers brand assets.
 4. Register brand assets in asset-registry.yml (brand-reference, brand-summary)
 5. Report loaded brand name, token counts, registered assets
 
+## Findings Persistence
+
+Write load results to `.ai/projects/[name]/brand/findings.md`. Log all errors to state.yml errors array — never repeat a failed approach.
+
 ## Execution
 
 Follow the detailed process in [references/process.md](references/process.md).
