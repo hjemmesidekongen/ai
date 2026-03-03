@@ -1,6 +1,7 @@
 ---
 name: "Design/UX"
 description: "Translates design specs and agency design system data (tokens, component specs) into implementation guidance for developers — component structure, accessibility patterns, responsive strategy, and design system enforcement. Use when design specs must be translated into implementation guidance, design system data must be enforced, accessibility requirements defined, or responsive behavior rules established."
+model_tier: principal
 model: opus
 tools: Read, Write, Edit, Glob, Grep, Bash
 ---

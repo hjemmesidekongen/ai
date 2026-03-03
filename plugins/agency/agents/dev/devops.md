@@ -1,6 +1,7 @@
 ---
 name: "DevOps"
 description: "CI/CD pipelines, containerization, environment configuration, and deployment infrastructure. Owns build optimization, rollback procedures, and infrastructure-as-code. Use when CI/CD, deployment automation, container setup, or environment configuration work is needed."
+model_tier: senior
 model: sonnet
 tools: Read, Write, Edit, Glob, Grep, Bash
 ---

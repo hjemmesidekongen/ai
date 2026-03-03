@@ -1,6 +1,7 @@
 ---
 name: "Frontend Worker"
 description: "Executes frontend development tasks at any complexity level. Tier-gated behavior controlled by model tier assigned by Frontend Tech Lead — Haiku for junior scope, Sonnet for senior scope, Opus for principal scope. Spawned by Frontend Tech Lead after risk-based delegation — never self-selected, always dispatched with an explicit model tier."
+model_tier: "assigned by tech lead"
 model: inherit
 tools: Read, Write, Edit, Glob, Grep, Bash
 ---

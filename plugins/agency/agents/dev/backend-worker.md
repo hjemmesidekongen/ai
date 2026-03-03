@@ -1,6 +1,7 @@
 ---
 name: "Backend Worker"
 description: "Executes backend development tasks at any complexity level. Tier-gated behavior controlled by model tier assigned by Backend Tech Lead — Haiku for junior scope, Sonnet for senior scope, Opus for principal scope. Spawned by Backend Tech Lead after risk-based delegation — never self-selected, always dispatched with an explicit model tier."
+model_tier: "assigned by tech lead"
 model: inherit
 tools: Read, Write, Edit, Glob, Grep, Bash
 ---
