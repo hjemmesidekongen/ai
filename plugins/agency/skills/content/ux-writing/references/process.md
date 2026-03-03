@@ -347,6 +347,8 @@ form_labels:
 - Navigation labels: nouns or short noun phrases, title case
 - Form placeholders: realistic examples, not instructions ("Jane Smith" not "Enter your name")
 
+**2-Action Rule checkpoint:** After generating each category's YAML, save progress to `.ai/projects/[name]/content/findings.md` before moving to the next category.
+
 ---
 
 ## Step 4 — User Review Protocol
@@ -359,6 +361,8 @@ Present each category as a batch. For each batch:
 4. Confirm readiness: "Ready to move to [next category]?"
 
 Do not move to the next category until the user confirms the current one.
+
+**2-Action Rule checkpoint:** After each category review is confirmed, save the approved copy and any user feedback to `.ai/projects/[name]/content/findings.md`.
 
 ---
 
@@ -419,3 +423,28 @@ skills:
       - "content/ux/states.yml"
       - "content/ux/labels.yml"
 ```
+
+---
+
+## Two-Stage Verification
+
+**Stage 1 — Spec Compliance (Haiku):**
+Run spec-compliance-reviewer. Checks:
+- `categories_complete` — all 6 UX copy YAML files exist and are non-empty
+- `brand_voice_applied` — tone and personality tokens from brand-summary.yml are reflected in copy
+- `component_coverage` — every component slot and interactive state from component specs is addressed
+- `error_taxonomy_applied` — every error message has: code, severity, category, title, description, action
+- `assets_registered` — all 6 UX copy files registered in asset-registry.yml under content.ux
+
+If FAIL: fix structural issues. Do NOT proceed to Stage 2.
+
+**Stage 2 — Quality Review (Opus):**
+Only after Stage 1 passes. Checks:
+- Error messages never blame the user ("That format isn't valid" not "You entered an invalid format")
+- All empty states have escape hatches — no dead ends where the user is stranded
+- Confirmations use consequence-based descriptions ("This permanently removes your data") not vague warnings
+- Tooltips are ≤60 characters — trim any that exceed this limit
+- Validation messages are specific about the rule violated, not generic ("invalid" alone is forbidden)
+
+If FAIL: address quality issues.
+If PASS_WITH_NOTES: review notes, decide whether to address.

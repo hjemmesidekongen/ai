@@ -66,6 +66,10 @@ the project's brand voice.
 6. Register all page copy YAMLs in asset-registry.yml
 7. Run checkpoint — all 5 checks must pass before advancing
 
+## Findings Persistence
+
+Write intermediate results to `.ai/projects/[name]/content/findings.md`. **2-Action Rule:** after every 2 generation actions, IMMEDIATELY save progress to findings.md. Log all errors to state.yml errors array — never repeat a failed approach.
+
 ## Execution
 
 Before executing, read `references/process.md` for the full page copy YAML

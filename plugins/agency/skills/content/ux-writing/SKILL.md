@@ -66,6 +66,10 @@ labels — with brand voice applied throughout.
 5. Register all 6 UX copy files in asset-registry.yml
 6. Run checkpoint — all 5 checks must pass before advancing
 
+## Findings Persistence
+
+Write intermediate results to `.ai/projects/[name]/content/findings.md`. **2-Action Rule:** after every 2 generation actions, IMMEDIATELY save progress to findings.md. Log all errors to state.yml errors array — never repeat a failed approach.
+
 ## Execution
 
 Before executing, read `references/process.md` for full YAML formats,

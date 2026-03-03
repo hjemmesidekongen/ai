@@ -216,6 +216,8 @@ navigation:
     route: /signup
 ```
 
+**2-Action Rule checkpoint:** After generating each page's copy YAML, save progress to `.ai/projects/[name]/content/findings.md` before continuing to the next page.
+
 ---
 
 ## Step 6 — Brand Voice Application Rules
@@ -262,6 +264,8 @@ Present copy page by page. For each page:
 5. Revise only flagged slots; re-present the full page after revisions
 6. Confirm before moving to next page
 
+**2-Action Rule checkpoint:** After completing user review for each page, save the approved copy and any revision notes to `.ai/projects/[name]/content/findings.md`.
+
 ---
 
 ## Step 8 — Register in Asset Registry
@@ -297,6 +301,31 @@ Run all 5 checks from the SKILL.md checkpoint block:
 
 On failure: identify the failing check, fix the specific gap, re-run that check.
 On pass: update `state.yml` phase to completed, set `next_skill` to `ux-writing`.
+
+---
+
+## Two-Stage Verification
+
+**Stage 1 — Spec Compliance (Haiku):**
+Run spec-compliance-reviewer. Checks:
+- `pages_covered` — one copy YAML exists per page route defined in navigation-map.yml
+- `slots_filled` — every slot referenced in layout YAMLs has copy in the page YAML
+- `brand_voice_applied` — headlines, CTAs, and body copy reflect tone and vocabulary from brand-summary.yml
+- `slot_types_complete` — all slot types present: headline, body, cta, label, description, placeholder
+- `assets_registered` — all page copy YAMLs registered in asset-registry.yml under content.pages
+
+If FAIL: fix structural issues. Do NOT proceed to Stage 2.
+
+**Stage 2 — Quality Review (Opus):**
+Only after Stage 1 passes. Checks:
+- Copy matches brand voice tone spectrum (formal/casual axis positioning is accurate)
+- No generic placeholder text remaining (no "Lorem ipsum", "TBD", or "placeholder copy")
+- CTAs are action-oriented and specific (no "Click Here", "Submit", "OK")
+- Slot character limits respected (every slot value is within its `max_chars` bound)
+- Multi-instance components have unique copy across all instances
+
+If FAIL: address quality issues.
+If PASS_WITH_NOTES: review notes, decide whether to address.
 
 ---
 
