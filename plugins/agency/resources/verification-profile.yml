@@ -1,0 +1,212 @@
+# Agency Plugin — Verification Profile
+# Maps every skill to its verification type, checkpoint checks, and QA gate.
+# Referenced by plan-execute and verification-runner.
+#
+# Registered in task-planner verification-registry.yml as agency_profile.
+
+profile_name: "agency"
+version: "1.0.0"
+
+# ──────────────────────────────────────────────
+# QA Strategy
+# ──────────────────────────────────────────────
+
+qa_strategy:
+  frequency: "final"           # QA runs on the final wave only
+  two_stage: true              # Stage 1 (spec compliance) gates Stage 2 (quality)
+  stage_1_tier: "junior"       # Haiku — mechanical checks
+  stage_2_tier: "principal"    # Opus — quality review
+  max_retry_rounds: 3
+
+# ──────────────────────────────────────────────
+# Verification Types Used
+# ──────────────────────────────────────────────
+
+verification_types:
+  data_validation:
+    source: "task-planner (built-in)"
+    used_by: [brand-loader, design-tokens, component-specs, web-layout, app-copy, ux-writing, config-generator, feature-decomposer, team-planner, agent-dispatcher, completion-gate, qa-validation, deploy-config]
+
+  file_validation:
+    source: "task-planner (built-in)"
+    used_by: [logo-assets]
+
+  accessibility_validation:
+    source: "task-planner (built-in)"
+    used_by: [design-tokens]
+
+  code_quality_gate:
+    source: "dev (registered)"
+    used_by: [code-review, scaffold, storybook-generator]
+
+  manual_approval:
+    source: "task-planner (built-in)"
+    used_by: [project-scanner]
+
+# ──────────────────────────────────────────────
+# Per-Skill Checkpoint Map
+# ──────────────────────────────────────────────
+
+skills:
+  # --- Brand Module ---
+  brand-loader:
+    checkpoint_type: data_validation
+    checks: [brand_reference_loaded, tokens_extracted, assets_registered]
+    model_tier: junior
+    two_stage_verification: false
+    findings_persistence: true
+
+  # --- Design Module ---
+  logo-assets:
+    checkpoint_type: file_validation
+    checks: [logo_svg_variants, brand_icon_variants, svg_validity, svg_file_size, preview_html, assets_registered]
+    model_tier: principal
+    two_stage_verification: true
+    findings_persistence: true
+
+  asset-registry:
+    checkpoint_type: none
+    checks: []
+    model_tier: junior
+    two_stage_verification: false
+    findings_persistence: true
+    note: "Utility skill — called by other skills, no standalone checkpoint"
+
+  design-tokens:
+    checkpoint_type: accessibility_validation
+    checks: [tailwind_config_valid, css_variables_valid, dtcg_valid, wcag_aa_body, wcag_aa_large, colorblind_notes, assets_registered]
+    model_tier: senior
+    two_stage_verification: true
+    findings_persistence: true
+
+  component-specs:
+    checkpoint_type: data_validation
+    checks: [components_exist, required_fields, token_references_valid, slots_defined, a11y_requirements, assets_registered]
+    model_tier: principal
+    two_stage_verification: true
+    findings_persistence: true
+
+  web-layout:
+    checkpoint_type: data_validation
+    checks: [layouts_exist, components_referenced, navigation_map, responsive_rules, assets_registered]
+    model_tier: senior
+    two_stage_verification: true
+    findings_persistence: true
+
+  # --- Content Module ---
+  app-copy:
+    checkpoint_type: data_validation
+    checks: [pages_covered, slots_filled, brand_voice_applied, slot_types_complete, assets_registered]
+    model_tier: senior
+    two_stage_verification: true
+    findings_persistence: true
+
+  ux-writing:
+    checkpoint_type: data_validation
+    checks: [categories_complete, brand_voice_applied, component_coverage, error_taxonomy_applied, assets_registered]
+    model_tier: senior
+    two_stage_verification: true
+    findings_persistence: true
+
+  # --- Dev Module ---
+  project-scanner:
+    checkpoint_type: manual_approval
+    checks: [scan_results_written, key_files_identified, frameworks_detected]
+    model_tier: junior
+    two_stage_verification: true
+    findings_persistence: true
+
+  config-generator:
+    checkpoint_type: data_validation
+    checks: [config_exists, meta_complete, frameworks_runtime_exists, language_populated, build_command_populated, design_tokens_section_exists, user_confirmed]
+    model_tier: senior
+    two_stage_verification: true
+    findings_persistence: true
+
+  storybook-generator:
+    checkpoint_type: code_quality_gate
+    checks: [storybook_config_exists, stories_generated, stories_build]
+    model_tier: senior
+    two_stage_verification: false
+    findings_persistence: true
+
+  scaffold:
+    checkpoint_type: code_quality_gate
+    checks: [files_generated, build_passes, lint_passes]
+    model_tier: senior
+    two_stage_verification: false
+    findings_persistence: true
+
+  feature-decomposer:
+    checkpoint_type: data_validation
+    checks: [features_decomposed, tasks_generated, dependencies_valid]
+    model_tier: principal
+    two_stage_verification: true
+    findings_persistence: true
+
+  team-planner:
+    checkpoint_type: data_validation
+    checks: [agents_assigned, file_ownership_clean, model_tiers_set]
+    model_tier: principal
+    two_stage_verification: true
+    findings_persistence: true
+
+  agent-dispatcher:
+    checkpoint_type: data_validation
+    checks: [agents_dispatched, reports_collected, state_updated]
+    model_tier: senior
+    two_stage_verification: true
+    findings_persistence: true
+
+  completion-gate:
+    checkpoint_type: data_validation
+    checks: [all_tasks_complete, build_passes, tests_pass]
+    model_tier: junior
+    two_stage_verification: false
+    findings_persistence: true
+
+  code-review:
+    checkpoint_type: code_quality_gate
+    checks: [review_complete, design_token_compliance, no_critical_issues]
+    model_tier: principal
+    two_stage_verification: true
+    findings_persistence: true
+
+  qa-validation:
+    checkpoint_type: data_validation
+    checks: [qa_report_complete, all_checks_passed, verdict_rendered]
+    model_tier: principal
+    two_stage_verification: true
+    findings_persistence: true
+
+  # --- DevOps Module ---
+  deploy-config:
+    checkpoint_type: data_validation
+    checks: [config_generated, env_vars_mapped, provider_validated]
+    model_tier: senior
+    two_stage_verification: true
+    findings_persistence: true
+
+  deploy-execute:
+    checkpoint_type: data_validation
+    checks: [deployment_successful, health_check_passed]
+    model_tier: senior
+    two_stage_verification: false
+    findings_persistence: true
+
+# ──────────────────────────────────────────────
+# Quality Focus Areas (for Stage 2 QA reviewer)
+# ──────────────────────────────────────────────
+
+qa_focus:
+  - "Progressive disclosure enforced — all SKILL.md under 80 lines"
+  - "Every skill has checkpoint with measurable checks"
+  - "PORT skills preserve all logic from source plugin"
+  - "NEW skills have complete process.md with no placeholder sections"
+  - "Asset-registry integration in all asset-producing skills"
+  - "Design tokens use WCAG-validated contrast pairs"
+  - "Project isolation enforced across all write paths"
+  - "Model tier assigned on every task"
+  - "Findings persistence in all 20 skills"
+  - "Two-stage verification in all active-output skills"
+  - "Error logging to state.yml in all 20 skills"
