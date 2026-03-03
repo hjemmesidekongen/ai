@@ -15,6 +15,7 @@ reads:
   - ".ai/projects/[name]/project-state.yml (execution.dispatched_tasks)"
   - ".ai/projects/[name]/dev/dev-config.yml (commands section)"
 model_tier: junior
+model: haiku
 interactive: false
 checkpoint:
   type: code_quality_gate

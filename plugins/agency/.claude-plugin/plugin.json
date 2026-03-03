@@ -2,48 +2,9 @@
   "name": "agency",
   "version": "1.0.0",
   "description": "Full-service digital agency — brand loading, design systems, content, development, and deployment in one unified plugin. Replaces separate brand/design/content/seo/dev/devops plugins.",
-  "hooks": {
-    "PreToolUse": [
-      {
-        "matcher": "Write|Edit|Bash",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "cat .ai/projects/$(cat .ai/agency.yml 2>/dev/null | grep 'active:' | awk '{print $2}' 2>/dev/null)/state.yml 2>/dev/null | head -20 || true"
-          }
-        ]
-      }
-    ],
-    "PostToolUse": [
-      {
-        "matcher": "Write|Edit",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "echo '[agency] File updated. If this completes a phase, update state.yml.'"
-          }
-        ]
-      }
-    ],
-    "SessionStart": [
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "bash ${CLAUDE_PLUGIN_ROOT}/scripts/session-recovery.sh"
-          }
-        ]
-      }
-    ],
-    "Stop": [
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "bash ${CLAUDE_PLUGIN_ROOT}/scripts/check-wave-complete.sh"
-          }
-        ]
-      }
-    ]
-  }
+  "author": "mvn",
+  "repository": "https://github.com/mvn/claude-local-workspace",
+  "license": "MIT",
+  "keywords": ["agency", "brand", "design", "development", "deployment", "full-service"],
+  "hooks": "hooks/hooks.json"
 }

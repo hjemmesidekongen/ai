@@ -1,14 +1,7 @@
 ---
-name: content
+name: agency:content
 description: "Orchestrate agency content pipeline — generate page copy from layouts then UX microcopy from component specs."
-arguments:
-  - name: project
-    description: "Project name (optional — defaults to active project)"
-    required: false
-  - name: --from
-    description: "Resume from a specific phase: app-copy | ux-writing"
-    required: false
-model_tier: senior
+argument-hint: "[project] [--from app-copy|ux-writing]"
 ---
 
 # /agency:content

@@ -1,19 +1,7 @@
 ---
 name: agency:init
 description: "Initialize a new agency project — creates project directory, loads brand data, scans tech stack, and registers in agency.yml"
-arguments:
-  - name: project_name
-    description: "Name for the project (kebab-case)"
-    required: true
-  - name: --app-path
-    description: "Path to the application root (default: apps/[project_name])"
-    required: false
-  - name: --brand
-    description: "Path to existing brand-reference.yml to import"
-    required: false
-  - name: --skip-scan
-    description: "Skip tech stack scanning"
-    required: false
+argument-hint: "<project> [--app-path <path>] [--brand <path>] [--skip-scan]"
 ---
 
 # /agency:init

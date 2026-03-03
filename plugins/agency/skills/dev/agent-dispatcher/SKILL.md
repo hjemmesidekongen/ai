@@ -18,6 +18,7 @@ reads:
   - ".ai/projects/[name]/project-state.yml (dev module)"
   - ".ai/projects/[name]/knowledge/*.yml (tag-filtered per task)"
 model_tier: senior
+model: sonnet
 interactive: false
 checkpoint:
   type: data_validation

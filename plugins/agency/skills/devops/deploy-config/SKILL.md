@@ -16,6 +16,7 @@ writes:
 reads:
   - ".ai/projects/[name]/dev/dev-config.yml"
 model_tier: senior
+model: sonnet
 interactive: true
 checkpoint:
   type: data_validation

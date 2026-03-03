@@ -18,6 +18,7 @@ reads:
   - ".ai/projects/[name]/design/component-specs/ (optional, reuse check)"
   - ".ai/projects/[name]/design/tokens/ (optional, passed to Frontend TL)"
 model_tier: principal
+model: opus
 interactive: true
 checkpoint:
   type: data_validation

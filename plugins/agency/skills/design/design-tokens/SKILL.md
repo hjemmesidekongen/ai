@@ -18,6 +18,7 @@ writes:
 reads:
   - ".ai/projects/[name]/brand/brand-summary.yml"
 model_tier: senior
+model: sonnet
 checkpoint:
   type: accessibility_validation
   required_checks:

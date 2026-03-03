@@ -15,6 +15,7 @@ reads:
   - ".ai/projects/[name]/asset-registry.yml"
   - "plugins/agency/resources/templates/asset-registry-schema.yml"
 model_tier: junior
+model: haiku
 checkpoint: none (utility skill — called by other skills)
 ---
 

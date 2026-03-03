@@ -1,13 +1,7 @@
 ---
 name: agency:scan
 description: "Re-scan the active project for tech stack changes, new dependencies, and configuration drift since the last scan"
-arguments:
-  - name: --full
-    description: "Force a full re-scan instead of delta-only"
-    required: false
-  - name: --module
-    description: "Scan only a specific module's files (brand, design, content, dev, devops)"
-    required: false
+argument-hint: "[--full] [--module <module>]"
 ---
 
 # /agency:scan

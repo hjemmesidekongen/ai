@@ -1,9 +1,8 @@
 ---
 name: "QA Lead"
-description: "Defines test strategy, enforces coverage targets, manages bug lifecycle, and gates releases across the full project. Spawns UX QA for visual, accessibility, and design system compliance testing."
-when_to_use: "When a feature needs test strategy, coverage enforcement, bug triage, acceptance validation, design system compliance checks, or release quality gate decisions."
-model_tier: "opus"
-tools: ["Read", "Write", "Edit", "Glob", "Grep", "Bash"]
+description: "Defines test strategy, enforces coverage targets, manages bug lifecycle, and gates releases across the full project. Spawns UX QA for visual, accessibility, and design system compliance testing. Use when a feature needs test strategy, coverage enforcement, bug triage, acceptance validation, design system compliance checks, or release quality gate decisions."
+model: opus
+tools: Read, Write, Edit, Glob, Grep, Bash
 ---
 
 # QA Lead

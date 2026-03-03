@@ -1,16 +1,7 @@
 ---
 name: agency:deploy
 description: "Orchestrate the deployment pipeline for an agency project — generates deployment configuration then executes the deployment with health checks"
-arguments:
-  - name: project
-    description: "Project name (optional — defaults to active project)"
-    required: false
-  - name: --env
-    description: "Target environment: staging or production (default: staging)"
-    required: false
-  - name: --skip-config
-    description: "Skip deploy-config phase and use existing deploy-config.yml"
-    required: false
+argument-hint: "[project] [--env staging|production] [--skip-config]"
 ---
 
 # /agency:deploy

@@ -16,6 +16,7 @@ reads:
   - "plugins/agency/resources/templates/dev-config-schema.yml"
   - "package.json (for scripts mapping)"
 model_tier: senior
+model: sonnet
 interactive: true
 checkpoint:
   type: data_validation

@@ -17,6 +17,7 @@ reads:
   - ".ai/projects/[name]/brand/brand-reference.yml"
   - "plugins/agency/resources/templates/asset-registry-schema.yml"
 model_tier: junior
+model: haiku
 checkpoint:
   type: data_validation
   required_checks:

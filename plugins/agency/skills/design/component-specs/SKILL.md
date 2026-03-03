@@ -19,6 +19,7 @@ reads:
   - ".ai/projects/[name]/design/tokens/variables.css"
   - ".ai/projects/[name]/brand/brand-summary.yml"
 model_tier: principal
+model: opus
 interactive: true
 checkpoint:
   type: data_validation

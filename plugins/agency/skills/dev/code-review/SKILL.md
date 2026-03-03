@@ -18,6 +18,7 @@ reads:
   - ".ai/projects/[name]/knowledge/conventions.yml"
   - ".ai/projects/[name]/design/tokens/ (design token files)"
 model_tier: senior
+model: sonnet
 interactive: false
 checkpoint:
   type: data_validation

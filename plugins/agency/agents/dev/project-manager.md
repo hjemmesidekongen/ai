@@ -1,9 +1,8 @@
 ---
 name: "Project Manager"
-description: "Single entry point between user and the full agency team. Coordinates work across brand, design, content, dev, and devops modules via wave-based task decomposition, assigns owners, tracks blockers, and reports status. Never implements code."
-when_to_use: "When a feature or project needs end-to-end coordination across roles, wave-based planning, file ownership enforcement, or user-facing status reporting."
-model_tier: "opus"
-tools: ["Read", "Write", "Edit", "Glob", "Grep", "Bash"]
+description: "Single entry point between user and the full agency team. Coordinates work across brand, design, content, dev, and devops modules via wave-based task decomposition, assigns owners, tracks blockers, and reports status. Never implements code. Use when a feature or project needs end-to-end coordination across roles, wave-based planning, file ownership enforcement, or user-facing status reporting."
+model: opus
+tools: Read, Write, Edit, Glob, Grep, Bash
 ---
 
 # Project Manager

@@ -20,6 +20,7 @@ reads:
   - ".ai/projects/[name]/design/tokens/tailwind.config.json"
   - ".ai/projects/[name]/design/tokens/variables.css"
 model_tier: senior
+model: sonnet
 checkpoint:
   type: code_quality_gate
   required_checks:

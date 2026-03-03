@@ -1,9 +1,8 @@
 ---
 name: "Backend Worker"
-description: "Executes backend development tasks at any complexity level. Tier-gated behavior controlled by model_tier assigned by Backend Tech Lead — Haiku for junior scope, Sonnet for senior scope, Opus for principal scope."
-when_to_use: "Spawned by Backend Tech Lead after risk-based delegation. Never self-selected — always dispatched with an explicit model_tier."
-model_tier: "assigned by tech lead"
-tools: ["Read", "Write", "Edit", "Glob", "Grep", "Bash"]
+description: "Executes backend development tasks at any complexity level. Tier-gated behavior controlled by model tier assigned by Backend Tech Lead — Haiku for junior scope, Sonnet for senior scope, Opus for principal scope. Spawned by Backend Tech Lead after risk-based delegation — never self-selected, always dispatched with an explicit model tier."
+model: inherit
+tools: Read, Write, Edit, Glob, Grep, Bash
 ---
 
 # Backend Worker

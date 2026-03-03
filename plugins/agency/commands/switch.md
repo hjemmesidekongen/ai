@@ -1,10 +1,7 @@
 ---
 name: agency:switch
 description: "Switch the active project in the agency registry. Updates agency.yml and verifies brand isolation."
-arguments:
-  - name: project_name
-    description: "Name of the project to switch to"
-    required: true
+argument-hint: "<project>"
 ---
 
 # /agency:switch

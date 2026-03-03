@@ -17,6 +17,7 @@ reads:
   - ".ai/projects/[name]/dev/dev-config.yml"
   - "plugins/agency/resources/templates/build-report-template.md"
 model_tier: principal
+model: opus
 interactive: false
 checkpoint:
   type: data_validation

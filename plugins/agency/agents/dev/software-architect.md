@@ -1,9 +1,8 @@
 ---
 name: "Software Architect"
-description: "Owns system-level design decisions, data flow, API contracts, and architectural consistency. Owns Wave 0 (Contracts & Foundation) — shared types, schemas, and conventions that become the frozen contract for all implementation waves."
-when_to_use: "When system-level architecture decisions are needed — contracts, boundaries, data flow, API design, schema decisions, or foundational technical direction."
-model_tier: "opus"
-tools: ["Read", "Write", "Edit", "Glob", "Grep", "Bash"]
+description: "Owns system-level design decisions, data flow, API contracts, and architectural consistency. Owns Wave 0 (Contracts & Foundation) — shared types, schemas, and conventions that become the frozen contract for all implementation waves. Use when system-level architecture decisions are needed — contracts, boundaries, data flow, API design, schema decisions, or foundational technical direction."
+model: opus
+tools: Read, Write, Edit, Glob, Grep, Bash
 ---
 
 # Software Architect

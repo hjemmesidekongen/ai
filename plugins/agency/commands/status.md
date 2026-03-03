@@ -1,10 +1,7 @@
 ---
 name: agency:status
 description: "Show the current project's pipeline status across all modules (brand, design, content, dev, devops)"
-arguments:
-  - name: project
-    description: "Project name (optional — defaults to active project)"
-    required: false
+argument-hint: "[project]"
 ---
 
 # /agency:status

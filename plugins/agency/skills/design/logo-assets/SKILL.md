@@ -31,6 +31,7 @@ checkpoint:
   on_fail: "Fix issues and re-run checkpoint. Advance only after all checks pass."
   on_pass: "Update state.yml, write recovery_notes, register assets, advance."
 model_tier: principal
+model: opus
 ---
 
 # Logo Assets

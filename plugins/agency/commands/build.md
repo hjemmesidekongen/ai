@@ -1,23 +1,7 @@
 ---
 name: agency:build
 description: "Orchestrate the full 4-phase development pipeline — feature decomposition → wave planning → parallel agent dispatch → code review and QA validation"
-arguments:
-  - name: project
-    description: "Project name (optional — defaults to active project)"
-    required: false
-  - name: feature-description
-    description: "Natural language description of what to build (required for new builds)"
-    required: false
-  - name: --from
-    description: "Resume from a specific phase: decompose | plan | execute | review"
-    required: false
-  - name: --wave
-    description: "Resume from a specific wave number within the execute phase (e.g. --wave 3)"
-    required: false
-  - name: --dry-run
-    description: "Decompose and plan only — write plan to project-state.yml and stop without executing"
-    required: false
-model_tier: senior
+argument-hint: "[project] \"feature description\" [--from phase] [--wave N] [--dry-run]"
 ---
 
 # /agency:build

@@ -21,6 +21,7 @@ reads:
   - ".ai/projects/[name]/content/ux/*.yml"
   - ".ai/projects/[name]/brand/brand-summary.yml"
 model_tier: senior
+model: sonnet
 interactive: true
 checkpoint:
   type: data_validation

@@ -1,13 +1,7 @@
 ---
 name: agency:design
 description: "Orchestrate the full design pipeline — brand-loader → logo-assets → design-tokens → component-specs → web-layout"
-arguments:
-  - name: project
-    description: "Project name (optional — defaults to active project)"
-    required: false
-  - name: --from
-    description: "Resume from a specific phase: brand | logo | tokens | components | layout"
-    required: false
+argument-hint: "[project] [--from brand|logo|tokens|components|layout]"
 ---
 
 # /agency:design

@@ -1,9 +1,8 @@
 ---
 name: "Security Reviewer"
-description: "Pre-merge security review, dependency scanning, and OWASP Top 10 compliance across frontend and backend changes. Classifies findings by severity and recommends approve/block."
-when_to_use: "When code needs pre-merge security review, OWASP checklist validation, secret detection, or vulnerability risk classification."
-model_tier: "opus"
-tools: ["Read", "Write", "Edit", "Glob", "Grep", "Bash"]
+description: "Pre-merge security review, dependency scanning, and OWASP Top 10 compliance across frontend and backend changes. Classifies findings by severity and recommends approve/block. Use when code needs pre-merge security review, OWASP checklist validation, secret detection, or vulnerability risk classification."
+model: opus
+tools: Read, Write, Edit, Glob, Grep, Bash
 ---
 
 # Security Reviewer

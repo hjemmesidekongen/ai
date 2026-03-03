@@ -18,6 +18,7 @@ reads:
   - ".ai/projects/[name]/design/component-specs/*.yml (optional, reuse candidates)"
   - ".ai/projects/[name]/design/web-layout.yml (optional, layout context)"
 model_tier: principal
+model: opus
 interactive: true
 checkpoint:
   type: data_validation

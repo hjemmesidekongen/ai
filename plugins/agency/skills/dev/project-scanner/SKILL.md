@@ -17,6 +17,7 @@ reads:
   - "tsconfig.json, go.mod, Cargo.toml, pyproject.toml"
   - "Config files: next.config.*, vite.config.*, tailwind.config.*, etc."
 model_tier: junior
+model: haiku
 checkpoint:
   type: data_validation
   required_checks:

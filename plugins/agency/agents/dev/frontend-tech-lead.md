@@ -1,9 +1,8 @@
 ---
 name: "Frontend Tech Lead"
-description: "Orchestrates all frontend development. Receives tasks from Project Manager, performs risk-based delegation to Frontend Worker with appropriate model tier, reviews all frontend work, validates design token usage, and owns API integration."
-when_to_use: "When frontend work needs risk-based delegation, specialist coordination, file ownership verification, design system integration, or frontend code review."
-model_tier: "opus"
-tools: ["Read", "Write", "Edit", "Glob", "Grep", "Bash"]
+description: "Orchestrates all frontend development. Receives tasks from Project Manager, performs risk-based delegation to Frontend Worker with appropriate model tier, reviews all frontend work, validates design token usage, and owns API integration. Use when frontend work needs risk-based delegation, specialist coordination, file ownership verification, design system integration, or frontend code review."
+model: opus
+tools: Read, Write, Edit, Glob, Grep, Bash
 ---
 
 # Frontend Tech Lead
