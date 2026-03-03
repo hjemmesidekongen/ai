@@ -1,0 +1,206 @@
+# Project State Schema
+# Defines the structure of .ai/projects/[name]/state.yml
+# Version: 1.0.0
+
+_meta:
+  schema: "project-state"
+  version: "1.0.0"
+  plugin: "agency"
+  description: "Per-project state tracking. One per project in .ai/projects/[name]/state.yml."
+
+schema:
+  project:
+    type: string
+    required: true
+    description: "Project name (matches key in agency.yml)"
+
+  status:
+    type: string
+    required: true
+    enum: ["created", "in_progress", "completed", "paused", "failed"]
+    description: "Overall project status"
+
+  created_at:
+    type: string
+    format: "ISO 8601"
+    required: true
+
+  updated_at:
+    type: string
+    format: "ISO 8601"
+    required: true
+
+  # ─────────────────────────────────────────
+  # Module-level tracking
+  # ─────────────────────────────────────────
+
+  modules:
+    type: map
+    required: true
+    description: "Per-module state tracking. Each module runs independently and may have its own findings.md."
+    value_schema:
+      status:
+        type: string
+        enum: ["not_started", "in_progress", "completed", "skipped", "failed"]
+      started_at:
+        type: string
+        format: "ISO 8601"
+        required: false
+      completed_at:
+        type: string
+        format: "ISO 8601"
+        required: false
+      current_skill:
+        type: string
+        required: false
+        description: "Currently executing skill within this module"
+      completed_skills:
+        type: list
+        item_type: string
+        description: "Ordered list of skill names that have completed in this module"
+      findings_file:
+        type: string
+        required: false
+        description: "Path to module-level findings.md for research persistence across /compact"
+
+    keys:
+      brand:
+        description: "Brand loading — reads existing brand-reference.yml from brand-guideline plugin output"
+      design:
+        description: "Design system — logos, tokens, components, layouts"
+      content:
+        description: "Content generation — app copy, UX writing, microcopy"
+      dev:
+        description: "Development — project scanning, scaffolding, building, code review"
+      devops:
+        description: "Deployment — CI/CD pipeline config and execution"
+
+  # ─────────────────────────────────────────
+  # Current execution context
+  # ─────────────────────────────────────────
+
+  current_module:
+    type: string
+    required: false
+    description: "Which module is currently being executed"
+
+  current_skill:
+    type: string
+    required: false
+    description: "Which skill is currently running within the current module"
+
+  # ─────────────────────────────────────────
+  # Error tracking (follows plugin-blueprint pattern)
+  # See: plugins/task-planner/resources/state-schema.yml
+  #
+  # Rules:
+  #   1. Log ALL errors immediately when they occur
+  #   2. Before attempting an approach, check errors for previous attempts
+  #   3. Never repeat a failed approach — mutate strategy instead
+  #   4. When an error is fixed, update result to "resolved" but keep the entry
+  #   5. Never delete entries — mark resolved instead
+  # ─────────────────────────────────────────
+
+  errors:
+    type: list
+    required: true
+    default: []
+    description: "Persistent error log. Never delete entries — mark resolved instead."
+    item_schema:
+      timestamp:
+        type: string
+        format: "ISO 8601"
+        required: true
+        description: "When the error occurred"
+      module:
+        type: string
+        required: true
+        description: "Which module the error occurred in (brand, design, content, dev, devops)"
+      skill:
+        type: string
+        required: true
+        description: "Which skill failed"
+      error:
+        type: string
+        required: true
+        description: "What went wrong (concise but specific)"
+      attempted_fix:
+        type: string
+        required: true
+        description: "What was tried to resolve it"
+      result:
+        type: string
+        required: true
+        enum: ["resolved", "partial", "unresolved"]
+        description: "Outcome of the fix attempt"
+      next_approach:
+        type: string
+        required: false
+        description: "What to try next if result is not resolved. Required when result is 'unresolved' or 'partial'."
+
+  # ─────────────────────────────────────────
+  # Asset tracking (cross-module)
+  # ─────────────────────────────────────────
+
+  asset_registry:
+    type: string
+    required: false
+    description: "Path to asset-registry.yml for this project"
+    example: ".ai/projects/blik/asset-registry.yml"
+
+  # ─────────────────────────────────────────
+  # Session recovery
+  # ─────────────────────────────────────────
+
+  recovery_notes:
+    type: string
+    required: false
+    description: >
+      Human-readable notes about where execution stands and what is next.
+      Written after each skill completes. Read by session-recovery.sh and
+      by Claude when resuming after /compact or session restart.
+
+  last_session_id:
+    type: string
+    required: false
+    description: "Session ID of the last session that worked on this state"
+
+# ─────────────────────────────────────────
+# Example instance
+# ─────────────────────────────────────────
+
+example:
+  project: "blik"
+  status: "in_progress"
+  created_at: "2026-03-03T00:00:00Z"
+  updated_at: "2026-03-03T14:30:00Z"
+  modules:
+    brand:
+      status: "completed"
+      started_at: "2026-03-03T10:00:00Z"
+      completed_at: "2026-03-03T10:15:00Z"
+      current_skill: null
+      completed_skills: ["brand-loader"]
+    design:
+      status: "in_progress"
+      started_at: "2026-03-03T10:15:00Z"
+      current_skill: "design-tokens"
+      completed_skills: ["logo-assets", "asset-registry"]
+      findings_file: ".ai/projects/blik/design/findings.md"
+    content:
+      status: "not_started"
+      completed_skills: []
+    dev:
+      status: "not_started"
+      completed_skills: []
+    devops:
+      status: "not_started"
+      completed_skills: []
+  current_module: "design"
+  current_skill: "design-tokens"
+  errors: []
+  asset_registry: ".ai/projects/blik/asset-registry.yml"
+  recovery_notes: |
+    Design module in progress. Logo and asset registry complete.
+    Currently generating design tokens from brand colors/typography.
+  last_session_id: null
