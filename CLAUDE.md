@@ -126,6 +126,27 @@ plugins/
       session-recovery.sh          # Dev-specific session recovery
       check-wave-complete.sh       # Dev-specific completion gate
     CHANGELOG.md
+  agency/                            # Unified agency plugin (building)
+    .claude-plugin/plugin.json       # version: "1.0.0", includes hooks
+    commands/                        # init, design, content, build, deploy, status, switch, scan
+    skills/
+      brand/                         # brand-loader
+      design/                        # logo-assets, asset-registry, design-tokens, component-specs, web-layout
+      content/                       # app-copy, ux-writing
+      dev/                           # project-scanner, config-generator, scaffold, storybook-generator,
+                                     # feature-decomposer, team-planner, agent-dispatcher, completion-gate,
+                                     # code-review, qa-validation
+      devops/                        # deploy-config, deploy-execute
+    agents/dev/                      # 5 leadership + 7 specialist agents
+    migrations/                      # MIGRATION-REGISTRY.yml
+    resources/
+      templates/                     # agency-registry, project-state, asset-registry schemas
+      deferred-backlog.yml           # 20 deferred features for post-MVP
+    scripts/
+      session-recovery.sh
+      check-wave-complete.sh
+      project-isolation-check.sh
+    CHANGELOG.md
 shared/
   brand-context-loader/            # Shared skill — loads brand data for any plugin
                                    # Calls version-compatibility-checker before loading
@@ -329,6 +350,21 @@ Reference: docs/subagent-execution-plan.md
 - [x] SE12: Integration test — parallel dispatch (parallel wave)
 - [x] SE13: Integration test — failure and retry
 - [x] SE14: Integration test — model tier enforcement
+
+### Part 8: Agency Plugin (in progress — unified agency replacing separate plugins)
+- [x] Step 74: Plugin scaffold + plugin.json + ecosystem.json
+- [x] Step 75: Core schemas (agency-registry, project-state, asset-registry)
+- [x] Step 76: Deferred backlog + verification profile
+- [ ] Step 77: Project isolation hook + CHANGELOG + migrations
+- [ ] Step 78: brand-loader skill
+- [ ] Step 79: Design skills (logo-assets, design-tokens, asset-registry, component-specs, web-layout)
+- [ ] Step 80: Content skills (app-copy, ux-writing)
+- [ ] Step 81: Dev skills PORT (project-scanner, config-generator, feature-decomposer, team-planner, agent-dispatcher, completion-gate, code-review, qa-validation)
+- [ ] Step 82: Dev skills NEW (storybook-generator, scaffold)
+- [ ] Step 83: DevOps skills (deploy-config, deploy-execute)
+- [ ] Step 84: Commands (init, design, content, build, deploy, status, switch, scan)
+- [ ] Step 85: Dev agents (5 leadership + 7 specialist)
+- [ ] Step 86: Self-review audit
 
 ## Specs
 Read the relevant spec BEFORE implementing. Do NOT try to build everything at once.
