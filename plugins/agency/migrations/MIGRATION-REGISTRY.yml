@@ -1,0 +1,14 @@
+# Migration Registry — agency plugin
+# Tracks all schema migrations for version upgrades
+
+_meta:
+  plugin: "agency"
+  current_version: "1.0.0"
+
+migrations: []
+# Future migrations will be added here as:
+# - from_version: "1.0.0"
+#   to_version: "1.1.0"
+#   type: "minor"
+#   script: "scripts/migrate-1.0.0-to-1.1.0.sh"
+#   description: "..."
