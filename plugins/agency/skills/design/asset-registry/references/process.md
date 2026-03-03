@@ -128,3 +128,19 @@ Types: {type_breakdown}
 | Duplicate ID on register | Update existing entry, log "Updated existing asset: {id}" |
 | Invalid type/format | Reject registration, report valid values |
 | File at path doesn't exist | Warn on validate, don't block on register (file may not be created yet) |
+
+## Error Logging
+
+Log all errors to `state.yml` errors array for tracking and retry prevention:
+
+```yaml
+errors:
+  - timestamp: "[ISO timestamp]"
+    skill: "asset-registry"
+    error: "[error description]"
+    attempted_fix: "[what was tried]"
+    result: "[resolved/unresolved]"
+    next_approach: "[alternative if unresolved]"
+```
+
+Before retrying any operation, check state.yml errors array for previous attempts on the same asset ID. Never repeat a failed approach.

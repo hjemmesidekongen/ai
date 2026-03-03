@@ -48,6 +48,10 @@ fields present.
 ### list(options)
 List all assets, optionally filtered by module or type.
 
+## Findings Persistence
+
+Write operation results to `.ai/projects/[name]/design/findings.md`. Log all errors to state.yml errors array — never repeat a failed approach.
+
 ## Execution
 
 Follow the detailed process in [references/process.md](references/process.md).
