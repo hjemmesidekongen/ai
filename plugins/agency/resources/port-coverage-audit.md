@@ -18,17 +18,18 @@ disclosure is enforced.
 | Model tier on every skill | PASS | 20/20 SKILL.md files have model_tier |
 | Progressive disclosure (<= 80 lines) | PASS | All 20 SKILL.md files ≤ 80 lines |
 | References/process.md present | PASS | All 20 skills have process.md |
-| Error logging (state.yml) | PARTIAL | 19/20 — asset-registry missing |
-| Findings persistence (2-Action Rule) | PARTIAL | 12/20 — brand/design/content lacking |
+| Error logging (state.yml) | PASS | 20/20 — all skills present |
+| Findings persistence (2-Action Rule) | PASS | 20/20 — all skills present |
 | Design token compliance in code-review | PASS | Fully documented |
 | Asset registry integration | PASS | All asset-producing skills reference it |
-| Two-stage verification documented | PARTIAL | 8/20 — dev/devops only |
+| Two-stage verification documented | PASS | 14/20 — all active-output skills (6 utility/execution appropriately excluded) |
 | Agent model tiers present | PASS | All 12 agents have model_tier |
 
-**Overall verdict: PASS with notes.** The plugin is structurally complete and MVP-ready.
-Three quality pattern gaps exist across brand, content, and design modules (findings
-persistence, two-stage verification, one error logging gap) and are documented as
-post-MVP recommendations below.
+**Overall verdict: PASS.** The plugin is structurally complete and MVP-ready.
+All four quality pattern gaps (GAP-01 through GAP-04) identified in the initial audit
+have been resolved. All 20 skills have findings persistence, error logging, and model
+tiers. All 14 active-output skills have two-stage verification. verification-profile.yml
+is present and complete.
 
 ---
 
@@ -152,19 +153,14 @@ Skills that reference `findings.md` or the 2-Action Rule (in SKILL.md or referen
 
 | Status | Skills |
 |--------|--------|
-| PRESENT | agent-dispatcher, code-review, completion-gate, config-generator, feature-decomposer, project-scanner, qa-validation, scaffold, storybook-generator, team-planner, deploy-config, deploy-execute (12/20) |
-| MISSING | brand-loader, app-copy, ux-writing, asset-registry, component-specs, design-tokens, logo-assets, web-layout (8/20) |
+| PRESENT | brand-loader, app-copy, ux-writing, asset-registry, component-specs, design-tokens, logo-assets, web-layout, agent-dispatcher, code-review, completion-gate, config-generator, feature-decomposer, project-scanner, qa-validation, scaffold, storybook-generator, team-planner, deploy-config, deploy-execute (20/20) |
 
-**Result: PARTIAL — GAP IDENTIFIED.**
+**Result: PASS — RESOLVED (2026-03-03).**
 
-The brand, content, and design module skills (8 of 20) do not reference the findings.md
-pattern or the 2-Action Rule. For non-research-heavy skills (asset-registry, brand-loader)
-this gap is lower risk. For logo-assets, design-tokens, component-specs, and web-layout —
-which involve iterative specification work — the omission increases context loss risk
-during `/compact` or session interruption.
-
-**Recommendation:** Add findings.md references to all 8 non-dev/devops skills in a
-follow-up pass (see Section 7).
+All 20 skills now reference findings.md or the 2-Action Rule. The 8 brand/content/design
+skills that were missing this pattern (brand-loader, app-copy, ux-writing, asset-registry,
+component-specs, design-tokens, logo-assets, web-layout) had findings persistence added
+as part of the agency-audit-fixes wave.
 
 ### 4c. Error Logging (state.yml errors array)
 
@@ -172,17 +168,13 @@ Skills that reference error logging to state.yml:
 
 | Status | Skills |
 |--------|--------|
-| PRESENT | brand-loader, app-copy, ux-writing, component-specs, design-tokens, logo-assets, web-layout, agent-dispatcher, code-review, completion-gate, config-generator, feature-decomposer, project-scanner, qa-validation, scaffold, storybook-generator, team-planner, deploy-config, deploy-execute (19/20) |
-| MISSING | asset-registry (1/20) |
+| PRESENT | brand-loader, app-copy, ux-writing, asset-registry, component-specs, design-tokens, logo-assets, web-layout, agent-dispatcher, code-review, completion-gate, config-generator, feature-decomposer, project-scanner, qa-validation, scaffold, storybook-generator, team-planner, deploy-config, deploy-execute (20/20) |
 
-**Result: PARTIAL — MINOR GAP.**
+**Result: PASS — RESOLVED (2026-03-03).**
 
-The asset-registry skill is a utility skill with no checkpoint (`checkpoint: none`).
-Its error handling is documented in process.md via a dedicated Error Handling table
-(invalid type/format → reject; duplicate ID → update). The omission of a state.yml
-errors array reference is acceptable for a utility skill but should be noted.
-
-**Recommendation:** Add a brief error logging note to asset-registry process.md.
+All 20 skills reference state.yml for error logging. The one gap (asset-registry)
+was resolved by adding error logging to its SKILL.md and process.md as part of the
+agency-audit-fixes wave.
 
 ### 4d. Design Token Compliance
 
@@ -215,20 +207,18 @@ Skills with documented two-stage verification (Stage 1 spec compliance + Stage 2
 
 | Status | Skills |
 |--------|--------|
-| PRESENT | agent-dispatcher, code-review, config-generator, feature-decomposer, project-scanner, qa-validation, team-planner, deploy-config (8/20) |
-| MISSING | brand-loader, app-copy, ux-writing, asset-registry, component-specs, design-tokens, logo-assets, web-layout, completion-gate, scaffold, storybook-generator, deploy-execute (12/20) |
+| PRESENT (active-output) | logo-assets, design-tokens, component-specs, web-layout, app-copy, ux-writing, project-scanner, config-generator, feature-decomposer, team-planner, agent-dispatcher, code-review, qa-validation, deploy-config (14/20) |
+| EXCLUDED (utility/execution) | brand-loader, asset-registry, storybook-generator, scaffold, completion-gate, deploy-execute (6/20 — appropriately excluded) |
 
-**Result: PARTIAL — GAP IDENTIFIED.**
+**Result: PASS — RESOLVED (2026-03-03).**
 
-Two-stage verification is documented only in dev module skills (plus deploy-config).
-Brand, content, and design module skills do not include the two-stage verification
-block in their process.md files. Utility skills (asset-registry) and execution
-skills (completion-gate, deploy-execute) may appropriately omit it, but the 5
-active-output skills (logo-assets, design-tokens, component-specs, web-layout,
-app-copy, ux-writing) should include it.
-
-**Recommendation:** Add two-stage verification blocks to the 6 active-output skills
-that are missing it.
+Two-stage verification is now present in all 14 active-output skills. The 6 utility
+and execution skills (brand-loader, asset-registry, storybook-generator, scaffold,
+completion-gate, deploy-execute) are appropriately excluded — they are either utility
+helpers called by other skills or execution-only skills where per-output quality
+gating is handled upstream. The 6 brand/content/design active-output skills (logo-assets,
+design-tokens, component-specs, web-layout, app-copy, ux-writing) had two-stage
+verification blocks added as part of the agency-audit-fixes wave.
 
 ---
 
@@ -238,13 +228,13 @@ All 20 SKILL.md files are within the 80-line limit:
 
 | Lines | Skills |
 |-------|--------|
-| ≤ 60 | brand-loader (60), asset-registry (53), deploy-execute (62) |
-| 61–70 | app-copy (73), ux-writing (73), component-specs (69), deploy-config (73), completion-gate (73), scaffold (72), web-layout (72) |
-| 71–79 | design-tokens (77), logo-assets (79), code-review (77), config-generator (78), feature-decomposer (77), qa-validation (75), storybook-generator (80) |
-| = 80 | project-scanner (80), team-planner (80), agent-dispatcher (79) |
+| ≤ 60 | brand-loader (64), asset-registry (57), deploy-execute (62) |
+| 61–70 | scaffold (72) |
+| 71–79 | component-specs (73), web-layout (76), app-copy (77), ux-writing (77), config-generator (78), feature-decomposer (77), code-review (77), qa-validation (75), deploy-config (73), completion-gate (73), agent-dispatcher (79) |
+| = 80 | logo-assets (80), design-tokens (80), project-scanner (80), storybook-generator (80), team-planner (80) |
 
-**At the 80-line limit:** project-scanner (80), team-planner (80), storybook-generator (80).
-These are at the ceiling but not over — PASS.
+**At the 80-line limit:** logo-assets (80), design-tokens (80), project-scanner (80),
+storybook-generator (80), team-planner (80). These are at the ceiling but not over — PASS.
 
 All 20 skills have a corresponding `references/process.md` file.
 
@@ -254,18 +244,15 @@ All 20 skills have a corresponding `references/process.md` file.
 
 ## 6. Two-Stage Verification Support — Global Documentation
 
-The agency plugin does not have a standalone `resources/verification-profile.yml` file.
-Two-stage verification is documented at the skill level (process.md) rather than as a
-plugin-level profile.
+The agency plugin now has `plugins/agency/resources/verification-profile.yml` (212 lines).
 
-This is a gap relative to the task-planner blueprint standard (Section 5, V1-V6), which
-calls for a verification profile in `resources/`.
+The file includes:
+- `qa_strategy` — frequency, two_stage, stage tiers, max_retry_rounds
+- `verification_types` — 5 types with `used_by` lists for all 20 skills
+- `skills` — all 20 skills with checkpoint_type, checks, model_tier, two_stage_verification, findings_persistence
+- `qa_focus` — 11 quality focus areas for Stage 2 QA reviewer
 
-**Result: PARTIAL — LOW PRIORITY GAP.**
-
-The pattern exists in the codebase (task-planner has it), and the agency plugin's
-verification behavior inherits from the task-planner dependency. A verification-profile.yml
-would make the agency plugin self-documenting but is not required for functional operation.
+**Result: PASS — RESOLVED (2026-03-03).**
 
 ---
 
@@ -274,33 +261,30 @@ would make the agency plugin self-documenting but is not required for functional
 ### Critical (blocks MVP quality)
 None identified. The plugin is functionally complete.
 
-### High Priority (address before second project)
+### High Priority — RESOLVED
 
-**GAP-01: Findings persistence missing in brand/content/design modules**
-- Affected: brand-loader, app-copy, ux-writing, asset-registry, component-specs,
+**GAP-01: Findings persistence missing in brand/content/design modules** — RESOLVED 2026-03-03
+- Was affected: brand-loader, app-copy, ux-writing, asset-registry, component-specs,
   design-tokens, logo-assets, web-layout
-- Risk: Context loss during `/compact` or session interruption when building a brand
-  or design system
-- Fix: Add findings.md reference and 2-Action Rule to each skill's SKILL.md (1-2 lines
-  each) and brief persistence section to process.md
+- Resolution: findings.md reference and 2-Action Rule added to all 8 skills in
+  agency-audit-fixes wave (tasks t1–t5)
 
-**GAP-02: Two-stage verification missing in 6 active-output skills**
-- Affected: logo-assets, design-tokens, component-specs, web-layout, app-copy, ux-writing
-- Risk: Output quality gating is inconsistent — dev outputs are gated, design/content outputs are not
-- Fix: Add two-stage verification block to each process.md (~10 lines each)
+**GAP-02: Two-stage verification missing in 6 active-output skills** — RESOLVED 2026-03-03
+- Was affected: logo-assets, design-tokens, component-specs, web-layout, app-copy, ux-writing
+- Resolution: Two-stage verification block added to all 6 active-output skills' process.md
+  in agency-audit-fixes wave (tasks t1–t5)
 
-### Medium Priority (before third project or agency scale)
+### Medium Priority — RESOLVED
 
-**GAP-03: asset-registry missing error logging to state.yml**
-- Affected: asset-registry
-- Risk: Silent failures on asset registration not tracked
-- Fix: Add 2-line error logging note to asset-registry SKILL.md
+**GAP-03: asset-registry missing error logging to state.yml** — RESOLVED 2026-03-03
+- Was affected: asset-registry
+- Resolution: Error logging to state.yml added to asset-registry SKILL.md and process.md
+  in agency-audit-fixes wave (task t3)
 
-**GAP-04: verification-profile.yml not present**
-- Affected: Plugin self-documentation
-- Risk: Inconsistency with blueprint standard (V1)
-- Fix: Create `plugins/agency/resources/verification-profile.yml` modeled on
-  task-planner's verification-registry.yml
+**GAP-04: verification-profile.yml not present** — RESOLVED 2026-03-03
+- Was affected: Plugin self-documentation
+- Resolution: `plugins/agency/resources/verification-profile.yml` created (212 lines)
+  in agency-audit-fixes wave (task t5)
 
 ### Low Priority (post-MVP)
 
@@ -332,6 +316,17 @@ estimate (small/medium/large), source plugin reference where applicable, and not
 
 ---
 
+## 9. Resolution Log
+
+| Gap | Priority | Resolution | Date |
+|-----|----------|-----------|------|
+| GAP-01 | HIGH | Findings persistence added to all 8 brand/content/design skills | 2026-03-03 |
+| GAP-02 | HIGH | Two-stage verification added to 6 active-output skills | 2026-03-03 |
+| GAP-03 | MEDIUM | Error logging added to asset-registry | 2026-03-03 |
+| GAP-04 | MEDIUM | verification-profile.yml created | 2026-03-03 |
+
+---
+
 ## Appendix A: File Reference
 
 | File | Purpose |
@@ -341,6 +336,7 @@ estimate (small/medium/large), source plugin reference where applicable, and not
 | `plugins/dev/.claude-plugin/ecosystem.json` | Dev skill source list |
 | `plugins/agency/.claude-plugin/ecosystem.json` | Agency skill manifest |
 | `plugins/agency/resources/deferred-backlog.yml` | 20 deferred items with triggers |
+| `plugins/agency/resources/verification-profile.yml` | Skill verification map (all 20 skills) |
 | `plugins/agency/skills/` | 20 SKILL.md files across 5 modules |
 | `plugins/agency/agents/dev/` | 12 agent definitions |
 | `plugins/agency/commands/` | 8 command definitions |
