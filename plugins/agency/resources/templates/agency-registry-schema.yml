@@ -14,7 +14,7 @@ schema:
     type: string
     required: true
     description: "Name of the currently active project. Must match a key in projects."
-    example: "blik"
+    example: "acme"
 
   # Project list — each project is an isolated tenant
   projects:
@@ -26,25 +26,25 @@ schema:
         type: string
         required: true
         description: "Path to the application root (relative to workspace root)"
-        example: "apps/blik-web"
+        example: "apps/acme-web"
 
       brand_package_path:
         type: string
         required: false
         description: "Path to the brand-specific package (relative to workspace root). Null if brand not yet loaded."
-        example: "packages/brand/blik"
+        example: "packages/brand/acme"
 
       brand_reference:
         type: string
         required: false
         description: "Path to the brand-reference.yml file for this project"
-        example: ".ai/projects/blik/brand/brand-reference.yml"
+        example: ".ai/projects/acme/brand/brand-reference.yml"
 
       project_dir:
         type: string
         required: true
         description: "Path to the .ai/projects/[name]/ directory containing all project state and outputs"
-        example: ".ai/projects/blik"
+        example: ".ai/projects/acme"
 
       created_at:
         type: string
@@ -85,13 +85,13 @@ schema:
 # ─────────────────────────────────────────
 
 example:
-  active: "blik"
+  active: "acme"
   projects:
-    blik:
-      app_path: "apps/blik-web"
-      brand_package_path: "packages/brand/blik"
-      brand_reference: ".ai/projects/blik/brand/brand-reference.yml"
-      project_dir: ".ai/projects/blik"
+    acme:
+      app_path: "apps/acme-web"
+      brand_package_path: "packages/brand/acme"
+      brand_reference: ".ai/projects/acme/brand/brand-reference.yml"
+      project_dir: ".ai/projects/acme"
       created_at: "2026-03-03T00:00:00Z"
       modules:
         brand: "completed"

@@ -2,7 +2,7 @@ _meta:
   schema: "deferred-backlog"
   version: "1.0.0"
   plugin: "agency"
-  description: "Features not needed for Blik MVP. Each entry has a trigger condition for when it becomes relevant. Source plugin and skills are listed for reference during port work."
+  description: "Features not needed for agency MVP. Each entry has a trigger condition for when it becomes relevant. Source plugin and skills are listed for reference during port work."
   last_reviewed: "2026-03-03"
   total_deferred: 20
 
@@ -10,13 +10,13 @@ _meta:
 # HOW TO READ THIS FILE
 # ============================================================
 # Each entry represents a capability that exists in a reference
-# plugin but is not part of the agency MVP (Blik build).
+# plugin but is not part of the agency MVP.
 # When the trigger fires, port the listed skills into the
 # appropriate agency module subdirectory.
 #
 # Priority:
 #   high   — likely needed for the second real project
-#   medium — needed once the agency expands past Blik
+#   medium — needed once the agency expands past the first project
 #   low    — specialist use case, defer indefinitely
 #
 # Effort:
@@ -29,8 +29,8 @@ deferred:
 
   # ──────────────────────────────────────────────────────────
   # BRAND MODULE — generation pipeline
-  # Blik already has brand-reference.yml. Agency MVP only needs
-  # brand-loader (read path). Generation is deferred.
+  # Projects with existing brand-reference.yml only need brand-loader
+  # (read path). Generation pipeline is deferred.
   # ──────────────────────────────────────────────────────────
 
   - id: "defer-01"
@@ -100,9 +100,9 @@ deferred:
       accessibility language guidelines, and prohibited terminology lists.
 
   # ──────────────────────────────────────────────────────────
-  # SEO MODULE — not built for Blik
-  # Blik is a product MVP and does not need SEO strategy yet.
-  # Full SEO module deferred until Blik launches and needs
+  # SEO MODULE — not built for agency MVP
+  # Product MVPs typically do not need SEO strategy yet.
+  # Full SEO module deferred until a project launches and needs
   # organic traffic growth.
   # ──────────────────────────────────────────────────────────
 
@@ -278,7 +278,7 @@ deferred:
     priority: "medium"
     effort: "small"
     notes: |
-      Deferred because Blik is a single-project build. Knowledge is embedded in
+      Deferred for single-project builds. Knowledge is embedded in
       config-generator output (already in MVP) for the single-project case.
       Needed when the agency workspace grows to 3+ active projects and ad-hoc
       knowledge duplication becomes a friction point.
@@ -343,7 +343,7 @@ deferred:
     priority: "low"
     effort: "large"
     notes: |
-      Specialist use case. Most Blik-scale projects stay within managed PaaS.
+      Specialist use case. Most MVP-scale projects stay within managed PaaS.
       Only needed when custom infra (AWS/GCP/Azure) is required.
       Skills would cover: Terraform/Pulumi config generation, secrets management,
       database provisioning (Neon MCP already available), network configuration.

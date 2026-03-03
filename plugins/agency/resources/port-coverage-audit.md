@@ -54,8 +54,8 @@ typography-color, visual-identity, logo-design, content-rules, social-media, com
 | compile-and-export | DEFERRED | defer-01 + defer-02 (brand manual export) |
 | brand-context-loader (shared) | PORT → brand-loader | `plugins/agency/skills/brand/brand-loader/` |
 
-**Result: PASS.** All 9 generation skills are deferred with rationale (Blik already has
-brand-reference.yml — generation pipeline is not needed for MVP). The read path is
+**Result: PASS.** All 9 generation skills are deferred with rationale (projects with existing
+brand-reference.yml only need the read path — generation pipeline is not needed for MVP). The read path is
 covered by brand-loader. The shared `brand-context-loader` from the original plugin
 is effectively replaced by brand-loader.
 
@@ -123,7 +123,7 @@ code-review, qa-validation, delta-scanner
 
 Dev plugin had 15 agents (5 leadership + 10 specialist). Agency has 12 agents
 (5 leadership + 7 specialist). Missing from dev → agency:
-- mobile-developer (deferred — Blik is web-only)
+- mobile-developer (deferred — MVP is web-only)
 - seo-expert (deferred — SEO module deferred)
 - designer (merged into design-ux in agency)
 
@@ -289,7 +289,7 @@ None identified. The plugin is functionally complete.
 ### Low Priority (post-MVP)
 
 **GAP-05: Mobile developer and SEO expert agents deferred**
-- When to address: When Blik launches mobile app or SEO module is ported (defer-05)
+- When to address: When a project needs a mobile app or the SEO module is ported (defer-05)
 
 **GAP-06: Analytics, Media, and CI/CD modules not built**
 - Covered by defer-11 through defer-20 in deferred-backlog.yml

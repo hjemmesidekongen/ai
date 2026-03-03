@@ -68,7 +68,7 @@ schema:
         type: string
         required: true
         description: "Path to the asset file (relative to project root)"
-        example: ".ai/projects/blik/design/logos/primary.svg"
+        example: ".ai/projects/acme/design/logos/primary.svg"
 
       producer:
         type: string
@@ -132,24 +132,24 @@ schema:
 # ─────────────────────────────────────────
 
 example:
-  project: "blik"
+  project: "acme"
   updated_at: "2026-03-03T14:00:00Z"
   assets:
     - id: "design-logo-primary-svg"
       name: "Primary Logo (SVG)"
       type: "logo"
       format: "svg"
-      path: ".ai/projects/blik/design/logos/primary.svg"
+      path: ".ai/projects/acme/design/logos/primary.svg"
       producer: "design/logo-assets"
       consumers: ["dev/scaffold", "devops/deploy-config"]
       tags: ["brand", "logo", "primary", "vector"]
       dimensions: { width: 200, height: 48, unit: "px" }
       variants:
         - name: "dark"
-          path: ".ai/projects/blik/design/logos/primary-dark.svg"
+          path: ".ai/projects/acme/design/logos/primary-dark.svg"
           description: "Dark background variant"
         - name: "icon-only"
-          path: ".ai/projects/blik/design/logos/icon-only.svg"
+          path: ".ai/projects/acme/design/logos/icon-only.svg"
           description: "Logomark without wordmark"
       created_at: "2026-03-03T12:00:00Z"
       status: "final"
@@ -158,7 +158,7 @@ example:
       name: "Tailwind Design Tokens"
       type: "design-token"
       format: "json"
-      path: ".ai/projects/blik/design/tokens/tailwind.config.json"
+      path: ".ai/projects/acme/design/tokens/tailwind.config.json"
       producer: "design/design-tokens"
       consumers: ["dev/scaffold", "dev/storybook-generator"]
       tags: ["tokens", "tailwind", "colors", "typography", "spacing"]
@@ -169,7 +169,7 @@ example:
       name: "Button Component Spec"
       type: "component-spec"
       format: "yml"
-      path: ".ai/projects/blik/design/components/button.yml"
+      path: ".ai/projects/acme/design/components/button.yml"
       producer: "design/component-specs"
       consumers: ["content/ux-writing", "dev/storybook-generator", "dev/scaffold"]
       tags: ["component", "button", "interactive", "form"]
@@ -180,7 +180,7 @@ example:
       name: "Error Message Copy"
       type: "ux-copy"
       format: "yml"
-      path: ".ai/projects/blik/content/ux/error-messages.yml"
+      path: ".ai/projects/acme/content/ux/error-messages.yml"
       producer: "content/ux-writing"
       consumers: ["dev/storybook-generator"]
       tags: ["ux", "errors", "validation", "microcopy"]

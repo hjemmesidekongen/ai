@@ -21,10 +21,10 @@ Orchestrates the full deployment pipeline: deploy-config → deploy-execute. Gen
 
 ```
 /agency:deploy                              # Deploy active project to staging
-/agency:deploy blik                         # Deploy specific project to staging
-/agency:deploy blik --env production        # Deploy to production (requires confirmation)
-/agency:deploy blik --skip-config           # Use existing deploy-config.yml, execute only
-/agency:deploy blik --env production --skip-config
+/agency:deploy acme                         # Deploy specific project to staging
+/agency:deploy acme --env production        # Deploy to production (requires confirmation)
+/agency:deploy acme --skip-config           # Use existing deploy-config.yml, execute only
+/agency:deploy acme --env production --skip-config
 ```
 
 ## Execution Steps

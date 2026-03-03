@@ -15,7 +15,7 @@ Shows the current pipeline status for a project across all agency modules.
 
 ```
 /agency:status              # Show active project status
-/agency:status blik         # Show specific project status
+/agency:status acme         # Show specific project status
 ```
 
 ## Execution Steps

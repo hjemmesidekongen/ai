@@ -23,7 +23,7 @@ Creates and registers a new agency project. Sets up the project directory, loads
 ## Usage
 
 ```
-/agency:init blik --app-path apps/blik-web --brand .ai/brands/blik/brand-reference.yml
+/agency:init acme --app-path apps/acme-web --brand .ai/brands/acme/brand-reference.yml
 /agency:init my-project
 /agency:init my-project --skip-scan
 ```

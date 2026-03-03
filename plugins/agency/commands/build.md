@@ -28,7 +28,7 @@ Orchestrates the full 4-phase development pipeline for an agency project. Each p
 
 ```
 /agency:build "Add user authentication with JWT"
-/agency:build blik "Redesign the dashboard"
+/agency:build acme "Redesign the dashboard"
 /agency:build "Add payment integration" --dry-run
 /agency:build "Add payment integration" --from execute
 /agency:build "Add payment integration" --wave 3

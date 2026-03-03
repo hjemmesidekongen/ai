@@ -146,7 +146,7 @@ schema:
     type: string
     required: false
     description: "Path to asset-registry.yml for this project"
-    example: ".ai/projects/blik/asset-registry.yml"
+    example: ".ai/projects/acme/asset-registry.yml"
 
   # ─────────────────────────────────────────
   # Session recovery
@@ -170,7 +170,7 @@ schema:
 # ─────────────────────────────────────────
 
 example:
-  project: "blik"
+  project: "acme"
   status: "in_progress"
   created_at: "2026-03-03T00:00:00Z"
   updated_at: "2026-03-03T14:30:00Z"
@@ -186,7 +186,7 @@ example:
       started_at: "2026-03-03T10:15:00Z"
       current_skill: "design-tokens"
       completed_skills: ["logo-assets", "asset-registry"]
-      findings_file: ".ai/projects/blik/design/findings.md"
+      findings_file: ".ai/projects/acme/design/findings.md"
     content:
       status: "not_started"
       completed_skills: []
@@ -199,7 +199,7 @@ example:
   current_module: "design"
   current_skill: "design-tokens"
   errors: []
-  asset_registry: ".ai/projects/blik/asset-registry.yml"
+  asset_registry: ".ai/projects/acme/asset-registry.yml"
   recovery_notes: |
     Design module in progress. Logo and asset registry complete.
     Currently generating design tokens from brand colors/typography.

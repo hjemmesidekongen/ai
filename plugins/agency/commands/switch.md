@@ -14,7 +14,7 @@ Switches the active project. All subsequent agency commands operate on the new a
 ## Usage
 
 ```
-/agency:switch blik
+/agency:switch acme
 /agency:switch other-project
 ```
 

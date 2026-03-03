@@ -11,7 +11,7 @@ asset:
   name: "Primary Logo (SVG)"          # Required: human-readable
   type: "logo"                        # Required: from schema enum
   format: "svg"                       # Required: file format
-  path: ".ai/projects/blik/design/logos/primary.svg"  # Required: relative path
+  path: ".ai/projects/acme/design/logos/primary.svg"  # Required: relative path
   producer: "design/logo-assets"      # Required: module/skill
   consumers: []                       # Optional: known consumers
   tags: ["brand", "logo", "primary"]  # Required: at least 1 tag

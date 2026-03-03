@@ -21,9 +21,9 @@ Design pipeline must be complete before content can run.
 
 ```
 /agency:content                          # Run full pipeline for active project
-/agency:content blik                     # Run full pipeline for specific project
+/agency:content acme                     # Run full pipeline for specific project
 /agency:content --from ux-writing        # Resume from ux-writing phase
-/agency:content blik --from app-copy     # Re-run full content pipeline for blik
+/agency:content acme --from app-copy     # Re-run full content pipeline for acme
 ```
 
 ## Phase Map

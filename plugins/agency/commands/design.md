@@ -19,9 +19,9 @@ checkpoint gate — the next phase only starts after the previous one passes.
 
 ```
 /agency:design                        # Run full pipeline for active project
-/agency:design blik                   # Run full pipeline for specific project
+/agency:design acme                   # Run full pipeline for specific project
 /agency:design --from tokens          # Resume from design-tokens phase
-/agency:design blik --from components # Resume blik from component-specs phase
+/agency:design acme --from components # Resume acme from component-specs phase
 ```
 
 ## Phase Map
