@@ -131,3 +131,26 @@ dev_profile:
     - "related tests pass for all changed files"
     - "file ownership respected — no cross-agent conflicts"
     - "model tier appropriate for task complexity"
+
+# ──────────────────────────────────────────────
+# Registered by: agency
+# ──────────────────────────────────────────────
+agency_profile:
+  after_each_wave:
+    - data_validation
+    - file_validation
+  final:
+    - data_validation
+    - file_validation
+    - schema_validation
+    - accessibility_validation
+  qa_frequency: "final"
+  qa_focus:
+    - "progressive disclosure enforced — all SKILL.md under 80 lines"
+    - "every skill has checkpoint with measurable checks"
+    - "PORT skills preserve all logic from source plugin"
+    - "NEW skills have complete process.md with no placeholder sections"
+    - "asset-registry integration in all asset-producing skills"
+    - "design tokens use WCAG-validated contrast pairs"
+    - "project isolation enforced across all write paths"
+    - "model tier assigned on every task"
