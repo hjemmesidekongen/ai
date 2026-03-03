@@ -1,0 +1,188 @@
+# Asset Registry Schema
+# Defines the structure of .ai/projects/[name]/asset-registry.yml
+# Version: 1.0.0
+
+_meta:
+  schema: "asset-registry"
+  version: "1.0.0"
+  plugin: "agency"
+  description: "Centralized asset manifest for a project. Every module registers assets it produces and queries assets it needs."
+
+schema:
+  project:
+    type: string
+    required: true
+    description: "Project name this registry belongs to"
+
+  updated_at:
+    type: string
+    format: "ISO 8601"
+    required: true
+
+  # Asset entries
+  assets:
+    type: list
+    required: true
+    default: []
+    description: "All registered assets for this project"
+    item_schema:
+      id:
+        type: string
+        required: true
+        description: "Unique asset identifier (kebab-case: module-type-name)"
+        example: "design-logo-primary-svg"
+
+      name:
+        type: string
+        required: true
+        description: "Human-readable asset name"
+        example: "Primary Logo (SVG)"
+
+      type:
+        type: string
+        required: true
+        enum:
+          - "logo"
+          - "icon"
+          - "favicon"
+          - "social-template"
+          - "design-token"
+          - "component-spec"
+          - "layout-spec"
+          - "copy"
+          - "ux-copy"
+          - "storybook-story"
+          - "config"
+          - "document"
+          - "image"
+          - "other"
+        description: "Asset type for filtering"
+
+      format:
+        type: string
+        required: true
+        description: "File format or data format"
+        enum: ["svg", "png", "jpg", "webp", "yml", "yaml", "json", "css", "ts", "tsx", "md", "mdx", "html", "other"]
+
+      path:
+        type: string
+        required: true
+        description: "Path to the asset file (relative to project root)"
+        example: ".ai/projects/blik/design/logos/primary.svg"
+
+      producer:
+        type: string
+        required: true
+        description: "Module and skill that created this asset"
+        example: "design/logo-assets"
+
+      consumers:
+        type: list
+        required: false
+        item_type: string
+        description: "Modules/skills that depend on this asset"
+        example: ["dev/scaffold", "dev/storybook-generator", "devops/deploy-config"]
+
+      tags:
+        type: list
+        required: true
+        item_type: string
+        description: "Searchable tags for asset discovery"
+        example: ["brand", "logo", "primary", "vector"]
+
+      dimensions:
+        type: map
+        required: false
+        description: "Dimensions for image/icon assets"
+        value_schema:
+          width: { type: number }
+          height: { type: number }
+          unit: { type: string, enum: ["px", "rem", "em", "%"] }
+
+      variants:
+        type: list
+        required: false
+        description: "Related variants of this asset (e.g., dark mode, sizes)"
+        item_schema:
+          name: { type: string }
+          path: { type: string }
+          description: { type: string }
+
+      created_at:
+        type: string
+        format: "ISO 8601"
+        required: true
+
+      status:
+        type: string
+        required: true
+        enum: ["draft", "final", "deprecated"]
+        default: "final"
+
+  # Query helpers — not persisted, but define valid query patterns
+  query_patterns:
+    by_type: "Filter assets by type field"
+    by_producer: "Filter assets by producing module/skill"
+    by_tag: "Filter assets matching any of the provided tags"
+    by_consumer: "Find assets consumed by a specific module/skill"
+    by_format: "Filter assets by file format"
+
+# ─────────────────────────────────────────
+# Example instance
+# ─────────────────────────────────────────
+
+example:
+  project: "blik"
+  updated_at: "2026-03-03T14:00:00Z"
+  assets:
+    - id: "design-logo-primary-svg"
+      name: "Primary Logo (SVG)"
+      type: "logo"
+      format: "svg"
+      path: ".ai/projects/blik/design/logos/primary.svg"
+      producer: "design/logo-assets"
+      consumers: ["dev/scaffold", "devops/deploy-config"]
+      tags: ["brand", "logo", "primary", "vector"]
+      dimensions: { width: 200, height: 48, unit: "px" }
+      variants:
+        - name: "dark"
+          path: ".ai/projects/blik/design/logos/primary-dark.svg"
+          description: "Dark background variant"
+        - name: "icon-only"
+          path: ".ai/projects/blik/design/logos/icon-only.svg"
+          description: "Logomark without wordmark"
+      created_at: "2026-03-03T12:00:00Z"
+      status: "final"
+
+    - id: "design-tokens-tailwind"
+      name: "Tailwind Design Tokens"
+      type: "design-token"
+      format: "json"
+      path: ".ai/projects/blik/design/tokens/tailwind.config.json"
+      producer: "design/design-tokens"
+      consumers: ["dev/scaffold", "dev/storybook-generator"]
+      tags: ["tokens", "tailwind", "colors", "typography", "spacing"]
+      created_at: "2026-03-03T13:00:00Z"
+      status: "final"
+
+    - id: "design-component-button"
+      name: "Button Component Spec"
+      type: "component-spec"
+      format: "yml"
+      path: ".ai/projects/blik/design/components/button.yml"
+      producer: "design/component-specs"
+      consumers: ["content/ux-writing", "dev/storybook-generator", "dev/scaffold"]
+      tags: ["component", "button", "interactive", "form"]
+      created_at: "2026-03-03T14:00:00Z"
+      status: "final"
+
+    - id: "content-ux-error-messages"
+      name: "Error Message Copy"
+      type: "ux-copy"
+      format: "yml"
+      path: ".ai/projects/blik/content/ux/error-messages.yml"
+      producer: "content/ux-writing"
+      consumers: ["dev/storybook-generator"]
+      tags: ["ux", "errors", "validation", "microcopy"]
+      created_at: "2026-03-03T15:00:00Z"
+      status: "final"
