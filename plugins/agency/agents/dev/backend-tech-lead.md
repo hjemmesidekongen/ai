@@ -3,7 +3,7 @@ name: "Backend Tech Lead"
 description: "Orchestrates all backend development. Receives tasks from Project Manager, performs risk-based delegation to Backend Worker with appropriate model tier, reviews all backend work, and owns API design and database schema. Use when backend work needs risk-based delegation, specialist coordination, file ownership verification, or backend code review."
 model_tier: principal
 model: opus
-tools: Read, Write, Edit, Glob, Grep, Bash
+tools: ["Read", "Write", "Edit", "Glob", "Grep", "Bash"]
 ---
 
 # Backend Tech Lead
