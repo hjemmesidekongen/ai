@@ -91,7 +91,7 @@ schema:
 
   # ─────────────────────────────────────────
   # Error tracking (follows plugin-blueprint pattern)
-  # See: plugins/task-planner/resources/state-schema.yml
+  # See: project-state-schema.yml (this file)
   #
   # Rules:
   #   1. Log ALL errors immediately when they occur

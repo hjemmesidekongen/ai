@@ -22,5 +22,5 @@
       "specialist": ["frontend-worker", "backend-worker", "security-reviewer", "devops", "ux-qa", "design-ux", "documentation-specialist"]
     }
   },
-  "dependencies": ["task-planner"]
+  "dependencies": []
 }

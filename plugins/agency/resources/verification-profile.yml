@@ -1,8 +1,7 @@
 # Agency Plugin — Verification Profile
 # Maps every skill to its verification type, checkpoint checks, and QA gate.
-# Referenced by plan-execute and verification-runner.
-#
-# Registered in task-planner verification-registry.yml as agency_profile.
+# Referenced by agency pipeline commands (design, content, build, deploy).
+# Each command runs its own checkpoint gates using the types below.
 
 profile_name: "agency"
 version: "1.0.0"
@@ -24,15 +23,15 @@ qa_strategy:
 
 verification_types:
   data_validation:
-    source: "task-planner (built-in)"
+    source: "built-in"
     used_by: [brand-loader, design-tokens, component-specs, web-layout, app-copy, ux-writing, config-generator, feature-decomposer, team-planner, agent-dispatcher, completion-gate, qa-validation, deploy-config]
 
   file_validation:
-    source: "task-planner (built-in)"
+    source: "built-in"
     used_by: [logo-assets]
 
   accessibility_validation:
-    source: "task-planner (built-in)"
+    source: "built-in"
     used_by: [design-tokens]
 
   code_quality_gate:
@@ -40,7 +39,7 @@ verification_types:
     used_by: [code-review, scaffold, storybook-generator]
 
   manual_approval:
-    source: "task-planner (built-in)"
+    source: "built-in"
     used_by: [project-scanner]
 
 # ──────────────────────────────────────────────

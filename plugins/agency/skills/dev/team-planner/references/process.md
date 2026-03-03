@@ -181,7 +181,7 @@ For each pair of tasks:
         c) Split: assign different sections of the file to each task
 ```
 
-Use `plugins/task-planner/scripts/check-file-conflicts.sh` or equivalent logic.
+Check for file ownership conflicts by comparing `files_affected` across all tasks in the same wave. No two parallel tasks may write to the same file.
 
 **If no overlaps:** Proceed to Step 6.
 

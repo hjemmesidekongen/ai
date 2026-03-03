@@ -2,10 +2,6 @@
 
 Full-service digital agency plugin — brand loading, design systems, content generation, development team orchestration, and deployment in one unified plugin.
 
-## Dependencies
-
-- task-planner (wave execution, verification, brainstorm)
-
 ## Modules
 
 | Module | Skills | Purpose |
