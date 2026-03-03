@@ -262,6 +262,8 @@ component-specs phase."
 Build a component registry: map each spec's `name` field to its file path.
 This is the allowed set of values for `section.component` in all layouts.
 
+**Save to findings.md after this step (2-Action Rule checkpoint).**
+
 ### Step 2 — Present site map to user
 
 Present the default 10-page set as a table. Ask:
@@ -295,6 +297,8 @@ For each page:
 Ensure every `section.component` value maps to a key in the component registry.
 Any component used in a layout that doesn't exist in `components/` is an error.
 
+**Save to findings.md after this step (2-Action Rule checkpoint).**
+
 ### Step 4 — Define responsive overrides
 
 After composing all sections for a page, add the `responsive` block:
@@ -320,6 +324,8 @@ Reply "ok" to continue, or list changes.
 ```
 
 Apply all feedback before writing files.
+
+**Save to findings.md after this step (2-Action Rule checkpoint).**
 
 ### Step 6 — Generate navigation-map.yml
 
@@ -380,6 +386,31 @@ Verify all 5 checkpoint checks pass:
 
 On failure: fix the failing check and re-run verification for that check only.
 On pass: update `state.yml` — set web-layout phase to `completed`.
+
+---
+
+## Two-Stage Verification
+
+**Stage 1 — Spec Compliance (Haiku):**
+Run spec-compliance-reviewer. Checks:
+- layouts_exist: at least 1 layout YAML exists per route defined in navigation-map.yml
+- components_referenced: every component reference in section.component maps to an existing spec in components/
+- navigation_map: navigation-map.yml exists with primary nav, footer, and mobile_menu blocks
+- responsive_rules: every layout with multi-column sections includes responsive overrides for mobile
+- assets_registered: all layout YAMLs and navigation-map.yml registered in asset-registry.yml
+
+If FAIL: fix structural issues. Do NOT proceed to Stage 2.
+
+**Stage 2 — Quality Review (Opus):**
+Only after Stage 1 passes. Checks:
+- Page sections are appropriate for each page's purpose (hero on home, no hero on auth pages)
+- Primary navigation has ≤6 items; secondary routes are in footer
+- Slot placeholders use correct patterns (`{brand_name}`, integers for repeated items)
+- Responsive overrides are present for all multi-column grids
+- Navigation map reflects the confirmed route set — no orphaned routes
+
+If FAIL: address quality issues.
+If PASS_WITH_NOTES: review notes, decide whether to address.
 
 ---
 

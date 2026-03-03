@@ -73,7 +73,8 @@ svg_validity, svg_file_size, preview_html, assets_registered)
 9. Run file_validation checkpoint (6 checks); fix failures; advance only
    after all checks pass
 10. Write recovery notes to state.yml
-
+## Findings Persistence
+Write progress to `.ai/projects/[name]/design/findings.md`. **2-Action Rule:** save after every 2 generation actions. Log errors to state.yml errors array.
 ## Execution
 
 Before executing, read `references/process.md` for detailed instructions.

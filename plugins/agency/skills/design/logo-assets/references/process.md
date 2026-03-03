@@ -147,6 +147,8 @@ Ready to generate concepts?
 
 Wait for user confirmation before proceeding.
 
+**Save to findings.md after this step (2-Action Rule checkpoint).**
+
 ---
 
 ## Phase 2: Concept Generation
@@ -270,6 +272,8 @@ After generating the preview:
 >
 > You can reference them by number (e.g., 'concepts 3, 7, 12, and 19')."
 
+**Save to findings.md after this step (2-Action Rule checkpoint).**
+
 ---
 
 ## Phase 3: Refinement
@@ -330,6 +334,8 @@ across all sizes and backgrounds.
 > Which one is THE logo? Pick your final choice, or tell me what to adjust."
 
 If the user wants further tweaks, iterate. Max 3 refinement rounds before pushing to finalize.
+
+**Save to findings.md after this step (2-Action Rule checkpoint).**
 
 ---
 
@@ -646,6 +652,32 @@ After writing all files, run these checks:
 notes, advance to next phase.
 
 **On fail:** Fix the failing checks, re-run validation. Do NOT advance. Max 3 rounds.
+
+---
+
+## Two-Stage Verification
+
+**Stage 1 — Spec Compliance (Haiku):**
+Run spec-compliance-reviewer. Checks:
+- logo_svg_variants: all 6 logo SVGs exist in `design/logos/`
+- brand_icon_variants: all 4 brand icon SVGs exist in `design/logos/brand-icon/`
+- svg_validity: every SVG is valid XML with `viewBox`, no fixed `width`/`height`
+- svg_file_size: no SVG exceeds 15KB
+- preview_html: `design/previews/logo-preview.html` exists
+- assets_registered: all 13 assets present in asset-registry.yml
+
+If FAIL: fix structural issues. Do NOT proceed to Stage 2.
+
+**Stage 2 — Quality Review (Opus):**
+Only after Stage 1 passes. Checks:
+- Logo design reflects brand personality, colors, and shape language from brand-summary.yml
+- All 6 variants form a coherent system (consistent style across light/dark/wordmark/mark)
+- Brand icon is recognizable at 32×32px
+- Social templates embed the final logo and use brand colors correctly
+- SVGs follow all rules (self-contained, paths not text, optimized, accessible title)
+
+If FAIL: address quality issues.
+If PASS_WITH_NOTES: review notes, decide whether to address.
 
 ---
 

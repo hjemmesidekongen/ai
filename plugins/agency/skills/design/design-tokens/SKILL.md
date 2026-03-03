@@ -72,6 +72,9 @@ WCAG accessibility standards.
 6. **Register assets** in asset-registry.yml (3 token files + contrast-matrix.md)
 7. Run checkpoint — all 7 checks must pass before advancing
 
+## Findings Persistence
+
+Write intermediate results to `.ai/projects/[name]/design/findings.md`. **2-Action Rule:** after every 2 research/generation actions, IMMEDIATELY save progress to findings.md. Log all errors to state.yml errors array — never repeat a failed approach.
 ## Execution
 
 Before executing, read `references/process.md` for detailed instructions.

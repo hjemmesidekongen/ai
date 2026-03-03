@@ -246,6 +246,8 @@ Extract from variables.css:
 
 Build a token registry (key → CSS variable) to validate references later.
 
+**Save to findings.md after this step (2-Action Rule checkpoint).**
+
 ### Step 2 — Present component list to user
 
 Present the 10-component baseline table. Ask:
@@ -288,6 +290,8 @@ Reply "ok" to move on, or list changes.
 
 Apply all feedback before moving to the next category.
 
+**Save to findings.md after this step (2-Action Rule checkpoint).**
+
 ### Step 5 — Validate token references
 
 Before writing files, verify every `var(--token-name)` used in the `tokens`
@@ -295,6 +299,8 @@ section exists in the token registry from Step 1.
 
 For any invalid reference: stop and either correct the token name or ask the
 user to confirm it will be added to the token files.
+
+**Save to findings.md after this step (2-Action Rule checkpoint).**
 
 ### Step 6 — Write component YAML files
 
@@ -340,6 +346,32 @@ Verify all 6 checkpoint checks pass:
 On failure: fix the failing check and re-run verification for that check only.
 On pass: update `state.yml` — set component-specs phase to `completed`, advance
 pointer to `web-layout`.
+
+---
+
+## Two-Stage Verification
+
+**Stage 1 — Spec Compliance (Haiku):**
+Run spec-compliance-reviewer. Checks:
+- components_exist: at least 5 component spec YAML files exist in `design/components/`
+- required_fields: every spec has name, description, props, tokens, slots, a11y, responsive
+- token_references_valid: all token references map to keys in tailwind.config.json or variables.css
+- slots_defined: every component with text content has at least 1 content slot
+- a11y_requirements: every interactive component has ARIA roles, keyboard navigation, focus management
+- assets_registered: all component specs registered in asset-registry.yml
+
+If FAIL: fix structural issues. Do NOT proceed to Stage 2.
+
+**Stage 2 — Quality Review (Opus):**
+Only after Stage 1 passes. Checks:
+- Props are complete — no obvious configurable variations are missing
+- Token references are semantically appropriate (e.g., brand primary used for CTAs, not neutrals)
+- A11y requirements are thorough for interactive/form/navigation components
+- Responsive rules enforce minimum 44px touch targets on mobile
+- Component set covers all downstream needs (app-copy slots, scaffold code, storybook stories)
+
+If FAIL: address quality issues.
+If PASS_WITH_NOTES: review notes, decide whether to address.
 
 ---
 

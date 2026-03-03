@@ -65,6 +65,10 @@ Outputs machine-readable YAMLs consumed by app-copy (content slots), scaffold
 7. Register all output files in `asset-registry.yml`
 8. Run checkpoint — all 5 checks must pass before advancing
 
+## Findings Persistence
+
+Write intermediate results to `.ai/projects/[name]/design/findings.md`. **2-Action Rule:** after every 2 research/generation actions, IMMEDIATELY save progress to findings.md. Log all errors to state.yml errors array — never repeat a failed approach.
+
 ## Execution
 
 Before executing, read `references/process.md` for the full layout YAML

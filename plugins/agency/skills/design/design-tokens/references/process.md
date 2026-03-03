@@ -113,6 +113,8 @@ Write `tailwind.config.json`. This is the Tailwind v3 theme configuration.
 - `darkMode: "class"` always — enables `.dark` class strategy
 - Map border radius names directly from brand-summary.yml
 
+**Save to findings.md after this step (2-Action Rule checkpoint).**
+
 ---
 
 ## Step 2: Generate CSS Custom Properties
@@ -216,6 +218,8 @@ Write `variables.css` with a `:root` block. Organize by token category with comm
 - Include `.dark` override block using brand-summary.yml dark mode adjustments
 - Dark mode overrides only the tokens that change — not a full duplicate
 
+**Save to findings.md after this step (2-Action Rule checkpoint).**
+
 ---
 
 ## Step 3: Generate DTCG JSON
@@ -295,6 +299,8 @@ interoperability with Figma Tokens, Style Dictionary, Token Pipeline, and simila
   `duration`, `cubicBezier`, `shadow`
 - Do not use custom `$type` values
 - Token group nesting maximum 3 levels deep
+
+**Save to findings.md after this step (2-Action Rule checkpoint).**
 
 ---
 
@@ -460,6 +466,8 @@ Generated: [date]
 - [Accessible Palette](https://accessiblepalette.com/) — CIELAB-based scale builder
 ```
 
+**Save to findings.md after this step (2-Action Rule checkpoint).**
+
 ---
 
 ## Step 5: Register Assets
@@ -594,6 +602,33 @@ If ANY check fails:
    ```
 
 3. Advance to component-specs phase
+
+---
+
+## Two-Stage Verification
+
+**Stage 1 — Spec Compliance (Haiku):**
+Run spec-compliance-reviewer. Checks:
+- tailwind_config_valid: tailwind.config.json is valid JSON with colors, fontFamily, spacing keys
+- css_variables_valid: variables.css has :root block with --color-*, --font-*, --spacing-* vars
+- dtcg_valid: tokens.dtcg.json follows DTCG format with $value, $type fields
+- wcag_aa_body: all body text pairs meet 4.5:1 contrast ratio
+- wcag_aa_large: all large text pairs meet 3:1 contrast ratio
+- colorblind_notes: colorblind safety notes exist for primary and semantic colors
+- assets_registered: all 3 token files registered in asset-registry.yml
+
+If FAIL: fix structural issues. Do NOT proceed to Stage 2.
+
+**Stage 2 — Quality Review (Opus):**
+Only after Stage 1 passes. Checks:
+- Token scales are complete and consistent (no missing shade steps)
+- Color values match brand-summary.yml exactly — no arbitrary substitutions
+- Dark mode overrides are sufficient and all pairs pass WCAG AA
+- DTCG descriptions convey intended use, not just values
+- Contrast matrix includes all required foreground/background pairs
+
+If FAIL: address quality issues.
+If PASS_WITH_NOTES: review notes, decide whether to address.
 
 ---
 

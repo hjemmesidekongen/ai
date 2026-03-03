@@ -63,6 +63,10 @@ storybook-generator, and scaffold to auto-generate content, stories, and code.
 5. Register all component YAML files in asset-registry.yml
 6. Run checkpoint — all 6 checks must pass before advancing to web-layout
 
+## Findings Persistence
+
+Write intermediate results to `.ai/projects/[name]/design/findings.md`. **2-Action Rule:** after every 2 research/generation actions, IMMEDIATELY save progress to findings.md. Log all errors to state.yml errors array — never repeat a failed approach.
+
 ## Execution
 
 Before executing, read `references/process.md` for the full component spec
