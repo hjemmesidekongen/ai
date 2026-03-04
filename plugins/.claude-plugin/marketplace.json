@@ -5,24 +5,14 @@
   },
   "plugins": [
     {
+      "name": "agency",
+      "source": "./agency",
+      "description": "Full-service digital agency — brand loading, design systems, content, development, and deployment in one unified plugin."
+    },
+    {
       "name": "task-planner",
       "source": "./task-planner",
-      "description": "Foundation plugin for wave-based task planning with verification and QA"
-    },
-    {
-      "name": "brand-guideline",
-      "source": "./brand-guideline",
-      "description": "Agency-grade brand guideline generator"
-    },
-    {
-      "name": "seo-plugin",
-      "source": "./seo-plugin",
-      "description": "SEO strategy and audit based on brand positioning"
-    },
-    {
-      "name": "dev",
-      "source": "./dev",
-      "description": "Multi-agent development team with project-aware knowledge, framework packs, and 4-phase execution flow"
+      "description": "Generic wave-based task planning with verification and QA."
     }
   ]
 }
