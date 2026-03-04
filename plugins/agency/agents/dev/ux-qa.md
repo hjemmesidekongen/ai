@@ -47,8 +47,10 @@ For each breakpoint verify:
 ## Design System Compliance
 
 Before running visual checks, read the project's design system data from `.ai/projects/[name]/design/`:
-- `design-tokens.yml` — color palette, spacing scale, typography scale
-- `component-specs.yml` — expected component patterns and variants
+- `tokens/tailwind.config.json` — Tailwind theme with design tokens
+- `tokens/variables.css` — CSS custom properties for colors, spacing, typography
+- `tokens/tokens.dtcg.json` — Design Token Community Group format (canonical source)
+- `components/*.yml` — per-component specs with variants, states, and usage rules
 
 Then verify:
 - [ ] All colors in the implementation match design tokens (no hardcoded hex/rgb values)

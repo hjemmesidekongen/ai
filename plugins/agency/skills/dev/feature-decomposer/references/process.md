@@ -12,7 +12,7 @@ each contribute analysis, with user checkpoints between each stage.
 Before starting, verify:
 1. `.ai/projects/[name]/dev/dev-config.yml` exists with confirmed config
 2. If dev-config.yml is missing, report error and suggest running `/agency:dev:init` first
-3. `.ai/projects/[name]/dev/team-state.yml` exists (create from schema if not)
+3. `.ai/projects/[name]/dev/feature-decomposition.yml` exists (create from schema if not)
 
 ## Step 0: Check for Existing Design Module Outputs
 
@@ -216,9 +216,9 @@ Proceed with this decomposition? [Y/n]"
 **If revised:** Incorporate revisions, present updated decomposition.
 **If approved and user confirms:** Proceed to Step 8.
 
-## Step 8: Write Decomposition to team-state.yml
+## Step 8: Write Decomposition to feature-decomposition.yml
 
-Write the `decomposition` section of `.ai/projects/[name]/dev/team-state.yml`:
+Write the `decomposition` section of `.ai/projects/[name]/dev/feature-decomposition.yml`:
 
 ```yaml
 decomposition:
@@ -298,7 +298,7 @@ When errors occur during decomposition:
 ## Commit Protocol
 
 **Subagent mode** (dispatched via Task()):
-1. Stage only team-state.yml and findings.md updates
+1. Stage only feature-decomposition.yml and findings.md updates
 2. Commit: `[plan_name]: feature-decomposer [task_id]`
 3. Report commit SHA in task_complete
 
@@ -308,7 +308,7 @@ When errors occur during decomposition:
 
 **Stage 1 — Spec Compliance (Haiku):**
 Run spec-compliance-reviewer. Checks:
-- team-state.yml decomposition section exists and is non-empty
+- feature-decomposition.yml decomposition section exists and is non-empty
 - Every component has name, description, boundaries, type (all non-empty)
 - Every component has at least 1 files_affected entry
 - po_validation.status is one of: approved, revised, rejected

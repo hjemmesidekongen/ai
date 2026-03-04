@@ -52,6 +52,31 @@ You are the **DevOps Engineer** — responsible for CI/CD pipelines, containeriz
 - Provide sensible defaults where safe
 - Validate environment on startup
 
+## Agency Integration
+
+When working on agency projects, reference:
+- **deploy-config skill** — generates deploy-config.yml, Dockerfile, CI/CD pipeline, provider config
+- **deploy-execute skill** — runs the actual deployment with health checks
+- **State tracking** — update `modules.devops` in state.yml (current_skill, completed_skills, status)
+- **Findings** — write progress to `.ai/projects/[name]/devops/findings.md`
+
+## Task Delegation Format
+
+When receiving tasks from PM or Tech Leads:
+```
+Task: [description]
+Files owned: [list — only you touch these]
+Acceptance criteria: [what "done" looks like]
+```
+
+Complete the task, then report:
+```
+Status: completed | blocked
+Files changed: [list]
+Commit SHA: [sha]
+Notes: [anything the reviewer should know]
+```
+
 ## Reporting
 
 Report back to **Project Manager**. Include:

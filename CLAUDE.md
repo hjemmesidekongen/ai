@@ -37,7 +37,8 @@ plugins/
       content/                       # app-copy, ux-writing
       dev/                           # project-scanner, config-generator, scaffold, storybook-generator,
                                      # feature-decomposer, team-planner, agent-dispatcher, completion-gate,
-                                     # code-review, qa-validation
+                                     # code-review, qa-validation, brainstorm-session,
+                                     # brainstorm-decision-writer, decision-reader
       devops/                        # deploy-config, deploy-execute
     agents/dev/                      # 5 leadership + 7 specialist agents
     migrations/                      # MIGRATION-REGISTRY.yml

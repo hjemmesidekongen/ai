@@ -10,7 +10,7 @@ if [ ! -f "$AGENCY_FILE" ]; then
   exit 0
 fi
 
-ACTIVE=$(grep 'active:' "$AGENCY_FILE" 2>/dev/null | awk '{print $2}' || true)
+ACTIVE=$(grep 'active:' "$AGENCY_FILE" 2>/dev/null | awk '{print $2}' | tr -d '"' || true)
 if [ -z "$ACTIVE" ]; then
   exit 0
 fi
@@ -29,6 +29,7 @@ if [ "$STATUS" = "in_progress" ]; then
   [ -n "$CURRENT" ] && echo "  Module: $CURRENT"
   [ -n "$CURRENT_SKILL" ] && echo "  Skill: $CURRENT_SKILL"
   echo "  Verify the current skill is complete before stopping."
+  exit 2
 fi
 
 exit 0

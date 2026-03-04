@@ -90,8 +90,8 @@ schema:
     description: "Which skill is currently running within the current module"
 
   # ─────────────────────────────────────────
-  # Error tracking (follows plugin-blueprint pattern)
-  # See: project-state-schema.yml (this file)
+  # Error tracking
+  # Follows the error-logging pattern used across all agency skills
   #
   # Rules:
   #   1. Log ALL errors immediately when they occur

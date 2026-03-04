@@ -67,7 +67,7 @@ schema:
       path:
         type: string
         required: true
-        description: "Path to the asset file (relative to project root)"
+        description: "Path to the asset file (relative to workspace root)"
         example: ".ai/projects/acme/design/logos/primary.svg"
 
       producer:

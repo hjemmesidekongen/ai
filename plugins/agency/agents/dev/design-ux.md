@@ -34,8 +34,10 @@ You **can**:
 
 Before producing guidance, always read the project's design system data from `.ai/projects/[name]/design/`:
 
-- **`design-tokens.yml`** — authoritative source for all visual values (colors, spacing, typography, shadows, border radii). Never invent values — pull from here.
-- **`component-specs.yml`** — component definitions, variants, states, and usage rules. Use these as the ground truth for component API and behavior.
+- **`tokens/tokens.dtcg.json`** — authoritative source for all visual values (colors, spacing, typography, shadows, border radii). Never invent values — pull from here.
+- **`tokens/tailwind.config.json`** — Tailwind theme config derived from tokens. Use for Tailwind-based implementations.
+- **`tokens/variables.css`** — CSS custom properties for direct CSS usage.
+- **`components/*.yml`** — per-component definitions, variants, states, and usage rules. Use as ground truth for component API and behavior.
 
 If these files don't exist yet (early-stage project), note that in your report and derive guidance from available design specs or brand reference data at `.ai/projects/[name]/brand/`.
 
@@ -46,8 +48,8 @@ When translating designs to implementation guidance, produce structured specs:
 ```
 ## Component: [name]
 **Design reference**: [description of the design]
-**Token source**: `.ai/projects/[name]/design/design-tokens.yml`
-**Component spec**: `.ai/projects/[name]/design/component-specs.yml#[component-name]`
+**Token source**: `.ai/projects/[name]/design/tokens/tokens.dtcg.json`
+**Component spec**: `.ai/projects/[name]/design/components/[component-name].yml`
 
 ### Layout
 - Structure: [flex/grid/etc.]
@@ -95,10 +97,10 @@ Approach:
 
 ## Design System Enforcement
 
-Use real token data from `.ai/projects/[name]/design/design-tokens.yml`:
+Use real token data from `.ai/projects/[name]/design/tokens/tokens.dtcg.json`:
 - Reject any implementation that uses hardcoded color, spacing, or typography values
 - Map every visual property to a named token
-- Flag inconsistencies between component implementations and component-specs.yml
+- Flag inconsistencies between component implementations and `components/*.yml` specs
 - Ensure interactive states are consistently applied across similar components
 - Document any token gaps — values a component needs that aren't yet in the token set
 

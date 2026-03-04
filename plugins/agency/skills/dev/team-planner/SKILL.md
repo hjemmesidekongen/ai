@@ -24,7 +24,7 @@ checkpoint:
   type: data_validation
   required_checks:
     - name: "waves_exist"
-      verify: "At least 1 wave in team-state.yml wave_plan.waves"
+      verify: "At least 1 wave in wave-plan.yml waves"
       fail_action: "Re-run PM wave assembly with simplified grouping"
     - name: "task_fields_complete"
       verify: "Every task has non-empty: id, description, assigned_agent, model_tier, component, files_owned"
@@ -42,7 +42,7 @@ checkpoint:
       verify: "User explicitly confirmed the wave plan"
       fail_action: "Present wave plan to user for confirmation"
   on_fail: "Fix issues and re-run checkpoint. Do not advance to Phase 3."
-  on_pass: "Update team-state.yml status to executing, advance to Phase 3."
+  on_pass: "Update state.yml status to executing, advance to Phase 3."
 ---
 
 # Team Planner
@@ -56,8 +56,8 @@ tasks. Frontend TL receives design token paths for brand-consistent implementati
 
 | Aspect | Details |
 |--------|---------|
-| **Reads** | team-state.yml decomposition, dev-config.yml, design tokens (optional) |
-| **Writes** | team-state.yml wave_plan section (waves, tasks, file_ownership) |
+| **Reads** | feature-decomposition.yml, dev-config.yml, design tokens (optional) |
+| **Writes** | wave-plan.yml (waves, tasks, file_ownership) |
 | **Checkpoint** | data_validation: waves exist, tasks complete, no file overlap, components covered, TL sign-off, user confirmed |
 | **Dependencies** | feature-decomposer (decomposition must exist) |
 

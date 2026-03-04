@@ -23,11 +23,23 @@ checkpoint:
   type: file_validation
   required_checks:
     - name: "logo_svg_variants"
+      verify: "6 logo SVGs exist in design/logos/ (primary, reversed, monochrome, icon, horizontal, stacked)"
+      fail_action: "Generate missing variants using brand data"
     - name: "brand_icon_variants"
+      verify: "4 brand icon SVGs exist in design/logos/brand-icon/ (default, monochrome, small, favicon)"
+      fail_action: "Generate missing icon variants from primary logo"
     - name: "svg_validity"
+      verify: "All SVG files are valid XML with proper viewBox and no raster content"
+      fail_action: "Fix SVG structure — ensure valid XML, viewBox attribute, no embedded bitmaps"
     - name: "svg_file_size"
+      verify: "Each SVG file is under 50KB"
+      fail_action: "Optimize paths — simplify geometry, remove unnecessary metadata"
     - name: "preview_html"
+      verify: "design/previews/logo-preview.html exists and embeds all logo variants"
+      fail_action: "Generate preview HTML with all variants on light/dark backgrounds"
     - name: "assets_registered"
+      verify: "All logo and icon SVGs are registered in asset-registry.yml with correct paths"
+      fail_action: "Register missing assets in asset-registry.yml"
   on_fail: "Fix issues and re-run checkpoint. Advance only after all checks pass."
   on_pass: "Update state.yml, write recovery_notes, register assets, advance."
 model_tier: principal

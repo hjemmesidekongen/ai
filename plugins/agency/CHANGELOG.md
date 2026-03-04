@@ -8,13 +8,13 @@ All notable changes to the agency plugin will be documented in this file.
 - Initial plugin scaffold with plugin.json and ecosystem.json
 - Core schemas: agency-registry, project-state, asset-registry
 - Deferred backlog tracking 20 features for post-MVP
-- Agency verification profile in verification-registry.yml
+- Agency verification profile in verification-profile.yml
 - Project isolation hook (PreToolUse)
 - Session recovery and stop hooks
 - Brand module: brand-loader skill
 - Design module: logo-assets, asset-registry, design-tokens, component-specs, web-layout
 - Content module: app-copy, ux-writing
-- Dev module: project-scanner, config-generator, storybook-generator, scaffold, feature-decomposer, team-planner, agent-dispatcher, completion-gate, code-review, qa-validation
+- Dev module: project-scanner, config-generator, storybook-generator, scaffold, feature-decomposer, team-planner, agent-dispatcher, completion-gate, code-review, qa-validation, brainstorm-session, brainstorm-decision-writer, decision-reader
 - DevOps module: deploy-config, deploy-execute
 - Commands: init, design, content, build, deploy, status, switch, scan
 - Dev agents: 5 leadership + 7 specialist

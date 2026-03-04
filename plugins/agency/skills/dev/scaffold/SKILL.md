@@ -7,7 +7,7 @@ description: >
   tools, and sets up component library foundation. Use when scaffolding a new
   project, running /agency:build scaffold phase, setting up Tailwind with
   design tokens, or creating component library structure.
-phase: 3
+phase: 0
 depends_on: [config-generator, design-tokens]
 writes:
   - "{app_path}/tailwind.config.ts"
@@ -38,7 +38,7 @@ checkpoint:
 
 # Scaffold
 
-Phase 1 of /agency:build. Reads dev-config.yml and design tokens to generate
+Pre-build setup for /agency:build. Reads dev-config.yml and design tokens to generate
 a working project skeleton: Tailwind config wired to brand tokens, CSS custom
 properties, and a component library directory with a reference Button component.
 

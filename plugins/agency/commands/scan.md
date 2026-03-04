@@ -49,7 +49,7 @@ else:
 **Delta mode:**
 ```
 1. Get git diff since last scan timestamp (from findings.md header)
-   git diff --name-only --since="{last_scan_date}" -- {app_path}
+   git log --name-only --pretty=format: --since="{last_scan_date}" -- {app_path} | sort -u
 
 2. Categorize changed files:
    - package.json / lock files → dependency changes

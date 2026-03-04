@@ -72,7 +72,7 @@ Phase 3 of /agency:build. Reads the wave plan, dispatches specialist agents via 
 
 ## Findings Persistence
 
-Write dispatch records to `.ai/projects/[name]/findings.md`.
+Write dispatch records to `.ai/projects/[name]/dev/findings.md`.
 **2-Action Rule:** After every 2 Task() dispatches, save dispatch records and reports immediately.
 
 ## Error Logging — Log errors to project-state.yml errors array. Check errors before retrying.

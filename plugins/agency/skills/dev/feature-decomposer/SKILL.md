@@ -24,7 +24,7 @@ checkpoint:
   type: data_validation
   required_checks:
     - name: "components_exist"
-      verify: "At least 1 component in team-state.yml decomposition.components"
+      verify: "At least 1 component in feature-decomposition.yml components"
       fail_action: "Re-run Architect agent with simplified scope"
     - name: "component_fields_complete"
       verify: "Every component has non-empty: name, description, boundaries, type"
@@ -39,7 +39,7 @@ checkpoint:
       verify: "If any component has type=frontend: at least 1 designer_specs entry"
       fail_action: "Dispatch Designer agent for frontend components"
   on_fail: "Fix issues and re-run checkpoint. Do not advance to Phase 2."
-  on_pass: "Update team-state.yml status to planning, advance to Phase 2."
+  on_pass: "Update state.yml status to planning, advance to Phase 2."
 ---
 
 # Feature Decomposer
@@ -53,7 +53,7 @@ each perspective to the user for feedback before finalizing.
 | Aspect | Details |
 |--------|---------|
 | **Reads** | feature description, dev-config.yml, knowledge files, component-specs (optional), web-layout (optional) |
-| **Writes** | team-state.yml decomposition section (components, designer_specs, po_validation) |
+| **Writes** | feature-decomposition.yml (components, designer_specs, po_validation) |
 | **Checkpoint** | data_validation: components exist, fields complete, files listed, PO status, designer specs for UI |
 | **Dependencies** | config-generator (dev-config.yml must exist) |
 

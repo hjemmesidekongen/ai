@@ -9,7 +9,7 @@ Full-service digital agency plugin — brand loading, design systems, content ge
 | brand | brand-loader | Load existing brand-reference.yml, extract design tokens |
 | design | logo-assets, asset-registry, design-tokens, component-specs, web-layout | Design system generation |
 | content | app-copy, ux-writing | Application copy and UX microcopy |
-| dev | project-scanner, config-generator, scaffold, storybook-generator, feature-decomposer, team-planner, agent-dispatcher, completion-gate, code-review, qa-validation | Full development team |
+| dev | project-scanner, config-generator, scaffold, storybook-generator, feature-decomposer, team-planner, agent-dispatcher, completion-gate, code-review, qa-validation, brainstorm-session, brainstorm-decision-writer, decision-reader | Full development team |
 | devops | deploy-config, deploy-execute | CI/CD and deployment |
 
 ## Commands

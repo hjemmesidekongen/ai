@@ -57,7 +57,7 @@ schema:
         description: "Status of each module for this project (not_started | in_progress | completed | skipped)"
         value_schema:
           type: string
-          enum: ["not_started", "in_progress", "completed", "skipped"]
+          enum: ["not_started", "in_progress", "completed", "skipped", "failed"]
         default_keys:
           - brand
           - design

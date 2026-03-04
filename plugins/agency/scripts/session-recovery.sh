@@ -13,7 +13,7 @@ if [ ! -f "$AGENCY_FILE" ]; then
   exit 0
 fi
 
-ACTIVE=$(grep 'active:' "$AGENCY_FILE" 2>/dev/null | awk '{print $2}' || true)
+ACTIVE=$(grep 'active:' "$AGENCY_FILE" 2>/dev/null | awk '{print $2}' | tr -d '"' || true)
 if [ -z "$ACTIVE" ]; then
   echo "No active project set in agency.yml."
   exit 0

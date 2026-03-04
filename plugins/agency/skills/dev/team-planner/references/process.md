@@ -14,7 +14,7 @@ them. The spec_ref path is passed to the Frontend TL as reference context instea
 ## Prerequisites
 
 Before starting, verify:
-1. `.ai/projects/[name]/dev/team-state.yml` exists with a populated `decomposition` section
+1. `.ai/projects/[name]/dev/feature-decomposition.yml` exists with a populated `decomposition` section
 2. `decomposition.components` has at least 1 component (feature-decomposer must have run)
 3. `.ai/projects/[name]/dev/dev-config.yml` exists with project structure
 4. If decomposition is missing, report error and suggest running feature-decomposer first
@@ -22,7 +22,7 @@ Before starting, verify:
 ## Step 1: Load Decomposition and Create Work Packages
 
 ```
-Read team-state.yml → decomposition.components and decomposition.designer_specs
+Read feature-decomposition.yml → decomposition.components and decomposition.designer_specs
 Read dev-config.yml → structure (src_root, key_directories)
 Check .ai/projects/[name]/design/tokens/ for available token files (tailwind.config.json,
   variables.css, tokens.dtcg.json) — note paths for Frontend TL dispatch
@@ -288,9 +288,9 @@ Does this wave plan look right? [Y/adjust]"
 **If user adjusts:** Incorporate feedback, re-check file ownership, re-present.
 **If user confirms:** Proceed to Step 8.
 
-## Step 8: Write Wave Plan to team-state.yml
+## Step 8: Write Wave Plan to wave-plan.yml
 
-Write the `wave_plan` section of `.ai/projects/[name]/dev/team-state.yml`:
+Write the `wave_plan` section of `.ai/projects/[name]/dev/wave-plan.yml`:
 
 ```yaml
 wave_plan:
@@ -376,7 +376,7 @@ When errors occur during team planning:
 ## Commit Protocol
 
 **Subagent mode** (dispatched via Task()):
-1. Stage only team-state.yml and findings.md updates
+1. Stage only wave-plan.yml and findings.md updates
 2. Commit: `[plan_name]: team-planner [task_id]`
 3. Report commit SHA in task_complete
 
@@ -386,7 +386,7 @@ When errors occur during team planning:
 
 **Stage 1 — Spec Compliance (Haiku):**
 Run spec-compliance-reviewer. Checks:
-- team-state.yml wave_plan section exists and is non-empty
+- wave-plan.yml wave_plan section exists and is non-empty
 - wave_plan.waves has at least 1 wave
 - Every task has non-empty: id, description, assigned_agent, model_tier, component, files_owned
 - No two tasks in the same wave have overlapping files_owned

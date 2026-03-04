@@ -106,9 +106,9 @@ If checkpoint fails: fix and re-run. Do not advance to Phase 2 until all 5 check
 On pass:
 ```
 Update state.yml:
-  modules.devops.current_skill → "deploy-config"
-  modules.devops.status        → "in_progress"
   Append "deploy-config" to modules.devops.completed_skills
+  modules.devops.current_skill → "deploy-execute"
+  modules.devops.status        → "in_progress"
 ```
 
 ### Phase 2: deploy-execute
