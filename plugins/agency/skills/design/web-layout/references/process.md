@@ -438,3 +438,11 @@ after phase 3: `tokens`, `components`. Phase 4 adds `layouts`. Merge carefully.
 **Dynamic route pages:** For pages with dynamic segments (e.g., `/blog/[slug]`),
 the layout describes the template structure — app-copy fills the slot content.
 Note `dynamic: true` in the layout YAML frontmatter if desired.
+
+---
+
+## Trace Protocol
+
+If `state.yml` has `trace.enabled: true`, follow the
+[trace protocol](../../../../resources/trace-protocol.md) to write a structured
+trace file to `.ai/projects/[name]/traces/`.

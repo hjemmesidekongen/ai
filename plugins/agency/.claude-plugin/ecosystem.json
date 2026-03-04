@@ -8,11 +8,13 @@
     "agency:deploy",
     "agency:status",
     "agency:switch",
-    "agency:scan"
+    "agency:scan",
+    "agency:trace",
+    "agency:render"
   ],
   "skills": {
     "brand": ["brand-loader"],
-    "design": ["logo-assets", "asset-registry", "design-tokens", "component-specs", "web-layout"],
+    "design": ["logo-assets", "asset-registry", "design-tokens", "component-specs", "web-layout", "visual-render"],
     "content": ["app-copy", "ux-writing"],
     "dev": ["project-scanner", "config-generator", "storybook-generator", "scaffold", "feature-decomposer", "team-planner", "agent-dispatcher", "completion-gate", "code-review", "qa-validation", "brainstorm-session", "brainstorm-decision-writer", "decision-reader"],
     "devops": ["deploy-config", "deploy-execute"]

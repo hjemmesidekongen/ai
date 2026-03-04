@@ -172,3 +172,11 @@ assert len(state.topics) >= 1
 | Write permission error | Log to state.yml errors, report to user |
 
 Log all errors to `state.yml` errors array. Before retrying, check errors array for previous attempts — never repeat a failed approach.
+
+---
+
+## Trace Protocol
+
+If `state.yml` has `trace.enabled: true`, follow the
+[trace protocol](../../../../resources/trace-protocol.md) to write a structured
+trace file to `.ai/projects/[name]/traces/`.

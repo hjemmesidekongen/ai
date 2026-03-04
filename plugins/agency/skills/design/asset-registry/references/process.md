@@ -144,3 +144,11 @@ errors:
 ```
 
 Before retrying any operation, check state.yml errors array for previous attempts on the same asset ID. Never repeat a failed approach.
+
+---
+
+## Trace Protocol
+
+If `state.yml` has `trace.enabled: true`, follow the
+[trace protocol](../../../../resources/trace-protocol.md) to write a structured
+trace file to `.ai/projects/[name]/traces/`.

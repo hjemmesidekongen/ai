@@ -355,3 +355,11 @@ slots:
   headline: "[ComponentName] heading"
   _source: placeholder
 ```
+
+---
+
+## Trace Protocol
+
+If `state.yml` has `trace.enabled: true`, follow the
+[trace protocol](../../../../resources/trace-protocol.md) to write a structured
+trace file to `.ai/projects/[name]/traces/`.

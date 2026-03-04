@@ -349,3 +349,11 @@ errors:
     result: "Placeholder written — needs component spec review"
     next_approach: "Run component-specs for TestimonialGrid then re-run app-copy"
 ```
+
+---
+
+## Trace Protocol
+
+If `state.yml` has `trace.enabled: true`, follow the
+[trace protocol](../../../../resources/trace-protocol.md) to write a structured
+trace file to `.ai/projects/[name]/traces/`.

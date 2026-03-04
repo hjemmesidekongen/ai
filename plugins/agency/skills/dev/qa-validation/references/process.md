@@ -259,3 +259,11 @@ When errors occur during QA validation:
 
 4. **Before retrying:** Always check project-state.yml errors array for previous failed
    attempts. Never repeat the same approach.
+
+---
+
+## Trace Protocol
+
+If `state.yml` has `trace.enabled: true`, follow the
+[trace protocol](../../../../resources/trace-protocol.md) to write a structured
+trace file to `.ai/projects/[name]/traces/`.

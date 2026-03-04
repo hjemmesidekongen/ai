@@ -438,3 +438,11 @@ to be 50-100 lines each, keeping prompt overhead manageable.
 
 If no examples match (0 examples with 2+ tag matches), omit the
 "## Reference Examples" section entirely. Do not include partial matches.
+
+---
+
+## Trace Protocol
+
+If `state.yml` has `trace.enabled: true`, follow the
+[trace protocol](../../../../resources/trace-protocol.md) to write a structured
+trace file to `.ai/projects/[name]/traces/`.

@@ -74,6 +74,8 @@ schema:
         description: "Development — project scanning, scaffolding, building, code review"
       devops:
         description: "Deployment — CI/CD pipeline config and execution"
+      render:
+        description: "Visual rendering — Pencil .pen designs from agency specs"
 
   # ─────────────────────────────────────────
   # Current execution context
@@ -139,6 +141,32 @@ schema:
         description: "What to try next if result is not resolved. Required when result is 'unresolved' or 'partial'."
 
   # ─────────────────────────────────────────
+  # Trace capture (toggleable observability)
+  # ─────────────────────────────────────────
+
+  trace:
+    type: map
+    required: false
+    description: "Structured trace capture settings. Toggled via /agency:trace on|off."
+    fields:
+      enabled:
+        type: boolean
+        required: true
+        default: false
+        description: "When true, skills write structured trace YAML per run"
+      mode:
+        type: string
+        required: false
+        enum: ["full", "decision-only"]
+        default: "full"
+        description: "full = all fields; decision-only = step name, decision, uncertainty only"
+      traces_dir:
+        type: string
+        required: false
+        description: "Path to traces directory for this project"
+        example: ".ai/projects/acme/traces/"
+
+  # ─────────────────────────────────────────
   # Asset tracking (cross-module)
   # ─────────────────────────────────────────
 
@@ -196,9 +224,16 @@ example:
     devops:
       status: "not_started"
       completed_skills: []
+    render:
+      status: "not_started"
+      completed_skills: []
   current_module: "design"
   current_skill: "design-tokens"
   errors: []
+  trace:
+    enabled: false
+    mode: "full"
+    traces_dir: ".ai/projects/acme/traces/"
   asset_registry: ".ai/projects/acme/asset-registry.yml"
   recovery_notes: |
     Design module in progress. Logo and asset registry complete.

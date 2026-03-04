@@ -171,3 +171,11 @@ assert len(ids) == len(set(ids))
 | Empty extraction (0 decisions) | Warn user, suggest re-reading transcript |
 
 Log all errors to `state.yml` errors array. Before retrying, check errors array for previous attempts — never repeat a failed approach.
+
+---
+
+## Trace Protocol
+
+If `state.yml` has `trace.enabled: true`, follow the
+[trace protocol](../../../../resources/trace-protocol.md) to write a structured
+trace file to `.ai/projects/[name]/traces/`.

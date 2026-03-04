@@ -645,3 +645,11 @@ Provide these links in the contrast-matrix.md for independent verification:
 | Stark (Figma plugin) | In-Figma contrast checking and colorblind simulation |
 | Style Dictionary | Transform DTCG tokens to any platform format |
 | Theo (Salesforce) | Token transformation pipeline |
+
+---
+
+## Trace Protocol
+
+If `state.yml` has `trace.enabled: true`, follow the
+[trace protocol](../../../../resources/trace-protocol.md) to write a structured
+trace file to `.ai/projects/[name]/traces/`.

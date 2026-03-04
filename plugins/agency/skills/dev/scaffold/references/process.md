@@ -369,3 +369,11 @@ Append this section to `.ai/projects/[name]/dev/findings.md`:
 ### Decisions
 - {Any decisions made, e.g. "Used app/ instead of src/ for Next.js app router"}
 ```
+
+---
+
+## Trace Protocol
+
+If `state.yml` has `trace.enabled: true`, follow the
+[trace protocol](../../../../resources/trace-protocol.md) to write a structured
+trace file to `.ai/projects/[name]/traces/`.

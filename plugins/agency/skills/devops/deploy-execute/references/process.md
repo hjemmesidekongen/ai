@@ -253,3 +253,11 @@ skills:
 | Health check 502/503 | App crashed on startup | Check provider logs: `railway logs`, `vercel logs` |
 | Missing required env var | Var not set in provider | Set via provider dashboard or CLI, re-deploy |
 | Docker push denied | Registry auth missing | `docker login [registry]` before push |
+
+---
+
+## Trace Protocol
+
+If `state.yml` has `trace.enabled: true`, follow the
+[trace protocol](../../../../resources/trace-protocol.md) to write a structured
+trace file to `.ai/projects/[name]/traces/`.

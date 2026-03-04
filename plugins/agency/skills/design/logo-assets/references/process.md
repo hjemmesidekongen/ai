@@ -699,3 +699,11 @@ Preview: design/previews/logo-preview.html
 Assets registered: 13 entries in asset-registry.yml
 Professional refinement: [recommended / not needed]
 ```
+
+---
+
+## Trace Protocol
+
+If `state.yml` has `trace.enabled: true`, follow the
+[trace protocol](../../../../resources/trace-protocol.md) to write a structured
+trace file to `.ai/projects/[name]/traces/`.

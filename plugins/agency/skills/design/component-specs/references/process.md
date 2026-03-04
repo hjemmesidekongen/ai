@@ -391,3 +391,11 @@ button-like components. Document the computed pixel size (lg = 48px+ is safe).
 
 **Overwriting asset-registry.yml:** Always read the file first and merge the
 `components` section. design-tokens wrote the `tokens` section — preserve it.
+
+---
+
+## Trace Protocol
+
+If `state.yml` has `trace.enabled: true`, follow the
+[trace protocol](../../../../resources/trace-protocol.md) to write a structured
+trace file to `.ai/projects/[name]/traces/`.
