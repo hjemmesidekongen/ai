@@ -1,0 +1,15 @@
+active: "blik"
+projects:
+  blik:
+    app_path: "apps/blik-web"
+    brand_package_path: null
+    brand_reference: ".ai/projects/blik/brand/brand-reference.yml"
+    project_dir: ".ai/projects/blik"
+    created_at: "2026-03-03T17:30:00Z"
+    modules:
+      brand: "completed"
+      design: "not_started"
+      content: "not_started"
+      dev: "not_started"
+      devops: "not_started"
+shared_packages: []

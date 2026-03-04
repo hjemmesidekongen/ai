@@ -1,4 +1,5 @@
 {
+  "_note": "Documentation-only registry. Not consumed by Claude Code at runtime. Components are auto-discovered from filesystem.",
   "commands": [
     "agency:init",
     "agency:design",

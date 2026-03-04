@@ -1,0 +1,18 @@
+project: "ecosystem-restructure"
+sessions:
+  - date: "2026-03-03"
+    transcript: "brainstorm-transcript-2026-03-03.md"
+    duration_minutes: 45
+    topics_explored:
+      - "plugin architecture — single agency vs multiple plugins"
+      - "brand isolation and turborepo multi-brand support"
+      - "agency.yml registry and project scoping"
+      - "build order driven by Blik's needs"
+      - "existing plugin analysis and migration strategy"
+      - "deferred backlog with trigger conditions"
+      - "foundation modules — brainstorm, pm, memory, review"
+      - "design system as structured output for dev consumption"
+      - "asset registry and centralized asset management"
+      - "copy/UX writing ownership"
+    decisions_extracted: true
+active: false

@@ -70,12 +70,10 @@ Phase 1 of /agency:dev:init. Static analysis of the project's stack, conventions
 
 ## Findings Persistence
 
-Write to `.ai/projects/[name]/dev/findings.md`. **2-Action Rule:** After every 2 reads or Glob/Grep calls, save findings immediately — protects against context loss during /compact.
+Write to `.ai/projects/[name]/dev/findings.md`. **2-Action Rule:** After every 2 reads or Glob/Grep calls, save findings immediately.
 
 ## Error Logging
-
 Log errors to state.yml errors array. Check errors before retrying — never repeat a failed approach.
 
 ## Execution
-
 Follow the detailed process in [references/process.md](references/process.md).

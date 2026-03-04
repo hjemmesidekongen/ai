@@ -65,7 +65,7 @@ schema:
 
     keys:
       brand:
-        description: "Brand loading — reads existing brand-reference.yml from brand-guideline plugin output"
+        description: "Brand loading — reads existing brand-reference.yml"
       design:
         description: "Design system — logos, tokens, components, layouts"
       content:

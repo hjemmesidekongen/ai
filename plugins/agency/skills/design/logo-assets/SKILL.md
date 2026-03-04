@@ -2,14 +2,14 @@
 name: logo-assets
 user-invocable: false
 description: >
-  Runs a 5-phase logo design process producing all logo SVG variants, brand
-  icon variants, social templates, and an interactive HTML preview. Use when
-  designing a project logo, generating logo concepts, or creating the full
-  logo system for an agency project. Produces 6 logo variants, 4 brand icon
-  variants, 3 social templates (OG image, Twitter card, LinkedIn banner), and
-  registers all assets in asset-registry.yml.
-phase: design
-depends_on: [brand-loader, design-tokens]
+  Designs a complete logo system: 6 logo SVG variants, 4 brand icon variants,
+  3 social templates (OG image, Twitter card, LinkedIn banner), and an
+  interactive HTML preview. Use when designing a project logo, creating logo
+  concepts, generating logo variants for light/dark backgrounds, building a
+  responsive logo system, or running /agency:design logo phase. Produces
+  production-ready SVGs and registers all assets in asset-registry.yml.
+phase: 2
+depends_on: [brand-loader]
 writes:
   - ".ai/projects/[name]/design/logos/*.svg"
   - ".ai/projects/[name]/design/logos/brand-icon/*.svg"
@@ -71,11 +71,9 @@ svg_validity, svg_file_size, preview_html, assets_registered)
 7. **Phase 5 — Optional refinement:** Figma/Illustrator import, CMYK/Pantone for
    print, trademark search guidance; noted in project state
 8. Register all SVG outputs in asset-registry.yml (logos, icons, social templates)
-9. Run file_validation checkpoint (6 checks); fix failures; advance only
-   after all checks pass
+9. Run file_validation checkpoint (6 checks); fix failures; advance only after all checks pass
 10. Write recovery notes to state.yml
-## Findings Persistence
-Write progress to `.ai/projects/[name]/design/findings.md`. **2-Action Rule:** save after every 2 generation actions. Log errors to state.yml errors array.
-## Execution
 
-Before executing, read `references/process.md` for detailed instructions.
+## Findings & Execution
+
+Write progress to `.ai/projects/[name]/design/findings.md`. **2-Action Rule:** save after every 2 generation actions. Log errors to state.yml errors array. Before executing, read `references/process.md` for detailed instructions.

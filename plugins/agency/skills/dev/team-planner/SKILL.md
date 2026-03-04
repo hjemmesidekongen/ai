@@ -11,9 +11,9 @@ description: >
 phase: 2
 depends_on: [feature-decomposer]
 writes:
-  - ".ai/projects/[name]/dev/team-state.yml (wave_plan section)"
+  - ".ai/projects/[name]/dev/wave-plan.yml"
 reads:
-  - ".ai/projects/[name]/dev/team-state.yml (decomposition section)"
+  - ".ai/projects/[name]/dev/feature-decomposition.yml"
   - ".ai/projects/[name]/dev/dev-config.yml"
   - ".ai/projects/[name]/design/component-specs/ (optional, reuse check)"
   - ".ai/projects/[name]/design/tokens/ (optional, passed to Frontend TL)"
@@ -74,8 +74,7 @@ tasks. Frontend TL receives design token paths for brand-consistent implementati
 9. User confirms or adjusts → write to team-state.yml
 
 ## Findings Persistence
-
 Write to `.ai/projects/[name]/dev/findings.md`. **2-Action Rule:** After every 2 planning operations, save findings immediately.
 
-## Error Logging — Log errors to state.yml errors array. Check errors before retrying.
+## Error Logging — Log errors to state.yml errors array.
 ## Execution — [references/process.md](references/process.md)

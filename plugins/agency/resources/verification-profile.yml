@@ -24,7 +24,7 @@ qa_strategy:
 verification_types:
   data_validation:
     source: "built-in"
-    used_by: [brand-loader, design-tokens, component-specs, web-layout, app-copy, ux-writing, config-generator, feature-decomposer, team-planner, agent-dispatcher, completion-gate, qa-validation, deploy-config]
+    used_by: [brand-loader, component-specs, web-layout, app-copy, ux-writing, config-generator, feature-decomposer, team-planner, agent-dispatcher, code-review, qa-validation, deploy-config, storybook-generator]
 
   file_validation:
     source: "built-in"
@@ -36,7 +36,7 @@ verification_types:
 
   code_quality_gate:
     source: "dev (registered)"
-    used_by: [code-review, scaffold, storybook-generator]
+    used_by: [scaffold, completion-gate, deploy-execute]
 
   manual_approval:
     source: "built-in"
@@ -123,7 +123,7 @@ skills:
     findings_persistence: true
 
   storybook-generator:
-    checkpoint_type: code_quality_gate
+    checkpoint_type: data_validation
     checks: [storybook_config_exists, stories_generated, stories_build]
     model_tier: senior
     two_stage_verification: false
@@ -158,16 +158,16 @@ skills:
     findings_persistence: true
 
   completion-gate:
-    checkpoint_type: data_validation
+    checkpoint_type: code_quality_gate
     checks: [all_tasks_complete, build_passes, tests_pass]
     model_tier: junior
     two_stage_verification: false
     findings_persistence: true
 
   code-review:
-    checkpoint_type: code_quality_gate
+    checkpoint_type: data_validation
     checks: [review_complete, design_token_compliance, no_critical_issues]
-    model_tier: principal
+    model_tier: senior
     two_stage_verification: true
     findings_persistence: true
 
@@ -187,7 +187,7 @@ skills:
     findings_persistence: true
 
   deploy-execute:
-    checkpoint_type: data_validation
+    checkpoint_type: code_quality_gate
     checks: [deployment_successful, health_check_passed]
     model_tier: senior
     two_stage_verification: false

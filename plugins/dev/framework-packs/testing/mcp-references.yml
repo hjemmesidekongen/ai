@@ -1,7 +1,0 @@
-# MCP servers relevant to the Testing framework pack
-# Agents load this to know which MCPs to call for this domain
-
-relevant_mcps:
-  - name: "eslint"
-    purpose: "Code quality and linting for test code with test-specific rules"
-    when_to_use: "When writing or reviewing test code, enforcing test best practices, ensuring test file quality, or debugging test linting issues"

@@ -1,5 +1,10 @@
 ---
-name: "Software Architect"
+name: software-architect
+color: blue
+capabilities:
+  - "System-level architecture and data flow design"
+  - "API contract and database schema definition"
+  - "Wave 0 foundation: shared types, interfaces, conventions"
 description: "Owns system-level design decisions, data flow, API contracts, and architectural consistency. Owns Wave 0 (Contracts & Foundation) — shared types, schemas, and conventions that become the frozen contract for all implementation waves. Use when system-level architecture decisions are needed — contracts, boundaries, data flow, API design, schema decisions, or foundational technical direction."
 model_tier: principal
 model: opus

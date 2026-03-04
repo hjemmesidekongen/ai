@@ -1,5 +1,10 @@
 ---
-name: "Documentation Specialist"
+name: documentation-specialist
+color: yellow
+capabilities:
+  - "Architecture diagram generation (Mermaid)"
+  - "AI context file maintenance (CONTEXT.md)"
+  - "API contract and decision documentation"
 description: "Generates architecture diagrams (Mermaid), maintains AI context files (CONTEXT.md), and documents API contracts, decisions, and module boundaries after feature completion. Use when completed work needs architecture documentation, Mermaid diagrams, API contract notes, or context file updates."
 model_tier: senior
 model: sonnet

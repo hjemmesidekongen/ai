@@ -76,6 +76,5 @@ without re-reading all upstream files.
 
 ## Execution
 
-Before executing, read `references/process.md` for the full story YAML
-format, state variant rules, responsive breakpoint definitions, a11y
-annotation schema, and per-component generation instructions.
+Before executing, read `references/process.md` for the full story YAML format,
+state variant rules, responsive breakpoint definitions, and a11y annotation schema.

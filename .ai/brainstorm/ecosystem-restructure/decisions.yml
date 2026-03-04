@@ -1,0 +1,163 @@
+project: "ecosystem-restructure"
+created_at: "2026-03-03T00:00:00Z"
+updated_at: "2026-03-03T00:00:00Z"
+source_sessions:
+  - "brainstorm-transcript-2026-03-03.md"
+
+decisions:
+  # === Architecture ===
+
+  - id: "d1"
+    domain: ["technical"]
+    decision: "Build one unified 'agency' plugin containing all capabilities (brand, design, content, media, SEO, dev, devops, analytics). Not 8 separate plugins."
+    confidence: "high"
+    context: "Skills are lazy-loaded, agents spawn on demand — runtime cost is identical. Separate plugins only add coordination tax (context loaders, version compatibility, activation management)."
+    session_date: "2026-03-03"
+
+  - id: "d2"
+    domain: ["technical"]
+    decision: "task-planner remains a separate standalone plugin as generic infrastructure. It is the only dependency of the agency plugin."
+    confidence: "high"
+    context: "task-planner is genuinely generic — wave execution, verification, brainstorm. It doesn't belong inside a domain-specific agency."
+    session_date: "2026-03-03"
+
+  - id: "d3"
+    domain: ["technical"]
+    decision: "Agency plugin is internally organized by department/module: brand, design, content, media, seo, dev, devops, analytics. Each module has its own subdirectory under skills/, agents/, etc."
+    confidence: "high"
+    context: "Mirrors agency roles. Helps organize what would otherwise be 50+ skills into logical groups."
+    session_date: "2026-03-03"
+
+  - id: "d4"
+    domain: ["technical"]
+    decision: "Commands are namespaced by module: /agency:brand, /agency:design, /agency:dev, etc."
+    confidence: "medium"
+    context: "Implied by the single-plugin architecture. Exact command names TBD during implementation."
+    session_date: "2026-03-03"
+
+  # === Multi-brand / Project Isolation ===
+
+  - id: "d5"
+    domain: ["technical"]
+    decision: "Brands are fully isolated tenants. They never share anything — if two brands use the same font, it exists twice. No cross-brand data access."
+    confidence: "high"
+    context: "User was emphatic: 'brands do NOT share anything.' This is a hard constraint, not a preference."
+    session_date: "2026-03-03"
+
+  - id: "d6"
+    domain: ["technical"]
+    decision: "agency.yml at project root serves as the registry. Contains: active project pointer, project list with app path + brand_package path, shared packages list."
+    confidence: "medium"
+    context: "Agreed on simple flat structure. No inheritance model yet — add when a project actually needs it."
+    session_date: "2026-03-03"
+
+  - id: "d7"
+    domain: ["technical"]
+    decision: "Shared packages (packages/shared, packages/ui) are platform-level and brand-agnostic. Any project can consume them. Brand-specific code lives in packages/brand/[name]."
+    confidence: "high"
+    context: "Follows turborepo conventions. Shared = npm-registry-like, brand = isolated tenant scope."
+    session_date: "2026-03-03"
+
+  - id: "d8"
+    domain: ["technical"]
+    decision: "PreToolUse hook enforces brand isolation — if a Write/Edit targets another project's brand directory, it is blocked."
+    confidence: "medium"
+    context: "Extends the existing file-ownership pattern from task-planner to project-level scope."
+    session_date: "2026-03-03"
+
+  - id: "d9"
+    domain: ["technical"]
+    decision: "Unified project directory structure: .ai/projects/[name]/ with module subdirectories (brand/, design/, content/, seo/, dev/, media/). One state.yml per project, one asset-registry.yml."
+    confidence: "medium"
+    context: "Replaces the scattered .ai/brands/, .ai/seo/, .ai/dev/ pattern. Single plugin owns one project directory."
+    session_date: "2026-03-03"
+
+  # === Module Responsibilities ===
+
+  - id: "d10"
+    domain: ["technical"]
+    decision: "brand module owns strategy and rules only: identity, audience, voice, colors, typography, content rules, visual identity guidelines. No asset generation — that moves to design."
+    confidence: "high"
+    context: "Brand defines what the brand IS. Design executes what it LOOKS like. Clean separation."
+    session_date: "2026-03-03"
+
+  - id: "d11"
+    domain: ["technical"]
+    decision: "design module is a design system generator: logo/favicon/icons, design tokens (CSS vars, Tailwind), structured component specs, web page layouts, social templates, asset variations."
+    confidence: "high"
+    context: "Must output machine-readable component specs (not just visuals) so dev can auto-generate Storybook stories and React components."
+    session_date: "2026-03-03"
+
+  - id: "d12"
+    domain: ["technical"]
+    decision: "UX copy and microcopy (button labels, error messages, empty states) belongs with the content module, not design. Designer owns constraints (max length, placement), content fills them."
+    confidence: "medium"
+    context: "Content module understands brand voice and content rules. Designer shouldn't need to reason about tone-of-voice."
+    session_date: "2026-03-03"
+
+  - id: "d13"
+    domain: ["technical"]
+    decision: "Centralized asset registry (asset-registry.yml) within each project. Every module that generates an asset registers it. Every module that needs an asset queries by tag, type, or producer."
+    confidence: "medium"
+    context: "Eliminates cross-module file path assumptions. Exact schema TBD during implementation."
+    session_date: "2026-03-03"
+
+  - id: "d14"
+    domain: ["technical"]
+    decision: "dev module handles: scaffold, Storybook components, feature implementation, code review. DevOps (CI/CD, deployment) is either a separate module within agency or folded into dev — decide during implementation."
+    confidence: "medium"
+    context: "DevOps scope might be too small for its own module. Analytics/tracking placement also TBD."
+    session_date: "2026-03-03"
+
+  # === Build Strategy ===
+
+  - id: "d15"
+    domain: ["product"]
+    decision: "Build for Blik first. The agency plugin's MVP scope is determined by what Blik needs — not the full agency vision."
+    confidence: "high"
+    context: "Dogfooding — agency plugin's first customer is Blik. Validates the pipeline before Blik (the UI) consumes it."
+    session_date: "2026-03-03"
+
+  - id: "d16"
+    domain: ["product"]
+    decision: "Rebuild fresh with a new set of eyes, but analyze existing plugins (brand-guideline 9 skills, seo 8 skills, dev 11 skills) thoroughly before building. Port valuable logic, don't discard."
+    confidence: "high"
+    context: "Existing plugins represent weeks of refined logic (logo 5-phase process, SEO clustering, etc.). Analysis pre-step prevents losing hard-won functionality."
+    session_date: "2026-03-03"
+
+  - id: "d17"
+    domain: ["product"]
+    decision: "Maintain a deferred-backlog.yml tracking features NOT needed for Blik, categorized by trigger condition (e.g., 'brand:generate triggers when new project has no brand')."
+    confidence: "medium"
+    context: "Ensures nothing is forgotten. Each deferred feature lists source plugin, skills to port, and trigger for when it becomes needed."
+    session_date: "2026-03-03"
+
+  - id: "d18"
+    domain: ["product"]
+    decision: "Brand generation is deferred — Blik already has a brand. MVP only needs a brand loader that reads existing brand-reference.yml."
+    confidence: "high"
+    context: "No point re-implementing 9 brand skills when the immediate project doesn't need them."
+    session_date: "2026-03-03"
+
+  - id: "d19"
+    domain: ["product"]
+    decision: "Build order follows dependency chain: foundation (brainstorm, pm, memory, review) → design (assets, tokens, components) → content (app copy, UX writing) → dev (scaffold, storybook, implement) → devops (deploy, CI/CD)."
+    confidence: "medium"
+    context: "Foundation enables everything else. Design must exist before dev can implement. Content can partially parallel dev."
+    session_date: "2026-03-03"
+
+  - id: "d20"
+    domain: ["product"]
+    decision: "Existing plugins (brand-guideline, seo-plugin, dev) remain as-is. Agency plugin is built fresh alongside them. No migration or removal of existing plugins."
+    confidence: "high"
+    context: "Existing plugins are working and tested. They serve as reference implementations during agency development."
+    session_date: "2026-03-03"
+
+  # === Blik Integration ===
+
+  - id: "d21"
+    domain: ["technical", "product"]
+    decision: "The agency plugin is the stepping stone to Blik. Every YAML schema, asset format, and state structure defined in the agency plugin becomes the contract that Blik's database schema maps to."
+    confidence: "high"
+    context: "Can't build the UI for a system that doesn't exist. Agency plugin defines the data model through actual use."
+    session_date: "2026-03-03"

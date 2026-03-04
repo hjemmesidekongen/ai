@@ -1,5 +1,10 @@
 ---
-name: "Backend Worker"
+name: backend-worker
+color: green
+capabilities:
+  - "Backend implementation at any complexity tier (Haiku/Sonnet/Opus)"
+  - "API endpoint and database query implementation"
+  - "Unit and integration testing for backend code"
 description: "Executes backend development tasks at any complexity level. Tier-gated behavior controlled by model tier assigned by Backend Tech Lead — Haiku for junior scope, Sonnet for senior scope, Opus for principal scope. Spawned by Backend Tech Lead after risk-based delegation — never self-selected, always dispatched with an explicit model tier."
 model_tier: "assigned by tech lead"
 model: inherit

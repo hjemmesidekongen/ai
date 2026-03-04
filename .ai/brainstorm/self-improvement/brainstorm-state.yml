@@ -1,0 +1,8 @@
+project: "self-improvement"
+sessions:
+  - date: "2026-03-02"
+    transcript: "brainstorm-transcript-2026-03-02.md"
+    duration_minutes: null
+    topics_explored: []
+    decisions_extracted: false
+active: true

@@ -12,10 +12,10 @@ description: >
 phase: 3
 depends_on: [team-planner]
 writes:
-  - ".ai/projects/[name]/project-state.yml (execution section)"
+  - ".ai/projects/[name]/dev/execution-log.yml"
 reads:
-  - ".ai/projects/[name]/project-state.yml (wave_plan section)"
-  - ".ai/projects/[name]/project-state.yml (dev module)"
+  - ".ai/projects/[name]/dev/wave-plan.yml"
+  - ".ai/projects/[name]/dev/dev-config.yml"
   - ".ai/projects/[name]/knowledge/*.yml (tag-filtered per task)"
 model_tier: senior
 model: sonnet

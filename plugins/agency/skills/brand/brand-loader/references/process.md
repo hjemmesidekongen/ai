@@ -9,7 +9,7 @@ brand_ref = brand_dir + "brand-reference.yml"
 
 if not exists(brand_ref):
   ERROR: "No brand-reference.yml found at {brand_ref}"
-  HINT: "Copy your brand-reference.yml to {brand_dir} or run the brand-guideline plugin first"
+  HINT: "Copy your brand-reference.yml to {brand_dir} or run /agency:init with --brand to load brand data"
   STOP
 ```
 

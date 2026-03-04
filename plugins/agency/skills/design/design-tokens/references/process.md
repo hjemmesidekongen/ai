@@ -306,7 +306,7 @@ interoperability with Figma Tokens, Style Dictionary, Token Pipeline, and simila
 
 ## Step 4: WCAG Validation
 
-**Ported from brand-guideline typography-color skill.** Run full validation on all
+Run full validation on all
 color pairs from brand-summary.yml.
 
 ### 4a: Compute Contrast Ratios

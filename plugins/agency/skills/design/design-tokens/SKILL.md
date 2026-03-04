@@ -64,7 +64,7 @@ WCAG accessibility standards.
    by category (color, font, spacing, radius, shadow)
 4. **Generate DTCG JSON** — tokens.dtcg.json in Design Tokens Community Group format
    with $value, $type, $description per token
-5. **WCAG validation** (ported from brand-guideline typography-color):
+5. **WCAG validation**:
    - Compute contrast ratios for all foreground/background pairs (WCAG formula)
    - Validate WCAG AA compliance — flag failures, suggest nearest passing shade
    - Generate colorblind safety notes (protanopia, deuteranopia, tritanopia)
@@ -74,8 +74,7 @@ WCAG accessibility standards.
 7. Run checkpoint — all 7 checks must pass before advancing
 
 ## Findings Persistence
+Write to `.ai/projects/[name]/design/findings.md`. **2-Action Rule:** after every 2 research/generation actions, save progress. Log errors to state.yml errors array — never repeat a failed approach.
 
-Write intermediate results to `.ai/projects/[name]/design/findings.md`. **2-Action Rule:** after every 2 research/generation actions, IMMEDIATELY save progress to findings.md. Log all errors to state.yml errors array — never repeat a failed approach.
 ## Execution
-
 Before executing, read `references/process.md` for detailed instructions.

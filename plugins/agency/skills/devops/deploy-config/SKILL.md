@@ -5,8 +5,9 @@ description: >
   Generates deployment configuration: Dockerfile, Railway/Vercel config,
   GitHub Actions CI/CD pipeline, and environment variable manifest. Reads
   dev-config.yml for framework and build commands. Use when setting up
-  deployment, running /agency:deploy config phase, creating CI/CD pipeline,
-  generating Dockerfile, or documenting environment variables.
+  deployment, deploying to Railway or Vercel, running /agency:deploy config
+  phase, creating CI/CD pipeline, generating Dockerfile, configuring staging
+  and production environments, or documenting environment variables.
 phase: 1
 depends_on: [config-generator]
 writes:

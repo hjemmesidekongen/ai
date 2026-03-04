@@ -1,7 +1,0 @@
-# MCP servers relevant to the Prisma framework pack
-# Agents load this to know which MCPs to call for this domain
-
-relevant_mcps:
-  - name: "neon"
-    purpose: "Neon Postgres database schema management, migrations, and query optimization"
-    when_to_use: "When managing Prisma schemas with Neon Postgres backends, running database migrations, optimizing queries, or handling schema version compatibility"

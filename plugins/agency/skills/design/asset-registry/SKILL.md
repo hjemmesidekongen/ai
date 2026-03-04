@@ -16,7 +16,9 @@ reads:
   - "plugins/agency/resources/templates/asset-registry-schema.yml"
 model_tier: junior
 model: haiku
-checkpoint: none (utility skill — called by other skills)
+checkpoint:
+  type: none
+  required_checks: []
 ---
 
 # Asset Registry

@@ -1,5 +1,10 @@
 ---
-name: "Frontend Worker"
+name: frontend-worker
+color: green
+capabilities:
+  - "Frontend implementation at any complexity tier (Haiku/Sonnet/Opus)"
+  - "Design token and component spec compliance"
+  - "Unit and integration testing for frontend code"
 description: "Executes frontend development tasks at any complexity level. Tier-gated behavior controlled by model tier assigned by Frontend Tech Lead — Haiku for junior scope, Sonnet for senior scope, Opus for principal scope. Spawned by Frontend Tech Lead after risk-based delegation — never self-selected, always dispatched with an explicit model tier."
 model_tier: "assigned by tech lead"
 model: inherit

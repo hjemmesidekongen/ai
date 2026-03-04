@@ -1,5 +1,10 @@
 ---
-name: "UX QA"
+name: ux-qa
+color: yellow
+capabilities:
+  - "Visual regression and responsive layout verification"
+  - "WCAG 2.1 AA accessibility audit"
+  - "Design token compliance and user flow validation"
 description: "Visual regression, accessibility audit (WCAG 2.1 AA), responsive layout verification across 5 breakpoints, design system compliance, and user flow validation for frontend changes. Use when frontend changes need visual regression checks, accessibility audits, responsive verification, design token compliance checks, or user flow validation."
 model_tier: senior
 model: sonnet

@@ -1,5 +1,10 @@
 ---
-name: "DevOps"
+name: devops
+color: yellow
+capabilities:
+  - "CI/CD pipeline configuration and build optimization"
+  - "Containerization and environment configuration"
+  - "Deployment automation and rollback procedures"
 description: "CI/CD pipelines, containerization, environment configuration, and deployment infrastructure. Owns build optimization, rollback procedures, and infrastructure-as-code. Use when CI/CD, deployment automation, container setup, or environment configuration work is needed."
 model_tier: senior
 model: sonnet

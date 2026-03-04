@@ -13,7 +13,13 @@
         "hooks": [
           {
             "type": "command",
-            "command": "cat .ai/projects/$(cat .ai/agency.yml 2>/dev/null | grep 'active:' | awk '{print $2}' 2>/dev/null)/state.yml 2>/dev/null | head -20 || true"
+            "command": "cat .ai/projects/$(cat .ai/agency.yml 2>/dev/null | grep 'active:' | awk '{print $2}' 2>/dev/null)/state.yml 2>/dev/null | head -20 || true",
+            "timeout": 30
+          },
+          {
+            "type": "command",
+            "command": "bash ${CLAUDE_PLUGIN_ROOT}/scripts/project-isolation-check.sh",
+            "timeout": 30
           }
         ]
       }
@@ -24,7 +30,8 @@
         "hooks": [
           {
             "type": "command",
-            "command": "echo '[agency] File updated. If this completes a phase, update state.yml.'"
+            "command": "echo '[agency] File updated. If this completes a phase, update state.yml.'",
+            "timeout": 30
           }
         ]
       }
@@ -34,7 +41,8 @@
         "hooks": [
           {
             "type": "command",
-            "command": "bash ${CLAUDE_PLUGIN_ROOT}/scripts/session-recovery.sh"
+            "command": "bash ${CLAUDE_PLUGIN_ROOT}/scripts/session-recovery.sh",
+            "timeout": 30
           }
         ]
       }
@@ -44,7 +52,8 @@
         "hooks": [
           {
             "type": "command",
-            "command": "bash ${CLAUDE_PLUGIN_ROOT}/scripts/check-wave-complete.sh"
+            "command": "bash ${CLAUDE_PLUGIN_ROOT}/scripts/check-wave-complete.sh",
+            "timeout": 30
           }
         ]
       }

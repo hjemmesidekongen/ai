@@ -10,7 +10,7 @@ description: >
 phase: 1
 depends_on: [config-generator]
 writes:
-  - ".ai/projects/[name]/dev/team-state.yml (decomposition section)"
+  - ".ai/projects/[name]/dev/feature-decomposition.yml"
 reads:
   - "User's feature description (from /agency:dev:build argument)"
   - ".ai/projects/[name]/dev/dev-config.yml"
