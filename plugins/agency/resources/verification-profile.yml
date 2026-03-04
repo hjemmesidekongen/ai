@@ -24,7 +24,7 @@ qa_strategy:
 verification_types:
   data_validation:
     source: "built-in"
-    used_by: [brand-loader, component-specs, web-layout, app-copy, ux-writing, config-generator, feature-decomposer, team-planner, agent-dispatcher, code-review, qa-validation, deploy-config, storybook-generator]
+    used_by: [brand-loader, component-specs, web-layout, app-copy, ux-writing, config-generator, feature-decomposer, team-planner, agent-dispatcher, code-review, qa-validation, deploy-config, storybook-generator, brainstorm-session, brainstorm-decision-writer, decision-reader]
 
   file_validation:
     source: "built-in"
@@ -178,6 +178,28 @@ skills:
     two_stage_verification: true
     findings_persistence: true
 
+  # --- Brainstorm Skills (Dev Module) ---
+  brainstorm-session:
+    checkpoint_type: data_validation
+    checks: [transcript_written, state_updated, topics_captured]
+    model_tier: principal
+    two_stage_verification: false
+    findings_persistence: true
+
+  brainstorm-decision-writer:
+    checkpoint_type: data_validation
+    checks: [decisions_yml_exists, decision_fields_complete, no_duplicate_ids]
+    model_tier: senior
+    two_stage_verification: false
+    findings_persistence: true
+
+  decision-reader:
+    checkpoint_type: data_validation
+    checks: [decisions_loaded, relevance_filtered, summary_written]
+    model_tier: junior
+    two_stage_verification: false
+    findings_persistence: true
+
   # --- DevOps Module ---
   deploy-config:
     checkpoint_type: data_validation
@@ -206,6 +228,6 @@ qa_focus:
   - "Design tokens use WCAG-validated contrast pairs"
   - "Project isolation enforced across all write paths"
   - "Model tier assigned on every task"
-  - "Findings persistence in all 20 skills"
+  - "Findings persistence in all 23 skills"
   - "Two-stage verification in all active-output skills"
-  - "Error logging to state.yml in all 20 skills"
+  - "Error logging to state.yml in all 23 skills"
