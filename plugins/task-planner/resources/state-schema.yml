@@ -1,0 +1,187 @@
+# State Schema
+# Canonical schema for state.yml files used by all plugins.
+# Every plugin that does multi-step work stores state at:
+#   .ai/[domain]/[project-name]/state.yml
+#
+# This schema defines the required structure. Plugins may add
+# domain-specific fields but MUST include these core fields.
+
+state:
+  # --- Execution context ---
+
+  command:
+    type: string
+    required: true
+    description: "The command that initiated this execution (e.g. brand:generate, seo:strategy)"
+
+  project:
+    type: string
+    required: true
+    description: "Project or brand name this state belongs to"
+
+  started_at:
+    type: string
+    format: iso8601
+    required: true
+    description: "When execution began"
+
+  updated_at:
+    type: string
+    format: iso8601
+    required: true
+    description: "Last time state was modified"
+
+  status:
+    type: string
+    required: true
+    enum: [pending, in_progress, completed, verified, failed, failed_spec, failed_quality]
+    default: pending
+    description: "Top-level execution status. Must be at column 0 (no indent) in YAML."
+
+  # --- Phase tracking ---
+
+  current_phase:
+    type: string
+    required: true
+    description: "Name of the currently executing skill/phase"
+
+  current_phase_number:
+    type: integer
+    required: true
+    description: "1-indexed number of the current phase"
+
+  total_phases:
+    type: integer
+    required: true
+    description: "Total number of phases in this execution"
+
+  # --- Phases array ---
+
+  phases:
+    type: array
+    required: true
+    description: "Ordered list of all phases in this execution"
+    items:
+      name:
+        type: string
+        required: true
+        description: "Skill/phase name"
+
+      number:
+        type: integer
+        required: true
+        description: "1-indexed phase number"
+
+      status:
+        type: string
+        required: true
+        enum: [pending, in_progress, completed, failed, failed_spec, failed_quality, passed_with_notes, skipped]
+        default: pending
+        description: "Phase-level status. failed_spec = Stage 1 failed; failed_quality = Stage 2 failed; passed_with_notes = both passed with concerns"
+
+      started_at:
+        type: string
+        format: iso8601
+        required: false
+
+      completed_at:
+        type: string
+        format: iso8601
+        required: false
+
+      checkpoint:
+        type: object
+        required: false
+        description: "Verification checkpoint result for this phase"
+        properties:
+          type:
+            type: string
+            required: true
+            description: "Checkpoint type (data_validation, file_validation, manual_approval, etc.)"
+          passed:
+            type: boolean
+            required: true
+          details:
+            type: string
+            required: false
+
+      artifacts:
+        type: array
+        required: false
+        items:
+          type: string
+        description: "Files created or modified during this phase"
+
+      commit_range:
+        type: object
+        required: false
+        description: "Git commit range for this phase, used by quality reviewer to scope review diffs"
+        properties:
+          base_sha:
+            type: string
+            required: true
+          head_sha:
+            type: string
+            required: true
+
+  # --- Error tracking ---
+  # The errors array survives /compact and session restarts.
+  # Every plugin MUST follow these rules:
+  #   1. Log ALL errors immediately when they occur
+  #   2. Before attempting an approach, check errors for previous attempts
+  #   3. Never repeat a failed approach — mutate strategy instead
+  #   4. When an error is fixed, update result to "resolved" but keep the entry
+  #   5. The verification-runner writes errors automatically on checkpoint failure
+
+  errors:
+    type: array
+    required: true
+    default: []
+    description: "Persistent error log. Never delete entries — mark resolved instead."
+    items:
+      timestamp:
+        type: string
+        format: iso8601
+        required: true
+        description: "When the error occurred"
+
+      skill:
+        type: string
+        required: true
+        description: "Which skill/phase encountered the error"
+
+      error:
+        type: string
+        required: true
+        description: "What went wrong (concise but specific)"
+
+      attempted_fix:
+        type: string
+        required: true
+        description: "What was tried to resolve it"
+
+      result:
+        type: string
+        required: true
+        enum: [resolved, partial, unresolved]
+        description: "Outcome of the fix attempt"
+
+      next_approach:
+        type: string
+        required: false
+        description: "What to try next if result is not resolved. Required when result is 'unresolved' or 'partial'."
+
+  # --- Session recovery ---
+
+  last_session_id:
+    type: string
+    required: false
+    description: "Session ID of the last session that worked on this state"
+
+  recovery_notes:
+    type: string
+    required: false
+    description: >
+      Human-readable notes about where execution stands and what's next.
+      Written after each phase completes. Read by session-recovery.sh and
+      by Claude when resuming after /compact or session restart.

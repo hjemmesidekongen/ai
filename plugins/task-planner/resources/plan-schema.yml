@@ -1,0 +1,207 @@
+# Plan Schema
+# Defines the structure of a plan file produced by the wave-decomposer
+# and consumed by plan-execute / plan-resume.
+
+plan:
+  name:
+    type: string
+    required: true
+    description: "Unique plan identifier (e.g. brand-generate-acme-corp)"
+
+  created_at:
+    type: string
+    format: iso8601
+    required: true
+
+  total_tasks:
+    type: integer
+    required: true
+    description: "Total number of tasks across all waves"
+
+  total_waves:
+    type: integer
+    required: true
+    description: "Total number of execution waves"
+
+  estimated_minutes:
+    type: integer
+    required: false
+    description: "Sum of all task estimates"
+
+  status:
+    type: string
+    required: true
+    enum: [pending, in_progress, completed, failed]
+    default: pending
+
+  verification_profile:
+    type: string
+    required: false
+    description: "Domain-specific profile (brand, web, seo, content). Determines which checks run after each wave and at final review."
+
+  # --- Task definitions ---
+  # Flat list of all tasks in the plan. Waves reference these by id.
+
+  tasks:
+    type: array
+    required: true
+    min_items: 1
+    items:
+      id:
+        type: string
+        required: true
+        description: "Unique task identifier within this plan (e.g. t1, t2)"
+
+      name:
+        type: string
+        required: true
+        description: "Human-readable task name"
+
+      depends_on:
+        type: array
+        required: true
+        items:
+          type: string
+        description: "List of task ids that must complete before this task starts. Empty array for root tasks."
+
+      files_written:
+        type: array
+        required: true
+        items:
+          type: string
+        description: "Files or file patterns this task writes to. Supports section-level ownership with # (e.g. brand-reference.yml#colors) and globs (e.g. assets/icons/*)."
+
+      files_read:
+        type: array
+        required: false
+        items:
+          type: string
+        description: "Files this task reads from. Read-only — no ownership conflicts."
+
+      estimated_minutes:
+        type: integer
+        required: false
+        description: "Estimated time to complete this task"
+
+      status:
+        type: string
+        required: true
+        enum: [pending, in_progress, completed, failed, skipped]
+        default: pending
+
+      model_tier:
+        type: string
+        required: false
+        enum: [junior, senior, principal, self]
+        default: senior
+        description: "Model tier for this task. junior=Haiku (simple/templated work), senior=Sonnet (implementation/reasoning), principal=Opus (architecture/QA/cross-cutting), self=domain-specialist self-assessment (starts at Haiku, escalates on failure). Defaults to senior if omitted."
+
+      base_sha:
+        type: string
+        required: false
+        description: "Git SHA before this task's commit. Set by orchestrator after dispatch. Used to scope quality review diffs."
+
+      commit_sha:
+        type: string
+        required: false
+        description: "Git SHA of this task's commit. Set from worker's task_complete report."
+
+      assigned_agent:
+        type: string
+        required: false
+        description: "Agent id assigned to this task (set during execution)"
+
+  # --- Wave definitions ---
+  # Ordered list of execution waves. Each wave contains task ids that
+  # can run in parallel (if parallel: true) once all depends_on_waves
+  # have completed and passed verification.
+
+  waves:
+    type: array
+    required: true
+    min_items: 1
+    items:
+      wave:
+        type: integer
+        required: true
+        description: "Wave number (1-indexed, sequential)"
+
+      parallel:
+        type: boolean
+        required: true
+        description: "Whether tasks in this wave can run concurrently. False means sequential execution."
+
+      tasks:
+        type: array
+        required: true
+        items:
+          type: string
+        description: "List of task ids included in this wave"
+
+      depends_on_waves:
+        type: array
+        required: false
+        items:
+          type: integer
+        description: "Wave numbers that must complete before this wave starts"
+
+      rationale:
+        type: string
+        required: false
+        description: "Explanation of why these tasks are grouped and ordered this way"
+
+      status:
+        type: string
+        required: true
+        enum: [pending, in_progress, completed, failed]
+        default: pending
+
+      verification:
+        type: object
+        required: true
+        properties:
+          type:
+            type: string
+            required: true
+            description: "Verification type from verification-registry.yml (e.g. data_validation, file_validation)"
+          checks:
+            type: array
+            required: true
+            items:
+              type: string
+            description: "Specific checks to run for this wave"
+          passed:
+            type: boolean
+            required: false
+            description: "null = not yet run, true = passed, false = failed"
+          details:
+            type: string
+            required: false
+            description: "Human-readable verification result"
+
+      qa_review:
+        type: boolean
+        required: false
+        default: false
+        description: "Whether the QA agent reviews this wave's output before advancing. Always true for the final wave."
+
+  # --- Execution mode ---
+
+  execution_mode:
+    type: string
+    required: false
+    enum: [inline, subagent]
+    default: subagent
+    description: "How tasks are dispatched. 'subagent' uses Task() tool per task. 'inline' runs in the orchestrator's session (legacy single-agent mode)."
+
+  # --- Recovery ---
+
+  recovery_notes:
+    type: string
+    required: false
+    description: "Free-text notes written after each wave completes. Used to reconstruct context after session breaks or compaction."
+
+  last_session_id:
+    type: string
+    required: false
+    description: "Session id of the last session that worked on this plan"
