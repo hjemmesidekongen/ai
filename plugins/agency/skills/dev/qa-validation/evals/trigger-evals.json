@@ -1,0 +1,23 @@
+[
+  {"query": "Validate the test-benchmark build against the original spec — check spec alignment and generate the build report", "should_trigger": true},
+  {"query": "We're in phase 4b of /agency:build. Code review passed, now run QA validation with PO sign-off", "should_trigger": true},
+  {"query": "Calculate the spec alignment score for the OAuth2 authentication feature — compare implemented components against the decomposition", "should_trigger": true},
+  {"query": "Generate the build report for test-benchmark using the build-report-template.md template", "should_trigger": true},
+  {"query": "Run PO assessment on the completed build — does the implementation match the original feature description?", "should_trigger": true},
+  {"query": "QA check: are all 4 components (oauth-setup, login-page, session-mgmt, rbac) implemented and passing gates?", "should_trigger": true},
+  {"query": "The spec alignment score is 65%. That's below 70% — flag the gaps and block build completion", "should_trigger": true},
+  {"query": "Validate build completeness for the test-benchmark project — per-component assessment against feature-decomposition.yml", "should_trigger": true},
+  {"query": "Run /agency:build phase 4b for test-benchmark — the code review found no critical issues, proceed to QA", "should_trigger": true},
+  {"query": "PO sign-off assessment: does the OAuth2 implementation cover Google and GitHub providers as specified?", "should_trigger": true},
+
+  {"query": "Review the wave 2 diff for code quality, security issues, and convention compliance", "should_trigger": false},
+  {"query": "Run build, lint, and test checks on the completed tasks before moving to phase 4", "should_trigger": false},
+  {"query": "Write unit tests for the session management module in src/auth/session/", "should_trigger": false},
+  {"query": "Decompose the 'user profile' feature into components with file boundaries", "should_trigger": false},
+  {"query": "Plan the team assignments — which agents handle which wave 2 tasks?", "should_trigger": false},
+  {"query": "Set up the deployment configuration for the staging environment", "should_trigger": false},
+  {"query": "Scaffold the RBAC components with boilerplate for roles and permissions", "should_trigger": false},
+  {"query": "Run the ESLint check on all changed files in the auth directory", "should_trigger": false},
+  {"query": "Check if design tokens are being used correctly in the login page", "should_trigger": false},
+  {"query": "Configure the OAuth2 redirect URIs for the Google provider", "should_trigger": false}
+]

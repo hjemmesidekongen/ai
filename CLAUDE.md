@@ -61,8 +61,8 @@ docs/
 | Command | Purpose |
 |---------|---------|
 | `/agency:init` | Initialize a new project |
-| `/agency:design` | Run design phase (tokens, logos, components, layout) |
-| `/agency:content` | Run content phase (app copy, UX writing) |
+| `/agency:design` | Run design phase (`--from <phase>`, `--force` to reset and re-run) |
+| `/agency:content` | Run content phase (`--from <phase>`, `--force` to reset and re-run) |
 | `/agency:build` | Run dev build phase |
 | `/agency:deploy` | Deploy project |
 | `/agency:status` | Show project status |

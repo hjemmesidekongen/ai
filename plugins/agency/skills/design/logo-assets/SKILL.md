@@ -64,6 +64,42 @@ svg_validity, svg_file_size, preview_html, assets_registered)
 
 ## Process Summary
 
+### Pre-check: Fast-forward detection
+
+Before starting the interactive flow, check if production logos already exist
+(e.g. from /brand:generate):
+
+```
+existing_logos = glob(.ai/projects/[name]/design/logos/*.svg)
+  OR glob(.ai/projects/[name]/brand/logos/*.svg)
+  OR glob(.ai/projects/[name]/brand/brand-package/logos/*.svg)
+
+if existing_logos.count >= 4:
+  Report existing assets found:
+    "Found {count} existing logo SVGs. These appear to be from a prior
+     brand generation run."
+    List files found.
+  Ask user:
+    "[1] Fast-forward — validate existing logos, copy to design/logos/,
+         generate any missing variants, and run checkpoint
+     [2] Start fresh — run the full 5-phase interactive logo design process"
+
+  if user picks [1] (fast-forward):
+    - Validate existing SVGs (valid XML, viewBox, no raster, <50KB)
+    - Copy to design/logos/ if not already there
+    - Identify missing variants from the 6 required (primary, reversed,
+      monochrome, icon, horizontal, stacked) and 4 brand icons
+    - Generate only missing variants
+    - Generate logo-preview.html
+    - Generate social templates if missing
+    - Skip to step 8 (register + checkpoint)
+
+  if user picks [2]:
+    Proceed with full interactive flow below
+```
+
+### Full interactive flow
+
 1. Read brand-summary.yml and brand-reference.yml — name, colors, typography, visual
 2. **Phase 1 — Discovery:** Reflect brand context → logo type preference
    (wordmark/lettermark/abstract/combination/emblem) → reference logos → what

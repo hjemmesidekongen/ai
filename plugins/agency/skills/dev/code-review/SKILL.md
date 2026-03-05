@@ -64,7 +64,7 @@ Phase 4a of /agency:build. Audits the full wave diff for quality, patterns, secu
 2. Run `git diff [base_sha]..[head_sha]` — get the full wave diff
 3. Read `dev-config.yml` conventions + `knowledge/conventions.yml` for project rules
 4. Load design tokens from `.ai/projects/[name]/design/tokens/` for token compliance checks
-5. For each changed file, review 6 dimensions: quality, patterns, conventions, security, performance, design token compliance
+5. For each changed file, review 6 dimensions: quality, patterns, conventions, security, performance, design token compliance — see [references/review-dimensions.md](references/review-dimensions.md) for checklists
 6. Rate each finding: critical (must fix), warning (should fix), info (suggestion)
 7. Write `review.code_review` to project-state.yml — if criticals exist, status = "failed"
 

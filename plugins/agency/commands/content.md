@@ -1,7 +1,7 @@
 ---
 name: agency:content
 description: "Orchestrate agency content pipeline — generate page copy from layouts then UX microcopy from component specs."
-argument-hint: "[project] [--from app-copy|ux-writing]"
+argument-hint: "[project] [--from app-copy|ux-writing] [--force]"
 ---
 
 # /agency:content
@@ -17,6 +17,8 @@ Design pipeline must be complete before content can run.
 /agency:content acme                     # Run full pipeline for specific project
 /agency:content --from ux-writing        # Resume from ux-writing phase
 /agency:content acme --from app-copy     # Re-run full content pipeline for acme
+/agency:content --force                  # Reset content state and re-run full pipeline
+/agency:content --from ux-writing --force # Reset from ux-writing onward and re-run
 ```
 
 ## Phase Map
@@ -60,7 +62,31 @@ if missing is not empty:
   exit
 ```
 
-### Step 3: Determine Start Phase
+### Step 3: Handle --force (if provided)
+
+```
+if --force flag provided:
+  if --from flag provided:
+    reset_from = --from value
+  else:
+    reset_from = app-copy   # reset everything
+
+  phases = [app-copy, ux-writing]
+  skills_to_remove = []
+
+  for phase in phases starting from reset_from:
+    skills_to_remove.append(skill_map[phase])
+
+  # Reset state
+  Remove skills_to_remove from state.modules.content.completed_skills
+  state.modules.content.status → "not_started" if no skills remain, else "in_progress"
+
+  Write updated state.yml
+
+  Report: "Reset content state from '{reset_from}' onward. Cleared: {skills_to_remove}"
+```
+
+### Step 4: Determine Start Phase
 
 ```
 phases = [app-copy, ux-writing]
@@ -92,7 +118,7 @@ Show header before starting:
 Starting from: {start_phase} phase
 ```
 
-### Step 4: Run app-copy (if start_phase <= app-copy)
+### Step 5: Run app-copy (if start_phase <= app-copy)
 
 ```
 if start_phase == app-copy:
@@ -137,7 +163,7 @@ if start_phase == app-copy:
   Report: "Phase 1/2: app-copy complete"
 ```
 
-### Step 5: Run ux-writing (if start_phase <= ux-writing)
+### Step 6: Run ux-writing (if start_phase <= ux-writing)
 
 ```
 Verify prerequisite:
@@ -184,7 +210,7 @@ Update state.yml:
     Run /agency:build to scaffold and build the application."
 ```
 
-### Step 6: Report
+### Step 7: Report
 
 ```
 ## Content Pipeline Complete: {project_name}

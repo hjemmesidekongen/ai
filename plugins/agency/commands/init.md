@@ -87,11 +87,9 @@ If agency.yml already exists, append the new project and set it as active.
 ```
 if --brand flag provided:
   Copy brand-reference.yml to {project_dir}/brand/
-  Run brand-loader skill:
-    - Extract design tokens
-    - Register brand assets in asset-registry.yml
-  Update state.yml: modules.brand.status → "completed"
+  Update state.yml: modules.brand.status → "loaded"
   Update agency.yml: brand_reference → path
+  Report: "Brand reference imported. /agency:design will run brand-loader to extract tokens and generate brand-summary.yml."
 else:
   Report: "No brand data provided. Run /agency:init with --brand or create brand data manually."
   Skip brand loading

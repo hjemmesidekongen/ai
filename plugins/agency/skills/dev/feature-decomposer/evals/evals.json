@@ -1,0 +1,39 @@
+{
+  "skill_name": "feature-decomposer",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Decompose this feature for the test-benchmark project: 'Add user authentication with OAuth2 (Google, GitHub) including login page, session management, and role-based access control'. The dev config is at .ai/projects/test-benchmark/dev/dev-config.yml. Project conventions are in .ai/projects/test-benchmark/knowledge/conventions.yml. Design component specs exist at .ai/projects/test-benchmark/design/tokens/. Write the decomposition to .ai/projects/test-benchmark/dev/feature-decomposition-test.yml.",
+      "expected_output": "A feature decomposition with multiple components, each having name, description, type, boundaries, and files_affected. Frontend components should have designer specs.",
+      "files": [".ai/projects/test-benchmark/dev/dev-config.yml", ".ai/projects/test-benchmark/knowledge/conventions.yml"],
+      "expectations": [
+        "Identifies at least 3 distinct components (auth provider setup, login UI, session management are the minimum)",
+        "Each component has a type field (backend, frontend, or fullstack)",
+        "Each component has files_affected with specific file paths",
+        "Frontend components include designer_specs or visual specifications"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Decompose: 'Add real-time notifications with WebSocket — bell icon in header, notification dropdown, mark-as-read, and push notification opt-in'. Dev config: .ai/projects/test-benchmark/dev/dev-config.yml. Consider that this is a Next.js TypeScript project. Write output to .ai/projects/test-benchmark/dev/notifications-decomposition.yml.",
+      "expected_output": "Component breakdown separating WebSocket server, notification UI, notification storage, and push notification subsystems.",
+      "files": [".ai/projects/test-benchmark/dev/dev-config.yml"],
+      "expectations": [
+        "Separates backend (WebSocket server, notification storage) from frontend (bell icon, dropdown) components",
+        "Identifies component boundaries — which files/directories each component owns",
+        "Includes a scope validation or PO validation section"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "Decompose: 'Add search functionality with full-text search, filters by category/date/author, pagination, and saved searches'. The project uses Next.js with TypeScript (dev config at .ai/projects/test-benchmark/dev/dev-config.yml). Consider existing patterns in the project. Output to .ai/projects/test-benchmark/dev/search-decomposition.yml.",
+      "expected_output": "Component breakdown for search with clear separation between search backend, filter UI, pagination, and saved searches persistence.",
+      "files": [".ai/projects/test-benchmark/dev/dev-config.yml"],
+      "expectations": [
+        "Identifies search backend/API as a separate component from the search UI",
+        "Includes filter components with their specific boundaries",
+        "Each component lists concrete file paths in files_affected"
+      ]
+    }
+  ]
+}

@@ -14,8 +14,8 @@ Full-service digital agency plugin — brand loading, design systems, content ge
 
 ## Commands
 
-- `/agency:init` — Create project, load brand, scan tech stack
-- `/agency:design` — Run design pipeline
+- `/agency:init` — Create project, import brand reference, scan tech stack
+- `/agency:design` — Run design pipeline (`--from <phase>`, `--force`)
 - `/agency:content` — Generate app copy and UX writing
 - `/agency:build` — Orchestrate development (4-phase)
 - `/agency:deploy` — Deploy to target environment

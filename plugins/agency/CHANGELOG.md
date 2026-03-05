@@ -2,6 +2,33 @@
 
 All notable changes to the agency plugin will be documented in this file.
 
+## [1.1.1] - 2026-03-05
+
+### Added
+- Trace schema v1.1.0: step-level `observation`, `improvement_idea`, `design_decision` fields
+- Trace schema v1.1.0: trace-level `reflections` section (observations, improvement_ideas, design_decisions)
+- Trace protocol: guidance on step-level vs trace-level reflections, mandatory reflections rule
+
+### Fixed
+- Auto-detect phase mismatch: design pipeline now checks `brand.completed_skills` for brand-loader instead of `design.completed_skills`
+- `/agency:init --brand` no longer marks brand as "completed" prematurely — marks as "loaded" instead, letting `/agency:design` run brand-loader properly
+- Legacy cleanup: `--force` removes `brand-loader` from `design.completed_skills` if present from older runs
+
+### Added
+- `--force` flag on `/agency:design` and `/agency:content` — resets module state and re-runs pipeline (composable with `--from`)
+- Logo-assets fast-forward mode — detects existing logos from `/brand:generate` and offers validate+copy instead of full interactive flow
+
+## [1.1.0] - 2026-03-04
+
+### Added
+- Visual render skill (`design/visual-render`) — bridges agency specs to Pencil MCP
+- Render command (`/agency:render`) — 4-phase visual pipeline (variables → components → pages → images)
+- Render module in project-state-schema — tracks render pipeline status
+- Reads design tokens, component specs, web layouts, and app copy to produce .pen files
+- Generates reusable Pencil components, composed page screens, AI/stock imagery
+- Outputs render-manifest.yml mapping all Pencil node IDs
+- 7-point visual validation checkpoint
+
 ## [1.0.0] - 2026-03-03
 
 ### Added

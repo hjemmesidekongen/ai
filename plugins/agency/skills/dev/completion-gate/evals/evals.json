@@ -1,0 +1,38 @@
+{
+  "skill_name": "completion-gate",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Run the completion gate for the login-page task in the test-benchmark project. The task was completed by frontend-worker. Changed files: src/pages/login/LoginPage.tsx, src/components/auth/OAuthButton.tsx, src/components/auth/LoginForm.tsx. Dev config is at .ai/projects/test-benchmark/dev/dev-config.yml (build: pnpm build, lint: pnpm lint, test_related: pnpm test --findRelatedTests). Project state is at .ai/projects/test-benchmark/state.yml. Record gate results in the execution log.",
+      "expected_output": "Gate check attempts for build, lint, and test_related commands against the login-page task's changed files, with results recorded.",
+      "files": [".ai/projects/test-benchmark/dev/dev-config.yml", ".ai/projects/test-benchmark/state.yml"],
+      "expectations": [
+        "Reads dev-config.yml to get the correct build, lint, and test commands",
+        "Identifies the login-page task's changed files from project state",
+        "Attempts to run or references the build command (pnpm build)"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "The rbac-system task failed its lint check on the first attempt — there's an unused import in src/middleware/rbac.ts. This is retry 1 of max 2. The dev config commands are at .ai/projects/test-benchmark/dev/dev-config.yml. Re-run the completion gate after the agent's fix. If it still fails, log to project-state.yml errors array.",
+      "expected_output": "Re-run gate check for the rbac-system task. If passing, record success. If still failing after 2 retries, escalate.",
+      "files": [".ai/projects/test-benchmark/dev/dev-config.yml", ".ai/projects/test-benchmark/state.yml"],
+      "expectations": [
+        "Tracks that this is retry 1 of max 2 retries",
+        "References the correct lint command from dev-config.yml",
+        "Describes escalation path if max retries exceeded (escalate to code-review)"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "Wave 1 is complete for test-benchmark. Both oauth-provider-setup and session-management tasks passed their individual gates. Run the full test suite at the wave boundary before dispatching wave 2. Dev config: .ai/projects/test-benchmark/dev/dev-config.yml. Project state: .ai/projects/test-benchmark/state.yml.",
+      "expected_output": "Full test suite run at wave boundary, verifying wave 1 integrity before wave 2 dispatch.",
+      "files": [".ai/projects/test-benchmark/dev/dev-config.yml", ".ai/projects/test-benchmark/state.yml"],
+      "expectations": [
+        "Distinguishes between per-task test_related and full test suite at wave boundary",
+        "References the full test command (pnpm test) for wave boundary check",
+        "Verifies both wave 1 tasks have passing gate results before running full suite"
+      ]
+    }
+  ]
+}

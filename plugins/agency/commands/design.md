@@ -1,7 +1,7 @@
 ---
 name: agency:design
 description: "Orchestrate the full design pipeline — brand-loader → logo-assets → design-tokens → component-specs → web-layout"
-argument-hint: "[project] [--from brand|logo|tokens|components|layout]"
+argument-hint: "[project] [--from brand|logo|tokens|components|layout] [--force]"
 ---
 
 # /agency:design
@@ -16,6 +16,8 @@ checkpoint gate — the next phase only starts after the previous one passes.
 /agency:design acme                   # Run full pipeline for specific project
 /agency:design --from tokens          # Resume from design-tokens phase
 /agency:design acme --from components # Resume acme from component-specs phase
+/agency:design --force                # Reset design state and re-run full pipeline
+/agency:design --from tokens --force  # Reset from tokens onward and re-run
 ```
 
 ## Phase Map
@@ -46,7 +48,44 @@ if not exists:
 state = read_yaml(state_file)
 ```
 
-### Step 2: Determine Start Phase
+### Step 2: Handle --force (if provided)
+
+```
+if --force flag provided:
+  if --from flag provided:
+    reset_from = --from value
+  else:
+    reset_from = brand   # reset everything
+
+  phases = [brand, logo, tokens, components, layout]
+  design_skills_to_remove = []
+  brand_skills_to_remove = []
+
+  for phase in phases starting from reset_from:
+    skill = skill_map[phase]
+    if phase == "brand":
+      brand_skills_to_remove.append(skill)
+    else:
+      design_skills_to_remove.append(skill)
+
+  # Reset state
+  Remove brand_skills_to_remove from state.modules.brand.completed_skills
+  Remove design_skills_to_remove from state.modules.design.completed_skills
+
+  if brand_skills_to_remove:
+    state.modules.brand.status → "loaded" if brand-reference.yml exists, else "not_started"
+  if design_skills_to_remove:
+    state.modules.design.status → "in_progress" if any design skills remain, else "not_started"
+
+  # Remove brand-loader from design.completed_skills if present (legacy cleanup)
+  Remove "brand-loader" from state.modules.design.completed_skills if present
+
+  Write updated state.yml
+
+  Report: "Reset design state from '{reset_from}' onward. Cleared: {removed skills list}"
+```
+
+### Step 3: Determine Start Phase
 
 ```
 phases = [brand, logo, tokens, components, layout]
@@ -64,11 +103,17 @@ if --from flag provided:
     "Unknown phase '{start_phase}'. Valid values: brand, logo, tokens, components, layout"
 else:
   # Auto-detect: find first incomplete phase
+  # Note: brand-loader lives in brand module, all others in design module
   for phase in phases:
     skill = skill_map[phase]
-    if skill not in state.modules.design.completed_skills:
-      start_phase = phase
-      break
+    if phase == "brand":
+      if skill not in state.modules.brand.completed_skills:
+        start_phase = phase
+        break
+    else:
+      if skill not in state.modules.design.completed_skills:
+        start_phase = phase
+        break
   if all phases complete:
     "Design pipeline already complete for '{project_name}'. Use --from to re-run a phase."
     exit
@@ -80,7 +125,7 @@ Show header before starting:
 Starting from: {start_phase} phase
 ```
 
-### Step 3: Run brand-loader (if start_phase <= brand)
+### Step 4: Run brand-loader (if start_phase <= brand)
 
 ```
 if start_phase == brand:
@@ -90,6 +135,8 @@ if start_phase == brand:
     "Run /agency:init {project_name} --brand <path> to import brand data."
     exit
 
+  # brand.status may be "loaded" (init copied brand-reference but didn't run brand-loader)
+  # or "not_started". Either way, brand-loader needs to run.
   Update state.yml:
     modules.brand.status → in_progress
     current_skill → brand-loader
@@ -118,7 +165,7 @@ if start_phase == brand:
   Report: "Phase 1/5: brand-loader complete"
 ```
 
-### Step 4: Run logo-assets (if start_phase <= logo)
+### Step 5: Run logo-assets (if start_phase <= logo)
 
 ```
 if start_phase in [brand, logo]:
@@ -160,7 +207,7 @@ if start_phase in [brand, logo]:
   Report: "Phase 2/5: logo-assets complete"
 ```
 
-### Step 5: Run design-tokens (if start_phase <= tokens)
+### Step 6: Run design-tokens (if start_phase <= tokens)
 
 ```
 if start_phase in [brand, logo, tokens]:
@@ -201,7 +248,7 @@ if start_phase in [brand, logo, tokens]:
   Report: "Phase 3/5: design-tokens complete"
 ```
 
-### Step 6: Run component-specs (if start_phase <= components)
+### Step 7: Run component-specs (if start_phase <= components)
 
 ```
 if start_phase in [brand, logo, tokens, components]:
@@ -243,7 +290,7 @@ if start_phase in [brand, logo, tokens, components]:
   Report: "Phase 4/5: component-specs complete"
 ```
 
-### Step 7: Run web-layout (if start_phase <= layout)
+### Step 8: Run web-layout (if start_phase <= layout)
 
 ```
 Verify prerequisite: at least 1 file exists in design/components/
@@ -284,7 +331,7 @@ Update state.yml:
     Run /agency:content to start the content pipeline."
 ```
 
-### Step 8: Report
+### Step 9: Report
 
 ```
 ## Design Pipeline Complete: {project_name}

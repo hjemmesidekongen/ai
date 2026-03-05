@@ -35,7 +35,7 @@
           },
           {
             "type": "command",
-            "command": "bash ${CLAUDE_PLUGIN_ROOT}/scripts/inject-trace-timestamp.sh \"$(echo \"$TOOL_INPUT\" | grep -o '\"[^\"]*traces/[^\"]*\"' | tr -d '\"' | head -1)\" 2>/dev/null || true",
+            "command": "bash ${CLAUDE_PLUGIN_ROOT}/scripts/inject-trace-timestamp.sh 2>/dev/null || true",
             "timeout": 10
           }
         ]

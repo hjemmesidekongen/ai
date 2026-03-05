@@ -4,9 +4,9 @@
 
 _meta:
   schema: "trace"
-  version: "1.0.0"
+  version: "1.1.0"
   plugin: "agency"
-  description: "Per-skill-run trace file capturing decisions, reasoning, uncertainty, and timing."
+  description: "Per-skill-run trace file capturing decisions, reasoning, uncertainty, timing, and reflective learning."
 
 schema:
   _meta:
@@ -94,6 +94,18 @@ schema:
         type: string
         required: false
         description: "Full mode only"
+      observation:
+        type: string
+        required: false
+        description: "What actually happened vs what was expected. Captures surprises, gaps, or confirmations."
+      improvement_idea:
+        type: string
+        required: false
+        description: "Actionable suggestion for improving the skill, schema, or pipeline based on this step."
+      design_decision:
+        type: string
+        required: false
+        description: "Choices with lasting impact beyond this run (e.g. 'dark mode is the default'). Distinct from routine reasoning."
       flags:
         type: list
         required: false
@@ -132,6 +144,27 @@ schema:
         item_type: string
       recommendation:
         type: string
+
+  reflections:
+    type: map
+    required: false
+    description: "Trace-level learning loop — observations and improvement ideas across the full run."
+    fields:
+      observations:
+        type: list
+        required: false
+        item_type: string
+        description: "What happened vs expected across the full skill run. Patterns, surprises, gaps."
+      improvement_ideas:
+        type: list
+        required: false
+        item_type: string
+        description: "Actionable suggestions for the plugin, pipeline, or skill definitions."
+      design_decisions:
+        type: list
+        required: false
+        item_type: string
+        description: "Significant choices made during this run that affect future work."
 
   errors_during_run:
     type: list
