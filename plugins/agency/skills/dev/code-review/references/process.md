@@ -77,12 +77,45 @@ Also update: `build.current_phase` → 4, `meta.updated_at` → current timestam
 
 ---
 
+## Step 0: Initialize Trace (mandatory if tracing enabled)
+
+Read `state.yml` and check `trace.enabled`. If `true`:
+
+1. Create trace file: `.ai/projects/[name]/traces/{skill-name}-{ISO-timestamp}.yml`
+2. Write `_meta` block: schema `"trace"`, version `"1.1.0"`, skill, module, project, started_at, trace_mode
+3. Initialize empty `steps: []`, `checkpoint_result: {}`, `quality_summary: {}`, `reflections: {}`
+
+**Schema v1.1.0 — required fields per step:**
+- `decision`, `reasoning`, `uncertainty` (always required)
+- `observation` — what happened vs expected; surprises, gaps, confirmations
+- `improvement_idea` — actionable suggestion for the skill/pipeline (if any)
+- `design_decision` — lasting choice beyond this run (if any)
+
+**Trace-level `reflections` section (REQUIRED — Stop hook enforces):**
+```yaml
+reflections:
+  observations: ["at least one observation about the run"]
+  improvement_ideas: []   # optional but encouraged
+  design_decisions: []    # optional, only for lasting choices
+```
+
+The Stop hook will BLOCK completion if reflections section is missing.
+
+---
+
+
 > **Extended reference:** See [references/review-dimensions.md](review-dimensions.md) for dimension checklists, severity examples, two-stage verification protocol, error scenarios, and commit protocol.
 
 ---
 
-## Trace Protocol
+## Trace Finalization (mandatory if tracing enabled)
 
-If `state.yml` has `trace.enabled: true`, follow the
-[trace protocol](../../../../resources/trace-protocol.md) to write a structured
-trace file to `.ai/projects/[name]/traces/`.
+Before completing, verify your trace file has:
+1. All steps recorded (written every 2 steps per the 2-Action Rule)
+2. `checkpoint_result` with pass/fail status
+3. `quality_summary` with avg_uncertainty and recommendation
+4. `reflections` section with at least one observation (REQUIRED — Stop hook enforces this)
+5. Step-level `observation`, `improvement_idea`, or `design_decision` where applicable
+
+The Stop hook will BLOCK completion if tracing is enabled and the trace file
+is missing or has no `reflections:` section.

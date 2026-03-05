@@ -8,6 +8,8 @@ All notable changes to the agency plugin will be documented in this file.
 - Trace schema v1.1.0: step-level `observation`, `improvement_idea`, `design_decision` fields
 - Trace schema v1.1.0: trace-level `reflections` section (observations, improvement_ideas, design_decisions)
 - Trace protocol: guidance on step-level vs trace-level reflections, mandatory reflections rule
+- Stop hook: `check-trace-written.sh` blocks completion when tracing enabled but trace file missing or lacks reflections
+- All 23 process.md files: Step 0 (initialize trace) + Trace Finalization footer replacing passive reference
 
 ### Fixed
 - Auto-detect phase mismatch: design pipeline now checks `brand.completed_skills` for brand-loader instead of `design.completed_skills`
