@@ -128,15 +128,19 @@ inspiration and layout patterns.
 ### Procedure
 
 1. Call `get_style_guide_tags()` to retrieve available Pencil tags
-2. Match brand-summary.yml `personality` and `mood` keywords to tags:
-   - e.g., brand mood "bold, modern" → tags `["modern", "bold", "clean", "website"]`
-   - e.g., brand mood "warm, friendly" → tags `["friendly", "warm", "organic", "website"]`
+2. Read `creative-direction.yml` — extract `identity`, `feel`, and `motion_philosophy`
+3. Match brand-summary.yml `personality` and `mood` keywords to tags, refined by
+   creative-direction.yml `identity` and `feel` keywords:
+   - e.g., brand mood "bold, modern" + identity "disruptor" → tags `["modern", "bold", "clean", "website"]`
+   - e.g., brand mood "warm, friendly" + feel "approachable" → tags `["friendly", "warm", "organic", "website"]`
    - Always include "website" as a base tag
-3. Call `get_style_guide(tags)` for visual inspiration — colors, typography
+   - Creative direction `texture` (e.g., "grain", "glass") can add texture-related tags
+   - Creative direction `color_strategy` (e.g., "monochromatic", "complementary") refines color tag selection
+4. Call `get_style_guide(tags)` for visual inspiration — colors, typography
    pairings, layout patterns
-4. Call `get_guidelines("landing-page")` for landing page patterns
+5. Call `get_guidelines("landing-page")` for landing page patterns
    - If project type is "app" or "dashboard", also call `get_guidelines("tailwind")`
-5. Present style direction to user:
+6. Present style direction to user:
    ```
    ## Style Direction
    Based on brand personality ({keywords}), I've selected:
@@ -146,7 +150,7 @@ inspiration and layout patterns.
 
    Does this direction work, or should I explore alternatives?
    ```
-6. Wait for user confirmation before proceeding
+7. Wait for user confirmation before proceeding
 
 Save to findings.md:
 ```markdown
@@ -279,6 +283,12 @@ Build one full-page screen for each layout YAML, populated with real content.
 
 ### Procedure
 
+Read `creative-direction.yml` before composing pages. Apply creative direction
+to all page composition decisions:
+- `spatial_philosophy` → section padding (e.g., "generous whitespace" = larger padding tokens)
+- `hero_approach` → hero section rendering (e.g., "immersive fullscreen" = full viewport, no container)
+- `color_strategy` → section background alternation (e.g., "monochromatic" = subtle shade shifts)
+
 For each layout YAML in `design/layouts/` (process `home.yml` first, then
 remaining sorted by route):
 
@@ -318,10 +328,11 @@ remaining sorted by route):
    f. If the component is structural (hero, footer, navigation):
       - Build inline following style guide patterns
       - Apply brand colors and typography from tokens
-   g. Apply section background:
-      - Odd sections: `$color-white` or `$color-neutral-50`
-      - Even sections: `$color-neutral-100` or `$color-primary-50`
-      - Hero sections: `$color-primary-900` or gradient
+   g. Apply section background (informed by creative-direction `color_strategy`):
+      - Default alternation: odd = `$color-white`/`$color-neutral-50`, even = `$color-neutral-100`/`$color-primary-50`
+      - If `color_strategy: "monochromatic"` → use subtle shade shifts within one hue
+      - If `color_strategy: "complementary"` → alternate between primary and accent tones
+      - Hero sections: `$color-primary-900` or gradient (override with `hero_approach` if set)
 5. After each page: call `snapshot_layout()` to verify structure
 6. Call `get_screenshot()` → save to `render/screenshots/page-{route}.png`
    - For home page, route name is "home"
@@ -438,6 +449,7 @@ _meta:
   generated_at: "{ISO 8601}"
 
 document: "render/{project-name}.pen"
+screenshots_as_ground_truth: true  # screenshots are authoritative visual reference for verification loop
 
 variables:
   count: {N}
@@ -509,11 +521,12 @@ Add render outputs to `asset-registry.yml`:
   description: "Node ID map for all rendered components and pages"
   generated_by: "visual-render"
 
-- type: "screenshot"
+- type: "design-reference"
   format: "png"
   path: "render/screenshots/page-{route}.png"  # one entry per page
   description: "Desktop screenshot of {page_name}"
   generated_by: "visual-render"
+  ground_truth: true  # authoritative visual reference for visual verification loop (dec-01)
 ```
 
 ### 8c. Run 7-Point Checkpoint

@@ -249,6 +249,123 @@ Textarea, Timeline, Toggle, Tooltip.
 
 ---
 
+## Error Page Components (Required)
+
+Error page components are **not optional** — they are always included regardless
+of user selection in Step 2. Generate the `ErrorPage` component spec alongside
+the core set.
+
+### ErrorPage Component Spec Template
+
+```yaml
+name: "ErrorPage"
+description: "Full-page error display with recovery UX and active retention"
+category: "feedback"
+
+props:
+  error_code:
+    type: "enum"
+    values: ["404", "403", "500", "generic"]
+    default: "404"
+    description: "HTTP error code determining layout and tone"
+  error_type:
+    type: "string"
+    required: false
+    description: "Machine-readable error category (e.g., not_found, forbidden, server_error)"
+  show_search:
+    type: "boolean"
+    default: true
+    description: "Display inline search bar for recovery navigation"
+  show_suggestions:
+    type: "boolean"
+    default: true
+    description: "Display 'Is this what you were looking for?' suggestion grid"
+
+tokens:
+  background: "var(--color-neutral-50)"
+  heading_color: "var(--color-neutral-900)"
+  description_color: "var(--color-neutral-600)"
+  suggestion_card_bg: "var(--color-white)"
+  suggestion_card_border: "var(--color-neutral-200)"
+  cta_background: "var(--color-primary-500)"
+  cta_text: "var(--color-white)"
+  search_border: "var(--color-neutral-300)"
+  font_family: "var(--font-body)"
+
+slots:
+  heading:
+    type: "text"
+    required: true
+    max_length: 60
+    description: "Error heading — brand-voice-appropriate, not technical"
+  description:
+    type: "text"
+    required: true
+    max_length: 120
+    description: "Empathetic explanation of what happened and what to do"
+  action_label:
+    type: "text"
+    required: true
+    max_length: 30
+    description: "Primary recovery CTA label (e.g., Go home, Search, Browse)"
+  suggestions:
+    type: "node"
+    required: false
+    description: "List of suggested pages derived from URL/referrer/search context"
+  search_input:
+    type: "node"
+    required: false
+    description: "Inline search bar for recovery navigation"
+
+states:
+  loading_suggestions:
+    description: "Fetching related pages from sitemap based on URL context"
+    suggestions: "skeleton"
+    search_input: "enabled"
+  no_suggestions:
+    description: "No relevant suggestions found — hide suggestions section"
+    suggestions: "hidden"
+    search_input: "enabled"
+
+a11y:
+  role: "alert"
+  aria_live: "polite"
+  keyboard:
+    Tab: "navigate between search input, suggestion links, and CTA"
+    Enter: "activate focused link or submit search"
+  focus_management: "auto-focus heading on page load for screen reader announcement"
+  aria_attributes:
+    aria-label: "Error page — maps to error_code prop"
+    aria-live: "polite — announces suggestion updates without interrupting"
+  contrast: "text/background meets WCAG AA (verified via design-tokens)"
+
+responsive:
+  mobile:
+    width: "100%"
+    suggestions_columns: 1
+    padding: "var(--spacing-8) var(--spacing-4)"
+  tablet:
+    width: "container"
+    suggestions_columns: 2
+    padding: "var(--spacing-12) var(--spacing-6)"
+  desktop:
+    width: "container"
+    suggestions_columns: 3
+    padding: "var(--spacing-16) var(--spacing-8)"
+```
+
+### Integration Notes
+
+- The ErrorPage component is consumed by **scaffold** to generate framework-specific
+  error pages (Next.js `not-found.tsx`, `error.tsx`; Vite error boundaries)
+- **ux-writing** produces error page copy for each `error_code` variant (see Category 7)
+- **error-logging** (Sentry) integration: on mount, the component posts context
+  (failed URL, referrer, session ID, timestamp) to the error tracking service
+- **analytics** integration: tracks `error_page_view`, `error_page_suggestion_click`,
+  and `error_page_bounce` events with full context
+
+---
+
 ## Step-by-Step Execution
 
 ### Step 1 — Read design tokens

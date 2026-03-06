@@ -2,12 +2,13 @@
 name: web-layout
 user-invocable: false
 description: >
-  Composes page layouts from available component specs. Produces layout YAMLs
-  defining how components are arranged on each page, a navigation map (routes,
-  menus, breadcrumbs), responsive breakpoints, and layout shift rules. Use when
-  designing page structure, defining site navigation, mapping page templates,
-  building responsive layouts, composing components into pages, or running
-  /agency:design layout phase.
+  Composes page layouts from component specs with Pencil guidelines and style
+  guide integration. Produces layout YAMLs, navigation map, responsive
+  breakpoints, and layout shift rules. Loads get_guidelines (landing-page or
+  web-app) and matches brand personality to style guide tags. Consumes
+  creative-direction.yml for spatial philosophy, hero approach, and color
+  strategy. Use when designing page structure, site navigation, responsive
+  layouts, or running /agency:design layout phase.
 phase: 4
 depends_on: [component-specs]
 writes:
@@ -17,6 +18,7 @@ writes:
 reads:
   - ".ai/projects/[name]/design/components/*.yml"
   - ".ai/projects/[name]/brand/brand-summary.yml"
+  - ".ai/projects/[name]/design/creative-direction.yml"
 model_tier: senior
 model: sonnet
 interactive: true
@@ -33,6 +35,8 @@ checkpoint:
       verify: "Every layout with multi-column sections includes responsive overrides for mobile"
     - name: "assets_registered"
       verify: "All layout YAMLs and navigation-map.yml registered in asset-registry.yml"
+    - name: "routes_covered"
+      verify: "Every route in navigation-map.yml either has a layout YAML or is flagged as missing_layout in the trace"
   on_fail: "Fix and re-run"
   on_pass: "Update state.yml, advance to next design phase"
 ---
@@ -46,9 +50,9 @@ Outputs machine-readable YAMLs consumed by app-copy (content slots), scaffold
 
 ## Context
 
-**Reads:** `design/components/*.yml`, `brand/brand-summary.yml`
+**Reads:** `design/components/*.yml`, `brand/brand-summary.yml`, `design/creative-direction.yml`
 **Writes:** `design/layouts/*.yml`, `design/navigation-map.yml`, `asset-registry.yml`
-**Checkpoint:** data_validation — 5 checks
+**Checkpoint:** data_validation — 6 checks
 **Depends on:** component-specs must be complete
 
 ## Process Summary
@@ -64,14 +68,8 @@ Outputs machine-readable YAMLs consumed by app-copy (content slots), scaffold
    breadcrumb strategy
 6. User review and iteration — present layouts grouped by page type
 7. Register all output files in `asset-registry.yml`
-8. Run checkpoint — all 5 checks must pass before advancing
+8. Run checkpoint — all 6 checks must pass before advancing
 
-## Findings Persistence
+## Findings & Execution
 
-Write intermediate results to `.ai/projects/[name]/design/findings.md`. **2-Action Rule:** after every 2 research/generation actions, IMMEDIATELY save progress to findings.md. Log all errors to state.yml errors array — never repeat a failed approach.
-
-## Execution
-
-Before executing, read `references/process.md` for the full layout YAML
-format, navigation map format, default page set, responsive rules, and
-step-by-step instructions.
+Write intermediate results to `.ai/projects/[name]/design/findings.md` every 2 actions. Log errors to state.yml — never repeat a failed approach. Before executing, read `references/process.md` for layout YAML format, nav map format, default page set, responsive rules, and step-by-step instructions.

@@ -2,11 +2,11 @@
 name: visual-render
 user-invocable: false
 description: >
-  Renders visual designs in Pencil from agency specs. Reads design tokens,
-  component specs, web layouts, and app copy to produce a complete .pen file
-  with reusable components, composed page screens, and AI-generated imagery.
-  Use when rendering visual mockups from agency pipeline output, producing
-  Pencil prototypes, creating design previews, or running /agency:render.
+  Renders visual designs in Pencil from agency specs. Reads tokens, components,
+  layouts, copy, brand, and creative direction to produce a .pen file with
+  reusable components, page screens, and AI imagery. Screenshots are first-class
+  artifacts and ground truth for visual verification (dec-01). Use when rendering
+  mockups, producing Pencil prototypes, or running /agency:render.
 phase: 7
 depends_on: [design-tokens, component-specs, web-layout, app-copy]
 writes:
@@ -22,6 +22,7 @@ reads:
   - ".ai/projects/[name]/design/navigation-map.yml"
   - ".ai/projects/[name]/content/pages/*.yml"
   - ".ai/projects/[name]/brand/brand-summary.yml"
+  - ".ai/projects/[name]/design/creative-direction.yml"
 model_tier: principal
 model: opus
 interactive: true
@@ -48,19 +49,13 @@ checkpoint:
 
 # Visual Render
 
-Phase 7 of the agency pipeline — the final visual output stage. Reads all
-upstream specs (tokens, components, layouts, content, brand) and produces
-live Pencil `.pen` designs using the Pencil MCP server. Outputs reusable
-components, composed page screens with real content, AI-generated imagery,
-and a render manifest mapping every artifact to its Pencil node ID.
+Phase 7 — final visual output. Produces live Pencil `.pen` designs from all
+upstream specs. Screenshots serve as ground truth for visual verification.
 
 ## Context
 
-**Reads:** `design/tokens/variables.css`, `design/tokens/tailwind.config.json`,
-`design/components/*.yml`, `design/layouts/*.yml`, `design/navigation-map.yml`,
-`content/pages/*.yml`, `brand/brand-summary.yml`
-**Writes:** `render/[project].pen`, `render/render-manifest.yml`,
-`render/screenshots/*.png`, `asset-registry.yml`
+**Reads:** tokens, components, layouts, nav-map, page copy, brand, creative-direction
+**Writes:** `render/[project].pen`, `render-manifest.yml`, `screenshots/*.png`, `asset-registry.yml`
 **Checkpoint:** visual_validation — 7 checks
 **Depends on:** design-tokens, component-specs, web-layout, app-copy
 
@@ -75,15 +70,6 @@ and a render manifest mapping every artifact to its Pencil node ID.
 7. Mobile variants (optional) — 375px copies with responsive overrides
 8. Finalize — manifest, asset-registry, 7-point checkpoint, state.yml update
 
-## Findings Persistence
+## Findings & Execution
 
-Write intermediate results to `.ai/projects/[name]/render/findings.md`.
-**2-Action Rule:** after every 2 research/generation actions, IMMEDIATELY save
-progress to findings.md. Log all errors to state.yml errors array — never
-repeat a failed approach.
-
-## Execution
-
-Before executing, read `references/process.md` for the full step-by-step
-instructions including token mapping strategy, component rendering approach,
-page composition patterns, and image generation prompts.
+Write intermediate results to `.ai/projects/[name]/render/findings.md` every 2 actions. Log errors to state.yml — never repeat a failed approach. Before executing, read `references/process.md` for token mapping, component rendering, page composition, and image generation instructions.

@@ -7,7 +7,7 @@ operates at the intersection of brand voice and component behaviour: it reads
 the machine-readable component specs (slots, states, interactive triggers)
 and converts them into structured copy organized by functional category.
 
-The outputs are 6 YAML files consumed downstream by scaffold (injects copy
+The outputs are 7 YAML files consumed downstream by scaffold (injects copy
 into generated components), storybook-generator (populates story fixtures),
 and the brand manual (documents the voice system).
 
@@ -378,6 +378,94 @@ form_labels:
 
 ---
 
+### Category 7: Error Page Copy → `content/ux/error-pages.yml`
+
+Error pages are marketing opportunities — convert dead ends into soft landings.
+Each error type gets distinct copy that matches severity and brand personality.
+
+```yaml
+# content/ux/error-pages.yml
+error_pages:
+  - error_code: "404"
+    tone: "lightest"   # opportunity for brand personality
+    heading: "Page not found"
+    description: "The page you're looking for doesn't exist or has been moved."
+    suggestion_heading: "Is this what you were looking for?"
+    recovery_ctas:
+      - label: "Go home"
+        href: "/"
+        variant: "primary"
+      - label: "Search"
+        href: null       # triggers inline search bar
+        variant: "secondary"
+      - label: "Browse {section}"
+        href: "/{section}"
+        variant: "ghost"
+    personality_note: "This is the best place to express brand personality — use humor, illustration, or a branded message if it fits the voice"
+
+  - error_code: "403"
+    tone: "firm_but_helpful"
+    heading: "Access restricted"
+    description: "You don't have permission to view this page."
+    suggestion_heading: null   # no suggestions for 403
+    recovery_ctas:
+      - label: "Sign in"
+        href: "/login"
+        variant: "primary"
+      - label: "Go home"
+        href: "/"
+        variant: "secondary"
+      - label: "Contact support"
+        href: "/contact"
+        variant: "ghost"
+    personality_note: "Firm but not cold — explain what the user can do to gain access"
+
+  - error_code: "500"
+    tone: "apologetic"
+    heading: "Something went wrong"
+    description: "We hit an unexpected error. Our team has been notified and is looking into it."
+    suggestion_heading: null   # server may be degraded — don't load suggestions
+    recovery_ctas:
+      - label: "Try again"
+        href: null       # reloads current page
+        variant: "primary"
+      - label: "Go home"
+        href: "/"
+        variant: "secondary"
+    personality_note: "Apologetic and reassuring — the user did nothing wrong, emphasize that the team is aware"
+
+  - error_code: "generic"
+    tone: "neutral"
+    heading: "Something's not right"
+    description: "An error occurred. Please try again or return to the home page."
+    suggestion_heading: null
+    recovery_ctas:
+      - label: "Go home"
+        href: "/"
+        variant: "primary"
+      - label: "Try again"
+        href: null
+        variant: "secondary"
+    personality_note: "Neutral fallback — used when the specific error code is unknown"
+```
+
+**Generation rules:**
+- Heading: brand-voice-appropriate, not technical — avoid HTTP codes in user-facing text
+- Description: empathetic, offers alternatives, matches brand personality
+- Suggestion labels: "Is this what you were looking for?" or branded equivalent
+- Recovery CTAs: always provide at least 2 escape paths — never strand the user
+- **Tone by severity:**
+  - 404: lightest — best opportunity for brand personality, humor, illustration
+  - 403: firm but helpful — clearly explains the access barrier and what to do
+  - 500: apologetic, reassuring — "our team has been notified" language
+  - Generic: neutral fallback — keep it simple and actionable
+- Never expose technical details (no HTTP status codes, stack traces, or error IDs in user-facing copy)
+- Cross-reference **error-logging** (Sentry) for context logging and **analytics** for error page event tracking
+
+**2-Action Rule checkpoint:** Save error page copy to findings.md before moving to Step 4.
+
+---
+
 ## Step 4 — User Review Protocol
 
 Present each category as a batch. For each batch:
@@ -424,6 +512,10 @@ content:
       type: "ux_copy"
       category: "labels"
       generated_at: "[timestamp]"
+    - path: ".ai/projects/[name]/content/ux/error-pages.yml"
+      type: "ux_copy"
+      category: "error_pages"
+      generated_at: "[timestamp]"
 ```
 
 ---
@@ -433,7 +525,7 @@ content:
 Run all 5 checks in the SKILL.md checkpoint block. For `brand_voice_applied`,
 spot-check 3 items per category against the vocabulary and tone rules loaded
 in Step 2. For `component_coverage`, cross-reference the coverage map built
-in Step 1 against all 6 output files.
+in Step 1 against all 7 output files.
 
 Update `state.yml`:
 
@@ -449,6 +541,7 @@ skills:
       - "content/ux/confirmations.yml"
       - "content/ux/states.yml"
       - "content/ux/labels.yml"
+      - "content/ux/error-pages.yml"
 ```
 
 ---
@@ -457,11 +550,11 @@ skills:
 
 **Stage 1 — Spec Compliance (Haiku):**
 Run spec-compliance-reviewer. Checks:
-- `categories_complete` — all 6 UX copy YAML files exist and are non-empty
+- `categories_complete` — all 7 UX copy YAML files exist and are non-empty
 - `brand_voice_applied` — tone and personality tokens from brand-summary.yml are reflected in copy
 - `component_coverage` — every component slot and interactive state from component specs is addressed
 - `error_taxonomy_applied` — every error message has: code, severity, category, title, description, action
-- `assets_registered` — all 6 UX copy files registered in asset-registry.yml under content.ux
+- `assets_registered` — all 7 UX copy files registered in asset-registry.yml under content.ux
 
 If FAIL: fix structural issues. Do NOT proceed to Stage 2.
 

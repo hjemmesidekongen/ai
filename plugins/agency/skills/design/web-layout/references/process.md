@@ -266,10 +266,99 @@ for any additional pages before generating layouts.
 | 7 | Login | `/login` | auth | Email + password, OAuth options |
 | 8 | Signup | `/signup` | auth | Registration form |
 | 9 | Dashboard | `/dashboard` | app | Main app landing (authenticated) |
-| 10 | 404 | `/404` | marketing | Not found page |
+| 10 | 404 | `/404` | marketing | Not found — recovery UX with suggestions |
+| 11 | 500 | `/500` | marketing | Server error — apologetic with status reassurance |
+| 12 | 403 | `/403` | marketing | Forbidden — explains access requirements |
+| 13 | Generic Error | `/error` | marketing | Fallback for unhandled error codes |
 
 Additional pages users commonly request: `/contact`, `/terms`, `/privacy`,
 `/docs`, `/careers`, `/changelog`, `/settings`, `/profile`.
+
+### Error Page Layout Template
+
+Error pages (404, 403, 500, generic) use the `marketing` template but with a
+recovery-oriented section structure. All error pages are **required** — they
+are always included regardless of user selection in Step 2.
+
+**Section structure for all error pages:**
+
+```yaml
+page: "404"
+route: "/404"
+title: "Page Not Found"
+description: "Recovery-focused error page with active retention"
+template: "marketing"
+
+sections:
+  - name: "error-hero"
+    component: "ErrorPage"
+    props:
+      error_code: "404"
+      show_search: true
+      show_suggestions: true
+    slots:
+      heading: "{error_heading}"         # filled by ux-writing Category 7
+      description: "{error_description}" # filled by ux-writing Category 7
+      action_label: "{error_cta}"        # filled by ux-writing Category 7
+    layout:
+      width: "container"
+      padding: "var(--spacing-16) var(--spacing-4)"
+      min_height: "60vh"
+      text_align: "center"
+
+  - name: "suggestions-grid"
+    component: "CardGrid"
+    props:
+      columns: 3
+      variant: "suggestion"
+    slots:
+      heading: "Is this what you were looking for?"
+      items: 6   # dynamically populated from URL parsing + sitemap
+    layout:
+      width: "container"
+      padding: "var(--spacing-8) var(--spacing-4)"
+
+  - name: "search-recovery"
+    component: "SearchBar"
+    props:
+      variant: "inline"
+      size: "lg"
+    slots:
+      placeholder: "Search for what you need…"
+    layout:
+      width: "narrow"
+      padding: "var(--spacing-6) var(--spacing-4)"
+
+  - name: "nav-shortcuts"
+    component: "Navigation"
+    props:
+      variant: "horizontal"
+    slots:
+      heading: "Or browse popular sections"
+      items: 4   # top-level nav items from navigation-map.yml
+    layout:
+      width: "container"
+      padding: "var(--spacing-8) var(--spacing-4)"
+
+responsive:
+  mobile:
+    sections:
+      - name: "suggestions-grid"
+        props: { columns: 1 }
+      - name: "nav-shortcuts"
+        props: { variant: "vertical" }
+```
+
+**Active retention:** The `suggestions-grid` section derives its items from:
+1. URL segment parsing (e.g., `/products/old-item` → suggest `/products`)
+2. Referrer analysis (if referrer is internal, suggest sibling pages)
+3. Sitemap search (match URL keywords against page titles)
+
+**Per error code variations:**
+- **404:** Full recovery UX — search bar, suggestions, nav shortcuts
+- **403:** Omit search; add "Sign in" CTA and access explanation
+- **500:** Omit suggestions (server may be degraded); show status reassurance
+- **Generic:** Minimal — heading, description, "Go home" CTA only
 
 ---
 
@@ -305,6 +394,33 @@ Reply with:
 ```
 
 Wait for confirmation before generating any layouts.
+
+### Step 2.5 — Load Pencil Guidelines & Style Guide
+
+When the project will be rendered in Pencil:
+
+1. Determine guideline type from project context:
+   - If template is mostly "marketing" → `get_guidelines("landing-page")`
+   - If template is "app" or "dashboard" → `get_guidelines("web-app")`
+
+2. Load style guide for creative inspiration:
+   - Call `get_style_guide_tags()` to retrieve available tags
+   - Match creative-direction.yml `identity` and `feel` keywords to tags
+   - Call `get_style_guide(matched_tags)` for visual direction
+   - Present the selected style guide to user for confirmation
+
+3. Read creative-direction.yml for:
+   - `spatial_philosophy` → informs section spacing and layout density
+   - `hero_approach` → guides hero section layout choices
+   - `scroll_behavior` → affects section ordering and transition zones
+   - `color_strategy` → guides section background alternation
+
+4. Let creative direction influence layout decisions:
+   - If `interaction_weight: "heavy"` → allow more interactive sections
+   - If `spatial_philosophy: "generous whitespace"` → increase section padding
+   - If `hero_approach: "immersive fullscreen"` → hero gets full viewport height + no container
+
+Save to findings.md after this step.
 
 ### Step 3 — Compose layouts by template type
 
@@ -398,7 +514,7 @@ overwrite the `tokens` or `components` sections written by earlier phases.
 
 ### Step 9 — Run checkpoint
 
-Verify all 5 checkpoint checks pass:
+Verify all 6 checkpoint checks pass:
 
 1. **layouts_exist** — count YAML files in `design/layouts/` — must match the
    number of routes confirmed in Step 2
@@ -410,6 +526,17 @@ Verify all 5 checkpoint checks pass:
    (columns > 1) has a `responsive.mobile` override setting `columns: 1`
 5. **assets_registered** — count of entries in `asset-registry.yml` layouts
    section matches: layout file count + 1 (navigation-map.yml)
+6. **routes_covered** — compare all routes in `navigation-map.yml` against
+   layout files in `design/layouts/`. **Flag every route that has no layout.**
+   If user confirmed a subset in Step 2, those are the expected layouts. But
+   any route in the nav-map without a layout must be logged as a warning in
+   `state.yml` errors array and flagged in the trace with `missing_layout`:
+   ```yaml
+   flags: ["missing_layout"]
+   observation: "N routes in nav-map have no layout: /pricing, /docs, ..."
+   ```
+   This does not block the checkpoint (layouts match Step 2 confirmation),
+   but ensures the gap is visible to downstream skills.
 
 On failure: fix the failing check and re-run verification for that check only.
 On pass: update `state.yml` — set web-layout phase to `completed`.
