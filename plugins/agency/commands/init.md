@@ -1,7 +1,7 @@
 ---
 name: agency:init
 description: "Initialize a new agency project — creates project directory, loads brand data, scans tech stack, and registers in agency.yml"
-argument-hint: "<project> [--app-path <path>] [--brand <path>] [--skip-scan]"
+argument-hint: "<project> [--app-path <path>] [--brand <path>] [--profile <name>] [--skip-scan]"
 ---
 
 # /agency:init
@@ -12,7 +12,7 @@ Creates and registers a new agency project. Sets up the project directory, loads
 
 ```
 /agency:init acme --app-path apps/acme-web --brand .ai/brands/acme/brand-reference.yml
-/agency:init my-project
+/agency:init my-project --profile personal
 /agency:init my-project --skip-scan
 ```
 
@@ -32,11 +32,47 @@ Create directories:
   {project_dir}/media/
 ```
 
-### Step 2: Initialize State
+### Step 2: Select Profile
+
+```
+if --profile flag provided:
+  profile_path = .ai/profiles/{--profile}.yml
+  if profile_path exists:
+    selected = load profile_path
+    Report: "Using profile: {selected.name}"
+  else:
+    Report: "Profile '{--profile}' not found at {profile_path}. Continuing without profile."
+    selected = null
+elif .ai/profiles/ exists:
+  profiles = list all .yml files in .ai/profiles/
+  if exactly 1 profile:
+    selected = that profile
+    Report: "Using profile: {selected.name}"
+  elif multiple profiles:
+    Present list to user:
+    "Available profiles:"
+    for each profile:
+      "  {N}. {profile.name} — {profile.description}"
+    Ask: "Select a profile (or 'none' for no profile):"
+    selected = user choice (null if 'none')
+  else:
+    selected = null
+else:
+  selected = null
+
+if selected:
+  Store selected profile name for state.yml
+  Report: "Profile '{selected.name}' selected — defaults will apply during stack negotiation."
+else:
+  Report: "No profile selected. Full negotiation will be used."
+```
+
+### Step 3: Initialize State
 
 Create `{project_dir}/state.yml` following project-state-schema.yml:
 ```yaml
 project: "{project_name}"
+profile: null  # or "{selected_profile_name}" if profile was selected in Step 2
 status: "created"
 created_at: "[now]"
 updated_at: "[now]"
@@ -59,7 +95,7 @@ updated_at: "[now]"
 assets: []
 ```
 
-### Step 3: Register in Agency Registry
+### Step 4: Register in Agency Registry
 
 Read or create `.ai/agency.yml`:
 ```yaml
@@ -82,7 +118,7 @@ shared_packages: []
 
 If agency.yml already exists, append the new project and set it as active.
 
-### Step 4: Load Brand (if --brand provided)
+### Step 5: Load Brand (if --brand provided)
 
 ```
 if --brand flag provided:
@@ -95,7 +131,7 @@ else:
   Skip brand loading
 ```
 
-### Step 5: Scan Tech Stack (unless --skip-scan)
+### Step 6: Scan Tech Stack & Negotiate (unless --skip-scan)
 
 ```
 if --skip-scan NOT set:
@@ -103,11 +139,25 @@ if --skip-scan NOT set:
   if app_path exists:
     Run project-scanner skill on app_path
     Report scan results
+
+    # Stack negotiation — first consumer of the profile
+    if profile selected:
+      Run skill: stack-negotiation
+        Reads: findings.md, profile YAML (.ai/profiles/{profile}.yml)
+        Writes: {project_dir}/dev/stack.yml
+      Report: "Stack negotiation complete. Confirmed stack saved to stack.yml."
+    else:
+      Run skill: stack-negotiation (full mode)
+        Reads: findings.md
+        Writes: {project_dir}/dev/stack.yml
+      Report: "Stack negotiation complete (full mode). Confirmed stack saved to stack.yml."
   else:
-    Report: "App path {app_path} not found. Skipping scan. Create the app directory and run /agency:scan later."
+    Report: "App path {app_path} not found. Skipping scan and negotiation. Create the app directory and run /agency:scan later."
+else:
+  Report: "Scan skipped. Stack negotiation also skipped."
 ```
 
-### Step 6: Report
+### Step 7: Report
 
 ```
 ## Project Initialized: {project_name}
@@ -115,11 +165,17 @@ if --skip-scan NOT set:
 ### Directory
   .ai/projects/{project_name}/ (created)
 
+### Profile
+  {profile_name} / No profile
+
 ### Brand
   {Loaded from X / No brand data}
 
 ### Tech Stack
   {Scan results / Skipped / App not found}
+
+### Stack
+  {stack.yml summary / Negotiation skipped / App not found}
 
 ### Next Steps
   1. /agency:design — run the design pipeline

@@ -1,12 +1,12 @@
 ---
 name: agency:design
-description: "Orchestrate the full design pipeline — brand-loader → logo-assets → design-tokens → component-specs → web-layout"
-argument-hint: "[project] [--from brand|logo|tokens|components|layout] [--force]"
+description: "Orchestrate the full 8-phase design pipeline — brand-loader → logo-assets → design-tokens → creative-direction → component-specs → web-layout → visual-render → implementation-guide"
+argument-hint: "[project] [--from brand|logo|tokens|creative|components|layout|render|guide] [--force]"
 ---
 
 # /agency:design
 
-Runs the full 5-phase design pipeline for an agency project. Each phase has a
+Runs the full 8-phase design pipeline for an agency project. Each phase has a
 checkpoint gate — the next phase only starts after the previous one passes.
 
 ## Usage
@@ -16,6 +16,9 @@ checkpoint gate — the next phase only starts after the previous one passes.
 /agency:design acme                   # Run full pipeline for specific project
 /agency:design --from tokens          # Resume from design-tokens phase
 /agency:design acme --from components # Resume acme from component-specs phase
+/agency:design --from creative        # Resume from creative-direction phase
+/agency:design --from render          # Resume from visual-render phase
+/agency:design --from guide           # Resume from implementation-guide phase
 /agency:design --force                # Reset design state and re-run full pipeline
 /agency:design --from tokens --force  # Reset from tokens onward and re-run
 ```
@@ -27,8 +30,11 @@ checkpoint gate — the next phase only starts after the previous one passes.
 | brand | brand-loader | junior | data_validation (3 checks) |
 | logo | logo-assets | principal | file_validation (6 checks) |
 | tokens | design-tokens | senior | accessibility_validation (7 checks) |
+| creative | creative-direction | principal | data_validation (3 checks) |
 | components | component-specs | principal | data_validation (6 checks) |
 | layout | web-layout | senior | data_validation (5 checks) |
+| render | visual-render | principal | visual_validation (7 checks) |
+| guide | implementation-guide | principal | data_validation (6 checks) |
 
 ## Execution Steps
 
@@ -57,9 +63,20 @@ if --force flag provided:
   else:
     reset_from = brand   # reset everything
 
-  phases = [brand, logo, tokens, components, layout]
+  phases = [brand, logo, tokens, creative, components, layout, render, guide]
   design_skills_to_remove = []
   brand_skills_to_remove = []
+
+  skill_map = {
+    brand:      brand-loader,
+    logo:       logo-assets,
+    tokens:     design-tokens,
+    creative:   creative-direction,
+    components: component-specs,
+    layout:     web-layout,
+    render:     visual-render,
+    guide:      implementation-guide
+  }
 
   for phase in phases starting from reset_from:
     skill = skill_map[phase]
@@ -88,19 +105,22 @@ if --force flag provided:
 ### Step 3: Determine Start Phase
 
 ```
-phases = [brand, logo, tokens, components, layout]
+phases = [brand, logo, tokens, creative, components, layout, render, guide]
 skill_map = {
   brand:      brand-loader,
   logo:       logo-assets,
   tokens:     design-tokens,
+  creative:   creative-direction,
   components: component-specs,
-  layout:     web-layout
+  layout:     web-layout,
+  render:     visual-render,
+  guide:      implementation-guide
 }
 
 if --from flag provided:
   start_phase = --from value
   if start_phase not in phases:
-    "Unknown phase '{start_phase}'. Valid values: brand, logo, tokens, components, layout"
+    "Unknown phase '{start_phase}'. Valid values: brand, logo, tokens, creative, components, layout, render, guide"
 else:
   # Auto-detect: find first incomplete phase
   # Note: brand-loader lives in brand module, all others in design module
@@ -162,7 +182,7 @@ if start_phase == brand:
     modules.design.status → in_progress
     current_skill → null
 
-  Report: "Phase 1/5: brand-loader complete"
+  Report: "Phase 1/8: brand-loader complete"
 ```
 
 ### Step 5: Run logo-assets (if start_phase <= logo)
@@ -204,7 +224,7 @@ if start_phase in [brand, logo]:
     modules.design.completed_skills → append logo-assets
     current_skill → null
 
-  Report: "Phase 2/5: logo-assets complete"
+  Report: "Phase 2/8: logo-assets complete"
 ```
 
 ### Step 6: Run design-tokens (if start_phase <= tokens)
@@ -245,13 +265,48 @@ if start_phase in [brand, logo, tokens]:
     modules.design.completed_skills → append design-tokens
     current_skill → null
 
-  Report: "Phase 3/5: design-tokens complete"
+  Report: "Phase 3/8: design-tokens complete"
 ```
 
-### Step 7: Run component-specs (if start_phase <= components)
+### Step 7: Run creative-direction (if start_phase <= creative)
 
 ```
-if start_phase in [brand, logo, tokens, components]:
+if start_phase in [brand, logo, tokens, creative]:
+  Verify prerequisite: brand-summary.yml exists
+  if not exists:
+    "brand-loader has not run. Start from --from brand."
+    exit
+
+  Update state.yml:
+    current_skill → creative-direction
+
+  Run skill: creative-direction (model: principal)
+    Reads: brand-summary.yml, frontend-design/SKILL.md
+    Writes: design/creative-direction.yml
+
+  Run checkpoint (data_validation):
+    - creative_direction_generated
+    - All 11 fields present (identity, feel, motion_philosophy, spatial_philosophy,
+      texture, interaction_weight, color_strategy, typography_personality,
+      hero_approach, scroll_behavior, anti_patterns)
+    - No Layer 1 contradictions
+
+  if checkpoint fails:
+    Log error to state.yml errors array
+    "creative-direction checkpoint failed. Fix issues above and re-run with --from creative."
+    exit
+
+  Update state.yml:
+    modules.design.completed_skills → append creative-direction
+    current_skill → null
+
+  Report: "Phase 4/8: creative-direction complete"
+```
+
+### Step 8: Run component-specs (if start_phase <= components)
+
+```
+if start_phase in [brand, logo, tokens, creative, components]:
   Verify prerequisites:
     - design/tokens/tailwind.config.json exists
     - design/tokens/variables.css exists
@@ -287,51 +342,137 @@ if start_phase in [brand, logo, tokens, components]:
     modules.design.completed_skills → append component-specs
     current_skill → null
 
-  Report: "Phase 4/5: component-specs complete"
+  Report: "Phase 5/8: component-specs complete"
 ```
 
-### Step 8: Run web-layout (if start_phase <= layout)
+### Step 9: Run web-layout (if start_phase <= layout)
 
 ```
-Verify prerequisite: at least 1 file exists in design/components/
-if not:
-  "component-specs has not run. Start from --from components."
-  exit
+if start_phase in [brand, logo, tokens, creative, components, layout]:
+  Verify prerequisite: at least 1 file exists in design/components/
+  if not:
+    "component-specs has not run. Start from --from components."
+    exit
 
-Update state.yml:
-  current_skill → web-layout
+  Update state.yml:
+    current_skill → web-layout
 
-Run skill: web-layout (model: senior, interactive)
-  Reads: design/components/*.yml, brand-summary.yml
-  Writes: design/layouts/*.yml
-          design/navigation-map.yml
-          asset-registry.yml
+  Run skill: web-layout (model: senior, interactive)
+    Reads: design/components/*.yml, brand-summary.yml
+    Writes: design/layouts/*.yml
+            design/navigation-map.yml
+            asset-registry.yml
 
-Note: web-layout is interactive — confirm site map with user, iterate on
-layout compositions, validate all component references before finalizing
+  Note: web-layout is interactive — confirm site map with user, iterate on
+  layout compositions, validate all component references before finalizing
 
-Run checkpoint (data_validation, 5 checks):
-  - layouts_exist
-  - components_referenced
-  - navigation_map
-  - responsive_rules
-  - assets_registered
+  Run checkpoint (data_validation, 5 checks):
+    - layouts_exist
+    - components_referenced
+    - navigation_map
+    - responsive_rules
+    - assets_registered
 
-if checkpoint fails:
-  Log error to state.yml errors array
-  "web-layout checkpoint failed. Fix issues above and re-run with --from layout."
-  exit
+  if checkpoint fails:
+    Log error to state.yml errors array
+    "web-layout checkpoint failed. Fix issues above and re-run with --from layout."
+    exit
 
-Update state.yml:
-  modules.design.status → completed
-  modules.design.completed_skills → append web-layout
-  current_skill → null
-  updated_at → now
-  recovery_notes → "Design pipeline complete. All 5 phases passed checkpoints.
-    Run /agency:content to start the content pipeline."
+  Update state.yml:
+    modules.design.completed_skills → append web-layout
+    current_skill → null
+
+  Report: "Phase 6/8: web-layout complete"
 ```
 
-### Step 9: Report
+### Step 10: Run visual-render (if start_phase <= render)
+
+```
+if start_phase in [brand, logo, tokens, creative, components, layout, render]:
+  Verify prerequisites:
+    - At least 1 layout YAML exists in design/layouts/
+    - design/creative-direction.yml exists
+  if missing:
+    "web-layout or creative-direction has not run. Start from the missing phase."
+    exit
+
+  Update state.yml:
+    current_skill → visual-render
+
+  Run skill: visual-render (model: principal, interactive)
+    Reads: tokens, components, layouts, nav-map, page copy, brand, creative-direction
+    Writes: render/[project].pen, render-manifest.yml, screenshots/*.png, asset-registry.yml
+
+  Note: visual-render uses Pencil MCP tools. Load guidelines (landing-page or web-app
+  based on project type), select style guide via tags matching brand personality,
+  run full creative process. Export screenshots as first-class artifacts.
+
+  Run checkpoint (visual_validation, 7 checks):
+    - pen_file_created
+    - variables_set
+    - components_built
+    - pages_composed
+    - screenshots_captured
+    - manifest_complete
+    - assets_registered
+
+  if checkpoint fails:
+    Log error to state.yml errors array
+    "visual-render checkpoint failed. Fix issues above and re-run with --from render."
+    exit
+
+  Update state.yml:
+    modules.design.completed_skills → append visual-render
+    current_skill → null
+
+  Report: "Phase 7/8: visual-render complete"
+```
+
+### Step 11: Run implementation-guide (if start_phase <= guide)
+
+```
+if start_phase in [brand, logo, tokens, creative, components, layout, render, guide]:
+  Verify prerequisites:
+    - creative-direction.yml exists
+    - At least 1 component spec YAML exists
+    - At least 1 layout YAML exists
+    - render/screenshots/ has at least 1 PNG
+  if missing:
+    "Required upstream phases not complete. Start from the missing phase."
+    exit
+
+  Update state.yml:
+    current_skill → implementation-guide
+
+  Run skill: implementation-guide (model: principal, interactive)
+    Reads: creative-direction.yml, tokens, component specs, layouts, Pencil screenshots
+    Writes: design/implementation-guides/*.yml, asset-registry.yml
+
+  Run checkpoint (data_validation, 6 checks):
+    - guides_exist
+    - sections_covered
+    - motion_api_valid
+    - creative_direction_aligned
+    - layer1_compliant
+    - assets_registered
+
+  if checkpoint fails:
+    Log error to state.yml errors array
+    "implementation-guide checkpoint failed. Fix issues above and re-run with --from guide."
+    exit
+
+  Update state.yml:
+    modules.design.status → completed
+    modules.design.completed_skills → append implementation-guide
+    current_skill → null
+    updated_at → now
+    recovery_notes → "Design pipeline complete. All 8 phases passed checkpoints.
+      Run /agency:content to start the content pipeline."
+
+  Report: "Phase 8/8: implementation-guide complete"
+```
+
+### Step 12: Report
 
 ```
 ## Design Pipeline Complete: {project_name}
@@ -343,8 +484,11 @@ Update state.yml:
 | brand | brand-loader | {status} | brand-summary.yml, asset-registry entries |
 | logo | logo-assets | {status} | {N} SVGs, logo-preview.html |
 | tokens | design-tokens | {status} | tailwind.config.json, variables.css, tokens.dtcg.json, contrast-matrix.md |
+| creative | creative-direction | {status} | creative-direction.yml |
 | components | component-specs | {status} | {N} component YAMLs |
 | layout | web-layout | {status} | {N} layout YAMLs, navigation-map.yml |
+| render | visual-render | {status} | [project].pen, screenshots/*.png, render-manifest.yml |
+| guide | implementation-guide | {status} | {N} implementation guide YAMLs |
 
 (Only show phases that ran in this invocation; show "skipped" for phases
 skipped via --from)
@@ -379,5 +523,5 @@ Run: /agency:init {project_name} --brand <path-to-brand-reference.yml>
 
 **Unknown --from value:**
 ```
-Unknown phase 'xyz'. Valid values: brand, logo, tokens, components, layout
+Unknown phase 'xyz'. Valid values: brand, logo, tokens, creative, components, layout, render, guide
 ```

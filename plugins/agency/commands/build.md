@@ -26,6 +26,12 @@ Orchestrates the full 4-phase development pipeline for an agency project. Each p
 | plan | team-planner | principal | data_validation (4 checks) |
 | execute | agent-dispatcher + completion-gate | senior + junior | code_quality_gate (per task) |
 | review | code-review + qa-validation | senior + principal | code_quality_gate (6 checks) |
+| context | frontend-design + codex + creative-direction + implementation-guide | varies | loaded before Phase 1 |
+
+**Agent Context:** Before Phase 1, build agents load a four-layer design context
+(frontend-design → codex → creative-direction → implementation-guide), TDD skill
+(profile-controlled), and visual verification settings. These are passed to every
+dispatched agent during Phase 3.
 
 ## Execution Steps
 
@@ -53,7 +59,65 @@ state = read_yaml(state_file)
 ```
 dev_config = {project_dir}/dev/dev-config.yml
 if dev_config not found:
-  "dev-config.yml not found. Run /agency:init {project_name} first to generate project configuration."
+  # --- Greenfield Bootstrap ---
+  # Check if this is a greenfield project (no app code exists yet).
+  # If brainstorm decisions or design outputs exist, we can derive the config
+  # without a project-scanner pass.
+
+  app_path = agency.yml.projects.{project_name}.app_path
+  app_exists = directory_exists(app_path)
+
+  if not app_exists:
+    # Look for alternative data sources
+    decisions_glob = .ai/brainstorm/*/decisions.yml
+    design_tokens = .ai/projects/{project_name}/design/tokens/
+    brand_summary = .ai/projects/{project_name}/brand/brand-summary.yml
+    claude_md = CLAUDE.md
+
+    has_decisions = glob(decisions_glob) has results
+    has_design = directory_exists(design_tokens)
+
+    if has_decisions or has_design:
+      Report: "Greenfield project detected — no app code at {app_path}."
+      Report: "Bootstrapping dev-config.yml from brainstorm decisions and design outputs."
+
+      # Phase A: Generate dev-config.yml in greenfield mode
+      Run skill: config-generator (greenfield_mode: true)
+        Reads:  decisions.yml (tech stack, architecture, conventions)
+                design tokens (if present)
+                brand-summary.yml (if present)
+                CLAUDE.md (package manager, conventions, monorepo config)
+        Writes: {project_dir}/dev/dev-config.yml
+
+      # Phase B: Scaffold the app skeleton
+      Run skill: scaffold
+        Reads:  {project_dir}/dev/dev-config.yml
+                {project_dir}/design/tokens/ (if present)
+        Writes: {app_path}/ (project skeleton)
+
+      Report: "Greenfield bootstrap complete — app scaffolded at {app_path}."
+      # dev_config now exists; continue to Step 3
+    else:
+      "No dev-config.yml, no app code, and no brainstorm decisions found."
+      "Either:"
+      "  1. Run /brainstorm:start to define the tech stack, then try /agency:build again"
+      "  2. Create the app manually at {app_path} and run /agency:scan + /agency:build"
+      exit
+  else:
+    # App exists but no config — run normal scanner + config-generator
+    Report: "App code found at {app_path} but dev-config.yml is missing."
+    Report: "Running project-scanner → config-generator to create dev-config.yml."
+
+    Run skill: project-scanner
+      Reads:  {app_path}/ source files
+      Writes: {project_dir}/dev/findings.md
+
+    Run skill: config-generator
+      Reads:  {project_dir}/dev/findings.md
+      Writes: {project_dir}/dev/dev-config.yml
+
+    Report: "Dev config generated. Continuing build pipeline."
+  # --- End Greenfield Bootstrap ---
 
 if --from or --wave flag provided:
   # Resume mode — feature_description from project-state.yml
@@ -118,6 +182,75 @@ if start_phase == decompose:
       started_at: "{timestamp}"
 ```
 
+### Step 4a: Load Agent Context
+
+Before any build agent begins work, load the skill context they'll need.
+
+```
+# Read profile for feature toggles
+profile = read_yaml(.ai/profiles/{state.profile}.yml) OR null
+
+# 1. Frontend Design (Layer 1) — always loaded for UI work
+agent_context.design_rules = read(plugins/agency/skills/design/frontend-design/SKILL.md)
+agent_context.design_references = [
+  "references/anti-slop.md",
+  "references/typography.md",
+  "references/color-system.md",
+  "references/motion.md",
+  "references/accessibility.md"
+]
+
+# 2. Codex Skills (Layer 2) — loaded based on confirmed stack
+stack = read_yaml({project_dir}/dev/stack.yml) OR null
+if stack:
+  codex_skills = []
+  if stack.framework contains "react": codex_skills.append("codex/react.md")
+  if stack.css == "tailwind": codex_skills.append("codex/tailwind.md")
+  if stack.animation == "motion-dev": codex_skills.append("codex/motion-dev.md")
+  if stack.framework contains "next": codex_skills.append("codex/nextjs.md")
+  if stack.language == "typescript": codex_skills.append("codex/typescript.md")
+  agent_context.codex = codex_skills
+  Report: "Loaded {len(codex_skills)} codex skills: {names}"
+
+# 3. Creative Direction (Layer 3) — loaded if exists
+creative_dir = {project_dir}/design/creative-direction.yml
+if file_exists(creative_dir):
+  agent_context.creative_direction = read_yaml(creative_dir)
+
+# 4. Implementation Guides (Layer 4) — loaded if exists
+guides_dir = {project_dir}/design/implementation-guides/
+if directory_exists(guides_dir):
+  agent_context.implementation_guides = glob(guides_dir + "*.yml")
+  Report: "Loaded {count} implementation guides"
+
+# 5. TDD — profile-controlled
+if profile:
+  if profile.tdd == true:
+    agent_context.tdd = read(plugins/agency/skills/dev/tdd/SKILL.md)
+    Report: "TDD enabled (profile)"
+  elif profile.tdd == "detect":
+    if file_exists({app_path}/vitest.config.*) or file_exists({app_path}/jest.config.*):
+      agent_context.tdd = read(plugins/agency/skills/dev/tdd/SKILL.md)
+      Report: "TDD enabled (detected test infrastructure)"
+    else:
+      Report: "TDD disabled (no test infrastructure detected)"
+  else:
+    Report: "TDD disabled (profile)"
+
+# 6. Visual Verification — profile-controlled
+if profile:
+  if profile.visual_verification == true:
+    agent_context.visual_verification = true
+    Report: "Visual verification enabled (profile)"
+  elif profile.visual_verification == "detect":
+    if pencil_screenshots_exist and playwright_configured:
+      agent_context.visual_verification = true
+    else:
+      agent_context.visual_verification = false
+  else:
+    agent_context.visual_verification = false
+```
+
 ### Step 5: Phase 1 — feature-decomposer (if start_phase <= decompose)
 
 ```
@@ -130,6 +263,11 @@ if start_phase in [decompose]:
   if design_outputs are present:
     Note to decomposer: "Design pipeline outputs available — component-specs and
     web-layout results should inform component boundaries and file structure."
+
+  # Pass implementation guides to decomposer if available
+  if agent_context.implementation_guides:
+    Note to decomposer: "Implementation guides available — motion and interaction
+    specs should inform component boundaries and complexity estimates."
 
   Update state.yml:
     modules.dev.current_skill → feature-decomposer
@@ -243,6 +381,13 @@ if start_phase in [decompose, plan, execute]:
 
   Dispatch strategy:
     - Load wave-plan.yml; iterate waves from resume_wave onward
+    - Each dispatched agent receives:
+        - agent_context.design_rules (frontend-design, Layer 1)
+        - agent_context.codex (matching codex skills, Layer 2)
+        - agent_context.creative_direction (Layer 3, if exists)
+        - agent_context.implementation_guides (Layer 4, page-specific guides)
+        - agent_context.tdd (TDD skill, if enabled)
+        - dev-config.yml, design tokens
     - For each wave:
         if wave.parallel == true:
           Dispatch all tasks as simultaneous Task() calls (one per agent)
@@ -252,6 +397,21 @@ if start_phase in [decompose, plan, execute]:
         Run completion-gate for each task:
           Checks: build passes, lint passes, tests pass
           If gate fails: log to state.yml errors; halt and report to user
+
+        # Visual verification at milestones (if enabled)
+        if agent_context.visual_verification:
+          milestone = determine_milestone(current_wave, total_waves, wave_content)
+          if milestone:  # null if no milestone applies to this wave
+            Report: "Visual verification milestone: {milestone}"
+            Run skill: visual-verification
+              milestone: {milestone}
+              Reads: Pencil screenshots, Playwright screenshots, tokens, implementation guides
+              Writes: visual-verification-report.yml (appended)
+
+            if verification fails:
+              Log to state.yml errors
+              Present flagged issues to user
+              User decides: fix now (re-run wave), accept (continue), adjust threshold
 
   Note: Each specialist agent commits its own work during execution.
 
