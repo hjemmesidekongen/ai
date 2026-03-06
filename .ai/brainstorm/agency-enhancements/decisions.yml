@@ -1,0 +1,335 @@
+_meta:
+  schema: "brainstorm-decisions"
+  version: "1.0.0"
+  project: "agency-enhancements"
+  session_date: "2026-03-06"
+  total_decisions: 18
+  confidence_summary:
+    high: 17
+    medium: 1
+    low: 0
+
+decisions:
+
+  # ──────────────────────────────────────────────────────────
+  # PIPELINE ENHANCEMENTS
+  # ──────────────────────────────────────────────────────────
+
+  - id: "dec-01"
+    title: "Visual Verification Loop"
+    domain: ["design", "dev"]
+    confidence: "high"
+    summary: >
+      Three-tier visual verification at section milestones (layout skeleton,
+      above the fold, full page, multi-page): (1) code lint — static analysis
+      of spacing tokens, grid usage, container consistency against design tokens,
+      (2) LLM vision — screenshot against Pencil reference checking structural
+      alignment (gutters, grid, baselines) not pixel-perfection, (3) human
+      escalation — only when LLM confidence is below threshold or at final
+      milestone. Verification bar is structural alignment and visual discipline.
+    affects:
+      - "plugins/agency/skills/dev/"
+      - "plugins/agency/skills/design/"
+
+  - id: "dec-02"
+    title: "Error Pages as First-Class Deliverables"
+    domain: ["design", "content", "dev"]
+    confidence: "high"
+    summary: >
+      Error pages (404, 403, 500, generic fallback) planned in design phase,
+      written in content phase, scaffolded in build phase. Include: logging
+      instrumentation (failed URL, referrer, session/request ID, timestamp),
+      active retention logic ("Is this what you're looking for?" suggestions
+      derived from URL/referrer/search/history context), recovery UX (search
+      bar, navigation, breadcrumbs), marketing opportunity (UX writing skill
+      produces error copy matching brand voice, goal is convert dead ends into
+      soft landings). Analytics skill captures error page hits with full context
+      including whether user clicked suggestion or bounced.
+    affects:
+      - "plugins/agency/skills/design/component-specs/"
+      - "plugins/agency/skills/design/web-layout/"
+      - "plugins/agency/skills/content/ux-writing/"
+      - "plugins/agency/skills/dev/scaffold/"
+
+  - id: "dec-03"
+    title: "Stack Negotiation"
+    domain: ["dev"]
+    confidence: "high"
+    summary: >
+      Interactive stack negotiation between scanning and config generation.
+      Scans workspace (other projects, shared configs, MCP servers) not just
+      current project. Presents: "Other applications use Next.js 15 — use the
+      same?" per detected technology. For greenfield: full selection flow.
+      MCP-aware: surfaces available MCP servers as recommendations. Tiered
+      prompting: always ask (framework, CSS, component library, icons), ask if
+      ambiguous (auth, DB, API style), use shared defaults silently (linting,
+      formatting, tsconfig). Output: confirmed stack.yml consumed by
+      config-generator.
+    affects:
+      - "plugins/agency/skills/dev/project-scanner/"
+      - "plugins/agency/skills/dev/config-generator/"
+
+  - id: "dec-04"
+    title: "Profile System"
+    domain: ["technical"]
+    confidence: "high"
+    summary: >
+      Named profiles loaded at /agency:init defining context-level defaults.
+      Personal profile: stack defaults (Next.js, Tailwind, Untitled UI, shared
+      configs), confirm negotiation, TDD on, e2e on, code audit off. Work
+      profile: no stack defaults, full negotiation, code audit on, TDD/e2e
+      detect from existing infrastructure. Personal fully defined now. Work
+      stays skeleton until real friction encountered. Profiles stored in
+      .ai/profiles/.
+    affects:
+      - "plugins/agency/commands/init.md"
+      - ".ai/profiles/"
+
+  # ──────────────────────────────────────────────────────────
+  # TECHNOLOGY SKILLS (CODEX)
+  # ──────────────────────────────────────────────────────────
+
+  - id: "dec-05"
+    title: "Generic Technology Skills (Codex)"
+    domain: ["dev"]
+    confidence: "high"
+    summary: >
+      Portable skill files per technology encoding user's engineering standards.
+      Loaded when corresponding tech is in the stack. Initial set: react.md
+      (named exports, co-located props, hooks extraction, no barrel exports),
+      tailwind.md (cn() merging, no @apply, token-only spacing),
+      motion-dev.md (easing curves, spring configs, entrance patterns),
+      nextjs.md (routing, page structure, server/client boundaries),
+      typescript.md (strict, Zod at boundaries, immutable, no any). Each ≤80
+      lines, opinionated, non-negotiable. Additional skills added only when
+      technology is actually used.
+    affects:
+      - "plugins/agency/skills/dev/"
+
+  - id: "dec-06"
+    title: "Code Audit Skill"
+    domain: ["dev"]
+    confidence: "high"
+    summary: >
+      New skill scanning existing codebases to discover conventions — for
+      projects not authored by user or with style drift. Analyzes 50-100 files
+      for: export style, state management, styling approach, component
+      structure, test patterns, naming conventions. Produces
+      project-conventions.yml reviewed and corrected by user (picks canonical
+      pattern where codebase is inconsistent). Becomes project-specific overlay
+      on generic tech skills. Enabled by default in work profile, disabled in
+      personal. Separate from /agency:scan (structural) — this is behavioral.
+    affects:
+      - "plugins/agency/skills/dev/"
+      - "plugins/agency/commands/"
+
+  - id: "dec-07"
+    title: "TDD Skill"
+    domain: ["dev"]
+    confidence: "high"
+    summary: >
+      Development skill enforcing pure Red/Green/Refactor. One failing test
+      with least amount added, implement only enough to pass, next assertion.
+      Run vitest --watch during implementation. Unit tests adjacent to files
+      (.test.tsx). Not a pipeline feature or hook — a skill the agent follows.
+      Detection for work projects: vitest config + test files exist → enabled,
+      no infrastructure → disabled + flagged. Controlled by profile
+      (tdd: true | "detect").
+    affects:
+      - "plugins/agency/skills/dev/"
+
+  - id: "dec-08"
+    title: "Test Utilities Skill"
+    domain: ["dev"]
+    confidence: "high"
+    summary: >
+      Shared test infrastructure skill applying to both unit and e2e. Core
+      principle: mocks are shared infrastructure, not per-test throwaway.
+      Includes: renderWithProviders() wrapper in src/test/utils.ts, factory
+      functions (createMockUser, createMockProject) with spread overrides, MSW
+      shared default handlers, Playwright shared fixtures in /e2e/fixtures/.
+      Discipline: check for existing mock before creating, create in shared
+      utils not inline, never define provider wrapper in test file. Code audit
+      (dec-06) flags mock duplication.
+    affects:
+      - "plugins/agency/skills/dev/"
+
+  - id: "dec-09"
+    title: "E2E Testing Skill"
+    domain: ["dev"]
+    confidence: "high"
+    summary: >
+      Playwright conventions as standalone skill. E2e tests in /e2e/ at project
+      root — outside the application. Only responsibility: boot app and run
+      through programmatically. Page object pattern, shared fixtures in
+      /e2e/fixtures/. Connects to visual verification loop (dec-01): at section
+      milestones, Playwright screenshots across breakpoints feed into LLM
+      vision check. Detection for work: /e2e/ + playwright config → enabled,
+      else disabled. Profile-controlled (e2e: true | "detect").
+    affects:
+      - "plugins/agency/skills/dev/"
+
+  # ──────────────────────────────────────────────────────────
+  # DESIGN & IMPLEMENTATION QUALITY
+  # ──────────────────────────────────────────────────────────
+
+  - id: "dec-10"
+    title: "Pencil Design Phase Upgrade"
+    domain: ["design"]
+    confidence: "high"
+    summary: >
+      Pencil design becomes a real creative step using full capabilities:
+      load guidelines (landing-page or web-app), pick style guide via tags
+      matching brand personality, full creative process (concept extraction,
+      section rhythm, hero rules, anti-slop, creative variation). Export
+      screenshots as first-class artifacts in asset-registry — ground truth
+      for visual verification loop (dec-01). YAML layout specs remain for
+      machine consumption but Pencil design is authoritative visual reference.
+    affects:
+      - "plugins/agency/skills/design/web-layout/"
+      - "plugins/agency/commands/design.md"
+
+  - id: "dec-11"
+    title: "Ported Frontend Design Skill"
+    domain: ["design", "dev"]
+    confidence: "high"
+    summary: >
+      Port and integrate proven design skills into agency plugin, replacing
+      standalone frontend-design plugin. Combines: Anthropic frontend-design
+      (anti-slop baseline), Bencium controlled-ux-designer (mathematical
+      typographic scales, color system architecture, animation timing 100-500ms,
+      physics profiles, WCAG 2.1 AA), motion-framer patterns adapted for
+      Motion.dev. Overridden with user opinions: Motion.dev not GSAP, Untitled
+      UI, shared configs, border radius/easing preferences. Layer 1 + 2 of
+      four-layer architecture. Loaded by build agents before writing frontend.
+    affects:
+      - "plugins/agency/skills/design/"
+      - "plugins/agency/skills/dev/"
+    references:
+      - "https://github.com/anthropics/claude-code/blob/main/plugins/frontend-design/skills/frontend-design/SKILL.md"
+      - "https://github.com/bencium/bencium-claude-code-design-skill"
+      - "https://github.com/freshtechbro/claudedesignskills"
+
+  - id: "dec-12"
+    title: "Creative Direction Generator"
+    domain: ["design"]
+    confidence: "high"
+    summary: >
+      New skill reading brand context (personality, audience, tone, product
+      type) to generate per-project creative-direction.yml. Layer 3 of
+      four-layer architecture. Defines: identity (one-line metaphor), feel
+      (emotional descriptors), motion philosophy, spatial philosophy, texture,
+      interaction weight, color strategy, typography personality, hero approach,
+      scroll behavior, project-specific anti-patterns. Runs after brand-loader,
+      before Pencil design. Both Pencil design and build agents consume it.
+      Different brands produce fundamentally different directions.
+    affects:
+      - "plugins/agency/skills/design/"
+      - ".ai/projects/[name]/design/creative-direction.yml"
+
+  - id: "dec-13"
+    title: "Design-to-Implementation Translation"
+    domain: ["design", "dev"]
+    confidence: "medium"
+    summary: >
+      Skill sitting after Pencil design, before build. Reads creative
+      direction, design tokens, Pencil screenshots, component specs. Produces
+      implementation guide per page: entrance animations per section (timing,
+      easing, stagger), hover behaviors, scroll interactions, texture
+      treatments, spatial rules, component choreography. Build agents get three
+      references: Pencil screenshot (looks), component spec (structure),
+      implementation guide (feel/motion). Prevents design intent dying in
+      translation. Medium confidence due to potential overlap with creative
+      direction (dec-12) — may merge.
+    affects:
+      - "plugins/agency/skills/design/"
+      - "plugins/agency/skills/dev/"
+
+  # ──────────────────────────────────────────────────────────
+  # OBSERVABILITY
+  # ──────────────────────────────────────────────────────────
+
+  - id: "dec-14"
+    title: "Error Logging Skill (Sentry)"
+    domain: ["dev", "devops"]
+    confidence: "high"
+    summary: >
+      Build-phase skill setting up error logging. Every project by default.
+      Scaffolds: Sentry SDK (framework-appropriate), error boundaries wrapping
+      key UI sections, API error interceptors with request context, unhandled
+      rejection handlers, error page integration (404/500 POST context to
+      Sentry — ties to dec-02), source map upload for readable stack traces.
+      Distinct from analytics (user behavior) and observability (system health).
+      Sentry answers: what broke and why. Tool confirmed via stack negotiation.
+    affects:
+      - "plugins/agency/skills/dev/"
+
+  - id: "dec-15"
+    title: "Analytics Skill"
+    domain: ["dev", "content"]
+    confidence: "high"
+    summary: >
+      Build-phase skill instrumenting full user behavior tracking. Requires
+      user input on event taxonomy. Scaffolds: analytics SDK (PostHog/Mixpanel
+      via stack negotiation), automatic page view tracking, UTM capture on
+      first load persisted to session (survives navigation), click/interaction
+      tracking, scroll depth, entry/exit tracking, funnel definitions (user-
+      defined sequences), error page analytics with full context (ties to
+      dec-02), GDPR consent gating (both paths scaffolded — full stream on
+      consent, anonymous/nothing on denial). Short interview required: what
+      events matter, what funnels, what user properties.
+    affects:
+      - "plugins/agency/skills/dev/"
+
+  - id: "dec-16"
+    title: "Observability Skill"
+    domain: ["devops"]
+    confidence: "high"
+    summary: >
+      Devops-phase skill for server-side system health. Only for projects with
+      backend — skipped for static sites. Scaffolds: request tracing
+      (OpenTelemetry), performance budgets per endpoint, health endpoints
+      (/health, /ready), database slow query logging, uptime monitoring config.
+      Coordinates with error logging (Sentry trace IDs) and analytics (shared
+      session context). Lower priority than dec-14 and dec-15 — relevant
+      post-launch. Tool confirmed via stack negotiation.
+    affects:
+      - "plugins/agency/skills/devops/"
+
+  # ──────────────────────────────────────────────────────────
+  # INFRASTRUCTURE
+  # ──────────────────────────────────────────────────────────
+
+  - id: "dec-17"
+    title: "Shared Linting/Config Packages"
+    domain: ["dev"]
+    confidence: "high"
+    summary: >
+      In turborepo/monorepo setups, agent always discovers and uses shared
+      config packages. Never creates project-level configs duplicating workspace
+      root. Discovery during stack negotiation: scan packages/ for shared
+      configs, surface them. No duplication: extend, don't reimplement. No
+      editing: shared packages are read-only to build agent, flag conflicts.
+      New projects in monorepo scaffold with extends pointing to shared
+      packages. Personal profile lists known packages. Work profile discovers
+      via scan.
+    affects:
+      - "plugins/agency/skills/dev/config-generator/"
+      - "plugins/agency/skills/dev/project-scanner/"
+
+  - id: "dec-18"
+    title: "Motion.dev as Default Animation Library"
+    domain: ["dev"]
+    confidence: "high"
+    summary: >
+      Motion.dev (formerly Framer Motion) is the default and only animation
+      library for React projects. Hard default. No GSAP, React Spring, or
+      anime.js unless explicitly overridden. Declarative API co-located with
+      components. LazyMotion for bundle size (4.6KB). Spring physics for
+      interactive elements. Layout animations for reordering. AnimatePresence
+      for exits — never conditional render without transition.
+      prefers-reduced-motion always respected. Referenced by codex skill
+      (dec-05), frontend design skill (dec-11), and implementation guide
+      (dec-13).
+    affects:
+      - "plugins/agency/skills/dev/"
