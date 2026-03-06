@@ -15,7 +15,20 @@ reads:
 writes:
   - ".ai/projects/{project}/design/creative-direction.yml"
 model_tier: "principal"
-checkpoint: "creative_direction_generated"
+checkpoint:
+  type: data_validation
+  required_checks:
+    - name: "creative_direction_file_exists"
+      verify: "creative-direction.yml exists at .ai/projects/{project}/design/"
+      fail_action: "Re-run generation from brand-summary.yml"
+    - name: "all_sections_present"
+      verify: "All 11 required sections present with no empty values"
+      fail_action: "Check process.md schema, fill missing sections"
+    - name: "layer1_compliance"
+      verify: "No contradictions with frontend-design Layer 1 rules"
+      fail_action: "Resolve conflicts in favor of Layer 1 constraints"
+  on_fail: "Log error to state.yml, re-run failed checks"
+  on_pass: "Update state.yml, mark creative-direction completed"
 ---
 
 # Creative Direction Generator
@@ -40,8 +53,6 @@ Higher layers override lower layers. Layer 1 rules remain non-negotiable.
 **Reads:** `brand/brand-summary.yml` (colors, typography, spacing, personality)
 **Reads:** `frontend-design/SKILL.md` (Layer 1 baseline — must not contradict)
 **Writes:** `design/creative-direction.yml`
-**Checkpoint:** creative_direction_generated
-
 ## Output Schema
 
 `creative-direction.yml` must define all of: identity, feel,

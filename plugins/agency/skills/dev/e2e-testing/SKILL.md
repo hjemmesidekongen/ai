@@ -10,7 +10,20 @@ writes:
   - "e2e/"
   - "playwright.config.ts"
 model_tier: "senior"
-checkpoint: "e2e_tests_passing"
+checkpoint:
+  type: code_quality_gate
+  required_checks:
+    - name: "playwright_config_exists"
+      verify: "playwright.config.ts exists with 3 breakpoints configured"
+      fail_action: "Create playwright config with mobile/tablet/desktop viewports"
+    - name: "page_objects_created"
+      verify: "At least one page object class exists in e2e/pages/"
+      fail_action: "Generate page objects from application routes"
+    - name: "e2e_tests_green"
+      verify: "playwright test exits with 0 failures"
+      fail_action: "Fix failing specs, check selectors use data-testid"
+  on_fail: "Log error to state.yml, re-run failed checks"
+  on_pass: "Update state.yml, mark E2E testing completed"
 ---
 
 # E2E Testing

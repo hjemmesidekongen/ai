@@ -8,7 +8,8 @@ description: >
   artifacts and ground truth for visual verification (dec-01). Use when rendering
   mockups, producing Pencil prototypes, or running /agency:render.
 phase: 7
-depends_on: [design-tokens, component-specs, web-layout, app-copy]
+depends_on: [design-tokens, component-specs, web-layout]
+optional_inputs: [app-copy]  # uses placeholder copy if app-copy hasn't run
 writes:
   - ".ai/projects/[name]/render/[project-name].pen"
   - ".ai/projects/[name]/render/render-manifest.yml"
@@ -57,7 +58,8 @@ upstream specs. Screenshots serve as ground truth for visual verification.
 **Reads:** tokens, components, layouts, nav-map, page copy, brand, creative-direction
 **Writes:** `render/[project].pen`, `render-manifest.yml`, `screenshots/*.png`, `asset-registry.yml`
 **Checkpoint:** visual_validation — 7 checks
-**Depends on:** design-tokens, component-specs, web-layout, app-copy
+**Depends on:** design-tokens, component-specs, web-layout
+**Optional:** app-copy (uses placeholder copy if content pipeline hasn't run)
 
 ## Process Summary
 
@@ -65,7 +67,7 @@ upstream specs. Screenshots serve as ground truth for visual verification.
 2. Select Pencil style guide — match brand personality to tags, get guidelines
 3. Create document and set variables — parse variables.css, convert to Pencil format
 4. Build reusable components — one per component spec, with token-mapped properties
-5. Compose page screens — one per layout, with navigation, sections, and real copy
+5. Compose page screens — one per layout, with navigation, sections, and real or placeholder copy
 6. Generate images — AI prompts from brand personality + section context
 7. Mobile variants (optional) — 375px copies with responsive overrides
 8. Finalize — manifest, asset-registry, 7-point checkpoint, state.yml update

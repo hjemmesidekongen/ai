@@ -31,6 +31,62 @@ The Stop hook will BLOCK completion if reflections section is missing.
 ---
 
 
+## Pre-check: Fast-forward Detection
+
+Before starting the interactive flow, check if production logos already exist
+(e.g. from /brand:generate):
+
+```
+existing_logos = glob(.ai/projects/[name]/design/logos/*.svg)
+  OR glob(.ai/projects/[name]/brand/logos/*.svg)
+  OR glob(.ai/projects/[name]/brand/brand-package/logos/*.svg)
+
+if existing_logos.count >= 4:
+  Report existing assets found:
+    "Found {count} existing logo SVGs. These appear to be from a prior
+     brand generation run."
+    List files found.
+  Ask user:
+    "[1] Fast-forward — validate existing logos, copy to design/logos/,
+         generate any missing variants, and run checkpoint
+     [2] Start fresh — run the full 5-phase interactive logo design process"
+
+  if user picks [1] (fast-forward):
+    - Validate existing SVGs (valid XML, viewBox, no raster, <50KB)
+    - Copy ALL assets to project-local directories if not already there:
+      - Logos → design/logos/ (6 SVGs)
+      - Brand icons → design/logos/ (4 SVGs, flat — no subdirectory)
+      - Social templates → design/logos/social-templates/ (3 SVGs)
+      Also check .ai/brands/[brand]/assets/ as a source location
+    - Identify missing variants from the 6 required logos and 4 brand icons
+    - Generate only missing variants
+    - Generate logo-preview.html (with <img src> refs to ../logos/)
+    - Generate social templates if missing
+    - Register ALL assets with project-local paths (.ai/projects/[name]/...)
+      — never register .ai/brands/ paths in asset-registry.yml
+    - Skip to checkpoint (Phase 4 Step 6 onward)
+
+  if user picks [2]:
+    Proceed with full interactive flow below
+```
+
+---
+
+## Full Interactive Flow Summary
+
+1. Read brand-summary.yml and brand-reference.yml — name, colors, typography, visual
+2. **Phase 1 — Discovery:** Reflect brand context, logo type preference (wordmark/lettermark/abstract/combination/emblem), reference logos, what to avoid, design brief summary; wait for user confirmation
+3. **Phase 2 — Concept Generation:** 20-25 SVG concepts via 4 parallel sub-agents (wordmarks, abstract, combination, wildcard); HTML preview; user picks 3-5 favorites
+4. **Phase 3 — Refinement:** 3-4 variations per pick (weight/spacing/proportion/detail/color); multi-size testing (200px, 80px, 40px, 16px); background testing; final selection
+5. **Phase 4 — Finalization:** 6 logo SVG variants, 4 brand icon variants, clear space + minimum size, misuse rules, update preview, confirm before writing
+6. **Phase 4b — Social Templates:** OG image (1200x630), Twitter card (1200x628), LinkedIn banner (1584x396); each embeds final logo + brand colors
+7. **Phase 5 — Optional refinement:** Figma/Illustrator import, CMYK/Pantone for print, trademark search guidance
+8. Register all SVG outputs in asset-registry.yml (logos, icons, social templates)
+9. Run file_validation checkpoint (6 checks); fix failures; advance only after all checks pass
+10. Write recovery notes to state.yml
+
+---
+
 ## Before You Start
 
 Read all brand data from the project:
@@ -263,7 +319,7 @@ After all concepts are generated, create an **HTML preview page** at
 
   <div class="grid">
     <!-- Each concept as a card with:
-         - SVG rendered inline (not as <img> — allows CSS theming)
+         - <img src="path/to/concept-NN.svg"> referencing the actual file
          - Concept number and name
          - Shown on light background
     -->
@@ -283,7 +339,12 @@ After all concepts are generated, create an **HTML preview page** at
 - Light/dark mode toggle button
 - Each concept displayed at ~200px width with its name below
 - Clean, distraction-free layout — the logos are the focus
-- All SVGs embedded inline (not as external files) for simplicity
+- **Use `<img src>` tags referencing the actual SVG files** — the preview
+  doubles as a functional test that all files exist at their expected paths
+- All paths must be **relative to the preview file's location** (e.g.
+  `../logos/logo-full-light.svg`, `../logos/brand-icon.svg`)
+- **Never reference `.ai/brands/`** — always reference the project-local
+  copies in `design/logos/` and `design/logos/social-templates/`
 - No external dependencies — the page must work offline
 
 ### Presenting Concepts
@@ -411,7 +472,7 @@ very small contexts (app icons, social avatars, favicons).
 | `brand-icon-dark.svg` | For light backgrounds — dark mark |
 | `brand-icon-mono.svg` | Single color (black) for monochrome contexts |
 
-**File destinations:** `.ai/projects/[name]/design/logos/brand-icon/`
+**File destinations:** `.ai/projects/[name]/design/logos/`
 
 ### Step 3: Define Clear Space & Minimum Size
 
@@ -454,6 +515,21 @@ Add a **"Final Logo System"** section to `logo-preview.html` showing:
 - Clear space visualization
 - Misuse examples (can be described, not necessarily rendered as altered SVGs)
 
+**Path rules for the preview HTML:**
+
+- **Use `<img src>` tags** pointing to the actual SVG files — the preview
+  page is a functional test that all logo files exist at their expected paths.
+  If images are broken, the files are missing or misplaced.
+- All paths must be **relative to the preview file's location**:
+  - Logos: `../logos/logo-full-light.svg`
+  - Brand icons: `../logos/brand-icon.svg`
+  - Social templates: `../logos/social-templates/og-image-template.svg`
+- **Never reference `.ai/brands/`** — always reference the project-local
+  copies in `design/logos/`. The preview file lives in `design/previews/`,
+  so `../logos/` reaches the right directory.
+- After generating the preview, **open the HTML and verify all images render**.
+  Broken images mean broken paths or missing files — fix before proceeding.
+
 ### Step 6: Summary Before Writing
 
 Present the complete logo system for approval:
@@ -472,7 +548,7 @@ Files to write:
     - logo-wordmark-dark.svg
     - logo-mark.svg
     - logo-mark-mono.svg
-  .ai/projects/[name]/design/logos/brand-icon/
+  .ai/projects/[name]/design/logos/
     - brand-icon.svg
     - brand-icon-light.svg
     - brand-icon-dark.svg
@@ -590,6 +666,11 @@ After all files are written, inform the user about optional next steps:
 After all files are written (logos, brand icons, social templates), register
 every asset in `.ai/projects/[name]/asset-registry.yml`.
 
+**Critical:** All registered paths must use project-local directories
+(`.ai/projects/[name]/design/logos/...`), never `.ai/brands/...`. The
+asset-registry is consumed by downstream skills which expect project-local
+paths. If logos were copied from `.ai/brands/`, register the copy location.
+
 ### Registration Schema
 
 Add one entry per SVG file under the `logo_assets` group:
@@ -624,16 +705,16 @@ logo_assets:
       use_on: "Single-color contexts, watermarks, embossing"
   brand_icons:
     - id: "brand-icon"
-      path: ".ai/projects/[name]/design/logos/brand-icon/brand-icon.svg"
+      path: ".ai/projects/[name]/design/logos/brand-icon.svg"
       type: brand_icon
     - id: "brand-icon-light"
-      path: ".ai/projects/[name]/design/logos/brand-icon/brand-icon-light.svg"
+      path: ".ai/projects/[name]/design/logos/brand-icon-light.svg"
       type: brand_icon
     - id: "brand-icon-dark"
-      path: ".ai/projects/[name]/design/logos/brand-icon/brand-icon-dark.svg"
+      path: ".ai/projects/[name]/design/logos/brand-icon-dark.svg"
       type: brand_icon
     - id: "brand-icon-mono"
-      path: ".ai/projects/[name]/design/logos/brand-icon/brand-icon-mono.svg"
+      path: ".ai/projects/[name]/design/logos/brand-icon-mono.svg"
       type: brand_icon
   social_templates:
     - id: "og-image-template"
@@ -669,10 +750,10 @@ After writing all files, run these checks:
 | Check | Rule | Fail action |
 |-------|------|-------------|
 | `logo_svg_variants` | All 6 logo SVGs exist in `design/logos/` | Generate the missing variants |
-| `brand_icon_variants` | All 4 brand icon SVGs exist in `design/logos/brand-icon/` | Derive from the logo mark |
+| `brand_icon_variants` | All 4 brand icon SVGs exist in `design/logos/` (brand-icon.svg, brand-icon-light/dark/mono.svg) | Derive from the logo mark |
 | `svg_validity` | Every SVG is valid XML with `viewBox`, no fixed `width`/`height` | Fix the invalid SVGs |
 | `svg_file_size` | No SVG exceeds 15KB | Optimize — simplify paths, reduce precision, strip metadata |
-| `preview_html` | `design/previews/logo-preview.html` exists and has no broken references | Regenerate the preview page |
+| `preview_html` | `design/previews/logo-preview.html` exists, all `<img src>` paths use `../logos/` relative refs (no `.ai/brands/`), and every referenced SVG file exists on disk | Fix paths to use `../logos/` relative refs; verify all referenced files exist |
 | `assets_registered` | All 13 assets are present in asset-registry.yml | Add missing entries |
 
 **On pass:** Update `state.yml` → mark logo-assets complete, write recovery

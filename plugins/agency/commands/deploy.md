@@ -150,7 +150,7 @@ Update state.yml:
   modules.devops.current_skill → "deploy-execute"
   modules.devops.status        → "completed"
   Append "deploy-execute" to modules.devops.completed_skills
-  status → "deployed" (if all modules complete) OR keep current status
+  status → "completed" (if all modules complete) OR keep current status
   recovery_notes → "Deployed to {env}. URL: {deployment_url}. Run /agency:status for details."
 ```
 

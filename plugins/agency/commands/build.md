@@ -582,7 +582,7 @@ errors:
     skill: "feature-decomposer"
     error: "no_file_overlap check failed — ComponentA and ComponentB both list src/api/auth.ts"
     attempted_fix: "Reassigned src/api/auth.ts exclusively to ComponentA"
-    result: "pending"
+    result: "unresolved"
     next_approach: "Re-run feature-decomposer, ensure shared files are in a dedicated shared component"
 ```
 

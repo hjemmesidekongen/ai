@@ -1,10 +1,10 @@
 # Agency Plugin — Verification Profile
-# Maps every skill to its verification type, checkpoint checks, and QA gate.
+# Central QA configuration for the agency pipeline.
+# Per-skill checkpoints live in each skill's SKILL.md frontmatter (canonical source).
 # Referenced by agency pipeline commands (design, content, build, deploy).
-# Each command runs its own checkpoint gates using the types below.
 
 profile_name: "agency"
-version: "1.0.0"
+version: "1.1.0"
 
 # ──────────────────────────────────────────────
 # QA Strategy
@@ -42,178 +42,17 @@ verification_types:
     source: "built-in"
     used_by: [project-scanner]
 
+  visual_validation:
+    source: "built-in"
+    used_by: [visual-render, visual-verification]
+
 # ──────────────────────────────────────────────
-# Per-Skill Checkpoint Map
+# Per-Skill Checkpoints
 # ──────────────────────────────────────────────
-
-skills:
-  # --- Brand Module ---
-  brand-loader:
-    checkpoint_type: data_validation
-    checks: [brand_reference_loaded, tokens_extracted, assets_registered]
-    model_tier: junior
-    two_stage_verification: false
-    findings_persistence: true
-
-  # --- Design Module ---
-  logo-assets:
-    checkpoint_type: file_validation
-    checks: [logo_svg_variants, brand_icon_variants, svg_validity, svg_file_size, preview_html, assets_registered]
-    model_tier: principal
-    two_stage_verification: true
-    findings_persistence: true
-
-  asset-registry:
-    checkpoint_type: none
-    checks: []
-    model_tier: junior
-    two_stage_verification: false
-    findings_persistence: true
-    note: "Utility skill — called by other skills, no standalone checkpoint"
-
-  design-tokens:
-    checkpoint_type: accessibility_validation
-    checks: [tailwind_config_valid, css_variables_valid, dtcg_valid, wcag_aa_body, wcag_aa_large, colorblind_notes, assets_registered]
-    model_tier: senior
-    two_stage_verification: true
-    findings_persistence: true
-
-  component-specs:
-    checkpoint_type: data_validation
-    checks: [components_exist, required_fields, token_references_valid, slots_defined, a11y_requirements, assets_registered]
-    model_tier: principal
-    two_stage_verification: true
-    findings_persistence: true
-
-  web-layout:
-    checkpoint_type: data_validation
-    checks: [layouts_exist, components_referenced, navigation_map, responsive_rules, assets_registered]
-    model_tier: senior
-    two_stage_verification: true
-    findings_persistence: true
-
-  # --- Content Module ---
-  app-copy:
-    checkpoint_type: data_validation
-    checks: [pages_covered, slots_filled, brand_voice_applied, slot_types_complete, assets_registered]
-    model_tier: senior
-    two_stage_verification: true
-    findings_persistence: true
-
-  ux-writing:
-    checkpoint_type: data_validation
-    checks: [categories_complete, brand_voice_applied, component_coverage, error_taxonomy_applied, assets_registered]
-    model_tier: senior
-    two_stage_verification: true
-    findings_persistence: true
-
-  # --- Dev Module ---
-  project-scanner:
-    checkpoint_type: manual_approval
-    checks: [scan_results_written, key_files_identified, frameworks_detected]
-    model_tier: junior
-    two_stage_verification: true
-    findings_persistence: true
-
-  config-generator:
-    checkpoint_type: data_validation
-    checks: [config_exists, meta_complete, frameworks_runtime_exists, language_populated, build_command_populated, design_tokens_section_exists, user_confirmed]
-    model_tier: senior
-    two_stage_verification: true
-    findings_persistence: true
-
-  storybook-generator:
-    checkpoint_type: data_validation
-    checks: [storybook_config_exists, stories_generated, stories_build]
-    model_tier: senior
-    two_stage_verification: false
-    findings_persistence: true
-
-  scaffold:
-    checkpoint_type: code_quality_gate
-    checks: [files_generated, build_passes, lint_passes]
-    model_tier: senior
-    two_stage_verification: false
-    findings_persistence: true
-
-  feature-decomposer:
-    checkpoint_type: data_validation
-    checks: [features_decomposed, tasks_generated, dependencies_valid]
-    model_tier: principal
-    two_stage_verification: true
-    findings_persistence: true
-
-  team-planner:
-    checkpoint_type: data_validation
-    checks: [agents_assigned, file_ownership_clean, model_tiers_set]
-    model_tier: principal
-    two_stage_verification: true
-    findings_persistence: true
-
-  agent-dispatcher:
-    checkpoint_type: data_validation
-    checks: [agents_dispatched, reports_collected, state_updated]
-    model_tier: senior
-    two_stage_verification: true
-    findings_persistence: true
-
-  completion-gate:
-    checkpoint_type: code_quality_gate
-    checks: [all_tasks_complete, build_passes, tests_pass]
-    model_tier: junior
-    two_stage_verification: false
-    findings_persistence: true
-
-  code-review:
-    checkpoint_type: data_validation
-    checks: [review_complete, design_token_compliance, no_critical_issues]
-    model_tier: senior
-    two_stage_verification: true
-    findings_persistence: true
-
-  qa-validation:
-    checkpoint_type: data_validation
-    checks: [qa_report_complete, all_checks_passed, verdict_rendered]
-    model_tier: principal
-    two_stage_verification: true
-    findings_persistence: true
-
-  # --- Brainstorm Skills (Dev Module) ---
-  brainstorm-session:
-    checkpoint_type: data_validation
-    checks: [transcript_written, state_updated, topics_captured]
-    model_tier: principal
-    two_stage_verification: false
-    findings_persistence: true
-
-  brainstorm-decision-writer:
-    checkpoint_type: data_validation
-    checks: [decisions_yml_exists, decision_fields_complete, no_duplicate_ids]
-    model_tier: senior
-    two_stage_verification: false
-    findings_persistence: true
-
-  decision-reader:
-    checkpoint_type: data_validation
-    checks: [decisions_loaded, relevance_filtered, summary_written]
-    model_tier: junior
-    two_stage_verification: false
-    findings_persistence: true
-
-  # --- DevOps Module ---
-  deploy-config:
-    checkpoint_type: data_validation
-    checks: [config_generated, env_vars_mapped, provider_validated]
-    model_tier: senior
-    two_stage_verification: true
-    findings_persistence: true
-
-  deploy-execute:
-    checkpoint_type: code_quality_gate
-    checks: [deployment_successful, health_check_passed]
-    model_tier: senior
-    two_stage_verification: false
-    findings_persistence: true
+# Canonical checkpoint definitions live in each skill's SKILL.md frontmatter.
+# Format: checkpoint: { type, required_checks: [...], on_fail, on_pass }
+# Run smoke test (Agent 5) to validate consistency across all 36 skills.
+# Do NOT duplicate checkpoint definitions here — that causes drift.
 
 # ──────────────────────────────────────────────
 # Quality Focus Areas (for Stage 2 QA reviewer)
@@ -221,13 +60,13 @@ skills:
 
 qa_focus:
   - "Progressive disclosure enforced — all SKILL.md under 80 lines"
-  - "Every skill has checkpoint with measurable checks"
+  - "Every skill has checkpoint in SKILL.md frontmatter (canonical source)"
   - "PORT skills preserve all logic from source plugin"
   - "NEW skills have complete process.md with no placeholder sections"
   - "Asset-registry integration in all asset-producing skills"
   - "Design tokens use WCAG-validated contrast pairs"
   - "Project isolation enforced across all write paths"
   - "Model tier assigned on every task"
-  - "Findings persistence in all 23 skills"
+  - "Findings persistence in all skills"
   - "Two-stage verification in all active-output skills"
-  - "Error logging to state.yml in all 23 skills"
+  - "Error logging to state.yml in all skills"

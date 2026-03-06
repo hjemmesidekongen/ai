@@ -9,12 +9,18 @@ description: >
   setting project conventions, or mapping build commands.
 phase: 2
 depends_on: [project-scanner]
+depends_on_greenfield: []  # No dependencies in greenfield mode
 writes:
   - ".ai/projects/[name]/dev/dev-config.yml"
 reads:
   - ".ai/projects/[name]/dev/findings.md#project-scan"
   - "plugins/agency/resources/templates/dev-config-schema.yml"
   - "package.json (for scripts mapping)"
+greenfield_sources:
+  - ".ai/brainstorm/*/decisions.yml (tech stack, architecture, conventions)"
+  - "CLAUDE.md (package manager, monorepo, conventions)"
+  - ".ai/projects/[name]/design/tokens/ (design token paths)"
+  - ".ai/projects/[name]/brand/brand-summary.yml (brand context)"
 model_tier: senior
 model: sonnet
 interactive: true
@@ -48,32 +54,18 @@ checkpoint:
 
 # Config Generator
 
-Phase 2 of /agency:dev:init. Reads project-scanner findings, transforms them into dev-config.yml, and walks the user through confirming detections. Includes a design token integration step linking token files from scanner findings or `.ai/projects/[name]/design/tokens/`. Output is the central project contract for all downstream dev skills.
+Phase 2 of /agency:dev:init. Reads project-scanner findings (or brainstorm decisions in greenfield mode), transforms them into dev-config.yml, and walks the user through confirming detections. Includes a design token integration step linking token files from scanner findings or `.ai/projects/[name]/design/tokens/`. Output is the central project contract for all downstream dev skills.
 
 ## Context
 
 | Aspect | Details |
 |--------|---------|
 | **Reads** | findings.md (scan results), dev-config-schema.yml (target format), package.json (scripts) |
+| **Reads (greenfield)** | decisions.yml (brainstorm), CLAUDE.md (conventions), design tokens, brand-summary.yml |
 | **Writes** | dev-config.yml (the project contract) |
 | **Checkpoint** | data_validation — 7 checks: config, meta, frameworks.runtime, language, build command, design_tokens section, user confirmation |
-| **Dependencies** | project-scanner (must run first to produce findings.md) |
+| **Dependencies** | project-scanner (must run first to produce findings.md) — OR greenfield_sources when invoked with greenfield_mode: true |
 
-## Process Summary
+## Process
 
-1. Read scan results from findings.md — extract frameworks, language, package manager, architecture
-2. Transform findings into dev-config.yml schema format
-3. Present each detected framework to user for confirmation (one at a time)
-4. Resolve ambiguous detections interactively
-5. Integrate design token paths — check findings.md Design Tooling section and `.ai/projects/[name]/design/tokens/`
-6. Ask about conventions not auto-detectable (branch pattern, commit format, coverage threshold)
-7. Map package.json scripts to commands section (build, dev, test, lint, format, typecheck)
-8. Write completed dev-config.yml; present final summary and wait for confirmation
-
-## Findings Persistence
-
-Write confirmed values to `.ai/projects/[name]/dev/findings.md`. **2-Action Rule:** After every 2 user interactions, IMMEDIATELY save to findings.md. Log all errors to state.yml errors array — never repeat a failed approach.
-
-## Execution
-
-Follow the detailed process in [references/process.md](references/process.md).
+Reads scan results (or brainstorm decisions in greenfield mode), confirms frameworks/conventions interactively, integrates design tokens, maps package.json scripts to commands, writes dev-config.yml. Write confirmed values to findings.md (**2-Action Rule:** save every 2 interactions). Log errors to state.yml. See [references/process.md](references/process.md) for detailed steps.

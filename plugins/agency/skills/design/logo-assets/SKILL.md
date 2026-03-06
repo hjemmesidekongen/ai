@@ -26,7 +26,7 @@ checkpoint:
       verify: "6 logo SVGs exist in design/logos/ (primary, reversed, monochrome, icon, horizontal, stacked)"
       fail_action: "Generate missing variants using brand data"
     - name: "brand_icon_variants"
-      verify: "4 brand icon SVGs exist in design/logos/brand-icon/ (default, monochrome, small, favicon)"
+      verify: "4 brand icon SVGs exist in design/logos/ (brand-icon.svg, brand-icon-light.svg, brand-icon-dark.svg, brand-icon-mono.svg)"
       fail_action: "Generate missing icon variants from primary logo"
     - name: "svg_validity"
       verify: "All SVG files are valid XML with proper viewBox and no raster content"
@@ -35,8 +35,8 @@ checkpoint:
       verify: "Each SVG file is under 50KB"
       fail_action: "Optimize paths — simplify geometry, remove unnecessary metadata"
     - name: "preview_html"
-      verify: "design/previews/logo-preview.html exists and embeds all logo variants"
-      fail_action: "Generate preview HTML with all variants on light/dark backgrounds"
+      verify: "design/previews/logo-preview.html exists, all <img src> paths use relative refs to ../logos/ (not .ai/brands/), and every referenced file exists"
+      fail_action: "Fix paths to use ../logos/ relative refs and verify all referenced SVG files exist"
     - name: "assets_registered"
       verify: "All logo and icon SVGs are registered in asset-registry.yml with correct paths"
       fail_action: "Register missing assets in asset-registry.yml"
@@ -62,66 +62,11 @@ previews/logo-preview.html, asset-registry.yml
 **Checkpoint:** file_validation — 6 checks (logo_svg_variants, brand_icon_variants,
 svg_validity, svg_file_size, preview_html, assets_registered)
 
-## Process Summary
+## Process
 
-### Pre-check: Fast-forward detection
-
-Before starting the interactive flow, check if production logos already exist
-(e.g. from /brand:generate):
-
-```
-existing_logos = glob(.ai/projects/[name]/design/logos/*.svg)
-  OR glob(.ai/projects/[name]/brand/logos/*.svg)
-  OR glob(.ai/projects/[name]/brand/brand-package/logos/*.svg)
-
-if existing_logos.count >= 4:
-  Report existing assets found:
-    "Found {count} existing logo SVGs. These appear to be from a prior
-     brand generation run."
-    List files found.
-  Ask user:
-    "[1] Fast-forward — validate existing logos, copy to design/logos/,
-         generate any missing variants, and run checkpoint
-     [2] Start fresh — run the full 5-phase interactive logo design process"
-
-  if user picks [1] (fast-forward):
-    - Validate existing SVGs (valid XML, viewBox, no raster, <50KB)
-    - Copy to design/logos/ if not already there
-    - Identify missing variants from the 6 required (primary, reversed,
-      monochrome, icon, horizontal, stacked) and 4 brand icons
-    - Generate only missing variants
-    - Generate logo-preview.html
-    - Generate social templates if missing
-    - Skip to step 8 (register + checkpoint)
-
-  if user picks [2]:
-    Proceed with full interactive flow below
-```
-
-### Full interactive flow
-
-1. Read brand-summary.yml and brand-reference.yml — name, colors, typography, visual
-2. **Phase 1 — Discovery:** Reflect brand context → logo type preference
-   (wordmark/lettermark/abstract/combination/emblem) → reference logos → what
-   to avoid → design brief summary; wait for user confirmation
-3. **Phase 2 — Concept Generation:** 20-25 SVG concepts via 4 parallel sub-agents
-   (wordmarks, abstract, combination, wildcard); HTML preview at
-   design/previews/logo-preview.html; user picks 3-5 favorites
-4. **Phase 3 — Refinement:** 3-4 variations per pick (weight/spacing/proportion/
-   detail/color); multi-size testing (200px, 80px, 40px, 16px); background
-   testing (white, dark, brand color, photography, light gray); final selection
-5. **Phase 4 — Finalization:** 6 logo SVG variants → 4 brand icon variants →
-   clear space + minimum size → misuse rules → update preview → confirm before
-   writing all files
-6. **Phase 4b — Social Templates:** OG image (1200x630), Twitter card (1200x628),
-   LinkedIn banner (1584x396); each embeds final logo + brand colors; written
-   to social-templates/
-7. **Phase 5 — Optional refinement:** Figma/Illustrator import, CMYK/Pantone for
-   print, trademark search guidance; noted in project state
-8. Register all SVG outputs in asset-registry.yml (logos, icons, social templates)
-9. Run file_validation checkpoint (6 checks); fix failures; advance only after all checks pass
-10. Write recovery notes to state.yml
+Structured 5-phase interactive flow with fast-forward detection for existing logos.
+Phases: Discovery, Concept Generation (20-25 SVGs), Refinement, Finalization (6 logo + 4 icon + 3 social SVGs), Optional Professional Refinement. See `references/process.md` for full step-by-step instructions.
 
 ## Findings & Execution
 
-Write progress to `.ai/projects/[name]/design/findings.md`. **2-Action Rule:** save after every 2 generation actions. Log errors to state.yml errors array. Before executing, read `references/process.md` for detailed instructions.
+Write progress to `.ai/projects/[name]/design/findings.md`. **2-Action Rule:** save after every 2 generation actions. Log errors to state.yml errors array.

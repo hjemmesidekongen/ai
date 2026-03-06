@@ -10,7 +10,17 @@ writes:
   - "src/**/*.test.tsx"
   - "src/**/*.test.ts"
 model_tier: "senior"
-checkpoint: "tests_passing_coverage_met"
+checkpoint:
+  type: code_quality_gate
+  required_checks:
+    - name: "all_tests_passing"
+      verify: "vitest run exits with 0 failures"
+      fail_action: "Fix failing tests using RED/GREEN cycle"
+    - name: "coverage_threshold_met"
+      verify: "Line coverage >= 80% on new code"
+      fail_action: "Add missing test cases for uncovered branches"
+  on_fail: "Log error to state.yml, re-run failed checks"
+  on_pass: "Update state.yml, mark TDD cycle completed"
 ---
 
 # TDD

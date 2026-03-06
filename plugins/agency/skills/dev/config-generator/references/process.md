@@ -7,13 +7,36 @@ dev-config.yml file. This is an interactive skill — every detection is
 presented to the user for confirmation before being written. The output
 file becomes the central contract that all downstream dev skills consume.
 
+## Process Summary
+
+1. Read scan results from findings.md — extract frameworks, language, package manager, architecture
+2. Transform findings into dev-config.yml schema format
+3. Present each detected framework to user for confirmation (one at a time)
+4. Resolve ambiguous detections interactively
+5. Integrate design token paths — check findings.md Design Tooling section and `.ai/projects/[name]/design/tokens/`
+6. Ask about conventions not auto-detectable (branch pattern, commit format, coverage threshold)
+7. Map package.json scripts to commands section (build, dev, test, lint, format, typecheck)
+8. Write completed dev-config.yml; present final summary and wait for confirmation
+
 ## Prerequisites
 
 Before starting, verify:
-1. `.ai/projects/[name]/dev/findings.md` exists with scan results
-2. If findings.md is missing or empty, report error and suggest re-running project-scanner
+1. `.ai/projects/[name]/dev/findings.md` exists with scan results — **OR**
+2. Greenfield mode is active (invoked with `greenfield_mode: true` by build.md)
 
-## Step 1: Load Scan Results
+If findings.md is missing and greenfield mode is NOT active, report error and suggest re-running project-scanner.
+
+## Step 0b: Greenfield Detection
+
+```
+if greenfield_mode == true:
+  # Skip Step 1 entirely — derive config from alternate sources
+  Go to Step 1b (Greenfield Config Derivation)
+else:
+  Continue to Step 1 (normal scan-based flow)
+```
+
+## Step 1: Load Scan Results (normal mode)
 
 ```
 Read .ai/projects/[name]/dev/findings.md
@@ -33,6 +56,67 @@ Extract:
 If any section is missing, note it — those fields will need to be asked directly.
 
 **Save to findings.md after this step (2-Action Rule checkpoint).**
+
+## Step 1b: Greenfield Config Derivation (greenfield mode only)
+
+When no app code exists yet, derive the config from available upstream data.
+This step replaces Step 1 and produces equivalent structured data for Steps 2-10.
+
+```
+# 1. Read brainstorm decisions
+decisions_files = Glob(".ai/brainstorm/*/decisions.yml")
+for each decisions_file:
+  Read decisions.yml
+  Extract decisions where domain includes "technical":
+    - Frameworks (NestJS, Next.js, Electron, etc.) → frameworks.runtime[]
+    - Database (Prisma, PostgreSQL, SQLite, etc.) → frameworks.database[]
+    - Architecture (monorepo, CQRS, FDD, etc.) → conventions.architecture
+    - Build tools (Turborepo, tsup, etc.) → frameworks.build[]
+    - API style (REST, MCP, WebSocket, etc.) → conventions.api_style
+    - App structure (apps/project/backend, apps/project/web, etc.) → structure
+
+# 2. Read CLAUDE.md for conventions
+Read CLAUDE.md from project root
+Extract:
+  - Package manager (pnpm, npm, yarn, bun) → conventions.package_manager
+  - Monorepo tool (Turborepo, Nx, etc.) → conventions.monorepo_tool
+  - Language (TypeScript, etc.) → conventions.language
+  - Testing requirements (Jest, Vitest, Playwright, coverage) → frameworks.testing[]
+  - Linting/formatting (ESLint, Prettier) → conventions.linter, conventions.formatter
+  - Commit format → conventions.commit_format
+  - Branch pattern → conventions.branch_pattern
+
+# 3. Read design module outputs (if present)
+if .ai/projects/[name]/design/tokens/ exists:
+  design_tokens.tailwind_config = .ai/projects/[name]/design/tokens/tailwind.config.json
+  design_tokens.css_variables = .ai/projects/[name]/design/tokens/variables.css
+  design_tokens.tokens_dtcg = .ai/projects/[name]/design/tokens/tokens.dtcg.json
+
+# 4. Read brand summary (if present)
+if .ai/projects/[name]/brand/brand-summary.yml exists:
+  Extract design system preferences (dark-mode-first, color system, typography)
+
+# 5. Derive commands from conventions
+commands.build = "{package_manager} build"
+commands.dev = "{package_manager} dev"
+commands.test = "{package_manager} test"
+commands.lint = "{package_manager} lint"
+commands.typecheck = "{package_manager} run type:check" (if TypeScript)
+
+# 6. Derive structure from decisions
+structure.src_root = "{app_path}/src"
+structure.entry_points = derived from framework (Next.js → app/, NestJS → main.ts)
+
+# 7. Write synthetic findings.md for downstream reference
+Write .ai/projects/[name]/dev/findings.md with:
+  Header: "# Greenfield Config — derived from brainstorm decisions"
+  All extracted data in the standard findings.md format
+  Note: "Generated in greenfield mode — no project-scanner pass"
+```
+
+**After deriving, continue to Step 2 with the extracted data.**
+The remaining steps (2-10) work identically — the user still confirms
+every detection interactively. The only difference is the data source.
 
 ## Step 2: Initialize Config Structure
 

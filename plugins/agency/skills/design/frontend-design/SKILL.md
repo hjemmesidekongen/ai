@@ -8,7 +8,17 @@ reads:
   - ".ai/projects/{project}/design/creative-direction.yml"
 writes: []
 model_tier: "principal"
-checkpoint: "design_rules_loaded"
+checkpoint:
+  type: data_validation
+  required_checks:
+    - name: "reference_files_loaded"
+      verify: "All 5 reference files read (anti-slop, typography, color, motion, a11y)"
+      fail_action: "Re-read missing reference files from references/"
+    - name: "constraints_internalized"
+      verify: "Agent can state Layer 1 non-negotiable rules from memory"
+      fail_action: "Re-read reference files, summarize key constraints"
+  on_fail: "Log error to state.yml, re-read references"
+  on_pass: "Update state.yml, mark design rules loaded"
 ---
 
 # Frontend Design Skill

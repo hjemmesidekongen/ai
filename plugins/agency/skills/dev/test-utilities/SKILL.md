@@ -11,7 +11,20 @@ writes:
   - "src/test/msw/"
   - "e2e/fixtures/"
 model_tier: "senior"
-checkpoint: "test_utils_available"
+checkpoint:
+  type: code_quality_gate
+  required_checks:
+    - name: "render_wrapper_exists"
+      verify: "src/test/utils.ts exports renderWithProviders()"
+      fail_action: "Create render wrapper with all required providers"
+    - name: "factories_created"
+      verify: "At least one factory function exists in src/test/factories/"
+      fail_action: "Generate factory functions from project data models"
+    - name: "msw_handlers_configured"
+      verify: "Default MSW handlers exist in src/test/msw/handlers.ts"
+      fail_action: "Create default API mock handlers from stack.yml endpoints"
+  on_fail: "Log error to state.yml, re-run failed checks"
+  on_pass: "Update state.yml, mark test utilities available"
 ---
 
 # Test Utilities

@@ -248,7 +248,7 @@ errors:
     skill: "app-copy"
     error: "slots_filled check failed — 3 slots missing copy in landing.yml"
     attempted_fix: "Reviewed layout YAML slot definitions"
-    result: "pending"
+    result: "unresolved"
     next_approach: "Re-run app-copy and regenerate copy for landing page slots"
 ```
 

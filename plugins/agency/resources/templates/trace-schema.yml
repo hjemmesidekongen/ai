@@ -1,6 +1,6 @@
 # Trace Schema
 # Defines the structure of .ai/projects/[name]/traces/[skill]-[timestamp].yml
-# Version: 1.0.0
+# Version: 1.1.0
 
 _meta:
   schema: "trace"
@@ -110,7 +110,7 @@ schema:
         type: list
         required: false
         item_type: string
-        enum_values: ["missing_input", "ambiguous_spec", "low_confidence", "schema_mismatch", "fallback_used"]
+        enum_values: ["missing_input", "ambiguous_spec", "low_confidence", "schema_mismatch", "fallback_used", "missing_layout", "path_mismatch"]
       token_estimate_step:
         type: number
         required: false
@@ -122,7 +122,7 @@ schema:
     fields:
       status:
         type: string
-        enum: ["passed", "failed"]
+        enum: ["passed", "failed", "abandoned"]
       checks_run:
         type: number
       checks_passed:

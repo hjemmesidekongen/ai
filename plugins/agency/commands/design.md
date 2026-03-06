@@ -90,7 +90,7 @@ if --force flag provided:
   Remove design_skills_to_remove from state.modules.design.completed_skills
 
   if brand_skills_to_remove:
-    state.modules.brand.status → "loaded" if brand-reference.yml exists, else "not_started"
+    state.modules.brand.status → "completed" if brand-reference.yml exists, else "not_started"
   if design_skills_to_remove:
     state.modules.design.status → "in_progress" if any design skills remain, else "not_started"
 
@@ -155,7 +155,7 @@ if start_phase == brand:
     "Run /agency:init {project_name} --brand <path> to import brand data."
     exit
 
-  # brand.status may be "loaded" (init copied brand-reference but didn't run brand-loader)
+  # brand.status may be "completed" (init copied brand-reference but didn't run brand-loader)
   # or "not_started". Either way, brand-loader needs to run.
   Update state.yml:
     modules.brand.status → in_progress
@@ -400,12 +400,15 @@ if start_phase in [brand, logo, tokens, creative, components, layout, render]:
     current_skill → visual-render
 
   Run skill: visual-render (model: principal, interactive)
-    Reads: tokens, components, layouts, nav-map, page copy, brand, creative-direction
+    Reads: tokens, components, layouts, nav-map, brand, creative-direction
+    Reads (optional): page copy from content/pages/*.yml
     Writes: render/[project].pen, render-manifest.yml, screenshots/*.png, asset-registry.yml
 
   Note: visual-render uses Pencil MCP tools. Load guidelines (landing-page or web-app
   based on project type), select style guide via tags matching brand personality,
   run full creative process. Export screenshots as first-class artifacts.
+  visual-render uses placeholder copy if /agency:content has not run yet —
+  the design pipeline is self-contained and does not require content to proceed.
 
   Run checkpoint (visual_validation, 7 checks):
     - pen_file_created
@@ -511,7 +514,7 @@ errors:
     skill: "design-tokens"
     error: "wcag_aa_body check failed — 3 color pairs below 4.5:1"
     attempted_fix: "Darkened primary-600 from #2563EB to #1D4ED8"
-    result: "pending"
+    result: "unresolved"
     next_approach: "Adjust secondary palette neutrals if contrast still fails"
 ```
 

@@ -74,8 +74,6 @@ schema:
         description: "Development — project scanning, scaffolding, building, code review"
       devops:
         description: "Deployment — CI/CD pipeline config and execution"
-      render:
-        description: "Visual rendering — Pencil .pen designs from agency specs"
 
   # ─────────────────────────────────────────
   # Current execution context
@@ -222,9 +220,6 @@ example:
       status: "not_started"
       completed_skills: []
     devops:
-      status: "not_started"
-      completed_skills: []
-    render:
       status: "not_started"
       completed_skills: []
   current_module: "design"
