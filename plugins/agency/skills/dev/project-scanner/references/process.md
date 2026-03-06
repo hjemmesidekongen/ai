@@ -9,6 +9,30 @@ config files > package.json deps > import patterns > directory structure.
 
 **Output path:** `.ai/projects/[name]/dev/findings.md`
 
+## Step 0.5: Read Active Profile
+
+Before scanning, check if an active profile exists to pre-load stack defaults
+and shared config references.
+
+```
+Read .ai/agency.yml to find active profile name
+If profile specified:
+  Read .ai/profiles/{profile-name}.yml
+  Extract:
+    - stack_defaults (framework, css, component_library, animation, icons)
+    - shared_configs (list of @repo/* packages to expect)
+    - negotiation mode (confirm vs full)
+If no profile or file missing:
+  Continue without defaults — all values detected from scan
+```
+
+Profile data is used later:
+- In shared config detection (Step 13.5) to cross-reference expected vs found packages
+- In workspace scan (Step 12) to prioritize what to look for in sibling projects
+- By config-generator to pre-fill stack negotiation
+
+**Save profile data to findings after this step (2-Action Rule checkpoint).**
+
 ## Step 1: Read package.json
 
 ```
@@ -236,9 +260,118 @@ Check for:
 
 **Save to findings after Step 11 (2-Action Rule checkpoint).**
 
-## Step 12: Compile Results
+## Step 12: Workspace Scan
 
-Compile all detections into the findings.md format:
+Scan sibling directories (projects in the same parent folder) to build workspace
+context. This helps stack negotiation understand the broader environment.
+
+```
+Determine workspace root:
+  parent_dir = dirname(project_root)
+
+List sibling directories:
+  ls parent_dir — filter out hidden dirs and non-project dirs
+
+For each sibling directory (max 10):
+  Check for package.json:
+    - Read name, framework deps (next, nuxt, vite, etc.)
+    - Note primary language (tsconfig.json → TS, go.mod → Go, etc.)
+  Check for lock file:
+    - Determine package manager
+  Check for monorepo indicators:
+    - turbo.json, nx.json, workspaces field
+
+Record each sibling as:
+  - name: [dir name]
+  - stack: [framework + language]
+  - package_manager: [detected]
+  - monorepo: [true/false]
+```
+
+If workspace root is a monorepo itself, also scan `apps/` and `packages/`:
+- Each app's stack and dependencies
+- Shared packages and their purposes
+
+**Save to findings after Step 12 (2-Action Rule checkpoint).**
+
+## Step 13: MCP Server Discovery
+
+Detect MCP (Model Context Protocol) servers configured in the project or user
+environment. These are surfaced as recommendations during stack negotiation.
+
+```
+Check for MCP config files (in order of precedence):
+  1. .mcp.json at project root
+  2. mcp.json at project root
+  3. .cursor/mcp.json at project root
+  4. ~/.config/claude/claude_desktop_config.json (user-level)
+
+For each config file found:
+  Parse JSON
+  Extract mcpServers object
+  For each server entry:
+    - name: [server key]
+    - command: [how it's launched]
+    - args: [arguments]
+    - type: "stdio" or "sse" (from transport config)
+    - scope: "project" or "user" (based on where found)
+
+Classify servers by capability:
+  - Database: neon, supabase, planetscale, prisma
+  - Design: figma, pencil
+  - Deployment: vercel, netlify, cloudflare
+  - Communication: slack, linear, github
+  - Storage: s3, cloudinary
+  - Other: [any unrecognized]
+```
+
+Record even if no servers found — write "none found" to make the check explicit.
+
+**Save to findings after Step 13 (2-Action Rule checkpoint).**
+
+## Step 13.5: Shared Config Package Detection
+
+In monorepo/turborepo setups, discover shared config packages that must be
+extended (never duplicated) by new projects in the workspace.
+
+```
+If monorepo detected (from Step 5):
+  Scan packages/ directory:
+    ls packages/ — look for config-related packages
+
+  Common patterns to detect:
+    - @repo/eslint-config or packages/eslint-config
+    - @repo/typescript-config or packages/typescript-config
+    - @repo/tailwind-config or packages/tailwind-config
+    - @repo/prettier-config or packages/prettier-config
+    - @repo/ui (shared component library)
+    - @repo/utils (shared utilities)
+
+  For each found package:
+    Read its package.json:
+      - name: [package name, e.g., @repo/eslint-config]
+      - path: [relative path, e.g., packages/eslint-config]
+      - purpose: [inferred from name and deps]
+      - exports: [main/exports field — what it provides]
+
+  Cross-reference with profile:
+    If active profile has shared_configs list:
+      - Mark each profile-listed config as "expected"
+      - Flag any expected configs NOT found in packages/ as "missing"
+      - Flag any found configs NOT in profile as "discovered"
+
+If NOT a monorepo:
+  Record "Not a monorepo — shared config detection skipped"
+  If profile lists shared_configs, note: "Profile expects shared configs but
+  project is not a monorepo — verify profile selection"
+```
+
+**Save to findings after Step 13.5 (2-Action Rule checkpoint).**
+
+## Step 14: Compile Results
+
+Compile all detections (including workspace, MCP, and shared config data) into
+the findings.md format:
 
 ```markdown
 ## Project Scan Findings
@@ -295,6 +428,32 @@ Compile all detections into the findings.md format:
 - Commit pattern: [description]
 - Branch pattern: [description]
 
+### Active Profile
+- Profile: [name or "none"]
+- Stack defaults: [framework, css, etc. or "none — full negotiation"]
+- Shared configs (expected): [list from profile or "none"]
+
+### Workspace Context
+- Workspace root: [parent directory path]
+- Sibling projects:
+  - [name]: [stack] ([package manager], monorepo: [yes/no])
+- Common patterns: [shared tech across siblings, e.g., "all use pnpm + TypeScript"]
+
+### MCP Servers
+- Config source: [file path or "none found"]
+- Servers:
+  - [name]: [type] (scope: [project/user], capability: [category])
+- Recommendations: [servers relevant to detected stack]
+
+### Shared Config Packages
+- Monorepo: [yes/no]
+- Found packages:
+  - [name]: [path] (purpose: [description])
+- Profile cross-reference:
+  - Expected and found: [list]
+  - Expected but missing: [list]
+  - Found but not in profile: [list]
+
 ### Ambiguous Detections
 - [observation]: [possible interpretations]
 ```
@@ -329,8 +488,11 @@ When errors occur during scanning:
 **Stage 1 — Spec Compliance (Haiku):**
 Run spec-compliance-reviewer. Checks:
 - findings.md exists and is non-empty at `.ai/projects/[name]/dev/findings.md`
-- Contains required sections (Detected Frameworks, Language, Package Manager, Design Tooling, Brand Files)
+- Contains required sections (Detected Frameworks, Language, Package Manager, Design Tooling, Brand Files, Workspace Context, MCP Servers, Shared Config Packages)
 - At least 3 config file paths listed (found or not-found)
+- Workspace Context section present (even if empty)
+- MCP Servers section present (servers listed or "none found")
+- Shared Config Packages section present (packages listed or "not a monorepo")
 - state.yml updated if errors occurred
 
 If FAIL: fix structural issues. Do NOT proceed to Stage 2.
@@ -342,6 +504,9 @@ Only after Stage 1 passes. Checks:
 - Confidence levels appropriate (strong signals → high, weak → low)
 - Design tooling detection thorough (Tailwind theme, token file formats noted)
 - Brand file detection accurate (correct path recorded if found)
+- Workspace scan covers sibling projects (not just current project)
+- MCP servers correctly classified by capability
+- Shared config packages cross-referenced with profile (if profile active)
 - Ambiguous detections properly flagged
 
 If FAIL: address quality issues.

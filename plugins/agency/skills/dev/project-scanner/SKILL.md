@@ -2,20 +2,19 @@
 name: project-scanner
 user-invocable: false
 description: >
-  Static analysis of a project to detect frameworks, language, package manager,
-  architecture patterns, testing tools, linting, key directories, design tooling
-  (Tailwind, CSS variables, Storybook, design tokens), and existing brand files.
-  Produces structured scan results consumed by config-generator. Use when
-  initializing a project via /agency:dev:init, detecting the project stack,
-  scanning for design system files, or checking for existing brand-reference.yml.
+  Static analysis of project + workspace: frameworks, language, pkg manager,
+  architecture, testing, linting, design tooling, brand files, MCP servers,
+  shared config packages, and sibling project stacks. Profile-aware — reads
+  active profile for defaults. Output consumed by config-generator.
 phase: 1
 depends_on: []
 writes:
   - ".ai/projects/[name]/dev/findings.md#project-scan"
 reads:
-  - "package.json"
-  - "tsconfig.json, go.mod, Cargo.toml, pyproject.toml"
+  - "package.json, tsconfig.json, go.mod, Cargo.toml, pyproject.toml"
   - "Config files: next.config.*, vite.config.*, tailwind.config.*, etc."
+  - ".ai/profiles/*.yml, .mcp.json, mcp.json, .cursor/mcp.json"
+  - "packages/*/package.json (shared config detection)"
 model_tier: junior
 model: haiku
 checkpoint:
@@ -39,41 +38,43 @@ checkpoint:
     - name: "findings_exist"
       verify: "findings.md exists at .ai/projects/[name]/dev/findings.md with scan results"
       fail_action: "Write current scan results to findings.md immediately"
+    - name: "workspace_scanned"
+      verify: "findings.md contains Workspace Context section (even if empty)"
+      fail_action: "Scan parent dir for sibling projects; write to Workspace Context"
+    - name: "mcp_servers_checked"
+      verify: "findings.md contains MCP Servers section (servers listed or 'none found')"
+      fail_action: "Check .mcp.json, mcp.json, .cursor/mcp.json for server definitions"
+    - name: "shared_configs_checked"
+      verify: "findings.md contains Shared Config Packages section (even if not monorepo)"
+      fail_action: "Scan packages/ for config packages; write results or 'not a monorepo'"
   on_fail: "Fix issues and re-run checkpoint. Do not advance until all checks pass."
   on_pass: "Update state.yml, write recovery_notes, advance to next phase."
 ---
 
 # Project Scanner
 
-Phase 1 of /agency:dev:init. Static analysis of the project's stack, conventions, architecture, design tooling, and brand files. Output feeds config-generator (Phase 2) via findings.md.
+Phase 1 of /agency:dev:init. Static analysis of project stack, workspace context, MCP servers, and shared configs. Profile-aware. Output feeds config-generator (Phase 2) via findings.md.
 
 ## Context
 | Aspect | Details |
 |--------|---------|
-| **Reads** | Project source files via Glob, Grep, and Read |
+| **Reads** | Project files, profiles, MCP configs, sibling projects via Glob/Grep/Read |
 | **Writes** | `.ai/projects/[name]/dev/findings.md` |
-| **Checkpoint** | data_validation: framework, language, package manager, config files, design tooling, findings.md |
-| **Dependencies** | None — first skill in the init flow |
+| **Checkpoint** | 9 checks: framework, language, pkg manager, configs, design, findings, workspace, MCP, shared configs |
+| **Dependencies** | None — first skill in init flow (reads profile if available) |
 ## Process Summary
 
-1. Read package.json — extract dependencies, devDependencies, scripts
-2. Glob for known config files (next.config.*, vite.config.*, turbo.json, etc.)
-3. Detect language (tsconfig.json → TypeScript, go.mod → Go, etc.)
-4. Detect package manager from lock files (pnpm-lock.yaml, yarn.lock, bun.lockb, package-lock.json)
-5. Detect architecture pattern (monorepo, Next.js router style, SvelteKit/Remix routes)
-6. Detect testing, linting, and formatting tools from config files
-7. Map src structure — entry points, key directories, component libraries
-8. **Detect design tooling** — Tailwind, CSS variables, Storybook, design token files
-9. **Detect brand files** — check for brand-reference.yml in project root and .ai/
-10. Detect git conventions from recent commits and .github/ templates
-11. Save findings following 2-Action Rule; run checkpoint (up to 3 fix rounds)
+1. Read active profile from `.ai/profiles/` — load stack defaults and shared config refs
+2. Read package.json, glob config files, detect language + pkg manager + architecture
+3. Detect testing, linting, formatting; map src structure
+4. Detect design tooling (Tailwind, CSS vars, Storybook, tokens) and brand files
+5. Detect git conventions from commits and .github/ templates
+6. **Workspace scan** — scan sibling dirs for tech stacks of other projects
+7. **MCP server discovery** — check .mcp.json, mcp.json, .cursor/mcp.json
+8. **Shared config detection** — find @repo/* config packages in packages/
+9. Save findings (2-Action Rule); run checkpoint (up to 3 fix rounds)
 
-## Findings Persistence
-
-Write to `.ai/projects/[name]/dev/findings.md`. **2-Action Rule:** After every 2 reads or Glob/Grep calls, save findings immediately.
-
-## Error Logging
-Log errors to state.yml errors array. Check errors before retrying — never repeat a failed approach.
-
-## Execution
-Follow the detailed process in [references/process.md](references/process.md).
+## Rules
+- **Findings:** Write to `.ai/projects/[name]/dev/findings.md`. **2-Action Rule:** save after every 2 operations.
+- **Errors:** Log to state.yml errors array. Check before retrying — never repeat a failed approach.
+- **Execution:** Follow [references/process.md](references/process.md).
