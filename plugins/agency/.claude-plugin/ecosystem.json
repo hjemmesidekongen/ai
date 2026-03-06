@@ -14,10 +14,52 @@
   ],
   "skills": {
     "brand": ["brand-loader"],
-    "design": ["logo-assets", "asset-registry", "design-tokens", "component-specs", "web-layout", "visual-render"],
+    "design": [
+      "logo-assets",
+      "asset-registry",
+      "design-tokens",
+      "component-specs",
+      "web-layout",
+      "visual-render",
+      "creative-direction",
+      "frontend-design",
+      "implementation-guide"
+    ],
     "content": ["app-copy", "ux-writing"],
-    "dev": ["project-scanner", "config-generator", "storybook-generator", "scaffold", "feature-decomposer", "team-planner", "agent-dispatcher", "completion-gate", "code-review", "qa-validation", "brainstorm-session", "brainstorm-decision-writer", "decision-reader"],
-    "devops": ["deploy-config", "deploy-execute"]
+    "dev": [
+      "project-scanner",
+      "config-generator",
+      "storybook-generator",
+      "scaffold",
+      "feature-decomposer",
+      "team-planner",
+      "agent-dispatcher",
+      "completion-gate",
+      "code-review",
+      "qa-validation",
+      "brainstorm-session",
+      "brainstorm-decision-writer",
+      "decision-reader",
+      "stack-negotiation",
+      "tdd",
+      "test-utilities",
+      "e2e-testing",
+      "code-audit",
+      "error-logging",
+      "analytics",
+      "visual-verification"
+    ],
+    "devops": ["deploy-config", "deploy-execute", "observability"]
+  },
+  "codex": {
+    "_note": "Stack-specific reference files loaded by build.md based on stack.yml. Not invocable skills.",
+    "files": ["react.md", "tailwind.md", "nextjs.md", "typescript.md", "motion-dev.md"],
+    "path": "skills/dev/codex/"
+  },
+  "profiles": {
+    "_note": "User profiles controlling feature toggles (TDD, e2e, visual verification, code audit).",
+    "path": ".ai/profiles/",
+    "files": ["personal.yml", "work.yml"]
   },
   "agents": {
     "dev": {
