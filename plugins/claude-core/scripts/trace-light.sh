@@ -21,7 +21,7 @@ TOOL="${TOOL%%\"*}"
 
 # status — check for error signals in one grep call
 STATUS="success"
-if echo "$INPUT" | grep -qi '"is_error":true\|"error":\|"not found"\|"No such file"' 2>/dev/null; then
+if echo "$INPUT" | grep -qi '"is_error": *true\|"error":\|"not found"\|"No such file"\|Permission denied\|command not found\|ENOENT\|EACCES' 2>/dev/null; then
   STATUS="error"
 fi
 
@@ -46,7 +46,13 @@ case "$TOOL" in
   Bash)
     case "$INPUT" in *'"command":"'*)
       CONTEXT="${INPUT#*\"command\":\"}"
-      CONTEXT="${CONTEXT%%\"*}" ;; esac
+      # Cut at JSON structural boundary instead of interior escaped quotes
+      tmp="${CONTEXT%%\",\"*}"; tmp2="${CONTEXT%%\"\}*}"
+      [ ${#tmp2} -lt ${#tmp} ] && tmp="$tmp2"
+      CONTEXT="$tmp"
+      # Unescape JSON quotes
+      CONTEXT="${CONTEXT//\\\"/\"}"
+      ;; esac
     [ ${#CONTEXT} -gt 80 ] && CONTEXT="${CONTEXT:0:77}..." ;;
   Grep|Glob)
     case "$INPUT" in *'"pattern":"'*)
@@ -56,6 +62,20 @@ case "$TOOL" in
     case "$INPUT" in *'"skill":"'*)
       CONTEXT="${INPUT#*\"skill\":\"}"
       CONTEXT="${CONTEXT%%\"*}" ;; esac ;;
+  Agent)
+    case "$INPUT" in *'"description":"'*)
+      CONTEXT="${INPUT#*\"description\":\"}"
+      tmp="${CONTEXT%%\",\"*}"; tmp2="${CONTEXT%%\"\}*}"
+      [ ${#tmp2} -lt ${#tmp} ] && tmp="$tmp2"
+      CONTEXT="$tmp" ;; esac
+    if [ -z "$CONTEXT" ]; then
+      case "$INPUT" in *'"prompt":"'*)
+        CONTEXT="${INPUT#*\"prompt\":\"}"
+        tmp="${CONTEXT%%\",\"*}"; tmp2="${CONTEXT%%\"\}*}"
+        [ ${#tmp2} -lt ${#tmp} ] && tmp="$tmp2"
+        CONTEXT="$tmp" ;; esac
+    fi
+    [ ${#CONTEXT} -gt 80 ] && CONTEXT="${CONTEXT:0:77}..." ;;
   *)
     case "$INPUT" in *'"file_path":"'*)
       CONTEXT="${INPUT#*\"file_path\":\"}"
@@ -63,7 +83,11 @@ case "$TOOL" in
     if [ -z "$CONTEXT" ]; then
       case "$INPUT" in *'"command":"'*)
         CONTEXT="${INPUT#*\"command\":\"}"
-        CONTEXT="${CONTEXT%%\"*}" ;; esac
+        tmp="${CONTEXT%%\",\"*}"; tmp2="${CONTEXT%%\"\}*}"
+        [ ${#tmp2} -lt ${#tmp} ] && tmp="$tmp2"
+        CONTEXT="$tmp"
+        CONTEXT="${CONTEXT//\\\"/\"}"
+        ;; esac
     fi ;;
 esac
 
@@ -76,7 +100,18 @@ CONTEXT="${CONTEXT//|//}"
 TRACE_DIR=".ai/traces"
 [ ! -d "$TRACE_DIR" ] && mkdir -p "$TRACE_DIR" 2>/dev/null
 
+# Log rotation — date-based (one read + conditional mv)
+TRACE_FILE="${TRACE_DIR}/trace-light.log"
+if [ -f "$TRACE_FILE" ]; then
+  read -r FIRST_LINE < "$TRACE_FILE"
+  FIRST_DATE="${FIRST_LINE%%T*}"
+  TODAY="${TS%%T*}"
+  if [ -n "$FIRST_DATE" ] && [ "$FIRST_DATE" != "$TODAY" ]; then
+    mv "$TRACE_FILE" "${TRACE_DIR}/trace-light-${FIRST_DATE}.log" 2>/dev/null
+  fi
+fi
+
 # Append trace entry
-echo "${TS}|${TOOL}|${STATUS}|${DURATION}|${CONTEXT}" >> "${TRACE_DIR}/trace-light.log" 2>/dev/null
+echo "${TS}|${TOOL}|${STATUS}|${DURATION}|${CONTEXT}" >> "$TRACE_FILE" 2>/dev/null
 
 exit 0

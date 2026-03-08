@@ -162,6 +162,14 @@ Two levels, always-on light + opt-in full:
 entries with: explanation, reproduction, expected vs actual, severity, fix
 suggestion. Captured in the moment, not after the fact.
 
+### Relationship to Agency Traces
+
+Agency traces are domain-skill observability — per-skill decisions, uncertainty flags,
+and reflections stored in `.ai/projects/<name>/traces/`. Claude-core traces are universal
+tool-level logging in `.ai/traces/`. The two systems are independent and complementary:
+claude-core captures what happened (every tool invocation), agency captures why it
+happened (skill-level reasoning within a project context).
+
 ## Version Policy
 
 - Semver: `MAJOR.MINOR.PATCH`
