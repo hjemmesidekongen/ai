@@ -1,0 +1,409 @@
+project: "streamline-local-claude-workflow"
+session_date: "2026-03-08"
+decided_by: "user + claude"
+
+decisions:
+
+  # ============================================================
+  # ARCHITECTURE
+  # ============================================================
+
+  - id: D-001
+    domain: architecture
+    title: "Split into multiple independent plugins"
+    decision: >
+      Replace the monolithic agency plugin with multiple independent plugins:
+      claude-core (foundation), claude-toolkit (builder tools), and domain
+      plugins (development, marketing, devops). Each domain plugin depends
+      only on claude-core, never on other domain plugins.
+    confidence: high
+    context: >
+      The agency plugin became too tightly coupled — 85+ skills with
+      cross-dependencies. Removing one feature required touching 10+ files.
+      The new architecture enforces isolation: plugins can only reference
+      claude-core, and the orchestrator/planner can dispatch across plugins.
+    alternatives_considered:
+      - "Keep agency plugin, refactor internally — rejected: still one monolith"
+      - "Fully flat skills with no plugins — rejected: no grouping, no shared state"
+
+  - id: D-002
+    domain: architecture
+    title: "Claude Core vs Claude Toolkit split"
+    decision: >
+      Split the foundation into two plugins:
+      - claude-core: always-loaded essentials (tracing, memory, planning,
+        brainstorm, agent orchestration, roadmap, CLAUDE.md management)
+      - claude-toolkit: builder/meta tools loaded only when building Claude
+        infrastructure (skill create/enhance/audit, plugin create/audit,
+        command/hook create/audit, A/B testing)
+    confidence: high
+    context: >
+      Prevents token tax — a marketing session shouldn't load skill-creation
+      tools. Core is always available; toolkit is opt-in.
+
+  - id: D-003
+    domain: architecture
+    title: "No cross-plugin references"
+    decision: >
+      Plugins must not reference each other directly. Only claude-core can
+      be referenced by other plugins. Cross-domain flows are orchestrated
+      by the planner (e.g., dev finishes → plan says deploy with devops).
+      Outputs are "isolated enrichments" — marketing generates files that
+      dev CAN read but doesn't DEPEND on.
+    confidence: high
+    context: >
+      If we uninstall devops, dev still works — we just lose the deploy
+      capability. Each plugin is removable without breaking others.
+
+  - id: D-004
+    domain: architecture
+    title: "CLAUDE.md as the connection layer between plugins"
+    decision: >
+      Project-level CLAUDE.md contains pointers to project artifacts
+      (brand files, design tokens, etc.) so plugins can find relevant
+      data without knowing about each other. E.g., "Brand X files at
+      .ai/projects/X/brand/" with a brand.md index of assets, tone, etc.
+    confidence: high
+    context: >
+      Plugins produce artifacts in known locations. CLAUDE.md points to
+      them. Any plugin can follow the pointer without importing another plugin.
+
+  # ============================================================
+  # CLAUDE.MD MANAGEMENT
+  # ============================================================
+
+  - id: D-005
+    domain: quality
+    title: "CLAUDE.md guardian hook"
+    decision: >
+      Every edit to any CLAUDE.md file triggers a validation hook that:
+      1. Checks for contradictions with existing rules
+      2. Checks for redundancy
+      3. Evaluates potential consequences
+      4. Considers alternative approaches
+      5. Only commits the change if validation passes
+    confidence: high
+    context: >
+      CLAUDE.md is the boot sequence — loaded at every session start.
+      A bad instruction cascades into everything. This is the "immune
+      system" for the most sensitive file in the workspace.
+
+  # ============================================================
+  # MEMORY
+  # ============================================================
+
+  - id: D-006
+    domain: memory
+    title: "Three-file memory architecture"
+    decision: >
+      Memory is structured across three files with distinct purposes:
+      1. CLAUDE.md — rules, behaviors, instructions (always loaded)
+      2. MEMORY.md — facts, preferences, pointers (<150 lines, always loaded)
+      3. decisions.yml — reasoning and context (on-demand, not auto-loaded)
+      Plus roadmap.yml for future ideas.
+    confidence: high
+    context: >
+      Keeps session boot cost constant. Deep knowledge is available when
+      needed but doesn't pollute every conversation. No vector DB, no
+      graph RAG — flat files with discipline.
+
+  - id: D-007
+    domain: memory
+    title: "Memory pruning and graduation"
+    decision: >
+      - MEMORY.md hard cap: 150 lines
+      - Entries that become skills or CLAUDE.md rules get deleted (graduated)
+      - Daily cron checks for bloat and stale entries (>30 days unreferenced)
+      - Not everything user says is an instruction — distinguish thinking-out-loud
+        from decisions from preferences
+    confidence: high
+    context: >
+      Goal is "smarter without fatter." Memory should be lean, correct,
+      and high-signal. Bloated memory is worse than no memory.
+
+  # ============================================================
+  # TRACING & LOGGING
+  # ============================================================
+
+  - id: D-008
+    domain: observability
+    title: "Two-level tracing: light always-on, full opt-in"
+    decision: >
+      - Light tracing: always enabled. Timestamp, what ran, pass/fail,
+        duration, error summary. Append-only log, near-zero cost.
+      - Full tracing: opt-in via trace:full command. Adds decision trace
+        (why this approach), intermediate outputs, file changes, token
+        usage. Structured YAML per session.
+    confidence: high
+    context: >
+      Light tracing is cheap observability. Full tracing is for active
+      development where we need to debug decisions and replay reasoning.
+
+  - id: D-009
+    domain: observability
+    title: "Real-time error annotation"
+    decision: >
+      When errors occur during development, Claude must immediately capture:
+      - Brief explanation of the error
+      - Reproduction steps
+      - Expected vs actual output
+      - Severity grading
+      - Suggested fix
+      This happens in the moment, not rationalized after the fact.
+    confidence: high
+    context: >
+      Errors described at the moment of occurrence are more accurate than
+      retrospective analysis. This also prevents context loss between
+      sub-agents — the error log becomes shared knowledge.
+
+  - id: D-010
+    domain: observability
+    title: "Pre-completion trace review hook"
+    decision: >
+      Before a task transitions from "in progress" to "done," a hook reads
+      the trace log for that task, filters for errors/warnings, and:
+      - Blocks completion if critical errors found (surfaces them for review)
+      - Reports minor issues for accept/review decision
+      - Passes cleanly if no issues
+    confidence: high
+    context: >
+      Quality gate that uses trace data already collected. Free to run
+      since the data exists. Prevents shipping known issues.
+
+  # ============================================================
+  # ROADMAP
+  # ============================================================
+
+  - id: D-011
+    domain: planning
+    title: "Structured roadmap.yml with auto-capture"
+    decision: >
+      A single .ai/roadmap.yml file tracks all future ideas, deferred
+      features, and improvement opportunities. Each item has: id, title,
+      description, category, target plugin, priority (now/next/later/backlog),
+      source, date, tags. Claude auto-captures out-of-scope ideas during
+      any conversation without being asked.
+    confidence: high
+    context: >
+      Ideas surface everywhere — brainstorms, implementation sessions,
+      random conversations — and disappear into transcripts. Structured
+      YAML is searchable by category/tag/plugin/priority. Auto-capture
+      ensures nothing is lost.
+
+  # ============================================================
+  # BUILD METHODOLOGY
+  # ============================================================
+
+  - id: D-012
+    domain: methodology
+    title: "Re-implement, don't port"
+    decision: >
+      When migrating functionality from agency to claude-core, do NOT
+      copy-paste. Instead:
+      1. Audit the existing version (what it does, what it achieves, weaknesses)
+      2. Ask: what's the ideal version with current knowledge?
+      3. Build MVP — minimum that works well
+      4. Document what's deferred to iteration 2 (in roadmap.yml)
+      5. Capture improvement ideas while building
+      Take inspiration from existing code when relevant, but don't default
+      to the same approach.
+    confidence: high
+    context: >
+      Claude is smarter now, has better capabilities, and we learned from
+      the agency build. Porting preserves old design decisions. Re-implementing
+      gives us a chance to do it right.
+
+  - id: D-013
+    domain: methodology
+    title: "One skill at a time, thoroughly tested"
+    decision: >
+      Build one skill, test it with A/B split testing (Anthropic's create-skill
+      approach), store test results alongside the skill, verify it works
+      properly, then move to the next. Each skill must pass testing before
+      the next one begins. Skills are re-testable — we can revisit and
+      retest quality at any time.
+    confidence: high
+    context: >
+      The agency plugin built 85 steps before validating the foundation.
+      That's how we ended up with coupling and untested assumptions.
+
+  - id: D-014
+    domain: methodology
+    title: "Remove from agency after successful migration"
+    decision: >
+      Agency plugin stays installed as scaffolding during migration. When
+      a skill is re-implemented in claude-core and tested, delete it from
+      agency. Agency's skill count shrinks until it's empty and we delete
+      the plugin entirely. Use agency's existing planning/brainstorm while
+      building their replacements.
+    confidence: high
+    context: >
+      Ship of Theseus — every piece gets replaced, but the ship keeps
+      sailing. At no point are we half-migrated in a broken state.
+
+  - id: D-015
+    domain: methodology
+    title: "Source attribution for ported/inspired skills"
+    decision: >
+      Every skill inspired by or ported from an external source gets a
+      _source block in its SKILL.md frontmatter:
+      origin URL, ported date, version hash, modifications summary.
+      Enables checking for upstream updates in 6 months.
+    confidence: high
+    context: >
+      User wants to track where skills came from and whether upstream
+      versions have been updated since porting.
+
+  # ============================================================
+  # DOCUMENTATION
+  # ============================================================
+
+  - id: D-016
+    domain: documentation
+    title: "Self-documenting: both user and developer docs"
+    decision: >
+      Claude auto-updates documentation as implementation progresses:
+      - User-facing: onboarding guides, how-to, FAQ (plain language, numbered steps)
+      - Developer-facing: how internals work, architecture decisions
+      Updated at task completion, not as an afterthought.
+    confidence: high
+    context: >
+      User has ADHD and finds it difficult to remember implementation
+      details across sessions. Documentation must be maintained as a
+      first-class concern, not a separate task.
+
+  # ============================================================
+  # UI & STATUS
+  # ============================================================
+
+  - id: D-017
+    domain: ux
+    title: "Status bar integration"
+    decision: >
+      Claude Code status line shows at-a-glance project state:
+      - Active project name
+      - Trace level (light/full)
+      - Memory usage (lines/150 cap)
+      - Roadmap item count
+      - Missing initialization warning
+    confidence: medium
+    context: >
+      Small build effort, high daily value. Makes invisible state visible.
+
+  # ============================================================
+  # CRON / AUTOMATION
+  # ============================================================
+
+  - id: D-018
+    domain: automation
+    title: "Scheduled maintenance crons"
+    decision: >
+      Use /loop for recurring maintenance:
+      - Daily: memory health check (MEMORY.md bloat, stale entries)
+      - Daily: trace cleanup (expire old light trace entries)
+      - Weekly: roadmap review prompt (promote backlog items?)
+      - Session start: CLAUDE.md validation (hook, not cron)
+    confidence: medium
+    context: >
+      Keeps the system healthy without manual intervention. Low-cost
+      background maintenance.
+
+  # ============================================================
+  # PLANNING & BRAINSTORM
+  # ============================================================
+
+  - id: D-019
+    domain: planning
+    title: "Planning and brainstorm live in claude-core"
+    decision: >
+      Planning (create/execute/status/resume) and brainstorm (start/decide)
+      are core capabilities, not separate plugins. All work should be
+      planned the same way regardless of domain. All plugins should be
+      able to read brainstorm decisions.
+    confidence: high
+    context: >
+      If planning is outside core, domain plugins can't reference it
+      (violates the no-cross-reference rule). Planning and brainstorm
+      are domain-agnostic operational tools.
+
+  - id: D-020
+    domain: planning
+    title: "Simplified planning — no fragmented skills"
+    decision: >
+      Planning is 4 commands, not 9 skills:
+      - plan:create (wave decomposition is internal, not a separate skill)
+      - plan:execute (verification is inline, not a separate skill)
+      - plan:status
+      - plan:resume
+      Brainstorm is 2 commands: start, decide.
+      Decision reading is just file reading, not a skill.
+    confidence: high
+    context: >
+      Current task-planner fragments simple operations into too many
+      skills (wave-decomposer, file-ownership, verification-runner,
+      spec-compliance-reviewer, qa-reviewer). Debugging across 9 files
+      is the entanglement we're escaping.
+
+  # ============================================================
+  # BUILD ORDER
+  # ============================================================
+
+  - id: D-021
+    domain: planning
+    title: "Five-phase build order"
+    decision: >
+      Phase 1 — Foundation (new capabilities):
+        0. Architecture doc (the contract)
+        1. Plugin scaffold (claude-core)
+        2. Status bar integration
+        3. CLAUDE.md guardian (validation hook)
+        4. Tracing (both levels + error annotation + pre-completion hook)
+        5. Memory discipline (rules, pruning, cron)
+      Phase 2 — Operational (replace agency equivalents):
+        6. Roadmap capture (auto + add/view + weekly cron)
+        7. Planning (re-implemented from scratch)
+        8. Brainstorm (re-implemented from scratch)
+      Phase 3 — Enhancement:
+        9. Project scan/init
+        10. Self-documenting
+        11. Agent orchestration
+        12. Source attribution
+      Phase 4 — Claude Toolkit (separate plugin):
+        13. Skill create + A/B testing + audit
+        14. Plugin/Command/Hook create + audit
+      Phase 5 — Domain Plugins (re-implemented one at a time):
+        15+. Development, Marketing, DevOps
+      Use agency's existing tools as scaffolding throughout.
+    confidence: high
+    context: >
+      CLAUDE.md guardian before tracing (tracing writes to CLAUDE.md).
+      Tracing before everything else (all subsequent work is observable).
+      Planning before Phase 3 (we use it to plan the rest). Agency stays
+      installed as scaffolding until fully replaced.
+
+  # ============================================================
+  # DROPPED / DEFERRED
+  # ============================================================
+
+  - id: D-022
+    domain: architecture
+    title: "Claude AI web UI portability — deferred"
+    decision: >
+      Not pursuing Claude AI compatibility for now. Skills and plugins
+      are Claude Code only. May revisit later (MCP bridge approach).
+    confidence: high
+    context: >
+      User explicitly said "forget about Claude AI" for now.
+
+  - id: D-023
+    domain: observability
+    title: "Database-backed tracing UI (Blik) — deferred"
+    decision: >
+      Full tracing UI with database storage, expiry, duplicate detection,
+      status management, and task conversion is on the Blik roadmap, not
+      the claude-core roadmap. Claude-core provides file-based tracing;
+      Blik will eventually consume it.
+    confidence: high
+    context: >
+      Blik is a separate project (mission planner for Claude Code).
+      Tracing integration is a future Blik feature, not a core feature.

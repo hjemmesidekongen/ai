@@ -1,0 +1,23 @@
+project: "streamline-local-claude-workflow"
+sessions:
+  - date: "2026-03-08"
+    transcript: "brainstorm-transcript-2026-03-08.md"
+    duration_minutes: 90
+    topics_explored:
+      - "Plugin architecture — monolith vs independent plugins"
+      - "Claude Core vs Claude Toolkit split"
+      - "CLAUDE.md as connection layer with guardian hook"
+      - "Memory architecture — three files, pruning discipline"
+      - "Two-level tracing with error annotation"
+      - "Roadmap auto-capture system"
+      - "Re-implement vs port methodology"
+      - "Build order — five phases"
+      - "Pre-completion trace review hook"
+      - "Self-documenting (user + dev docs)"
+      - "Status bar integration"
+      - "Cron jobs for maintenance"
+      - "Agency as scaffolding during migration"
+      - "Source attribution for ported skills"
+      - "Backup folder as inspiration source"
+    decisions_extracted: true
+active: false

@@ -1,0 +1,794 @@
+# ============================================================
+# ROADMAP — Claude Local Workflow
+# ============================================================
+# Single source of truth for all future work across all plugins.
+# Items are auto-captured during conversations and manually added.
+# Filter by: category, plugin, priority, tags
+#
+# Priority levels:
+#   now     — actively being built
+#   next    — queued for after current work
+#   later   — planned but not urgent
+#   backlog — good idea, no timeline
+# ============================================================
+
+items:
+
+  # ============================================================
+  # PHASE 1 — FOUNDATION (now)
+  # ============================================================
+
+  - id: RL-001
+    title: "Architecture doc — claude-core contract"
+    description: "Single-page architecture document defining plugin.json structure, directory layout, naming conventions, hook patterns. The contract everything conforms to."
+    category: core
+    plugin: claude-core
+    priority: now
+    source: "brainstorm/streamline-local-claude-workflow"
+    added: "2026-03-08"
+    tags: [architecture, foundation, phase-1]
+
+  - id: RL-002
+    title: "Plugin scaffold — claude-core"
+    description: "Empty plugin shell: plugin.json, directory structure, initial CLAUDE.md rules."
+    category: core
+    plugin: claude-core
+    priority: now
+    source: "brainstorm/streamline-local-claude-workflow"
+    added: "2026-03-08"
+    tags: [scaffold, foundation, phase-1]
+
+  - id: RL-003
+    title: "Status bar integration"
+    description: "Configure Claude Code status line to show: active project, trace level (light/full), memory usage (lines/150), roadmap count, missing init warning."
+    category: core
+    plugin: claude-core
+    priority: now
+    source: "brainstorm/streamline-local-claude-workflow"
+    added: "2026-03-08"
+    tags: [ux, status-bar, phase-1]
+
+  - id: RL-004
+    title: "CLAUDE.md guardian hook"
+    description: "PostToolUse hook on Write/Edit targeting CLAUDE.md files. Validates for contradictions, redundancy, bloat, unintended consequences. Considers alternatives before committing."
+    category: core
+    plugin: claude-core
+    priority: now
+    source: "brainstorm/streamline-local-claude-workflow"
+    added: "2026-03-08"
+    tags: [hooks, quality, claude-md, phase-1]
+
+  - id: RL-005
+    title: "Tracing — light mode (always-on)"
+    description: "Append-only log: timestamp, skill/command name, pass/fail, duration, error summary. Near-zero cost. Enabled by default for all skill/command invocations."
+    category: core
+    plugin: claude-core
+    priority: now
+    source: "brainstorm/streamline-local-claude-workflow"
+    added: "2026-03-08"
+    tags: [tracing, observability, phase-1]
+
+  - id: RL-006
+    title: "Tracing — full mode (opt-in)"
+    description: "Adds decision trace (why this approach), intermediate outputs, file changes, token usage. Structured YAML per session. Toggled via trace:full command."
+    category: core
+    plugin: claude-core
+    priority: now
+    source: "brainstorm/streamline-local-claude-workflow"
+    added: "2026-03-08"
+    tags: [tracing, observability, phase-1]
+
+  - id: RL-007
+    title: "Error annotation in tracing"
+    description: "When errors occur, immediately capture: brief explanation, reproduction steps, expected vs actual, severity, suggested fix. Written in the moment, not after the fact."
+    category: core
+    plugin: claude-core
+    priority: now
+    source: "brainstorm/streamline-local-claude-workflow"
+    added: "2026-03-08"
+    tags: [tracing, errors, phase-1]
+
+  - id: RL-008
+    title: "Pre-completion trace review hook"
+    description: "Before task transitions to 'done', read trace for that task, filter errors/warnings. Block if critical, report if minor, pass if clean."
+    category: core
+    plugin: claude-core
+    priority: now
+    source: "brainstorm/streamline-local-claude-workflow"
+    added: "2026-03-08"
+    tags: [tracing, quality-gate, hooks, phase-1]
+
+  - id: RL-009
+    title: "Memory discipline rules"
+    description: "MEMORY.md hard cap 150 lines. Entries graduate to skills/rules then get deleted. Daily cron for bloat/stale check. Distinguish user thinking-out-loud from decisions from preferences."
+    category: core
+    plugin: claude-core
+    priority: now
+    source: "brainstorm/streamline-local-claude-workflow"
+    added: "2026-03-08"
+    tags: [memory, pruning, phase-1]
+
+  # ============================================================
+  # PHASE 2 — OPERATIONAL (next)
+  # ============================================================
+
+  - id: RL-010
+    title: "Roadmap auto-capture behavior"
+    description: "When out-of-scope ideas surface during conversation, auto-append to roadmap.yml with category, plugin, tags. No user action required."
+    category: core
+    plugin: claude-core
+    priority: next
+    source: "brainstorm/streamline-local-claude-workflow"
+    added: "2026-03-08"
+    tags: [roadmap, auto-capture, phase-2]
+
+  - id: RL-011
+    title: "roadmap:add command"
+    description: "Explicitly add a roadmap item with all metadata fields."
+    category: core
+    plugin: claude-core
+    priority: next
+    source: "brainstorm/streamline-local-claude-workflow"
+    added: "2026-03-08"
+    tags: [roadmap, commands, phase-2]
+
+  - id: RL-012
+    title: "roadmap:view command"
+    description: "Filter and display roadmap items by plugin, priority, category, tag."
+    category: core
+    plugin: claude-core
+    priority: next
+    source: "brainstorm/streamline-local-claude-workflow"
+    added: "2026-03-08"
+    tags: [roadmap, commands, phase-2]
+
+  - id: RL-013
+    title: "Planning — re-implement (plan:create)"
+    description: "Break work into ordered steps with dependencies. Wave decomposition is internal logic, not a separate skill. Re-implemented from scratch, not ported."
+    category: core
+    plugin: claude-core
+    priority: next
+    source: "brainstorm/streamline-local-claude-workflow"
+    added: "2026-03-08"
+    tags: [planning, re-implement, phase-2]
+
+  - id: RL-014
+    title: "Planning — re-implement (plan:execute)"
+    description: "Run plan step by step. Verification is inline (not separate skill). Integrates with pre-completion trace review hook."
+    category: core
+    plugin: claude-core
+    priority: next
+    source: "brainstorm/streamline-local-claude-workflow"
+    added: "2026-03-08"
+    tags: [planning, re-implement, phase-2]
+
+  - id: RL-015
+    title: "Planning — re-implement (plan:status + plan:resume)"
+    description: "Status shows progress, blockers, next steps. Resume continues from last known state."
+    category: core
+    plugin: claude-core
+    priority: next
+    source: "brainstorm/streamline-local-claude-workflow"
+    added: "2026-03-08"
+    tags: [planning, re-implement, phase-2]
+
+  - id: RL-016
+    title: "Brainstorm — re-implement (brainstorm:start)"
+    description: "Begin/resume sparring session. Captures transcript. Sparring partner mode, not interviewer. Re-implemented from scratch."
+    category: core
+    plugin: claude-core
+    priority: next
+    source: "brainstorm/streamline-local-claude-workflow"
+    added: "2026-03-08"
+    tags: [brainstorm, re-implement, phase-2]
+
+  - id: RL-017
+    title: "Brainstorm — re-implement (brainstorm:decide)"
+    description: "Extract structured decisions from session. Write decisions.yml. No separate decision-reader skill — just file reading."
+    category: core
+    plugin: claude-core
+    priority: next
+    source: "brainstorm/streamline-local-claude-workflow"
+    added: "2026-03-08"
+    tags: [brainstorm, re-implement, phase-2]
+
+  # ============================================================
+  # PHASE 3 — ENHANCEMENT (later)
+  # ============================================================
+
+  - id: RL-018
+    title: "Project scan/init"
+    description: "Detect tech stack, frameworks, structure, dependencies. Generate Mermaid diagram overview. Platform awareness for AI context. Re-implement from agency's project-scanner."
+    category: core
+    plugin: claude-core
+    priority: later
+    source: "brainstorm/streamline-local-claude-workflow"
+    added: "2026-03-08"
+    tags: [scanning, project-init, mermaid, phase-3]
+
+  - id: RL-019
+    title: "Self-documenting system"
+    description: "Auto-update READMEs and user guides during implementation. Both user-facing (Quick Start, How-To, FAQ) and developer-facing (internals, architecture). Triggered at task completion."
+    category: core
+    plugin: claude-core
+    priority: later
+    source: "brainstorm/streamline-local-claude-workflow"
+    added: "2026-03-08"
+    tags: [documentation, user-guide, dev-docs, phase-3]
+    _source:
+      inspiration: "https://skills.sh/supercent-io/skills-template/user-guide-writing"
+      ported_date: null
+      notes: "4 doc types (Quick Start, How-To, FAQ, Tutorial). Adapt for both user + dev docs."
+
+  - id: RL-020
+    title: "Agent orchestration"
+    description: "Core agent definitions and dispatch patterns. Agents defined once in claude-core, reused by domain plugins. Sub-agent coordination rules. Re-implement from agency agents/."
+    category: core
+    plugin: claude-core
+    priority: later
+    source: "brainstorm/streamline-local-claude-workflow"
+    added: "2026-03-08"
+    tags: [agents, orchestration, phase-3]
+
+  - id: RL-021
+    title: "Source attribution system"
+    description: "_source block in SKILL.md frontmatter: origin URL, ported date, version hash, modifications. Enables upstream update checking."
+    category: core
+    plugin: claude-core
+    priority: later
+    source: "brainstorm/streamline-local-claude-workflow"
+    added: "2026-03-08"
+    tags: [attribution, provenance, phase-3]
+
+  # ============================================================
+  # PHASE 4 — CLAUDE TOOLKIT (later)
+  # ============================================================
+
+  - id: RL-022
+    title: "Skill create + A/B testing"
+    description: "Build new skills with validation. A/B split testing approach. Test results stored alongside skill. Re-testable at any time."
+    category: toolkit
+    plugin: claude-toolkit
+    priority: later
+    source: "brainstorm/streamline-local-claude-workflow"
+    added: "2026-03-08"
+    tags: [skills, testing, ab-test, phase-4]
+
+  - id: RL-023
+    title: "Skill enhance + audit"
+    description: "Improve existing skills. Audit quality with stored results. Check for overlap with existing functionality."
+    category: toolkit
+    plugin: claude-toolkit
+    priority: later
+    source: "brainstorm/streamline-local-claude-workflow"
+    added: "2026-03-08"
+    tags: [skills, audit, phase-4]
+
+  - id: RL-024
+    title: "Plugin create + enhance + audit"
+    description: "Same create/enhance/audit pattern applied to plugins."
+    category: toolkit
+    plugin: claude-toolkit
+    priority: later
+    source: "brainstorm/streamline-local-claude-workflow"
+    added: "2026-03-08"
+    tags: [plugins, phase-4]
+
+  - id: RL-025
+    title: "Command/Hook create + enhance + audit"
+    description: "Same create/enhance/audit pattern applied to commands and hooks."
+    category: toolkit
+    plugin: claude-toolkit
+    priority: later
+    source: "brainstorm/streamline-local-claude-workflow"
+    added: "2026-03-08"
+    tags: [commands, hooks, phase-4]
+
+  # ============================================================
+  # PHASE 5 — DOMAIN PLUGINS (backlog)
+  # ============================================================
+
+  - id: RL-026
+    title: "Development plugin"
+    description: "Re-implement dev skills: scaffold, config-generator, storybook, code-review, qa-validation. Standalone plugin depending only on claude-core."
+    category: dev
+    plugin: development
+    priority: backlog
+    source: "brainstorm/streamline-local-claude-workflow"
+    added: "2026-03-08"
+    tags: [dev, domain-plugin, phase-5]
+
+  - id: RL-027
+    title: "Marketing plugin"
+    description: "Re-implement marketing/content skills. SEO pipeline (8 skills fully specified in backup). Brand generation pipeline (9 skills in backup)."
+    category: marketing
+    plugin: marketing
+    priority: backlog
+    source: "brainstorm/streamline-local-claude-workflow"
+    added: "2026-03-08"
+    tags: [marketing, seo, brand, domain-plugin, phase-5]
+
+  - id: RL-028
+    title: "DevOps plugin"
+    description: "Re-implement deploy-config, deploy-execute. CI/CD pipeline configuration. IaC. Monitoring and alerting."
+    category: devops
+    plugin: devops
+    priority: backlog
+    source: "brainstorm/streamline-local-claude-workflow"
+    added: "2026-03-08"
+    tags: [devops, domain-plugin, phase-5]
+
+  # ============================================================
+  # FEATURE IDEAS (captured during brainstorm)
+  # ============================================================
+
+  - id: RL-029
+    title: "Screenshot loop for design iterations"
+    description: "Take screenshots between design iterations, confirm visual correctness in a loop before finalizing. Useful for Pencil MCP integration."
+    category: design
+    plugin: development
+    priority: backlog
+    source: "brainstorm/streamline-local-claude-workflow"
+    added: "2026-03-08"
+    tags: [visual-qa, iteration, screenshots, design]
+
+  - id: RL-030
+    title: "roadmap:promote command"
+    description: "Move items from backlog → later → next when they become relevant. Batch promote by tag or category."
+    category: core
+    plugin: claude-core
+    priority: backlog
+    source: "brainstorm/streamline-local-claude-workflow"
+    added: "2026-03-08"
+    tags: [roadmap, commands]
+
+  - id: RL-031
+    title: "Episodic memory layer"
+    description: "Structured log of 'we tried X on project Y, it failed because Z' — experience memory beyond facts (MEMORY.md) and decisions (decisions.yml). Research showed this as distinct memory type."
+    category: core
+    plugin: claude-core
+    priority: backlog
+    source: "brainstorm/streamline-local-claude-workflow"
+    added: "2026-03-08"
+    tags: [memory, episodic, research]
+
+  - id: RL-032
+    title: "MCP bridge for Claude AI portability"
+    description: "Build MCP server exposing key capabilities as tools for Claude AI web UI. Would allow some skills to be invoked from web interface."
+    category: core
+    plugin: claude-core
+    priority: backlog
+    source: "brainstorm/streamline-local-claude-workflow"
+    added: "2026-03-08"
+    tags: [claude-ai, portability, mcp]
+
+  - id: RL-033
+    title: "Database-backed tracing UI (Blik)"
+    description: "Full tracing UI with database storage, expiry, duplicate detection, status management, task conversion. MCP server for log viewing. Part of Blik project."
+    category: dev
+    plugin: blik
+    priority: backlog
+    source: "brainstorm/streamline-local-claude-workflow"
+    added: "2026-03-08"
+    tags: [blik, tracing, ui, database]
+
+  - id: RL-034
+    title: "Error-to-task conversion"
+    description: "Errors from trace logs convertible to tasks. AI auto-fixes based on selection criteria (blast radius contained, reversible, verification available)."
+    category: core
+    plugin: claude-core
+    priority: backlog
+    source: "brainstorm/streamline-local-claude-workflow"
+    added: "2026-03-08"
+    tags: [errors, tasks, auto-fix]
+
+  - id: RL-035
+    title: "Immune system / self-improvement plugin"
+    description: "Issue capture, triage, auto-fixer, pattern promoter, sentinel agent. Four input categories (wrong location, silent failure, quality, behavioral). Approve-once-auto-fix-forever pattern. From self-improvement brainstorm."
+    category: core
+    plugin: immune
+    priority: backlog
+    source: "brainstorm/self-improvement"
+    added: "2026-03-08"
+    tags: [self-improvement, immune, quality]
+
+  - id: RL-036
+    title: "Knowledge base for known failure patterns"
+    description: "Structured knowledge-base.yml with typed patterns, approval status, applicability metadata. Symptom-to-fix lookup. Core data store for immune system."
+    category: core
+    plugin: immune
+    priority: backlog
+    source: "brainstorm/self-improvement"
+    added: "2026-03-08"
+    tags: [self-improvement, immune, patterns]
+
+  - id: RL-037
+    title: "/dev:refactor command"
+    description: "Production-safe code reshaping: writes tests first, smaller waves, per-component commits, mandatory regression, conservative tier assignment. Never changes behavior, only structure."
+    category: dev
+    plugin: development
+    priority: backlog
+    source: "brainstorm/dev-hardening"
+    added: "2026-03-08"
+    tags: [dev, refactoring, safety]
+
+  - id: RL-038
+    title: "Upstream skill diffing (/dev:skills check)"
+    description: "Diff forked skills against upstream sources (skills.sh) and cherry-pick updates. Enabled by source attribution frontmatter."
+    category: toolkit
+    plugin: claude-toolkit
+    priority: backlog
+    source: "brainstorm/dev-hardening"
+    added: "2026-03-08"
+    tags: [skills, upstream, diffing]
+
+  - id: RL-039
+    title: "Framework packs with code examples"
+    description: "Per-framework directories (react-nextjs, vue-nuxt, backend, generic) with reference implementations. Agents receive relevant examples by tag at dispatch."
+    category: dev
+    plugin: development
+    priority: backlog
+    source: "brainstorm/dev-hardening"
+    added: "2026-03-08"
+    tags: [dev, frameworks, examples]
+
+  - id: RL-040
+    title: "MCP server dependency manifest"
+    description: "Plugin ships manifest of required MCP servers. Init checks for missing MCPs. /dev:doctor command for validation."
+    category: dev
+    plugin: development
+    priority: backlog
+    source: "brainstorm/dev-hardening"
+    added: "2026-03-08"
+    tags: [mcp, dependencies, doctor]
+
+  - id: RL-041
+    title: "Media plugins (Videographer, Photographer)"
+    description: "External AI models (Runway, Midjourney) for media generation. Claude as orchestrator, external AI as execution engine."
+    category: marketing
+    plugin: media
+    priority: backlog
+    source: "backup/docs/roadmap/media-plugins.md"
+    added: "2026-03-08"
+    tags: [media, video, photography, ai-generation]
+
+  - id: RL-042
+    title: "Vector DB for semantic memory retrieval"
+    description: "Pinecone/Weaviate/Chroma for semantic search across memories. Ruled out for MVP but viable when memory volume exceeds flat-file performance."
+    category: core
+    plugin: claude-core
+    priority: backlog
+    source: "brainstorm/streamline-local-claude-workflow (research)"
+    added: "2026-03-08"
+    tags: [memory, vector-db, semantic-search]
+
+  - id: RL-043
+    title: "Prompt caching optimization"
+    description: "Up to 85% latency reduction, 10x cost difference. Investigate leveraging prompt caching in plugin ecosystem."
+    category: core
+    plugin: claude-core
+    priority: backlog
+    source: "brainstorm/streamline-local-claude-workflow (research)"
+    added: "2026-03-08"
+    tags: [performance, caching, cost]
+
+  - id: RL-044
+    title: "Memory Composer for multi-agent isolation"
+    description: "Isolated memory per agent + shared coordination layer for multi-agent orchestration. Important for complex workflows."
+    category: core
+    plugin: claude-core
+    priority: backlog
+    source: "brainstorm/streamline-local-claude-workflow (research)"
+    added: "2026-03-08"
+    tags: [memory, multi-agent, isolation]
+
+  - id: RL-045
+    title: "Friction-driven feedback capture"
+    description: "Systematic capture of moments when output doesn't match expectations. Translate friction into instructions. Community best practice for memory improvement."
+    category: core
+    plugin: immune
+    priority: backlog
+    source: "brainstorm/streamline-local-claude-workflow (research)"
+    added: "2026-03-08"
+    tags: [self-improvement, feedback, memory]
+
+  - id: RL-046
+    title: "Path-scoped rules in CLAUDE.md"
+    description: "Different standards for test files vs components based on file path patterns. Anthropic supports this natively but not currently used."
+    category: core
+    plugin: claude-core
+    priority: backlog
+    source: "brainstorm/streamline-local-claude-workflow (research)"
+    added: "2026-03-08"
+    tags: [claude-md, rules, path-scoped]
+
+  - id: RL-047
+    title: "Environment variable handling for MCP servers"
+    description: "How to handle env vars for MCP servers without giving them directly to Claude. Needs research."
+    category: core
+    plugin: claude-core
+    priority: backlog
+    source: "brainstorm/streamline-local-claude-workflow (notes)"
+    added: "2026-03-08"
+    tags: [mcp, security, env-vars]
+
+  - id: RL-048
+    title: "Git workflow for ~/.claude/ managed files"
+    description: "Determine how to version-control Claude config. Include in ~/.claude/ with .gitignore on non-project files? Needs design."
+    category: core
+    plugin: claude-core
+    priority: backlog
+    source: "brainstorm/streamline-local-claude-workflow (notes)"
+    added: "2026-03-08"
+    tags: [git, config, workflow]
+
+  # ============================================================
+  # FROM AGENCY DEFERRED BACKLOG (carried forward)
+  # ============================================================
+
+  - id: RL-049
+    title: "Brand generation pipeline (9 skills)"
+    description: "Full brand creation from scratch: identity-interview, audience-personas, tone-of-voice, typography-color, visual-identity, logo-design, content-rules, social-media, compile-and-export."
+    category: marketing
+    plugin: marketing
+    priority: backlog
+    source: "agency/deferred-backlog.yml (defer-01)"
+    added: "2026-03-08"
+    tags: [brand, generation, pipeline]
+    _source:
+      backup_path: "claude-local-workspace-backup/plugins/brand-guideline/skills/"
+      notes: "9 skills fully specified in backup. Only brand-loader was ported to agency."
+
+  - id: RL-050
+    title: "Brand manual export (PDF/DOCX)"
+    description: "Export brand guidelines as formatted PDF or DOCX document."
+    category: marketing
+    plugin: marketing
+    priority: backlog
+    source: "agency/deferred-backlog.yml (defer-02)"
+    added: "2026-03-08"
+    tags: [brand, export, pdf]
+
+  - id: RL-051
+    title: "Social media template system"
+    description: "Generate social media templates consistent with brand identity."
+    category: marketing
+    plugin: marketing
+    priority: backlog
+    source: "agency/deferred-backlog.yml (defer-03)"
+    added: "2026-03-08"
+    tags: [social-media, templates, brand]
+
+  - id: RL-052
+    title: "Content governance rules"
+    description: "Define and enforce content standards across brand materials."
+    category: marketing
+    plugin: marketing
+    priority: backlog
+    source: "agency/deferred-backlog.yml (defer-04)"
+    added: "2026-03-08"
+    tags: [content, governance, brand]
+
+  - id: RL-053
+    title: "SEO pipeline (8 skills)"
+    description: "Full SEO workflow: project-interview, keyword-research, competitor-analysis, on-page-optimization, technical-seo, content-strategy, link-building, compile-and-export."
+    category: marketing
+    plugin: marketing
+    priority: backlog
+    source: "agency/deferred-backlog.yml (defer-05)"
+    added: "2026-03-08"
+    tags: [seo, pipeline]
+    _source:
+      backup_path: "claude-local-workspace-backup/plugins/seo-plugin/"
+      execution_guide: "claude-local-workspace-backup/docs/seo-plugin-execution-guide.md"
+      notes: "Fully specified in backup with 48KB execution guide. Zero ported to agency."
+
+  - id: RL-054
+    title: "Analytics and tracking setup"
+    description: "GA4, tracking pixels, conversion tracking setup and configuration."
+    category: marketing
+    plugin: marketing
+    priority: backlog
+    source: "agency/deferred-backlog.yml (defer-11)"
+    added: "2026-03-08"
+    tags: [analytics, tracking, ga4]
+
+  - id: RL-055
+    title: "CRO (Conversion Rate Optimization)"
+    description: "A/B testing recommendations, funnel analysis, conversion optimization."
+    category: marketing
+    plugin: marketing
+    priority: backlog
+    source: "agency/deferred-backlog.yml (defer-12)"
+    added: "2026-03-08"
+    tags: [cro, conversion, analytics]
+
+  - id: RL-056
+    title: "Image and video asset pipeline"
+    description: "Asset generation and management for images and video content."
+    category: marketing
+    plugin: media
+    priority: backlog
+    source: "agency/deferred-backlog.yml (defer-13)"
+    added: "2026-03-08"
+    tags: [media, assets, pipeline]
+
+  - id: RL-057
+    title: "Illustration and icon system"
+    description: "Consistent illustration and icon generation matching brand identity."
+    category: marketing
+    plugin: media
+    priority: backlog
+    source: "agency/deferred-backlog.yml (defer-14)"
+    added: "2026-03-08"
+    tags: [illustrations, icons, brand]
+
+  - id: RL-058
+    title: "Knowledge initializer (multi-project knowledge base)"
+    description: "Shared knowledge base across multiple projects. Currently per-project only."
+    category: dev
+    plugin: development
+    priority: backlog
+    source: "agency/deferred-backlog.yml (defer-15)"
+    added: "2026-03-08"
+    tags: [knowledge, multi-project]
+
+  - id: RL-059
+    title: "Tier assigner for agent dispatch"
+    description: "Automated model tier assignment (haiku/sonnet/opus) based on task complexity."
+    category: dev
+    plugin: development
+    priority: backlog
+    source: "agency/deferred-backlog.yml (defer-16)"
+    added: "2026-03-08"
+    tags: [agents, tier, dispatch]
+
+  - id: RL-060
+    title: "Delta scanner (incremental re-scan)"
+    description: "Incremental project scanning — only detect changes since last scan instead of full re-scan."
+    category: dev
+    plugin: development
+    priority: backlog
+    source: "agency/deferred-backlog.yml (defer-17)"
+    added: "2026-03-08"
+    tags: [scanning, incremental, performance]
+
+  - id: RL-061
+    title: "CI/CD pipeline configuration"
+    description: "Generate CI/CD pipeline configs (GitHub Actions, GitLab CI, etc.) from project scan."
+    category: devops
+    plugin: devops
+    priority: backlog
+    source: "agency/deferred-backlog.yml (defer-18)"
+    added: "2026-03-08"
+    tags: [cicd, pipeline, github-actions]
+
+  - id: RL-062
+    title: "Infrastructure as Code (IaC)"
+    description: "Generate Terraform, Pulumi, or similar IaC from project requirements."
+    category: devops
+    plugin: devops
+    priority: backlog
+    source: "agency/deferred-backlog.yml (defer-19)"
+    added: "2026-03-08"
+    tags: [iac, terraform, infrastructure]
+
+  - id: RL-063
+    title: "Monitoring and alerting setup"
+    description: "Configure monitoring dashboards and alerting rules for deployed applications."
+    category: devops
+    plugin: devops
+    priority: backlog
+    source: "agency/deferred-backlog.yml (defer-20)"
+    added: "2026-03-08"
+    tags: [monitoring, alerting, observability]
+
+  # ============================================================
+  # FROM BACKUP — NOT YET PORTED ANYWHERE
+  # ============================================================
+
+  - id: RL-064
+    title: "Content plugin (copy, blog, social, docs)"
+    description: "Dedicated content plugin. Depends on brand (voice) and SEO (keywords). Roadmap exists in backup."
+    category: marketing
+    plugin: marketing
+    priority: backlog
+    source: "backup/docs/roadmap/content-plugin.md"
+    added: "2026-03-08"
+    tags: [content, blog, social, docs]
+
+  - id: RL-065
+    title: "Design plugin (Pencil + brand integration)"
+    description: "Dedicated design plugin. Depends on brand (identity), Pencil MCP. Dev's designer agent reads designs, doesn't create them. Roadmap exists in backup."
+    category: design
+    plugin: design
+    priority: backlog
+    source: "backup/docs/roadmap/design-plugin.md"
+    added: "2026-03-08"
+    tags: [design, pencil, brand]
+
+  # ============================================================
+  # PHASE 1 DEFERRED TO ITERATION 2
+  # (discovered during implementation, not MVP)
+  # ============================================================
+
+  - id: RL-066
+    title: "Guardian: also validate MEMORY.md edits"
+    description: "CLAUDE.md guardian currently only fires on CLAUDE.md. Could also validate MEMORY.md edits for line count, content type, etc."
+    category: core
+    plugin: claude-core
+    priority: backlog
+    source: "phase-1-implementation"
+    added: "2026-03-08"
+    tags: [guardian, memory, iteration-2]
+
+  - id: RL-067
+    title: "Trace light: token usage estimation"
+    description: "Add estimated token usage per tool call to light trace entries. Would help track cost."
+    category: core
+    plugin: claude-core
+    priority: backlog
+    source: "phase-1-implementation"
+    added: "2026-03-08"
+    tags: [tracing, tokens, cost, iteration-2]
+
+  - id: RL-068
+    title: "Pre-completion: generate fix plan for critical errors"
+    description: "Instead of just listing critical errors, generate a proposed fix plan with steps."
+    category: core
+    plugin: claude-core
+    priority: backlog
+    source: "phase-1-implementation"
+    added: "2026-03-08"
+    tags: [pre-completion, errors, iteration-2]
+
+  - id: RL-069
+    title: "Memory health: auto-run via /loop"
+    description: "Set up memory-health-check.sh as a daily cron via /loop for automated monitoring."
+    category: core
+    plugin: claude-core
+    priority: next
+    source: "phase-1-implementation"
+    added: "2026-03-08"
+    tags: [memory, cron, automation, iteration-2]
+
+  - id: RL-070
+    title: "Status bar: show error count from session trace"
+    description: "Add current session error count to status bar for at-a-glance issue awareness."
+    category: core
+    plugin: claude-core
+    priority: backlog
+    source: "phase-1-implementation"
+    added: "2026-03-08"
+    tags: [status-bar, tracing, iteration-2]
+
+  - id: RL-071
+    title: "Apply error annotation behavior rule to CLAUDE.md"
+    description: "The behavior rule is prepared in resources/error-annotation-behavior.md but not yet added to CLAUDE.md. Needs guardian validation."
+    category: core
+    plugin: claude-core
+    priority: next
+    source: "phase-1-implementation"
+    added: "2026-03-08"
+    tags: [tracing, errors, claude-md, iteration-2]
+
+  - id: RL-072
+    title: "Apply memory discipline rules to CLAUDE.md"
+    description: "The discipline rules are prepared in resources/memory-discipline-claude-md.md but not yet added to CLAUDE.md. Needs guardian validation."
+    category: core
+    plugin: claude-core
+    priority: next
+    source: "phase-1-implementation"
+    added: "2026-03-08"
+    tags: [memory, claude-md, iteration-2]
+
+# ============================================================
+# STATS
+# ============================================================
+# Total items: 72
+# Phase 1 (now → complete): 9
+# Phase 2 (next): 8 + 3 iteration-2 items promoted to next
+# Phase 3 (later): 4
+# Phase 4 (later): 4
+# Phase 5+ (backlog): 44
+# ============================================================
