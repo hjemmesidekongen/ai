@@ -31,23 +31,42 @@ produces files another can read, but never depends on.
 ```
 plugins/claude-core/
 ├── .claude-plugin/
-│   └── plugin.json          # Plugin manifest — hooks, metadata
-├── scripts/                 # Shell scripts for hooks and automation
-│   ├── claude-md-guardian.sh
-│   ├── trace-light.sh
-│   ├── pre-completion-review.sh
-│   └── memory-health-check.sh
+│   ├── plugin.json          # Plugin manifest — hooks, metadata
+│   └── ecosystem.json       # Component registry
+├── scripts/                 # Shell scripts for hooks
+│   ├── claude-md-guardian.sh    # PostToolUse: CLAUDE.md edit validation
+│   ├── trace-light.sh          # PostToolUse: append-only tool trace
+│   ├── pre-completion-review.sh # Pre-completion error review
+│   ├── memory-health-check.sh  # Memory bloat/stale detection
+│   ├── session-recovery.sh     # SessionStart: report plan + project state
+│   ├── check-wave-complete.sh  # Stop: warn if plan/project work in progress
+│   └── check-trace-written.sh  # Stop: remind about missing trace reflections
 ├── commands/                # User-invocable commands (markdown)
+│   ├── brainstorm-start.md
+│   ├── brainstorm-decide.md
+│   ├── plan-create.md
+│   ├── plan-execute.md
+│   ├── plan-status.md
+│   ├── plan-resume.md
+│   ├── roadmap-add.md
+│   ├── roadmap-view.md
 │   └── trace-full.md
 ├── skills/                  # Re-usable skills (SKILL.md + references/)
-│   └── (Phase 2+: planning, brainstorm, etc.)
+│   ├── brainstorm-session/
+│   ├── brainstorm-decision-writer/
+│   ├── decision-reader/
+│   ├── plan-engine/
+│   ├── plan-verifier/
+│   └── roadmap-capture/
 ├── resources/               # Static resources, formats, rules
 │   ├── error-annotation-format.yml
-│   └── memory-rules.md
-├── tests/                   # Test results and validation scripts
-│   └── phase-1-results.yml
+│   ├── memory-rules.md
+│   ├── plan-schema.yml      # Canonical plan schema
+│   ├── state-schema.yml     # Canonical state schema
+│   └── brainstorm-schema.yml
+├── tests/
 ├── ARCHITECTURE.md          # This file
-└── README.md                # User-facing documentation
+└── README.md
 ```
 
 ## plugin.json Structure
@@ -55,23 +74,31 @@ plugins/claude-core/
 ```json
 {
   "name": "claude-core",
-  "version": "0.1.0",
-  "description": "Foundation plugin — tracing, memory, CLAUDE.md governance, planning, orchestration",
-  "author": { "name": "mvn" },
+  "version": "0.2.0",
   "hooks": {
-    "PreToolUse": [...],
-    "PostToolUse": [...],
-    "SessionStart": [...],
-    "Stop": [...]
+    "PostToolUse": ["claude-md-guardian.sh (Write|Edit)", "trace-light.sh (all)"],
+    "SessionStart": ["session-recovery.sh"],
+    "Stop": ["check-wave-complete.sh", "check-trace-written.sh"]
   }
 }
 ```
 
-**Hook registration rules:**
-- Every hook script must execute in <100ms (ideally <50ms)
-- Hook scripts must fail gracefully (exit 0 on error, never block Claude)
-- Hooks output guidance text — Claude reads it and decides action
-- A hook must never modify files silently; it advises, Claude acts
+**Hook inventory:**
+
+| Hook | Script | Trigger | Behavior |
+|------|--------|---------|----------|
+| PostToolUse | `claude-md-guardian.sh` | Write\|Edit on CLAUDE.md | Advisory: validate edits |
+| PostToolUse | `trace-light.sh` | All tools | Append trace entry (<30ms) |
+| SessionStart | `session-recovery.sh` | Session start | Report plan + project state |
+| Stop | `check-wave-complete.sh` | Session end | Warn if work in progress (exit 2) |
+| Stop | `check-trace-written.sh` | Session end | Remind about missing reflections |
+
+**Hook rules:**
+- Scripts must execute in <100ms (ideally <50ms)
+- Fail gracefully (exit 0 on error, never block Claude)
+- Output guidance text — Claude reads it and decides action
+- Never modify files silently; advise, Claude acts
+- Stop hooks may exit 2 to signal active work (non-blocking warning)
 
 ## Naming Conventions
 
@@ -173,6 +200,22 @@ happened (skill-level reasoning within a project context).
 ## Version Policy
 
 - Semver: `MAJOR.MINOR.PATCH`
-- Phase 1 ships as `0.1.0` (foundation, not feature-complete)
+- `0.1.0` — Phase 1 (foundation: tracing, memory, guardian)
+- `0.2.0` — Phase 2 (planning, brainstorm, roadmap) + migration cleanup
 - `1.0.0` when Phases 1-3 are complete and battle-tested
 - Breaking changes bump MINOR during 0.x (pre-1.0)
+
+## Migration from Legacy Plugins
+
+Claude-core consolidates functionality previously split across task-planner and agency.
+The "Ship of Theseus" migration replaces skills one at a time while keeping legacy
+plugins as scaffolding for their unique features.
+
+**Migrated to claude-core (removed from legacy):**
+- Planning: plan-engine, plan-verifier (from task-planner's wave-decomposer, file-ownership, verification-runner, spec-compliance-reviewer)
+- Brainstorm: brainstorm-session, brainstorm-decision-writer (from both task-planner and agency)
+- Utilities: decision-reader (from both), session-recovery, check-wave-complete, check-trace-written (from both)
+- Schemas: plan-schema.yml, state-schema.yml (from task-planner)
+
+**Remaining in task-planner:** plugin-* commands/skills, version-* skills, agents
+**Remaining in agency:** brand/design/content/dev/devops skills, agency:* commands, agents

@@ -28,7 +28,7 @@ A unified digital agency plugin (`plugins/agency/`) that handles brand loading, 
 plugins/
   agency/                            # The plugin
     .claude-plugin/
-      plugin.json                    # v1.0.0, hooks: PreToolUse, PostToolUse, SessionStart, Stop
+      plugin.json                    # v1.0.0, hooks: PreToolUse, PostToolUse (SessionStart/Stop moved to claude-core)
       ecosystem.json                 # Component registry (commands, skills, agents)
     commands/                        # init, design, content, build, deploy, status, switch, scan
     skills/
@@ -37,8 +37,7 @@ plugins/
       content/                       # app-copy, ux-writing
       dev/                           # project-scanner, config-generator, scaffold, storybook-generator,
                                      # feature-decomposer, team-planner, agent-dispatcher, completion-gate,
-                                     # code-review, qa-validation, brainstorm-session,
-                                     # brainstorm-decision-writer, decision-reader
+                                     # code-review, qa-validation (brainstorm/decision skills moved to claude-core)
       devops/                        # deploy-config, deploy-execute
     agents/dev/                      # 5 leadership + 7 specialist agents
     migrations/                      # MIGRATION-REGISTRY.yml
@@ -47,9 +46,8 @@ plugins/
       verification-profile.yml       # Verification rules
       deferred-backlog.yml           # 20 deferred features for post-MVP
     scripts/
-      session-recovery.sh
-      check-wave-complete.sh
       project-isolation-check.sh
+      inject-trace-timestamp.sh     # (session-recovery, check-wave-complete, check-trace-written moved to claude-core)
     CHANGELOG.md
     README.md
 docs/

@@ -55,17 +55,27 @@ Not a vague memory of it — the actual trace.
   automatically reviewed for unresolved issues. Critical errors block
   completion. Nothing ships with known problems.
 
-### Roadmap Capture
+### Planning and Brainstorming
 
-Good ideas surface at the worst times — during debugging, mid-brainstorm, in
-random conversations. They disappear into transcripts nobody reads again.
+Structure thinking before building. These were re-implemented from scratch in
+claude-core (previously split across task-planner and agency plugins).
 
-- **Auto-capture** — when an out-of-scope idea comes up, Claude adds it to
+- **Wave planning** — break work into dependency-ordered waves with file ownership
+  isolation. Tasks in the same wave run in parallel safely.
+- **Brainstorm sessions** — open-ended sparring where Claude pushes back on weak
+  reasoning. Formalize conclusions into structured decisions.
+- **Decision reader** — load past brainstorm decisions relevant to the current task.
+  Filter by domain, sort by confidence. Utility for any skill or agent.
+- **Roadmap capture** — when out-of-scope ideas surface, Claude adds them to
   `roadmap.yml` automatically. Tagged, categorized, searchable.
-- **Priority levels** — now, next, later, backlog. Promote items when they
-  become relevant.
-- **Source-linked** — every item traces back to where the idea originated.
-  No more "where did we discuss that?"
+
+### Session Lifecycle
+
+- **Session recovery** — on startup, reports active plan state and project context.
+  No more "where was I?" after reopening.
+- **Stop hooks** — warns if there's work in progress before ending a session.
+  Checks both plan state and agency project state.
+- **Trace reflection check** — reminds about missing reflections in agency traces.
 
 ### Status Bar
 
@@ -126,7 +136,7 @@ validated before the next one begins.
 | Phase | Status | What's Included |
 |-------|--------|----------------|
 | **Phase 1** | Complete | Tracing (light + full), memory discipline, CLAUDE.md guardian, status bar, error annotation, pre-completion review |
-| **Phase 2** | Planned | Planning (create/execute/status/resume), brainstorm (start/decide), roadmap capture |
+| **Phase 2** | Complete | Planning (create/execute/status/resume), brainstorm (start/decide), roadmap capture, decision-reader |
 | **Phase 3** | Planned | Project scanning, self-documenting, agent orchestration, source attribution |
 
 For the full roadmap across all plugins: [`.ai/roadmap.yml`](../../.ai/roadmap.yml)

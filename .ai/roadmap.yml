@@ -15,181 +15,147 @@
 items:
 
   # ============================================================
-  # PHASE 1 — FOUNDATION (now)
+  # PHASE 1 — FOUNDATION (complete)
   # ============================================================
 
   - id: RL-001
     title: "Architecture doc — claude-core contract"
-    description: "Single-page architecture document defining plugin.json structure, directory layout, naming conventions, hook patterns. The contract everything conforms to."
     category: core
     plugin: claude-core
-    priority: now
-    source: "brainstorm/streamline-local-claude-workflow"
-    added: "2026-03-08"
+    priority: done
+    completed: "2026-03-08"
     tags: [architecture, foundation, phase-1]
 
   - id: RL-002
     title: "Plugin scaffold — claude-core"
-    description: "Empty plugin shell: plugin.json, directory structure, initial CLAUDE.md rules."
     category: core
     plugin: claude-core
-    priority: now
-    source: "brainstorm/streamline-local-claude-workflow"
-    added: "2026-03-08"
+    priority: done
+    completed: "2026-03-08"
     tags: [scaffold, foundation, phase-1]
 
   - id: RL-003
     title: "Status bar integration"
-    description: "Configure Claude Code status line to show: active project, trace level (light/full), memory usage (lines/150), roadmap count, missing init warning."
     category: core
     plugin: claude-core
-    priority: now
-    source: "brainstorm/streamline-local-claude-workflow"
-    added: "2026-03-08"
+    priority: done
+    completed: "2026-03-08"
     tags: [ux, status-bar, phase-1]
 
   - id: RL-004
     title: "CLAUDE.md guardian hook"
-    description: "PostToolUse hook on Write/Edit targeting CLAUDE.md files. Validates for contradictions, redundancy, bloat, unintended consequences. Considers alternatives before committing."
     category: core
     plugin: claude-core
-    priority: now
-    source: "brainstorm/streamline-local-claude-workflow"
-    added: "2026-03-08"
+    priority: done
+    completed: "2026-03-08"
     tags: [hooks, quality, claude-md, phase-1]
 
   - id: RL-005
     title: "Tracing — light mode (always-on)"
-    description: "Append-only log: timestamp, skill/command name, pass/fail, duration, error summary. Near-zero cost. Enabled by default for all skill/command invocations."
     category: core
     plugin: claude-core
-    priority: now
-    source: "brainstorm/streamline-local-claude-workflow"
-    added: "2026-03-08"
+    priority: done
+    completed: "2026-03-08"
     tags: [tracing, observability, phase-1]
 
   - id: RL-006
     title: "Tracing — full mode (opt-in)"
-    description: "Adds decision trace (why this approach), intermediate outputs, file changes, token usage. Structured YAML per session. Toggled via trace:full command."
     category: core
     plugin: claude-core
-    priority: now
-    source: "brainstorm/streamline-local-claude-workflow"
-    added: "2026-03-08"
+    priority: done
+    completed: "2026-03-08"
     tags: [tracing, observability, phase-1]
 
   - id: RL-007
     title: "Error annotation in tracing"
-    description: "When errors occur, immediately capture: brief explanation, reproduction steps, expected vs actual, severity, suggested fix. Written in the moment, not after the fact."
     category: core
     plugin: claude-core
-    priority: now
-    source: "brainstorm/streamline-local-claude-workflow"
-    added: "2026-03-08"
+    priority: done
+    completed: "2026-03-08"
     tags: [tracing, errors, phase-1]
 
   - id: RL-008
     title: "Pre-completion trace review hook"
-    description: "Before task transitions to 'done', read trace for that task, filter errors/warnings. Block if critical, report if minor, pass if clean."
     category: core
     plugin: claude-core
-    priority: now
-    source: "brainstorm/streamline-local-claude-workflow"
-    added: "2026-03-08"
+    priority: done
+    completed: "2026-03-08"
     tags: [tracing, quality-gate, hooks, phase-1]
 
   - id: RL-009
     title: "Memory discipline rules"
-    description: "MEMORY.md hard cap 150 lines. Entries graduate to skills/rules then get deleted. Daily cron for bloat/stale check. Distinguish user thinking-out-loud from decisions from preferences."
     category: core
     plugin: claude-core
-    priority: now
-    source: "brainstorm/streamline-local-claude-workflow"
-    added: "2026-03-08"
+    priority: done
+    completed: "2026-03-08"
     tags: [memory, pruning, phase-1]
 
   # ============================================================
-  # PHASE 2 — OPERATIONAL (next)
+  # PHASE 2 — OPERATIONAL (complete)
   # ============================================================
 
   - id: RL-010
     title: "Roadmap auto-capture behavior"
-    description: "When out-of-scope ideas surface during conversation, auto-append to roadmap.yml with category, plugin, tags. No user action required."
     category: core
     plugin: claude-core
-    priority: next
-    source: "brainstorm/streamline-local-claude-workflow"
-    added: "2026-03-08"
+    priority: done
+    completed: "2026-03-08"
     tags: [roadmap, auto-capture, phase-2]
 
   - id: RL-011
     title: "roadmap:add command"
-    description: "Explicitly add a roadmap item with all metadata fields."
     category: core
     plugin: claude-core
-    priority: next
-    source: "brainstorm/streamline-local-claude-workflow"
-    added: "2026-03-08"
+    priority: done
+    completed: "2026-03-08"
     tags: [roadmap, commands, phase-2]
 
   - id: RL-012
     title: "roadmap:view command"
-    description: "Filter and display roadmap items by plugin, priority, category, tag."
     category: core
     plugin: claude-core
-    priority: next
-    source: "brainstorm/streamline-local-claude-workflow"
-    added: "2026-03-08"
+    priority: done
+    completed: "2026-03-08"
     tags: [roadmap, commands, phase-2]
 
   - id: RL-013
     title: "Planning — re-implement (plan:create)"
-    description: "Break work into ordered steps with dependencies. Wave decomposition is internal logic, not a separate skill. Re-implemented from scratch, not ported."
     category: core
     plugin: claude-core
-    priority: next
-    source: "brainstorm/streamline-local-claude-workflow"
-    added: "2026-03-08"
+    priority: done
+    completed: "2026-03-08"
     tags: [planning, re-implement, phase-2]
 
   - id: RL-014
     title: "Planning — re-implement (plan:execute)"
-    description: "Run plan step by step. Verification is inline (not separate skill). Integrates with pre-completion trace review hook."
     category: core
     plugin: claude-core
-    priority: next
-    source: "brainstorm/streamline-local-claude-workflow"
-    added: "2026-03-08"
+    priority: done
+    completed: "2026-03-08"
     tags: [planning, re-implement, phase-2]
 
   - id: RL-015
     title: "Planning — re-implement (plan:status + plan:resume)"
-    description: "Status shows progress, blockers, next steps. Resume continues from last known state."
     category: core
     plugin: claude-core
-    priority: next
-    source: "brainstorm/streamline-local-claude-workflow"
-    added: "2026-03-08"
+    priority: done
+    completed: "2026-03-08"
     tags: [planning, re-implement, phase-2]
 
   - id: RL-016
     title: "Brainstorm — re-implement (brainstorm:start)"
-    description: "Begin/resume sparring session. Captures transcript. Sparring partner mode, not interviewer. Re-implemented from scratch."
     category: core
     plugin: claude-core
-    priority: next
-    source: "brainstorm/streamline-local-claude-workflow"
-    added: "2026-03-08"
+    priority: done
+    completed: "2026-03-08"
     tags: [brainstorm, re-implement, phase-2]
 
   - id: RL-017
     title: "Brainstorm — re-implement (brainstorm:decide)"
-    description: "Extract structured decisions from session. Write decisions.yml. No separate decision-reader skill — just file reading."
     category: core
     plugin: claude-core
-    priority: next
-    source: "brainstorm/streamline-local-claude-workflow"
-    added: "2026-03-08"
+    priority: done
+    completed: "2026-03-08"
     tags: [brainstorm, re-implement, phase-2]
 
   # ============================================================
@@ -283,6 +249,16 @@ items:
     source: "brainstorm/streamline-local-claude-workflow"
     added: "2026-03-08"
     tags: [commands, hooks, phase-4]
+
+  - id: RL-073
+    title: "Auto-clear plugin cache after create/edit operations"
+    description: "All toolkit create/edit workflows (skill, command, hook, plugin) must automatically run rm -rf ~/.claude/plugins/cache/local-workspace/ as a post-step. Never require manual cache clearing."
+    category: toolkit
+    plugin: claude-toolkit
+    priority: later
+    source: "user-request/2026-03-08"
+    added: "2026-03-08"
+    tags: [cache, dx, hooks, phase-4]
 
   # ============================================================
   # PHASE 5 — DOMAIN PLUGINS (backlog)
@@ -764,30 +740,28 @@ items:
 
   - id: RL-071
     title: "Apply error annotation behavior rule to CLAUDE.md"
-    description: "The behavior rule is prepared in resources/error-annotation-behavior.md but not yet added to CLAUDE.md. Needs guardian validation."
     category: core
     plugin: claude-core
-    priority: next
-    source: "phase-1-implementation"
-    added: "2026-03-08"
+    priority: done
+    completed: "2026-03-08"
     tags: [tracing, errors, claude-md, iteration-2]
 
   - id: RL-072
     title: "Apply memory discipline rules to CLAUDE.md"
-    description: "The discipline rules are prepared in resources/memory-discipline-claude-md.md but not yet added to CLAUDE.md. Needs guardian validation."
     category: core
     plugin: claude-core
-    priority: next
-    source: "phase-1-implementation"
-    added: "2026-03-08"
+    priority: done
+    completed: "2026-03-08"
     tags: [memory, claude-md, iteration-2]
 
 # ============================================================
 # STATS
 # ============================================================
-# Total items: 72
-# Phase 1 (now → complete): 9
-# Phase 2 (next): 8 + 3 iteration-2 items promoted to next
+# Total items: 73
+# Phase 1 (done): 9
+# Phase 2 (done): 8
+# Iteration-2 (done): 2 (RL-071, RL-072)
+# Iteration-2 (next): 1 (RL-069)
 # Phase 3 (later): 4
 # Phase 4 (later): 4
 # Phase 5+ (backlog): 44
