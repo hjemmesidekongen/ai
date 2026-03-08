@@ -1,0 +1,148 @@
+# ============================================================
+# Error Annotation Format — claude-core tracing
+# ============================================================
+# Used by both light and full tracing modes.
+# Claude writes these entries in the moment, not after the fact.
+# The trace scripts provide the format; Claude provides the content.
+#
+# Light mode: error-annotated line appended to trace-light.log
+# Full mode:  structured error entry in session YAML
+# ============================================================
+
+# ----------------------------------------------------------
+# LIGHT TRACE FORMAT (extends the standard pipe-delimited line)
+# ----------------------------------------------------------
+# Standard: timestamp|tool_name|status|duration|context
+# Error:    timestamp|tool_name|error|duration|context|severity|error_summary
+#
+# The two extra pipe fields (severity, error_summary) distinguish
+# error-annotated lines from standard lines. Parsers detect error
+# annotations by: status == "error" AND field_count >= 7.
+
+light_trace:
+  standard_fields: "timestamp|tool_name|status|duration|context"
+  error_fields: "timestamp|tool_name|error|duration|context|severity|error_summary"
+  field_count:
+    standard: 5
+    error_annotated: 7
+  detection_rule: "status == 'error' AND field_count >= 7"
+
+  examples:
+    standard_error: "2026-03-08T14:22:01Z|Bash|error|-|npm test|critical|Tests fail — 3 assertions broken in auth module"
+    warning: "2026-03-08T14:22:01Z|Edit|error|-|src/api.ts|warning|Deprecated fetch wrapper used — works but will break in v3"
+    info: "2026-03-08T14:22:01Z|Read|error|-|config.json|info|Unexpected format (JSONC not JSON) — handled by stripping comments"
+
+# ----------------------------------------------------------
+# FULL TRACE FORMAT (structured YAML entry)
+# ----------------------------------------------------------
+# Added to the session file at .ai/traces/sessions/trace-full-{date}.yml
+# under an `errors:` array.
+
+full_trace:
+  required_fields:
+    timestamp:
+      type: "string"
+      format: "ISO 8601 UTC (e.g. 2026-03-08T14:22:01Z)"
+      description: "When the error was observed"
+
+    severity:
+      type: "enum"
+      values: ["critical", "warning", "info"]
+      description: "How much this error matters"
+
+    error_summary:
+      type: "string"
+      max_length: 120
+      description: "One-line description of what went wrong"
+
+    context:
+      type: "string"
+      description: "What was being done when the error occurred (tool, step, goal)"
+
+  optional_fields:
+    reproduction:
+      type: "string"
+      description: "Steps to reproduce the error"
+
+    expected:
+      type: "string"
+      description: "What was expected to happen"
+
+    actual:
+      type: "string"
+      description: "What actually happened"
+
+    suggested_fix:
+      type: "string"
+      description: "Claude's immediate assessment of how to fix it"
+
+    related_files:
+      type: "list"
+      items: "string"
+      description: "Absolute paths of files involved"
+
+    trace_ref:
+      type: "string"
+      description: "Reference to the trace entry — light log line number or full trace entry ID"
+
+  example:
+    timestamp: "2026-03-08T14:22:01Z"
+    severity: "critical"
+    error_summary: "Tests fail — 3 assertions broken in auth module"
+    context: "Running npm test after refactoring auth middleware"
+    reproduction: "Run `npm test -- --grep auth` from project root"
+    expected: "All 12 auth tests pass"
+    actual: "9 pass, 3 fail (token validation, session expiry, refresh flow)"
+    suggested_fix: "Token validation changed signature in refactor — update test mocks to match new arg order"
+    related_files:
+      - "/Users/mvn/project/src/auth/middleware.ts"
+      - "/Users/mvn/project/tests/auth/middleware.test.ts"
+    trace_ref: "line 47 of trace-light.log"
+
+# ----------------------------------------------------------
+# SEVERITY GUIDELINES
+# ----------------------------------------------------------
+
+severity_guidelines:
+  critical:
+    description: "Blocks task completion. Must be resolved before marking done."
+    action: "Stop and fix before proceeding."
+    examples:
+      - "Test failure that indicates broken functionality"
+      - "File write that overwrote important data"
+      - "Hook that blocks Claude from proceeding"
+      - "Build failure that prevents deployment"
+      - "Data loss or corruption"
+
+  warning:
+    description: "Does not block but should be reviewed. May indicate future issues."
+    action: "Note in trace, continue work, review before marking task complete."
+    examples:
+      - "Deprecated API usage"
+      - "Performance degradation detected"
+      - "Partial success — some items failed"
+      - "Workaround applied instead of proper fix"
+      - "Non-critical test skipped"
+
+  info:
+    description: "Noteworthy observation. No action required."
+    action: "Record for context. No follow-up needed."
+    examples:
+      - "Unexpected file format, handled gracefully"
+      - "Alternative approach discovered during debugging"
+      - "Dependency version mismatch (non-breaking)"
+      - "Edge case encountered but handled"
+      - "Configuration auto-corrected"
+
+# ----------------------------------------------------------
+# CONSTRAINTS
+# ----------------------------------------------------------
+
+constraints:
+  - "Write annotations in the moment — do not rationalize or reconstruct after the fact"
+  - "error_summary must be a single line, max 120 characters"
+  - "severity must be exactly one of: critical, warning, info"
+  - "Light trace error lines must be parseable with the same pipe delimiter as standard lines"
+  - "No pipe characters (|) in error_summary — use dashes or commas instead"
+  - "Annotations are shared knowledge — write clearly enough for another agent to understand without context"
+  - "Full trace entries go under the errors: array in the session YAML"

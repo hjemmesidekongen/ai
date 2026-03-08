@@ -1,0 +1,32 @@
+{
+  "name": "claude-core",
+  "version": "0.1.0",
+  "description": "Foundation plugin — tracing, memory governance, CLAUDE.md protection, planning, and orchestration. Required by all other plugins.",
+  "author": { "name": "mvn" },
+  "repository": "https://github.com/mvn/claude-local-workspace",
+  "license": "MIT",
+  "keywords": ["core", "foundation", "tracing", "memory", "planning", "orchestration"],
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash ${CLAUDE_PLUGIN_ROOT}/scripts/claude-md-guardian.sh 2>/dev/null || true",
+            "timeout": 50
+          }
+        ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash ${CLAUDE_PLUGIN_ROOT}/scripts/trace-light.sh 2>/dev/null || true",
+            "timeout": 30
+          }
+        ]
+      }
+    ]
+  }
+}

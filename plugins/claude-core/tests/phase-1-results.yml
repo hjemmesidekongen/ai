@@ -1,0 +1,120 @@
+# ============================================================
+# Phase 1 Integration Test Results
+# Claude Core — Foundation Layer
+# ============================================================
+# Date: 2026-03-08
+# Tester: Claude (automated) + manual verification
+# ============================================================
+
+summary:
+  total_tasks: 11
+  passed: 11
+  failed: 0
+  status: "PASS"
+
+wave_results:
+  wave_1:
+    task: t1 — Architecture doc
+    status: PASS
+    notes: "All sections covered. No contradictions with brainstorm decisions."
+
+  wave_2:
+    task: t2 — Plugin scaffold
+    status: PASS
+    notes: "plugin.json valid. All directories created. README marketing-quality."
+
+  wave_3:
+    tasks:
+      t3 — Status bar:
+        status: PASS
+        notes: "Project name, trace level, memory usage displayed. Graceful fallback when data missing. 70ms execution."
+      t4 — CLAUDE.md guardian:
+        status: PASS
+        notes: "Fires on CLAUDE.md, silent on others. Valid JSON output. 15ms execution."
+      t5 — Trace light:
+        status: PASS
+        notes: "Append-only log, correct format, tool-specific context extraction. ~10ms execution."
+
+  wave_4:
+    tasks:
+      t6 — Trace full command:
+        status: PASS
+        notes: "Toggle on/off, session YAML format defined, entry format documented, anti-recursion rules."
+      t7 — Error annotation:
+        status: PASS
+        notes: "Format backwards-compatible with light trace (7 fields vs 5). Severity guidelines clear."
+      t9 — Memory rules:
+        status: PASS
+        notes: "Three-file architecture documented. CLAUDE.md addition is 9 lines. Graduation rules clear."
+
+  wave_5:
+    tasks:
+      t8 — Pre-completion review:
+        status: PASS
+        notes: "Reads trace, categorizes by severity, JSON output. Clean run on real data. ~20ms."
+      t10 — Memory health check:
+        status: PASS
+        notes: "Counts lines, flags stale entries, suggests graduation candidates. Real data: 3/150 healthy."
+
+  wave_6:
+    task: t11 — Integration test
+    status: PASS
+    notes: "All features work together. All uninstall tests pass (each feature standalone)."
+
+integration_tests:
+  - name: "All files present"
+    status: PASS
+    details: "19 files across 6 directories"
+
+  - name: "plugin.json valid JSON"
+    status: PASS
+
+  - name: "All scripts executable"
+    status: PASS
+    details: "4/4 scripts have execute permission"
+
+  - name: "Guardian fires on CLAUDE.md"
+    status: PASS
+    details: "systemMessage contains 4-point validation checklist"
+
+  - name: "Guardian silent on non-CLAUDE.md"
+    status: PASS
+    details: "Empty output, exit 0"
+
+  - name: "Trace light appends entry"
+    status: PASS
+    details: "Pipe-delimited, correct tool name and context"
+
+  - name: "Pre-completion clean run"
+    status: PASS
+    details: "CLEAN message on trace without errors"
+
+  - name: "Memory health on real data"
+    status: PASS
+    details: "3/150 lines, healthy, no stale entries"
+
+uninstall_tests:
+  - name: "Remove guardian → others work"
+    status: PASS
+  - name: "Remove trace-light → others work"
+    status: PASS
+  - name: "Remove pre-completion → others work"
+    status: PASS
+  - name: "Remove memory-health → others work"
+    status: PASS
+
+performance:
+  claude_md_guardian: "~15ms"
+  trace_light: "~10ms"
+  pre_completion_review: "~20ms"
+  memory_health_check: "~20-160ms"
+  statusline: "~70ms"
+
+deferred_to_iteration_2:
+  - "CLAUDE.md guardian: could also validate MEMORY.md edits (not just CLAUDE.md)"
+  - "Trace light: could include token usage estimation per tool call"
+  - "Pre-completion: could generate a fix-plan for critical errors, not just list them"
+  - "Memory health: could integrate with /loop for automatic daily runs"
+  - "Status bar: could show error count from current session trace"
+  - "Error annotation: behavior rule not yet added to CLAUDE.md (prepared in resources/)"
+  - "Memory discipline: rules not yet added to CLAUDE.md (prepared in resources/)"
