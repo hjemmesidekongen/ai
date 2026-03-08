@@ -24,6 +24,8 @@ Execute a wave plan sequentially. Each wave completes and passes verification be
 
 2. **Pre-flight check:**
    - Verify plan.yml and state.yml exist
+   - **Read plan.md** — this contains the implementation rules for this plan.
+     These rules apply to every task. Load them into context now.
    - Check for unresolved errors from prior attempts
    - If errors exist → show them and ask whether to proceed or fix first
 

@@ -21,7 +21,8 @@ Resume an interrupted plan from the exact stopping point. Handles session breaks
    - If none active → "No active plans. Use `/plan:create` to start one."
 
 2. **Reconstruct context:**
-   - Read plan.yml and state.yml
+   - Read plan.yml, state.yml, and **plan.md** (implementation rules)
+   - plan.md contains the standards for this plan — load it before doing anything
    - Read recovery_notes for progress summary
    - Identify: last completed wave, current wave, any partial progress
 

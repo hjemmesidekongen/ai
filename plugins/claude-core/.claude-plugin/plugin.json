@@ -1,6 +1,6 @@
 {
   "name": "claude-core",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Foundation plugin — tracing, memory governance, CLAUDE.md protection, planning, and orchestration. Required by all other plugins.",
   "author": { "name": "mvn" },
   "repository": "https://github.com/mvn/claude-local-workspace",
@@ -24,6 +24,33 @@
             "type": "command",
             "command": "bash ${CLAUDE_PLUGIN_ROOT}/scripts/trace-light.sh 2>/dev/null || true",
             "timeout": 30
+          }
+        ]
+      }
+    ],
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash ${CLAUDE_PLUGIN_ROOT}/scripts/session-recovery.sh 2>/dev/null || true",
+            "timeout": 10
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash ${CLAUDE_PLUGIN_ROOT}/scripts/check-wave-complete.sh 2>/dev/null",
+            "timeout": 30
+          },
+          {
+            "type": "command",
+            "command": "bash ${CLAUDE_PLUGIN_ROOT}/scripts/check-trace-written.sh 2>/dev/null || true",
+            "timeout": 10
           }
         ]
       }

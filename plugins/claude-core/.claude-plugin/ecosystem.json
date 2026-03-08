@@ -15,7 +15,8 @@
     "brainstorm-session",
     "brainstorm-decision-writer",
     "plan-engine",
-    "plan-verifier"
+    "plan-verifier",
+    "decision-reader"
   ],
   "agents": [],
   "dependencies": []

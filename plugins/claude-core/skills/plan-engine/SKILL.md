@@ -11,6 +11,7 @@ depends_on: []
 reads: []
 writes:
   - ".ai/plans/{name}/plan.yml"
+  - ".ai/plans/{name}/plan.md"
   - ".ai/plans/{name}/state.yml"
 checkpoint: data_validation
 model_tier: principal
@@ -52,5 +53,19 @@ A task list (provided inline or as a file) with:
 
 ## Output
 
-- `.ai/plans/{name}/plan.yml` — the wave plan
+- `.ai/plans/{name}/plan.yml` — the wave plan (what to do)
+- `.ai/plans/{name}/plan.md` — implementation rules (how to do it)
 - `.ai/plans/{name}/state.yml` — execution state (all pending)
+
+## plan.md
+
+Every plan gets a `plan.md` — the implementation contract. It's read before
+executing any task in the plan. Contains:
+
+- Implementation standards (documentation inline, verification before advancing, etc.)
+- Files that must stay in sync when certain areas are modified
+- Plan-specific constraints (e.g., "always A/B benchmark new skills")
+- What NOT to do
+
+This is the plan's equivalent of CLAUDE.md — behavioral rules scoped to this
+specific body of work. Without it, important standards get forgotten mid-execution.

@@ -31,7 +31,13 @@ Generate a wave-based execution plan with dependency ordering, file-ownership is
    - Model-tier assignment
    - Verification setup
 
-4. **Present the plan** to the user:
+4. **Generate plan.md** — the implementation contract for this plan:
+   - Ask the user what standards apply (documentation, testing, benchmarks, etc.)
+   - Include files that must stay in sync when certain areas are modified
+   - Include plan-specific constraints and what NOT to do
+   - This file is read before executing every task — it prevents mid-plan amnesia
+
+5. **Present the plan** to the user:
    ```
    Plan: {name}
    {total_tasks} tasks across {total_waves} waves
@@ -44,7 +50,7 @@ Generate a wave-based execution plan with dependency ordering, file-ownership is
      → Verification: integration_test + QA review
    ```
 
-5. **Confirm:** "Plan saved to `.ai/plans/{name}/plan.yml`. Run `/plan:execute` to start."
+6. **Confirm:** "Plan saved to `.ai/plans/{name}/`. Run `/plan:execute` to start."
 
 ## Notes
 

@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
-# Agency plugin — Stop hook: remind about missing trace reflections
-# Follows established patterns: always exit 0, JSON output, warnings to stderr
-# Only checks traces modified in the last 60 minutes (current session)
+# claude-core — Stop hook: remind about missing trace reflections
+# Checks agency project traces for missing reflections section.
+# Always exits 0 (informational, never blocks).
 
-# Find active project
+# --- Check agency project traces ---
 AGENCY_FILE=".ai/agency.yml"
 [ ! -f "$AGENCY_FILE" ] && exit 0
 
@@ -36,9 +36,7 @@ for trace_file in $RECENT_TRACES; do
 done
 
 if [ -n "$INCOMPLETE" ]; then
-  # Remove trailing comma+space
   INCOMPLETE=$(echo "$INCOMPLETE" | sed 's/, $//')
-  # Informational system message — does NOT block the stop
   echo "{\"systemMessage\": \"Trace reminder: ${INCOMPLETE} missing reflections section\"}"
 fi
 
