@@ -1,0 +1,40 @@
+{
+  "expectations": [
+    {
+      "text": "Assigns t1 (scaffold) to junior tier",
+      "passed": true,
+      "evidence": "t1: Scaffold directory structure \u2192 **Junior** | Haiku. Reasoning: \"Pure mechanical work. Create folders, drop in boilerplate files. Zero judgment calls, zero risk of subtle bugs. A checklist task.\""
+    },
+    {
+      "text": "Assigns t2 (implement) to senior tier",
+      "passed": true,
+      "evidence": "t2: Implement authentication middleware \u2192 **Senior** | Sonnet. Reasoning: \"Auth middleware requires real engineering judgment \u2014 token validation, session handling, error responses, middleware ordering... Senior-level, not principal.\""
+    },
+    {
+      "text": "Assigns t3 (review/verify) to principal tier",
+      "passed": true,
+      "evidence": "t3: Review and verify all security controls \u2192 **Principal** | Opus. Reasoning: \"Security review demands the broadest context awareness and adversarial thinking... This is the task where a miss costs the most.\""
+    },
+    {
+      "text": "Assigns t4 (generate from template) to junior tier",
+      "passed": true,
+      "evidence": "t4: Generate config from template \u2192 **Junior** | Haiku. Reasoning: \"Template interpolation \u2014 read a template, fill in values, write the output. Deterministic, low-risk, no design decisions.\""
+    },
+    {
+      "text": "Assigns t5 (architect) to principal tier",
+      "passed": true,
+      "evidence": "t5: Architect the database schema \u2192 **Principal** | Opus. Reasoning: \"Schema design locks in structural decisions that are expensive to change later. Requires reasoning about data relationships, access patterns, normalization tradeoffs, indexing strategy, and future extensibility.\""
+    },
+    {
+      "text": "Provides reasoning for each assignment",
+      "passed": true,
+      "evidence": "All five tasks have individual reasoning paragraphs explaining the tier choice: t1 (mechanical/checklist), t2 (engineering judgment but well-understood), t3 (adversarial thinking/broadest context), t4 (deterministic/low-risk), t5 (expensive-to-change structural decisions)."
+    }
+  ],
+  "summary": {
+    "passed": 6,
+    "failed": 0,
+    "total": 6,
+    "pass_rate": 1.0
+  }
+}

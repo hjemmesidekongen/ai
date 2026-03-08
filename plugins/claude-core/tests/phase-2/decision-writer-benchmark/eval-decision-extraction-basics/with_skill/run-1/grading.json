@@ -1,0 +1,35 @@
+{
+  "expectations": [
+    {
+      "text": "Identifies the key decision: start with modular monolith, extract later",
+      "passed": true,
+      "evidence": "Candidate 1 explicitly states: \"Adopt a modular monolith architecture instead of microservices. Extract services only when individual teams demonstrate a proven need for independence.\""
+    },
+    {
+      "text": "Captures the reasoning: team autonomy is the driver",
+      "passed": true,
+      "evidence": "Candidate 2 directly captures this: \"Team autonomy (not scale or deployment independence) is the primary driver for architectural decomposition decisions.\" with transcript evidence quoting \"Mainly team autonomy. We have 4 teams stepping on each other.\""
+    },
+    {
+      "text": "Assigns appropriate domain tags like architecture or technical",
+      "passed": true,
+      "evidence": "Candidate 1 is tagged `architecture`, `technical`. Candidate 2 is tagged `architecture`, `process`. Both include architecture-related domain tags."
+    },
+    {
+      "text": "Suggests a confidence level based on the conviction shown",
+      "passed": true,
+      "evidence": "Both candidates ask the user to confirm confidence level (high/medium/low) and Candidate 1 notes \"Strong signal\" based on the conviction shift observed in the transcript. The skill is interactive and defers final confidence assignment to the user, which is the correct behavior per the skill's design."
+    },
+    {
+      "text": "Does not extract the initial 'split into microservices' as a decision since it was revised",
+      "passed": true,
+      "evidence": "The initial microservices position is only referenced as context for the shift: \"This is a clear conviction shift \u2014 started with 'split into microservices,' landed on modular monolith with conditional extraction.\" It is not presented as a separate decision candidate."
+    }
+  ],
+  "summary": {
+    "passed": 5,
+    "failed": 0,
+    "total": 5,
+    "pass_rate": 1.0
+  }
+}

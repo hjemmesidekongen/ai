@@ -1,0 +1,40 @@
+{
+  "expectations": [
+    {
+      "text": "Assigns t1 (scaffold) to junior tier",
+      "passed": true,
+      "evidence": "t1 | Scaffold directory structure | **junior** | Haiku"
+    },
+    {
+      "text": "Assigns t2 (implement) to senior tier",
+      "passed": true,
+      "evidence": "t2 | Implement authentication middleware | **senior** | Sonnet"
+    },
+    {
+      "text": "Assigns t3 (review/verify) to principal tier",
+      "passed": true,
+      "evidence": "t3 | Review and verify all security controls | **principal** | Opus"
+    },
+    {
+      "text": "Assigns t4 (generate from template) to junior tier",
+      "passed": true,
+      "evidence": "t4 | Generate config from template | **junior** | Haiku"
+    },
+    {
+      "text": "Assigns t5 (architect) to principal tier",
+      "passed": true,
+      "evidence": "t5 | Architect the database schema | **principal** | Opus"
+    },
+    {
+      "text": "Provides reasoning for each assignment",
+      "passed": true,
+      "evidence": "All five tasks have dedicated reasoning paragraphs explaining keyword matches and justification: t1 (scaffold keyword, mechanical work), t2 (implement keyword, scoped build task), t3 (review/verify keywords, cross-cutting reasoning), t4 (generate from template keyword, deterministic), t5 (architect keyword, foundational decision)"
+    }
+  ],
+  "summary": {
+    "passed": 6,
+    "failed": 0,
+    "total": 6,
+    "pass_rate": 1.0
+  }
+}

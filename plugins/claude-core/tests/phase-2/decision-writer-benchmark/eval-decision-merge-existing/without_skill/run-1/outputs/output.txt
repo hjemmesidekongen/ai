@@ -1,0 +1,37 @@
+Here's the merge process across all three plugin versions:
+
+## Core contract (all versions)
+
+**Append-only. Never overwrite. Never reorder.**
+
+## Steps
+
+1. **Read** existing `decisions.yml` (or treat as empty list if absent)
+2. **Extract** new decisions from the brainstorm transcript
+3. **Assign IDs** — continue from `max(existing) + 1` (so D-006, D-007 in your case)
+4. **Check for ID collisions** — if a generated ID already exists, bump to next available
+5. **Append** new decisions to the end of the existing list
+6. **Update metadata** — `updated_at` timestamp, add transcript to `source_sessions` list
+7. **Write** the merged file
+
+## Collision & contradiction handling
+
+| Scenario | Behavior |
+|----------|----------|
+| ID collision | Regenerate with `max_existing + 1` |
+| Contradiction with existing decision | **claude-core only**: flags it if >50% keyword overlap with different conclusions, asks user to keep both / replace / skip |
+| User wants to update an existing decision | **claude-core**: edit in place. **task-planner/agency**: create new entry |
+
+## Checkpoint verification
+
+The verification gate explicitly checks:
+```
+prior_decisions_preserved: "If prior decisions existed, they are preserved in the output"
+```
+If this fails → reload prior decisions and re-merge.
+
+## Your scenario
+
+D-001 through D-005 stay untouched. New decisions become D-006 and D-007. The file grows, never shrinks.
+
+The key difference between implementations: **claude-core** adds a contradiction-detection gate before writing, while the other two blindly append. If you're using the claude-core version, it'll prompt you before adding a decision that conflicts with an existing one.

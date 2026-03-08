@@ -1,0 +1,49 @@
+{
+  "evals": [
+    {
+      "id": "plan-engine-basic-decomposition",
+      "prompt": "Decompose this task list into waves:\n\nTasks:\n- t1: Create user schema (depends_on: [], writes: [models/user.yml])\n- t2: Build user API (depends_on: [t1], writes: [api/user.ts])\n- t3: Create product schema (depends_on: [], writes: [models/product.yml])\n- t4: Build product API (depends_on: [t3], writes: [api/product.ts])\n- t5: Integration tests (depends_on: [t2, t4], writes: [tests/integration.yml])\n\nShow the wave decomposition with parallel flags.",
+      "expectations": [
+        "Places t1 and t3 in wave 1 since they have no dependencies",
+        "Marks wave 1 as parallel since t1 and t3 write to different files",
+        "Places t2 and t4 in wave 2 since their dependencies are in wave 1",
+        "Marks wave 2 as parallel since t2 and t4 write to different files",
+        "Places t5 in wave 3 since it depends on both t2 and t4",
+        "Produces exactly 3 waves"
+      ]
+    },
+    {
+      "id": "plan-engine-file-conflict",
+      "prompt": "Decompose this task list into waves:\n\nTasks:\n- t1: Write header section (depends_on: [], writes: [config.yml#header])\n- t2: Write footer section (depends_on: [], writes: [config.yml#footer])\n- t3: Write full config (depends_on: [], writes: [config.yml])\n\nShow how file-ownership conflicts are handled.",
+      "expectations": [
+        "Identifies that t3 conflicts with both t1 and t2 since whole-file claim includes all sections",
+        "Recognizes that t1 and t2 do NOT conflict since they write different sections",
+        "Places t1 and t2 together in one wave as parallel",
+        "Moves t3 to a separate wave from t1 and t2",
+        "Explains the section-level ownership logic"
+      ]
+    },
+    {
+      "id": "plan-engine-model-tier",
+      "prompt": "Assign model tiers to these tasks:\n\n- t1: Scaffold directory structure\n- t2: Implement authentication middleware\n- t3: Review and verify all security controls\n- t4: Generate config from template\n- t5: Architect the database schema\n\nExplain the tier assignment for each.",
+      "expectations": [
+        "Assigns t1 (scaffold) to junior tier",
+        "Assigns t2 (implement) to senior tier",
+        "Assigns t3 (review/verify) to principal tier",
+        "Assigns t4 (generate from template) to junior tier",
+        "Assigns t5 (architect) to principal tier",
+        "Provides reasoning for each assignment"
+      ]
+    },
+    {
+      "id": "plan-engine-cycle-detection",
+      "prompt": "Decompose this task list:\n\n- t1: Build A (depends_on: [t3])\n- t2: Build B (depends_on: [t1])\n- t3: Build C (depends_on: [t2])\n\nWhat happens?",
+      "expectations": [
+        "Detects the circular dependency: t1 -> t3 -> t2 -> t1",
+        "Reports the cycle clearly with the involved task ids",
+        "Does NOT attempt to break the cycle automatically",
+        "Suggests the user restructure the dependencies"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "commands": [
+    "trace-full",
+    "roadmap-add",
+    "roadmap-view",
+    "brainstorm-start",
+    "brainstorm-decide",
+    "plan-create",
+    "plan-execute",
+    "plan-status",
+    "plan-resume"
+  ],
+  "skills": [
+    "roadmap-capture",
+    "brainstorm-session",
+    "brainstorm-decision-writer",
+    "plan-engine",
+    "plan-verifier"
+  ],
+  "agents": [],
+  "dependencies": []
+}

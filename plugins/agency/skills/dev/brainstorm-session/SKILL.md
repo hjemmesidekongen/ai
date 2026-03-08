@@ -14,6 +14,8 @@ writes:
 reads:
   - ".ai/brainstorm/*/decisions.yml (past decisions for context)"
   - ".ai/agency.yml (active project)"
+tools:
+  - "Perplexity MCP (perplexity_search, perplexity_deep_research) — ground pushback in real-world data"
 model_tier: principal
 model: opus
 interactive: true
@@ -51,9 +53,12 @@ and pushes back on ideas to strengthen decisions.
 
 1. Load past decisions from `.ai/brainstorm/*/decisions.yml` for context
 2. Ask user for brainstorm topic and goals
-3. Facilitate structured discussion — challenge, push back, explore alternatives
-4. Capture key points, trade-offs, and open questions in real-time
-5. Write timestamped transcript and update brainstorm-state.yml
+3. **Classify domain** — determine if topic is brand, design, technical, strategy, etc.
+4. **Create transcript file** — write header immediately, append each exchange as it happens
+5. Facilitate structured discussion — challenge, push back, explore alternatives
+6. **Use Perplexity MCP to ground pushback** — verify claims, research competitors, check best practices
+7. **Live-transcribe** — append every exchange to transcript during the session (not at the end)
+8. On session end — finalize transcript with closing sections, update brainstorm-state.yml
 
 ## Findings Persistence
 

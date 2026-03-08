@@ -1,0 +1,35 @@
+{
+  "expectations": [
+    {
+      "text": "Identifies that t3 conflicts with both t1 and t2 since whole-file claim includes all sections",
+      "passed": true,
+      "evidence": "Pairwise conflict table shows t1 vs t3 and t2 vs t3 both marked YES with rule 'Whole-file includes section'. Resolution text states 't3 conflicts with both t1 and t2'."
+    },
+    {
+      "text": "Recognizes that t1 and t2 do NOT conflict since they write different sections",
+      "passed": true,
+      "evidence": "Pairwise conflict table shows t1 vs t2 marked NO with rule 'Different sections'. Paths are config.yml#header vs config.yml#footer."
+    },
+    {
+      "text": "Places t1 and t2 together in one wave as parallel",
+      "passed": true,
+      "evidence": "Wave 1 contains tasks ['t1', 't2'] with parallel: true. Rationale states 't1 and t2 write different sections of config.yml (#header vs #footer) \u2014 no overlap, parallel-safe.'"
+    },
+    {
+      "text": "Moves t3 to a separate wave from t1 and t2",
+      "passed": true,
+      "evidence": "Wave 2 contains tasks ['t3'] with depends_on_waves: [1]. Resolution explicitly states 't3 moves to Wave 2.' Final state confirms Wave 1: [t1, t2], Wave 2: [t3]."
+    },
+    {
+      "text": "Explains the section-level ownership logic",
+      "passed": true,
+      "evidence": "Multiple explanations provided: (1) conflict table uses rule 'Different sections' for t1/t2 and 'Whole-file includes section' for t3 pairs, (2) wave 1 rationale explains section-level isolation, (3) wave 2 rationale explains 't3 writes whole config.yml, conflicting with both t1 (#header) and t2 (#footer)', (4) tie-break logic is explained with downstream dependents and task index ordering."
+    }
+  ],
+  "summary": {
+    "passed": 5,
+    "failed": 0,
+    "total": 5,
+    "pass_rate": 1.0
+  }
+}

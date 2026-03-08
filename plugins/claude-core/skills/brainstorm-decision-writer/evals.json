@@ -1,0 +1,45 @@
+{
+  "evals": [
+    {
+      "id": "decision-extraction-basics",
+      "prompt": "Given this brainstorm transcript excerpt:\n\nUser: 'I think we should split the monolith into microservices.'\nClaude: 'What's driving that? Is it scale, team autonomy, or deployment independence?'\nUser: 'Mainly team autonomy. We have 4 teams stepping on each other.'\nClaude: 'Have you considered a modular monolith first?'\nUser: 'Actually yeah, that's smarter. Let's start with a modular monolith and extract services only when teams prove they need independence.'\n\nExtract the decisions from this transcript. For each, provide the decision statement, confidence level, and domain tags.",
+      "expectations": [
+        "Identifies the key decision: start with modular monolith, extract later",
+        "Captures the reasoning: team autonomy is the driver",
+        "Assigns appropriate domain tags like architecture or technical",
+        "Suggests a confidence level based on the conviction shown",
+        "Does not extract the initial 'split into microservices' as a decision since it was revised"
+      ]
+    },
+    {
+      "id": "decision-contradiction-detection",
+      "prompt": "An existing decisions.yml contains:\n  D-001: 'Use PostgreSQL for all persistent storage' (confidence: high, domain: [technical])\n\nA new brainstorm transcript concludes with:\n  User: 'For the event log, we should use MongoDB since it's better for append-heavy workloads.'\n\nHow would you handle this when extracting decisions?",
+      "expectations": [
+        "Detects the potential contradiction with D-001 about database choice",
+        "Flags the conflict explicitly before writing",
+        "Presents options: keep both, replace D-001, narrow D-001's scope, or skip",
+        "Does not silently overwrite D-001"
+      ]
+    },
+    {
+      "id": "decision-no-premature-extraction",
+      "prompt": "Given this transcript:\n\nUser: 'Maybe we should use GraphQL... or REST... I keep going back and forth.'\nClaude: 'What's the main consumer of the API?'\nUser: 'Mobile app mostly, but also a web dashboard. Hmm, I need to think about this more.'\n\nExtract decisions from this transcript.",
+      "expectations": [
+        "Recognizes that no decision was made",
+        "Does not fabricate a decision from exploratory discussion",
+        "Suggests the topic is still open and may need more brainstorming",
+        "Does not force a conclusion"
+      ]
+    },
+    {
+      "id": "decision-merge-existing",
+      "prompt": "An existing decisions.yml has 5 decisions (D-001 through D-005). A new brainstorm session produced 2 new decisions.\n\nDescribe the merge process. What are the rules?",
+      "expectations": [
+        "New decisions get sequential IDs: D-006 and D-007",
+        "Existing decisions D-001 through D-005 are preserved unchanged",
+        "Never reorders or overwrites existing decisions",
+        "Updates the source_sessions array and updated_at timestamp"
+      ]
+    }
+  ]
+}

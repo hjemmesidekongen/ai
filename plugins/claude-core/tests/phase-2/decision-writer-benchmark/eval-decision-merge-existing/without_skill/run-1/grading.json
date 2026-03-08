@@ -1,0 +1,30 @@
+{
+  "expectations": [
+    {
+      "text": "New decisions get sequential IDs: D-006 and D-007",
+      "passed": true,
+      "evidence": "Step 3 states: 'Assign IDs \u2014 continue from max(existing) + 1 (so D-006, D-007 in your case)'. The scenario section confirms: 'New decisions become D-006 and D-007.'"
+    },
+    {
+      "text": "Existing decisions D-001 through D-005 are preserved unchanged",
+      "passed": true,
+      "evidence": "The scenario section explicitly states: 'D-001 through D-005 stay untouched.' The checkpoint verification also checks 'prior_decisions_preserved: If prior decisions existed, they are preserved in the output'."
+    },
+    {
+      "text": "Never reorders or overwrites existing decisions",
+      "passed": true,
+      "evidence": "The core contract states: 'Append-only. Never overwrite. Never reorder.' Step 5 says 'Append new decisions to the end of the existing list.' The summary states 'The file grows, never shrinks.'"
+    },
+    {
+      "text": "Updates the source_sessions array and updated_at timestamp",
+      "passed": true,
+      "evidence": "Step 6 explicitly states: 'Update metadata \u2014 updated_at timestamp, add transcript to source_sessions list'."
+    }
+  ],
+  "summary": {
+    "passed": 4,
+    "failed": 0,
+    "total": 4,
+    "pass_rate": 1.0
+  }
+}

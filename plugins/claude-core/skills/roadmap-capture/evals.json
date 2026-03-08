@@ -1,0 +1,55 @@
+{
+  "evals": [
+    {
+      "id": "roadmap-capture-explicit",
+      "prompt": "A user says: 'We should add dark mode support to the design system someday. Add it to the roadmap.'\n\nThe current roadmap has items RL-001 through RL-072. There are no existing items about dark mode.\n\nDescribe exactly what roadmap item you would create. Include all fields: id, title, description, category, plugin, priority, source, added date, and tags.",
+      "expectations": [
+        "Proposes a roadmap item with id RL-073 or next sequential",
+        "Title is concise and action-oriented, mentioning dark mode",
+        "Sets priority to backlog since no urgency was specified",
+        "Includes appropriate category like design or ux",
+        "Includes relevant tags like dark-mode or design-system",
+        "Mentions checking for duplicate items"
+      ]
+    },
+    {
+      "id": "roadmap-capture-implicit",
+      "prompt": "While working on component specs, the user says: 'I realized we'll eventually need auto-generated Storybook stories from component definitions. Not now though, let's stay focused.'\n\nShould this be captured to the roadmap? If yes, describe the item. If no, explain why not.",
+      "expectations": [
+        "Recognizes this as an out-of-scope idea worth capturing",
+        "Proposes a roadmap item about Storybook auto-generation",
+        "Sets appropriate category like toolkit or development",
+        "Does not suggest implementing the feature now",
+        "Acknowledges the user wants to stay focused on current work"
+      ]
+    },
+    {
+      "id": "roadmap-capture-duplicate",
+      "prompt": "A user says: 'We should track adding a screenshot loop for visual regression testing.'\n\nThe existing roadmap already contains: 'RL-025: Screenshot loop for visual regression — Automated visual comparison of component states before/after changes.'\n\nWhat do you do?",
+      "expectations": [
+        "Identifies the existing item RL-025 as a potential duplicate",
+        "Mentions the existing item to the user",
+        "Does not create a duplicate entry",
+        "Offers to update the existing item if the user wants changes"
+      ]
+    },
+    {
+      "id": "roadmap-no-trigger-current-task",
+      "prompt": "The user says: 'Let's add error handling to the plan-execute command. That's the task we're working on right now.'\n\nShould this be captured to the roadmap?",
+      "expectations": [
+        "Does NOT suggest adding this to the roadmap",
+        "Recognizes this is the current task, not a future idea",
+        "Suggests proceeding with the implementation"
+      ]
+    },
+    {
+      "id": "roadmap-no-trigger-thinking-aloud",
+      "prompt": "The user says: 'I wonder if we could use Redis for caching... or maybe just localStorage... hmm, not sure yet.'\n\nShould this be captured to the roadmap?",
+      "expectations": [
+        "Does NOT immediately capture this to the roadmap",
+        "Recognizes this is exploratory thinking, not a decision",
+        "Suggests waiting until the user has a clearer direction"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+Three decisions from this transcript:
+
+**D-001: Adopt modular monolith over microservices as the initial architecture**
+- Confidence: **high** — both parties aligned after pushback
+- Domain: `architecture`, `system-design`
+- Context: Microservices was the initial impulse, but modular monolith was accepted as the pragmatic starting point after challenging the assumption.
+
+**D-002: Extract services only when a team proves it needs deployment independence**
+- Confidence: **high** — explicit agreement, clear trigger condition
+- Domain: `architecture`, `team-structure`
+- Context: "Extract when proven" is the gating rule. This prevents premature decomposition — teams must demonstrate the need, not assume it.
+
+**D-003: Team autonomy is the primary architectural driver, not scale or deployment speed**
+- Confidence: **medium** — stated as the main motivation, but scale/deployment weren't deeply explored. Could resurface.
+- Domain: `architecture`, `org-design`
+- Context: The user confirmed autonomy as the driver when prompted. Worth revisiting if load patterns change or deployment bottlenecks emerge independently.
+
+---
+
+Worth noting: the strongest signal here is the *pivot*. The user came in with "microservices" but landed on "modular monolith" — that's a genuine decision, not just a preference. D-001 is the anchor; D-002 is the escape hatch criteria; D-003 is the underlying constraint that should be tested again later.

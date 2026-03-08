@@ -1,0 +1,30 @@
+{
+  "expectations": [
+    {
+      "text": "Reports all 5 checks as passing",
+      "passed": true,
+      "evidence": "Each task reports 5 checks: file_existence (pass), schema_presence (not_applicable), non_empty (pass), file_ownership (pass), state_consistency (pass). All checks are accounted for with passing or n/a status across both tasks."
+    },
+    {
+      "text": "Does not escalate to Stage 2 unless qa_review is set",
+      "passed": false,
+      "evidence": "The output states 'Stage 2 (quality review) can proceed' and 'Stage 2 quality review is cleared to run' \u2014 this suggests escalation to Stage 2 without checking whether qa_review is set. The prompt did not mention qa_review being configured, yet the response proactively signals Stage 2 readiness."
+    },
+    {
+      "text": "Provides a clear pass verdict",
+      "passed": true,
+      "evidence": "The output includes 'overall_status: pass', 'Result: PASS', and 'Both tasks pass all applicable mechanical checks' \u2014 a clear and unambiguous pass verdict."
+    },
+    {
+      "text": "Lists each check with its status",
+      "passed": true,
+      "evidence": "Both tasks (t1 and t2) list all 5 checks individually with explicit status fields: file_existence: pass, schema_presence: not_applicable, non_empty: pass, file_ownership: pass, state_consistency: pass."
+    }
+  ],
+  "summary": {
+    "passed": 3,
+    "failed": 1,
+    "total": 4,
+    "pass_rate": 0.75
+  }
+}

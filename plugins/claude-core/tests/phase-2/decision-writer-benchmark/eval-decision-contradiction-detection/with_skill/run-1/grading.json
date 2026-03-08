@@ -1,0 +1,30 @@
+{
+  "expectations": [
+    {
+      "text": "Detects the potential contradiction with D-001 about database choice",
+      "passed": true,
+      "evidence": "Output explicitly identifies the conflict: \"This conflicts with D-001: 'Use PostgreSQL for all persistent storage.'\" and explains that \"The word 'all' in D-001 covers event logs.\""
+    },
+    {
+      "text": "Flags the conflict explicitly before writing",
+      "passed": true,
+      "evidence": "Opens with \"This hits contradiction detection (Step 6) before anything gets written.\" The conflict is presented to the user for confirmation before any YAML is produced. The example YAML is shown only as \"The likely resolution\" \u2014 a hypothetical outcome, not an executed write."
+    },
+    {
+      "text": "Presents options: keep both, replace D-001, narrow D-001's scope, or skip",
+      "passed": true,
+      "evidence": "Three explicit options presented: (1) Replace D-001 \u2014 narrow its scope and add D-002, (2) Keep both \u2014 accept contradiction as intentional carve-out, (3) Skip \u2014 drop the MongoDB decision. The 'narrow D-001's scope' expectation is covered by option 1 which narrows D-001 to exclude event log. All four expected options are represented across the three choices (replace and narrow are combined in option 1)."
+    },
+    {
+      "text": "Does not silently overwrite D-001",
+      "passed": true,
+      "evidence": "Dedicated section titled \"Why not just silently add D-002\" explicitly explains why silent overwrite is forbidden: \"The process explicitly forbids it... The contradiction must be resolved at extraction time, with the user making the call.\" The flow asks \"Which way?\" and waits for user input before proceeding."
+    }
+  ],
+  "summary": {
+    "passed": 4,
+    "failed": 0,
+    "total": 4,
+    "pass_rate": 1.0
+  }
+}

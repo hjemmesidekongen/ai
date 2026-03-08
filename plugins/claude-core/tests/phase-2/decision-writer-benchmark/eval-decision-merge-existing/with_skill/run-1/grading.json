@@ -1,0 +1,30 @@
+{
+  "expectations": [
+    {
+      "text": "New decisions get sequential IDs: D-006 and D-007",
+      "passed": true,
+      "evidence": "Step 2 explicitly states: 'new decisions get D-006 and D-007. IDs are zero-padded, always sequential from the highest existing ID.'"
+    },
+    {
+      "text": "Existing decisions D-001 through D-005 are preserved unchanged",
+      "passed": true,
+      "evidence": "Step 1 states: 'load all 5 decisions, preserve them exactly as-is. No reordering, no edits to existing entries.' Rules table reinforces: 'Existing D-001\u2013D-005 stay unchanged unless user explicitly replaces one.'"
+    },
+    {
+      "text": "Never reorders or overwrites existing decisions",
+      "passed": true,
+      "evidence": "Rules summary table includes 'Never overwrite' and 'Never reorder \u2014 Decision order is append-only'. Step 4 confirms: 'Append new decisions \u2014 add D-006 and D-007 after D-005.' Merge rule: 'Read \u2192 append \u2192 write. Never start fresh if the file exists.'"
+    },
+    {
+      "text": "Updates the source_sessions array and updated_at timestamp",
+      "passed": true,
+      "evidence": "Step 5 explicitly states: 'bump updated_at to now, append the new transcript filename to source_sessions.'"
+    }
+  ],
+  "summary": {
+    "passed": 4,
+    "failed": 0,
+    "total": 4,
+    "pass_rate": 1.0
+  }
+}

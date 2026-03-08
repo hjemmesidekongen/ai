@@ -1,0 +1,8 @@
+[
+  {"query": "Extract the decisions from our brainstorm session", "should_trigger": true},
+  {"query": "What did we decide in the brainstorm? Let's formalize it.", "should_trigger": true},
+  {"query": "Let's co-author the decisions from our last thinking session", "should_trigger": true},
+  {"query": "What's the weather in Tokyo?", "should_trigger": false},
+  {"query": "Create a wave plan for the authentication module", "should_trigger": false},
+  {"query": "Let's brainstorm about our database architecture", "should_trigger": false}
+]

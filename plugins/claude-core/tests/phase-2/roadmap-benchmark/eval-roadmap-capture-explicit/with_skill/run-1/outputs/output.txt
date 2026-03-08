@@ -1,0 +1,32 @@
+No duplicate found. Capturing to roadmap.
+
+**Capturing "Add dark mode support to the design system" → roadmap (backlog)**
+
+Here's the exact item:
+
+```yaml
+- id: RL-073
+  title: "Add dark mode support to the design system"
+  description: >
+    Extend design tokens and component specs to support a dark theme.
+    Requires theme-aware color tokens, component variant mappings, and
+    a toggle mechanism for switching between light and dark modes.
+  category: design
+  plugin: agency
+  priority: backlog
+  source: conversation
+  added: 2026-03-08
+  tags: [dark-mode, design-system, theming, tokens, accessibility]
+```
+
+Field reasoning:
+
+- **id**: `RL-073` — next sequential after the existing RL-072
+- **title**: action-oriented, says what and where
+- **description**: captures the "what" (dark theme support) and the "how" at a high level (theme-aware tokens, variant mappings, toggle mechanism)
+- **category**: `design` — this is a design system concern
+- **plugin**: `agency` — the design system (design-tokens, component-specs) lives in the agency plugin
+- **priority**: `backlog` — user said "someday", no urgency. Default is backlog, and the language confirms it
+- **source**: `conversation` — surfaced during this conversation, not from a brainstorm or plan
+- **added**: `2026-03-08` — today's date
+- **tags**: 5 relevant keywords — `dark-mode` and `theming` for the feature itself, `design-system` and `tokens` for the technical domain, `accessibility` because dark mode has a11y implications (contrast, user preference via `prefers-color-scheme`)

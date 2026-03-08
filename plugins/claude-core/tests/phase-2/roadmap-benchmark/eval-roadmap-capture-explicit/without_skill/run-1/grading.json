@@ -1,0 +1,40 @@
+{
+  "expectations": [
+    {
+      "text": "Proposes a roadmap item with id RL-073 or next sequential",
+      "passed": true,
+      "evidence": "Item has `id: RL-073` and rationale states 'next sequential after RL-072'"
+    },
+    {
+      "text": "Title is concise and action-oriented, mentioning dark mode",
+      "passed": true,
+      "evidence": "Title is 'Dark mode support for design system' \u2014 concise, mentions dark mode, and describes the action"
+    },
+    {
+      "text": "Sets priority to backlog since no urgency was specified",
+      "passed": true,
+      "evidence": "priority: backlog, with rationale: '\"someday\" maps directly to backlog (good idea, no timeline)'"
+    },
+    {
+      "text": "Includes appropriate category like design or ux",
+      "passed": true,
+      "evidence": "category: design, with rationale: 'this lives in the design system, not core infra'"
+    },
+    {
+      "text": "Includes relevant tags like dark-mode or design-system",
+      "passed": true,
+      "evidence": "tags: [design-system, dark-mode, theming] \u2014 includes both dark-mode and design-system"
+    },
+    {
+      "text": "Mentions checking for duplicate items",
+      "passed": false,
+      "evidence": "The response does not mention checking for duplicate items in the existing roadmap. While the prompt states there are no existing dark mode items, the response doesn't acknowledge having checked or considered duplicates."
+    }
+  ],
+  "summary": {
+    "passed": 5,
+    "failed": 1,
+    "total": 6,
+    "pass_rate": 0.83
+  }
+}

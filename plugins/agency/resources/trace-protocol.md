@@ -75,7 +75,7 @@ Use these estimates when reporting `token_estimate_step`:
 ```yaml
 _meta:
   schema: "trace"
-  version: "1.0.0"
+  version: "1.1.0"
   skill: "{skill-name}"
   module: "{module}"
   project: "{project}"
@@ -135,11 +135,65 @@ Use **trace-level** `reflections` for cross-cutting insights that span multiple 
 
 A trace with no reflections at either level is a missed opportunity. Every run teaches something — even "everything worked as expected" is worth noting in `reflections.observations`.
 
+## Uncertainty Calibration
+
+0.0 should be **rare** — reserve it for pure existence checks ("does the file
+exist?"). Most steps involve judgment calls that carry real uncertainty.
+
+| Uncertainty | Meaning | Example |
+|-------------|---------|---------|
+| 0.0 | Mechanical check, no judgment | "file exists" / "YAML is valid XML" |
+| 0.05–0.1 | Low — clear inputs, well-defined rules | Validating token references against a known spec |
+| 0.1–0.2 | Moderate — some interpretation needed | Evaluating brand voice compliance in generated copy |
+| 0.2–0.4 | Significant — multiple valid approaches | Choosing component layout, writing headlines |
+| 0.4–0.7 | High — limited data, subjective judgment | Design decisions without user input |
+| 0.7–1.0 | Guessing — should rarely reach this | If you're here, stop and ask the user |
+
+A trace where every step is 0.0 is not honest — it means uncertainty was not
+actually evaluated. Be calibrated, not optimistic.
+
+## Flags
+
+Use flags to make problems visible. A trace with zero flags across many steps
+is suspicious — real work encounters issues. Available flag values:
+
+- `missing_input` — expected file/data not found
+- `ambiguous_spec` — spec unclear, had to interpret
+- `low_confidence` — uncertainty > 0.3 on this step
+- `schema_mismatch` — output doesn't match expected schema
+- `fallback_used` — primary approach failed, used alternative
+- `missing_layout` — route exists but no layout file
+- `path_mismatch` — registered path doesn't match actual file location
+
+## Quality Assessment
+
+Quality assessments should evaluate **how well** the output meets the bar,
+not just confirm it exists. Bad: "All inputs available". Good: "Brand voice
+compliance verified — 0 banned words, sentence case consistent, but hero
+headline may be too long for mobile at 78 chars (limit 80)."
+
+## Abandoned Traces
+
+If a skill run is interrupted and never completed (e.g. user cancels, session
+ends, `--force` re-run starts), the trace may be left with `ended_at: null`.
+On the next run of the same skill, check for incomplete traces and update them:
+
+```yaml
+ended_at: "abandoned"
+checkpoint_result:
+  status: "abandoned"
+  note: "Run interrupted — superseded by [new-trace-filename]"
+```
+
+This keeps the trace history clean without deleting files.
+
 ## Rules
 
 1. Never trace when `trace.enabled` is not `true`
 2. Step names must match process.md headings exactly
-3. Uncertainty of 0.0 means all inputs present and clear; 1.0 means guessing with no supporting data
+3. Uncertainty must be honestly calibrated — see table above; 0.0 is rare
 4. Always write `quality_summary` after the checkpoint completes
 5. Always write `reflections` after the checkpoint — at minimum one observation
 6. Keep trace files — never delete or overwrite a previous run's trace
+7. Timestamps must reflect real time — never fabricate step timestamps as sequential 1-second intervals
+8. Flags must be used when issues are found — a trace with 0 flags across many steps should be re-examined

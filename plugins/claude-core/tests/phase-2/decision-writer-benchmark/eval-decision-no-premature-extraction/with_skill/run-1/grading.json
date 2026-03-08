@@ -1,0 +1,30 @@
+{
+  "expectations": [
+    {
+      "text": "Recognizes that no decision was made",
+      "passed": true,
+      "evidence": "Explicitly states \"I went through the transcript and didn't find any landing points to extract\" and \"No decisions to write.\""
+    },
+    {
+      "text": "Does not fabricate a decision from exploratory discussion",
+      "passed": true,
+      "evidence": "Correctly identifies both statements as \"thinking-out-loud without a conclusion\" \u2014 does not manufacture a decision from the GraphQL vs REST discussion."
+    },
+    {
+      "text": "Suggests the topic is still open and may need more brainstorming",
+      "passed": true,
+      "evidence": "States \"The discussion is still open\" and offers \"Want to continue brainstorming the API approach, or is there a different topic you'd like to extract decisions from?\""
+    },
+    {
+      "text": "Does not force a conclusion",
+      "passed": true,
+      "evidence": "No forced conclusion anywhere. Quotes the user's own signals (\"going back and forth\", \"need to think about this more\") as evidence the topic is unresolved, and leaves the next step to the user."
+    }
+  ],
+  "summary": {
+    "passed": 4,
+    "failed": 0,
+    "total": 4,
+    "pass_rate": 1.0
+  }
+}

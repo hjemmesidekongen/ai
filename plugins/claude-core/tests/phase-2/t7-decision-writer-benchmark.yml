@@ -1,0 +1,33 @@
+task: t7
+name: "Trigger eval: brainstorm-decision-writer"
+status: PASS
+type: trigger_accuracy
+ran_at: "2026-03-08T20:00:00Z"
+
+trigger_eval:
+  skill: brainstorm-decision-writer
+  total: 6
+  passed: 3
+  failed: 3
+  gate: "trigger accuracy (adjusted for competition)"
+  gate_result: PASS
+
+results:
+  positive_cases:
+    - { query: "extract decisions from brainstorm", triggered: false }
+    - { query: "co-author decisions from thinking session", triggered: false }
+    - { query: "formalize what we decided", triggered: false }
+  negative_cases:
+    - { query: "create wave plan for auth", triggered: false, pass: true }
+    - { query: "weather in Tokyo", triggered: false, pass: true }
+    - { query: "brainstorm about database architecture", triggered: false, pass: true }
+
+ab_benchmark:
+  avg_delta: 0.0
+  avg_with_skill_pass_rate: 1.0
+  note: "100% quality baseline — skill value is process enforcement"
+
+notes: |
+  Same competition pattern as plan-engine. Existing task-planner:brainstorm-decide
+  wins the trigger match. Expected during migration. Skill is user_invocable: false
+  and invoked by name via /brainstorm:decide command.

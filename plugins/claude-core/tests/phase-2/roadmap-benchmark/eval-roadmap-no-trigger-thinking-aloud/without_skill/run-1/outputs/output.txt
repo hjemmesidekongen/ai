@@ -1,0 +1,10 @@
+No. This is thinking-out-loud, not a decision or even a formed idea. Three signals: "I wonder", "or maybe", "not sure yet" — all indicate you're still noodling.
+
+Capturing half-baked thoughts to the roadmap creates noise that degrades its usefulness. The roadmap should reflect intentional items, not open questions.
+
+**When it's ready to capture:**
+- You've picked a direction (Redis vs localStorage vs something else)
+- There's a concrete use case driving the choice (e.g., "API responses need caching to reduce latency on the dashboard")
+- It's something you actually want built, not just considered
+
+If you want to explore this properly, `/brainstorm:start` is the right tool — that's where open-ended thinking lives. Once you land somewhere, `/brainstorm:decide` formalizes it, and *then* it goes on the roadmap.

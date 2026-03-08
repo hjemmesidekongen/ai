@@ -1,0 +1,28 @@
+Let me skip the file setup and jump straight into sparring mode — we can save state later.
+
+---
+
+I'm here to spar. Push back, challenge, explore.
+When you're ready to lock in decisions: `/brainstorm:decide`
+
+---
+
+Alright, you're leaning monorepo for microservices. Let me push on that immediately.
+
+**The fundamental tension:** monorepo and microservices are philosophically opposed. Microservices exist to decouple teams and deployment. Monorepos couple everything into one repo, one CI pipeline, one version history. You're choosing an architecture that says "independent services" and then putting them in a box that says "everything together." That's not automatically wrong, but you need a clear reason why the coupling benefits outweigh the independence you're giving up.
+
+**The real question isn't monorepo vs polyrepo — it's what problem are you actually solving?**
+
+- If your pain is **shared code drift** (libs diverging across repos), monorepo helps. But so does a private package registry with versioned internal libs.
+- If your pain is **cross-service refactoring** (rename a proto field, update 12 services), monorepo makes atomic changes possible. But if you're doing that often, your service boundaries might be wrong.
+- If your pain is **tooling consistency** (every repo has a different lint config, different CI), monorepo solves it. But so does a template repo with good governance.
+
+**What I'd challenge specifically:**
+
+1. **How many services, how many teams?** Monorepo works brilliantly for Google-scale (with Bazel and custom tooling) and for small teams (< 5 devs, < 10 services). It gets painful in the middle — 3-8 teams, 15-40 services — where you need the coupling benefits but hit CI bottleneck, code ownership confusion, and merge queue hell.
+
+2. **What's your CI story?** Monorepo without smart build tooling (Nx, Turborepo, Bazel, Pants) means every PR triggers every test. That gets brutal fast. Are you ready to invest in that tooling on day one?
+
+3. **Deployment independence** — this is the one that usually kills monorepo for microservices. Can you deploy service A without touching service B? In a monorepo, you *can*, but teams tend to drift toward coupled deploys because "it's all right here." In polyrepo, deployment independence is the default.
+
+So — what's the actual pain you're solving? And what does your team structure look like?

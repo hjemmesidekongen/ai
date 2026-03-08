@@ -1,0 +1,30 @@
+{
+  "expectations": [
+    {
+      "text": "Recognizes that no decision was made",
+      "passed": true,
+      "evidence": "Opens with \"No decisions to extract. This is thinking-out-loud, not decision-making.\" and explicitly states \"There are no landing points, no conclusions, no commitments.\""
+    },
+    {
+      "text": "Does not fabricate a decision from exploratory discussion",
+      "passed": true,
+      "evidence": "Labels the GraphQL vs REST topic as an \"Open question\" that is \"explicitly undecided\" and the user's closing remark as an \"Explicit deferral.\" No decisions.yml entries or structured decision objects are produced."
+    },
+    {
+      "text": "Suggests the topic is still open and may need more brainstorming",
+      "passed": true,
+      "evidence": "Final sentence: \"Wait for the user to actually decide something.\" Also flags the user's own words (\"I need to think about this more\") as an explicit deferral, signaling the topic remains open."
+    },
+    {
+      "text": "Does not force a conclusion",
+      "passed": true,
+      "evidence": "Explicitly warns against forcing one: \"Extracting 'decisions' from this would be manufacturing signal from noise.\" No conclusion or recommendation is imposed."
+    }
+  ],
+  "summary": {
+    "passed": 4,
+    "failed": 0,
+    "total": 4,
+    "pass_rate": 1.0
+  }
+}

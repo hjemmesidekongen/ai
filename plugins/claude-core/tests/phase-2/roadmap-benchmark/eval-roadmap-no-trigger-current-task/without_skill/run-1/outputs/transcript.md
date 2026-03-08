@@ -1,0 +1,20 @@
+# Execution Transcript
+
+## Prompt
+
+The user says: 'Let's add error handling to the plan-execute command. That's the task we're working on right now.'
+
+Should this be captured to the roadmap?...
+
+## Response
+
+Now I have context. Two versions exist:
+
+1. **task-planner** (`plugins/task-planner/commands/plan-execute.md`) — 497 lines, very detailed error handling already spec'd (fix-and-retry loops, cascading failure analysis, state persistence)
+2. **claude-core** (`plugins/claude-core/commands/plan-execute.md`) — 61 lines, minimal error recovery section
+
+The task-planner version already has extensive error handling in the spec. The claude-core version is sparse. Which version are you targeting? And what specific error handling gaps are you seeing in practice — is this about the spec being incomplete, or about runtime behavior not matching the spec?
+
+## Stderr
+
+None

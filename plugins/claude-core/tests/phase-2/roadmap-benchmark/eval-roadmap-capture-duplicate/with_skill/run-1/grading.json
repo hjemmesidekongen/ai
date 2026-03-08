@@ -1,0 +1,30 @@
+{
+  "expectations": [
+    {
+      "text": "Identifies the existing item RL-025 as a potential duplicate",
+      "passed": true,
+      "evidence": "Output explicitly states: 'Already tracked as **RL-025**' and identifies it by ID."
+    },
+    {
+      "text": "Mentions the existing item to the user",
+      "passed": true,
+      "evidence": "Output quotes the full title and description: 'Screenshot loop for visual regression \u2014 Automated visual comparison of component states before/after changes.'"
+    },
+    {
+      "text": "Does not create a duplicate entry",
+      "passed": true,
+      "evidence": "Output explicitly states: 'No new entry added \u2014 this covers the same idea.'"
+    },
+    {
+      "text": "Offers to update the existing item if the user wants changes",
+      "passed": true,
+      "evidence": "Output ends with: 'If you want to refine the scope or add detail to RL-025, let me know.'"
+    }
+  ],
+  "summary": {
+    "passed": 4,
+    "failed": 0,
+    "total": 4,
+    "pass_rate": 1.0
+  }
+}

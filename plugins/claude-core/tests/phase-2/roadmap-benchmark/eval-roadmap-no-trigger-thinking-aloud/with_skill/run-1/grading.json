@@ -1,0 +1,25 @@
+{
+  "expectations": [
+    {
+      "text": "Does NOT immediately capture this to the roadmap",
+      "passed": true,
+      "evidence": "The output asks 'Want me to capture a caching layer item to the roadmap, or is this still in the thinking stage?' \u2014 it does not write to the roadmap or take any capture action. It pauses and asks first."
+    },
+    {
+      "text": "Recognizes this is exploratory thinking, not a decision",
+      "passed": true,
+      "evidence": "The phrase 'Sounds like you're still noodling on this' and the question 'is this still in the thinking stage?' both explicitly recognize that the input is exploratory rather than a firm decision."
+    },
+    {
+      "text": "Suggests waiting until the user has a clearer direction",
+      "passed": true,
+      "evidence": "By asking 'or is this still in the thinking stage?' the skill implicitly suggests that capturing may be premature and defers to the user to confirm readiness, effectively suggesting to wait for clearer direction."
+    }
+  ],
+  "summary": {
+    "passed": 3,
+    "failed": 0,
+    "total": 3,
+    "pass_rate": 1.0
+  }
+}

@@ -1,0 +1,41 @@
+# Execution Transcript
+
+## Prompt
+
+A user says: 'I want to think through our authentication strategy. We could use JWT, session cookies, or OAuth. What do you think?'
+
+Respond as a brainstorm sparring partner....
+
+## Response
+
+You're mixing up categories. JWT, session cookies, and OAuth aren't three alternatives — they operate at different layers.
+
+- **OAuth** is an authorization framework. It's how you delegate identity to a provider (Google, GitHub, etc.). It doesn't replace JWT or cookies — it typically *uses* one of them.
+- **JWT** is a token format. Stateless, self-contained claims. You still need to decide how to transport and store it.
+- **Session cookies** are a storage/transport mechanism. Server holds session state, cookie holds the session ID.
+
+The real question is: **what are you actually deciding?**
+
+A few things to untangle:
+
+1. **Identity source** — Do users create accounts with email/password, or do you federate to an identity provider (Google, GitHub, SSO)? If it's a SaaS dev tools product (Blik), your users will expect at least GitHub/Google OAuth.
+
+2. **Session management** — Stateless (JWT) vs stateful (server sessions)? JWTs are popular but come with real tradeoffs people underestimate:
+   - You can't revoke a JWT without building a blocklist — at which point you've reinvented server-side sessions with extra steps.
+   - Token refresh flows add complexity and are a common source of security bugs.
+   - JWTs in localStorage are XSS-vulnerable. JWTs in cookies are basically just... cookies with extra payload.
+
+3. **Transport** — HttpOnly cookies vs Authorization header? Cookies get CSRF concerns but handle browser navigation natively. Auth headers need client-side code on every request but avoid CSRF.
+
+**My push-back:** Most teams that pick "JWT for everything" end up rebuilding half of what session cookies give you for free, then bolting on token revocation, refresh rotation, and sliding expiration — all of which a session store handles trivially.
+
+**If this is a standard SaaS app**, the boring-but-correct answer is usually:
+- OAuth for third-party identity (GitHub/Google)
+- Server-side sessions with HttpOnly, Secure, SameSite cookies
+- JWT only if you need stateless auth for a public API or cross-service communication
+
+What's driving the consideration? Is there a specific constraint — like microservices that need to validate tokens without hitting a central store, or a mobile client in the mix?
+
+## Stderr
+
+None

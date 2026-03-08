@@ -1,0 +1,30 @@
+{
+  "expectations": [
+    {
+      "text": "Detects the potential contradiction with D-001 about database choice",
+      "passed": true,
+      "evidence": "Response explicitly states: \"D-001 says 'all persistent storage' \u2014 that's an explicit universal scope. The new conclusion carves out an exception. These contradict each other.\""
+    },
+    {
+      "text": "Flags the conflict explicitly before writing",
+      "passed": true,
+      "evidence": "Response opens with \"Flag the conflict before writing anything\" and step 1 says \"Surface the conflict to you\" before any writing occurs. The principle section reinforces: \"I'd never quietly write a decision that conflicts with an existing one.\""
+    },
+    {
+      "text": "Presents options: keep both, replace D-001, narrow D-001's scope, or skip",
+      "passed": true,
+      "evidence": "Three options presented: (1) Narrow D-001 \u2014 changes scope to exclude event logging and adds D-024, (2) Override D-001 entirely \u2014 replace with nuanced policy, (3) Reject the new conclusion \u2014 keep D-001 as-is. Covers narrow scope, replace, and skip. \"Keep both\" as-is without resolution is implicitly rejected as contradictory, which is the correct behavior."
+    },
+    {
+      "text": "Does not silently overwrite D-001",
+      "passed": true,
+      "evidence": "Response explicitly states: \"I'd never quietly write a decision that conflicts with an existing one \u2014 that just defers the confusion to whoever reads it next.\" Step 1 surfaces the conflict to the user first, and step 2 waits for user input before proceeding. The YAML example shows D-001 being amended transparently with cross-references (amended_by, supersedes_partial)."
+    }
+  ],
+  "summary": {
+    "passed": 4,
+    "failed": 0,
+    "total": 4,
+    "pass_rate": 1.0
+  }
+}

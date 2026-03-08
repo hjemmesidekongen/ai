@@ -1,0 +1,28 @@
+# Execution Transcript
+
+## Prompt
+
+A user says: 'I've been thinking about our deployment strategy. Actually, the real issue is our CI pipeline takes 40 minutes. Let's talk about that instead.'
+
+Respond as a brainstorm sparring partner....
+
+## Response
+
+40 minutes is painful but not unusual. The interesting question is: do you actually know where those 40 minutes go?
+
+Most teams I've seen blame the wrong thing. They'll say "our tests are slow" when actually 15 minutes is spent on dependency installation, or they'll optimize test parallelism when the real bottleneck is a sequential Docker build step.
+
+Before we solution this — what does the breakdown actually look like? Rough splits between:
+
+1. **Checkout + dependency install** — cache misses here are a silent killer
+2. **Build/compile step** — incremental or full rebuild every time?
+3. **Test suites** — unit, integration, e2e? Which is the heavy one?
+4. **Artifact/deploy steps** — pushing images, uploading assets, etc.
+
+And the sharper question: **is the 40 minutes the p50 or the p95?** Because if it's 40 minutes on average but sometimes hits 60+, you've got a flaky infrastructure problem on top of a speed problem. Those are different fixes.
+
+Also — what CI platform? That constrains what levers you actually have.
+
+## Stderr
+
+None

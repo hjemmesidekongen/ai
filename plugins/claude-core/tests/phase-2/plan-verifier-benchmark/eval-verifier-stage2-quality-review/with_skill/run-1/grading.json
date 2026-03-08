@@ -1,0 +1,30 @@
+{
+  "expectations": [
+    {
+      "text": "Identifies the TODO placeholder as incomplete content",
+      "passed": false,
+      "evidence": "No transcript or output provided. Cannot confirm TODO placeholder was identified."
+    },
+    {
+      "text": "Marks this as a critical finding with fix_required: true",
+      "passed": false,
+      "evidence": "No transcript or output provided. Cannot confirm critical finding was marked with fix_required: true."
+    },
+    {
+      "text": "Reports Stage 2 as fail",
+      "passed": false,
+      "evidence": "No transcript or output provided. Cannot confirm Stage 2 was reported as fail."
+    },
+    {
+      "text": "Does not accept stub content as passing quality review",
+      "passed": false,
+      "evidence": "No transcript or output provided. Cannot confirm stub content was rejected."
+    }
+  ],
+  "summary": {
+    "passed": 0,
+    "failed": 4,
+    "total": 4,
+    "pass_rate": 0.0
+  }
+}

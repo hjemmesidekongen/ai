@@ -1,0 +1,25 @@
+{
+  "expectations": [
+    {
+      "text": "Does NOT immediately capture this to the roadmap",
+      "passed": true,
+      "evidence": "Response opens with \"No.\" and explicitly states \"Capturing half-baked thoughts to the roadmap creates noise that degrades its usefulness. The roadmap should reflect intentional items, not open questions.\" No roadmap capture action was taken."
+    },
+    {
+      "text": "Recognizes this is exploratory thinking, not a decision",
+      "passed": true,
+      "evidence": "Response explicitly identifies it as \"thinking-out-loud, not a decision or even a formed idea\" and calls out three linguistic signals (\"I wonder\", \"or maybe\", \"not sure yet\") as indicators the user is \"still noodling.\""
+    },
+    {
+      "text": "Suggests waiting until the user has a clearer direction",
+      "passed": true,
+      "evidence": "Response provides a concrete \"When it's ready to capture\" section with three criteria (picked a direction, concrete use case, something you actually want built). Also suggests /brainstorm:start as the appropriate tool for open-ended exploration, with /brainstorm:decide to formalize before roadmap entry."
+    }
+  ],
+  "summary": {
+    "passed": 3,
+    "failed": 0,
+    "total": 3,
+    "pass_rate": 1.0
+  }
+}

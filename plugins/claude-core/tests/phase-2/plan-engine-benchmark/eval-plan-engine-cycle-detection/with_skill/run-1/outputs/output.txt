@@ -1,0 +1,15 @@
+**Dependency cycle detected.**
+
+The graph forms a closed loop:
+
+```
+t1 → t3 → t2 → t1
+```
+
+- t1 depends on t3
+- t3 depends on t2
+- t2 depends on t1
+
+No task has all dependencies satisfied, so the topological sort finds zero unblocked tasks on the first iteration while three tasks remain. Per the algorithm, this is a halt condition.
+
+**Result:** Plan generation fails with a cycle error involving tasks `t1`, `t2`, `t3`. No waves are emitted. The user needs to restructure the dependencies to break the cycle — typically by removing one edge (e.g., making one of the three tasks independent).

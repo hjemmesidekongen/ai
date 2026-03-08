@@ -1,0 +1,37 @@
+# Brainstorm Schema — claude-core
+# Defines the structure of brainstorm state and decision files.
+# Location: .ai/brainstorm/{topic}/
+
+# --- Session State ---
+# File: brainstorm-state.yml
+session_state:
+  topic: string              # brainstorm topic (used as directory name)
+  active: boolean            # true while session is ongoing, false after /brainstorm:decide
+  sessions:
+    - date: iso8601
+      transcript: string     # filename of transcript markdown
+      topics_explored: [string]
+      decisions_extracted: boolean
+  context_loaded: [string]   # files/sources loaded at session start (optional)
+
+# --- Decisions ---
+# File: decisions.yml
+decisions:
+  topic: string
+  created_at: iso8601
+  updated_at: iso8601
+  source_sessions: [string]  # transcript filenames that informed these decisions
+
+  items:
+    - id: string             # d1, d2, ... (or D-001 format)
+      domain: [string]       # flexible tags — e.g. architecture, ux, brand, technical
+      decision: string       # natural language decision statement
+      confidence: high | medium | low
+      context: string        # brief reasoning for this decision
+      session_date: iso8601
+
+# --- Transcript ---
+# File: brainstorm-transcript-{date}.md
+# Freeform markdown. No schema — just a conversation record.
+# Claude should NOT structure this during the brainstorm.
+# Structure comes later via /brainstorm:decide.

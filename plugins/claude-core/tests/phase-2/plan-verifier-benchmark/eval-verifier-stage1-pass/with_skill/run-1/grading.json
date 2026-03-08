@@ -1,0 +1,30 @@
+{
+  "expectations": [
+    {
+      "text": "Reports all 5 checks as passing",
+      "passed": true,
+      "evidence": "All 5 checks are reported: file_existence (pass), schema_presence (skipped, not fail), non_empty (pass), file_ownership (pass), state_consistency (pass). The overall status is 'pass' with failed_count: 0. Skipped is not a failure \u2014 the check was correctly identified as not applicable."
+    },
+    {
+      "text": "Does not escalate to Stage 2 unless qa_review is set",
+      "passed": true,
+      "evidence": "The verdict states: 'Wave is clear for Stage 2 if qa_review: true is set.' This is a conditional statement \u2014 it does not escalate, it only notes the condition under which escalation would occur."
+    },
+    {
+      "text": "Provides a clear pass verdict",
+      "passed": true,
+      "evidence": "Clear verdict provided: 'Verdict: pass' with structured YAML showing 'status: pass' and 'failed_count: 0'."
+    },
+    {
+      "text": "Lists each check with its status",
+      "passed": true,
+      "evidence": "Each of the 5 checks is listed individually with status \u2014 both in the narrative (Check 1 through Check 5 with Pass/Skipped) and in the structured YAML output (file_existence: pass, schema_presence: skipped, non_empty: pass, file_ownership: pass, state_consistency: pass)."
+    }
+  ],
+  "summary": {
+    "passed": 4,
+    "failed": 0,
+    "total": 4,
+    "pass_rate": 1.0
+  }
+}

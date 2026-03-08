@@ -1,0 +1,40 @@
+{
+  "expectations": [
+    {
+      "text": "Places t1 and t3 in wave 1 since they have no dependencies",
+      "passed": true,
+      "evidence": "Wave 1 contains 't1, t3' with reason 'No dependencies' in the topological sort table."
+    },
+    {
+      "text": "Marks wave 1 as parallel since t1 and t3 write to different files",
+      "passed": true,
+      "evidence": "File-ownership check for Wave 1 states 'models/user.yml vs models/product.yml \u2014 no conflict \u2192 parallel: true'."
+    },
+    {
+      "text": "Places t2 and t4 in wave 2 since their dependencies are in wave 1",
+      "passed": true,
+      "evidence": "Wave 2 contains 't2, t4' with reason 't2 needs t1, t4 needs t3 \u2014 both satisfied after wave 1'."
+    },
+    {
+      "text": "Marks wave 2 as parallel since t2 and t4 write to different files",
+      "passed": true,
+      "evidence": "File-ownership check for Wave 2 states 'api/user.ts vs api/product.ts \u2014 no conflict \u2192 parallel: true'."
+    },
+    {
+      "text": "Places t5 in wave 3 since it depends on both t2 and t4",
+      "passed": true,
+      "evidence": "Wave 3 contains 't5' with reason 'Needs t2 and t4 \u2014 both satisfied after wave 2'."
+    },
+    {
+      "text": "Produces exactly 3 waves",
+      "passed": true,
+      "evidence": "Summary states '3 waves, 5 tasks' and the topological sort table shows exactly 3 waves."
+    }
+  ],
+  "summary": {
+    "passed": 6,
+    "failed": 0,
+    "total": 6,
+    "pass_rate": 1.0
+  }
+}

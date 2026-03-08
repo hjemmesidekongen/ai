@@ -1,0 +1,35 @@
+{
+  "expectations": [
+    {
+      "text": "Detects that skills/x/references/process.md is missing",
+      "passed": true,
+      "evidence": "Check 1 (File Existence) table shows `skills/x/references/process.md` with Exists=no and Status=FAIL. Result explicitly states: \"skills/x/references/process.md missing from disk.\""
+    },
+    {
+      "text": "Fails the file_existence check",
+      "passed": true,
+      "evidence": "Stage 1 Result YAML shows `file_existence: status: fail` with `missing: [\"skills/x/references/process.md\"]`. Check 1 Result line reads \"FAIL\"."
+    },
+    {
+      "text": "Reports overall Stage 1 as fail",
+      "passed": true,
+      "evidence": "Stage 1 Result YAML shows `spec_compliance: status: fail` with `failed_count: 1`. The Verdict section explicitly states \"FAIL\"."
+    },
+    {
+      "text": "Skips Stage 2 entirely",
+      "passed": true,
+      "evidence": "Verdict section states: \"Stage 2 (Quality Review) skipped \u2014 Stage 1 did not pass.\" No Stage 2 output appears anywhere in the transcript."
+    },
+    {
+      "text": "Suggests creating the missing file as next approach",
+      "passed": true,
+      "evidence": "Error log entry shows `next_approach: \"Rebuild task t1 \u2014 generate missing process.md\"`. Next step section states: \"Task t1 must be re-executed to generate skills/x/references/process.md.\""
+    }
+  ],
+  "summary": {
+    "passed": 5,
+    "failed": 0,
+    "total": 5,
+    "pass_rate": 1.0
+  }
+}

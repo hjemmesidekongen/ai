@@ -1,0 +1,8 @@
+[
+  {"query": "I have 8 tasks with dependencies, can you organize them into parallel waves?", "should_trigger": true},
+  {"query": "Create a wave plan for building the authentication module", "should_trigger": true},
+  {"query": "Decompose this task list into execution waves with file ownership", "should_trigger": true},
+  {"query": "What's the weather in Tokyo?", "should_trigger": false},
+  {"query": "Review this pull request for code quality issues", "should_trigger": false},
+  {"query": "Help me brainstorm ideas for the new feature", "should_trigger": false}
+]

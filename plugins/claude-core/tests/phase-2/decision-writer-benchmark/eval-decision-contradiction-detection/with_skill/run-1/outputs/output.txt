@@ -1,0 +1,46 @@
+This hits **contradiction detection** (Step 6) before anything gets written.
+
+## What I'd do
+
+**First**, I'd present the candidate decision from the transcript:
+
+> **Candidate decision:** Use MongoDB for the event log due to append-heavy workload characteristics.
+>
+> *From transcript: "For the event log, we should use MongoDB since it's better for append-heavy workloads."*
+>
+> Is this a decision? If yes, how confident? (high/medium/low)
+
+**If confirmed**, I'd immediately flag the conflict:
+
+> This conflicts with **D-001**: *"Use PostgreSQL for all persistent storage."*
+>
+> The word "all" in D-001 covers event logs. Three options:
+>
+> 1. **Replace D-001** — narrow it to "Use PostgreSQL for all persistent storage except the event log" and add a new D-002 for MongoDB
+> 2. **Keep both** — accept the contradiction as an intentional carve-out (I'd recommend against this — it creates ambiguity)
+> 3. **Skip** — drop the MongoDB decision and keep D-001 as-is
+>
+> Which way?
+
+**The likely resolution** is option 1 — updating D-001's scope and adding D-002. That would produce:
+
+```yaml
+decisions:
+  - id: "D-001"
+    domain: ["technical"]
+    decision: "Use PostgreSQL for all persistent storage except the event log."
+    confidence: high
+    context: "Originally covered all storage. Narrowed after deciding MongoDB fits append-heavy event log workloads better."
+    session_date: "2026-03-01"
+
+  - id: "D-002"
+    domain: ["technical"]
+    decision: "Use MongoDB for the event log due to append-heavy workload characteristics."
+    confidence: high
+    context: "PostgreSQL was the default (D-001), but event log's append-heavy pattern favors MongoDB's write model."
+    session_date: "2026-03-08"
+```
+
+## Why not just silently add D-002
+
+The process explicitly forbids it. D-001 says "**all** persistent storage" — adding a MongoDB decision without updating D-001 leaves two contradictory decisions in the file. Anyone reading `decisions.yml` later (or a skill consuming it downstream) would hit ambiguity. The contradiction must be resolved at extraction time, with the user making the call.

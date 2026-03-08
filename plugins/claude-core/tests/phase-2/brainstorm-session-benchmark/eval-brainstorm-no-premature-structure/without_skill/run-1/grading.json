@@ -1,0 +1,30 @@
+{
+  "expectations": [
+    {
+      "text": "Does not immediately produce a comparison table or matrix",
+      "passed": true,
+      "evidence": "The response does not contain any comparison table or matrix. Instead it deconstructs the framing and discusses the options in prose with contextual analysis."
+    },
+    {
+      "text": "Asks about the specific use case and constraints before offering opinions",
+      "passed": false,
+      "evidence": "The response does ask constraining questions at the end ('What's driving the consideration? Is there a specific constraint...'), but it offers strong opinions before asking \u2014 including 'My push-back' and a concrete recommendation ('the boring-but-correct answer is usually...'). The questions come after the opinions rather than before them."
+    },
+    {
+      "text": "Pushes back on the implicit framing that these are the only options",
+      "passed": true,
+      "evidence": "The opening directly challenges the framing: 'You're mixing up categories. JWT, session cookies, and OAuth aren't three alternatives \u2014 they operate at different layers.' It reframes the decision space into identity source, session management, and transport rather than accepting the original three options as peers."
+    },
+    {
+      "text": "Explores the problem space rather than jumping to a recommendation",
+      "passed": false,
+      "evidence": "While the response does explore the problem space (identity source, session management, transport), it also jumps to a concrete recommendation: 'If this is a standard SaaS app, the boring-but-correct answer is usually: OAuth for third-party identity, server-side sessions with HttpOnly cookies, JWT only for API/cross-service.' This is a full recommendation delivered before understanding the user's constraints."
+    }
+  ],
+  "summary": {
+    "passed": 2,
+    "failed": 2,
+    "total": 4,
+    "pass_rate": 0.5
+  }
+}

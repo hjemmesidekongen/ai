@@ -1,9 +1,7 @@
 #!/usr/bin/env bash
-# Agency plugin — Stop hook: verify trace completeness when tracing is enabled
-# Scans all trace files for missing reflections section (v1.1.0 requirement)
-# Does NOT depend on current_skill — works regardless of pipeline timing
-#
-# Exit codes: 0 = pass, 2 = non-blocking warning
+# Agency plugin — Stop hook: remind about missing trace reflections
+# Follows established patterns: always exit 0, JSON output, warnings to stderr
+# Only checks traces modified in the last 60 minutes (current session)
 
 # Find active project
 AGENCY_FILE=".ai/agency.yml"
@@ -24,21 +22,24 @@ TRACES_DIR=$(grep 'traces_dir:' "$STATE_FILE" 2>/dev/null | awk '{print $2}' | t
 [ -z "$TRACES_DIR" ] && TRACES_DIR=".ai/projects/$ACTIVE/traces/"
 [ ! -d "$TRACES_DIR" ] && exit 0
 
-# Scan all trace files for missing reflections
+# Only check traces modified in the last 60 minutes (current session)
+RECENT_TRACES=$(find "$TRACES_DIR" -name "*.yml" -mmin -60 2>/dev/null)
+[ -z "$RECENT_TRACES" ] && exit 0
+
 INCOMPLETE=""
-for trace_file in "$TRACES_DIR"*.yml; do
+for trace_file in $RECENT_TRACES; do
   [ ! -f "$trace_file" ] && continue
   if ! grep -q 'reflections:' "$trace_file" 2>/dev/null; then
     SKILL=$(basename "$trace_file" | sed 's/-[0-9T].*\.yml$//')
-    INCOMPLETE="${INCOMPLETE}  - ${SKILL} ($(basename "$trace_file"))\n"
+    INCOMPLETE="${INCOMPLETE}${SKILL}, "
   fi
 done
 
 if [ -n "$INCOMPLETE" ]; then
-  echo "WARNING: Trace files missing 'reflections:' section:"
-  printf "$INCOMPLETE"
-  echo "Add reflections with at least one observation before completing."
-  exit 2
+  # Remove trailing comma+space
+  INCOMPLETE=$(echo "$INCOMPLETE" | sed 's/, $//')
+  # Informational system message — does NOT block the stop
+  echo "{\"systemMessage\": \"Trace reminder: ${INCOMPLETE} missing reflections section\"}"
 fi
 
 exit 0

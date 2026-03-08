@@ -1,0 +1,30 @@
+{
+  "expectations": [
+    {
+      "text": "Identifies the existing item RL-025 as a potential duplicate",
+      "passed": true,
+      "evidence": "Response explicitly references 'RL-025' and states 'Already tracked' indicating it identified the existing item as covering the same topic."
+    },
+    {
+      "text": "Mentions the existing item to the user",
+      "passed": true,
+      "evidence": "Response quotes the full item: 'RL-025 in .ai/roadmap.yml covers exactly this: \"Screenshot loop for visual regression \u2014 Automated visual comparison of component states before/after changes.\"'"
+    },
+    {
+      "text": "Does not create a duplicate entry",
+      "passed": true,
+      "evidence": "Response says 'No action needed' and does not create any new entry. No tool calls or file writes occurred."
+    },
+    {
+      "text": "Offers to update the existing item if the user wants changes",
+      "passed": true,
+      "evidence": "Response ends with 'Want to bump its priority or start scoping it?' \u2014 offering to modify the existing item rather than creating a new one."
+    }
+  ],
+  "summary": {
+    "passed": 4,
+    "failed": 0,
+    "total": 4,
+    "pass_rate": 1.0
+  }
+}

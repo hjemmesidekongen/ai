@@ -1,0 +1,30 @@
+{
+  "expectations": [
+    {
+      "text": "Does not immediately produce a comparison table or matrix",
+      "passed": true,
+      "evidence": "The response uses prose paragraphs and bullet points to discuss the options, but does not produce a structured comparison table or matrix format."
+    },
+    {
+      "text": "Asks about the specific use case and constraints before offering opinions",
+      "passed": false,
+      "evidence": "The response offers substantial opinions and analysis first (explaining OAuth, JWT vs session cookies, their tradeoffs) and only asks about use case at the end. It does not ask before offering opinions \u2014 it offers opinions extensively and then asks clarifying questions afterward."
+    },
+    {
+      "text": "Pushes back on the implicit framing that these are the only options",
+      "passed": true,
+      "evidence": "The response explicitly pushes back: \"You're framing this as three equal options, and they're not. JWT, session cookies, and OAuth aren't even in the same category \u2014 they solve different problems, and two of them often work together.\" It reframes OAuth as potentially a non-requirement and narrows the real question to JWT vs session cookies."
+    },
+    {
+      "text": "Explores the problem space rather than jumping to a recommendation",
+      "passed": true,
+      "evidence": "The response does not give a final recommendation. It explicitly states \"The answer to those questions changes the recommendation completely\" and asks clarifying questions about what's being built (single web app, multi-service, mobile + web, third-party login). It explores the conceptual distinctions between the options rather than jumping to one."
+    }
+  ],
+  "summary": {
+    "passed": 3,
+    "failed": 1,
+    "total": 4,
+    "pass_rate": 0.75
+  }
+}

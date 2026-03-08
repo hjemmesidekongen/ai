@@ -1,0 +1,40 @@
+{
+  "expectations": [
+    {
+      "text": "Places t1 and t3 in wave 1 since they have no dependencies",
+      "passed": true,
+      "evidence": "Wave 1 contains t1 (Create user schema) and t3 (Create product schema), noted as having 'No dependencies'"
+    },
+    {
+      "text": "Marks wave 1 as parallel since t1 and t3 write to different files",
+      "passed": true,
+      "evidence": "Both t1 and t3 have Parallel marked as `true`, with explanation 'no file conflicts \u2192 both run in parallel'"
+    },
+    {
+      "text": "Places t2 and t4 in wave 2 since their dependencies are in wave 1",
+      "passed": true,
+      "evidence": "Wave 2 contains t2 (Build user API, blocked by t1) and t4 (Build product API, blocked by t3)"
+    },
+    {
+      "text": "Marks wave 2 as parallel since t2 and t4 write to different files",
+      "passed": true,
+      "evidence": "Both t2 and t4 have Parallel marked as `true`, with explanation 'no file conflicts \u2192 both run in parallel'"
+    },
+    {
+      "text": "Places t5 in wave 3 since it depends on both t2 and t4",
+      "passed": true,
+      "evidence": "Wave 3 contains t5 (Integration tests) with 'Blocked by: t2, t4', described as 'Fan-in \u2014 requires both APIs complete'"
+    },
+    {
+      "text": "Produces exactly 3 waves",
+      "passed": true,
+      "evidence": "Output contains Wave 1, Wave 2, and Wave 3. Summary confirms '3 waves'"
+    }
+  ],
+  "summary": {
+    "passed": 6,
+    "failed": 0,
+    "total": 6,
+    "pass_rate": 1.0
+  }
+}

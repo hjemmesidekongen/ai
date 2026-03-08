@@ -1,0 +1,35 @@
+{
+  "expectations": [
+    {
+      "text": "Recognizes this as an out-of-scope idea worth capturing",
+      "passed": true,
+      "evidence": "Explicitly states 'Should capture: Yes.' and describes it as 'textbook roadmap-capture territory' \u2014 the user 'surfaced a concrete, actionable idea and explicitly deferred it.'"
+    },
+    {
+      "text": "Proposes a roadmap item about Storybook auto-generation",
+      "passed": true,
+      "evidence": "Proposes item RL-073 with title 'Auto-generate Storybook stories from component definitions' and a full YAML block including description, category, priority, source, date, and tags."
+    },
+    {
+      "text": "Sets appropriate category like toolkit or development",
+      "passed": true,
+      "evidence": "Sets category to 'dev' and plugin to 'development', noting it 'belongs in the future standalone development plugin (Phase 5)' \u2014 an appropriate categorization for developer tooling/codegen."
+    },
+    {
+      "text": "Does not suggest implementing the feature now",
+      "passed": true,
+      "evidence": "Sets priority to 'backlog' and explicitly notes 'user said \"not now\", no urgency indicated.' Does not propose any implementation steps."
+    },
+    {
+      "text": "Acknowledges the user wants to stay focused on current work",
+      "passed": true,
+      "evidence": "Quotes the user's intent: 'explicitly deferred it (\"not now, let's stay focused\")' and assigns backlog priority accordingly."
+    }
+  ],
+  "summary": {
+    "passed": 5,
+    "failed": 0,
+    "total": 5,
+    "pass_rate": 1.0
+  }
+}

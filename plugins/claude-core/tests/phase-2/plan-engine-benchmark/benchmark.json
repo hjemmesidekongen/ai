@@ -1,0 +1,67 @@
+{
+  "skill_name": "plan-engine",
+  "skill_path": "plugins/claude-core/skills/plan-engine",
+  "model": null,
+  "evals_run": 4,
+  "avg_with_skill_pass_rate": 1.0,
+  "avg_without_skill_pass_rate": 1.0,
+  "avg_delta": 0.0,
+  "per_eval": [
+    {
+      "eval_id": "plan-engine-basic-decomposition",
+      "with_skill": {
+        "pass_rate": 1.0,
+        "chars": 1537,
+        "duration": 16.328706979751587
+      },
+      "without_skill": {
+        "pass_rate": 1.0,
+        "chars": 1014,
+        "duration": 11.876595973968506
+      },
+      "delta": 0.0
+    },
+    {
+      "eval_id": "plan-engine-file-conflict",
+      "with_skill": {
+        "pass_rate": 1.0,
+        "chars": 3740,
+        "duration": 84.97165989875793
+      },
+      "without_skill": {
+        "pass_rate": 1.0,
+        "chars": 1705,
+        "duration": 24.71780514717102
+      },
+      "delta": 0.0
+    },
+    {
+      "eval_id": "plan-engine-model-tier",
+      "with_skill": {
+        "pass_rate": 1.0,
+        "chars": 1430,
+        "duration": 13.730074167251587
+      },
+      "without_skill": {
+        "pass_rate": 1.0,
+        "chars": 1645,
+        "duration": 15.102783918380737
+      },
+      "delta": 0.0
+    },
+    {
+      "eval_id": "plan-engine-cycle-detection",
+      "with_skill": {
+        "pass_rate": 1.0,
+        "chars": 593,
+        "duration": 8.07221794128418
+      },
+      "without_skill": {
+        "pass_rate": 1.0,
+        "chars": 429,
+        "duration": 8.718232870101929
+      },
+      "delta": 0.0
+    }
+  ]
+}

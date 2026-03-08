@@ -1,0 +1,45 @@
+{
+  "evals": [
+    {
+      "id": "brainstorm-sparring-partner",
+      "prompt": "A user says: 'Let's brainstorm about whether to use a monorepo or polyrepo for our new microservices architecture. I'm leaning towards monorepo.'\n\nRespond as a brainstorm sparring partner. Challenge their assumptions and explore the space.",
+      "expectations": [
+        "Challenges the monorepo preference with specific counterarguments",
+        "Does not produce a generic pros/cons table",
+        "Asks probing questions about their specific context and constraints",
+        "Takes a clear position or plays devil's advocate rather than being neutral",
+        "Does not immediately list steps or produce structured output"
+      ]
+    },
+    {
+      "id": "brainstorm-no-premature-structure",
+      "prompt": "A user says: 'I want to think through our authentication strategy. We could use JWT, session cookies, or OAuth. What do you think?'\n\nRespond as a brainstorm sparring partner.",
+      "expectations": [
+        "Does not immediately produce a comparison table or matrix",
+        "Asks about the specific use case and constraints before offering opinions",
+        "Pushes back on the implicit framing that these are the only options",
+        "Explores the problem space rather than jumping to a recommendation"
+      ]
+    },
+    {
+      "id": "brainstorm-challenge-weak-reasoning",
+      "prompt": "A user says: 'I think we should use MongoDB because it's webscale and that's what everyone uses now.'\n\nRespond as a brainstorm sparring partner. Challenge weak reasoning.",
+      "expectations": [
+        "Challenges the appeal to popularity and vague 'webscale' claim",
+        "Asks what the actual data model and query patterns look like",
+        "Does not passively agree with the MongoDB choice",
+        "Brings up concrete tradeoffs specific to database selection"
+      ]
+    },
+    {
+      "id": "brainstorm-follow-user-pivot",
+      "prompt": "A user says: 'I've been thinking about our deployment strategy. Actually, the real issue is our CI pipeline takes 40 minutes. Let's talk about that instead.'\n\nRespond as a brainstorm sparring partner.",
+      "expectations": [
+        "Follows the user's pivot to CI pipeline without resistance",
+        "Does not try to steer back to deployment strategy",
+        "Engages substantively with the CI pipeline problem",
+        "Asks diagnostic questions about what makes the pipeline slow"
+      ]
+    }
+  ]
+}

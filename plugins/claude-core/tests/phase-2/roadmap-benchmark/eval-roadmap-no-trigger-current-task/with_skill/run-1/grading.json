@@ -1,0 +1,25 @@
+{
+  "expectations": [
+    {
+      "text": "Does NOT suggest adding this to the roadmap",
+      "passed": true,
+      "evidence": "Output explicitly says 'No.' and identifies it as the current task, not suggesting roadmap addition."
+    },
+    {
+      "text": "Recognizes this is the current task, not a future idea",
+      "passed": true,
+      "evidence": "Output states: 'This is the current task, not a future idea.'"
+    },
+    {
+      "text": "Suggests proceeding with the implementation",
+      "passed": true,
+      "evidence": "Output quotes the skill's own rule: 'When NOT to trigger: The idea is part of the current task (just do it)' \u2014 the '(just do it)' directive implies proceeding with implementation."
+    }
+  ],
+  "summary": {
+    "passed": 3,
+    "failed": 0,
+    "total": 3,
+    "pass_rate": 1.0
+  }
+}

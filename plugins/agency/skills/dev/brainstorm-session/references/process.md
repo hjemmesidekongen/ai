@@ -17,6 +17,25 @@ for topic_dir in brainstorm_dir/*/
 Report: "Loaded {len(past_decisions)} past decisions across {topic_count} topics"
 ```
 
+## Step 1b: Classify Domain & Load Domain Context
+
+After getting the brainstorm topic, classify it into one or more domains:
+
+| Domain | Triggers | What to research |
+|--------|----------|-----------------|
+| **brand** | brand, identity, positioning, naming, values, voice, archetype | Competitor brands, positioning frameworks, brand case studies |
+| **design** | UI, UX, design system, tokens, components, layout | Design trends, component patterns, accessibility standards |
+| **technical** | architecture, stack, framework, API, database, performance | Framework comparisons, benchmarks, migration guides |
+| **strategy** | business model, pricing, market, growth, differentiation | Market data, competitor strategies, industry benchmarks |
+| **content** | copy, messaging, tone, SEO, landing page | Competitor messaging, conversion patterns, content strategy |
+| **product** | features, roadmap, MVP, user stories | Competitor features, user research patterns, product-market fit |
+
+Store the classification — it determines when and what to search during the session.
+
+```
+domain = classify(topic)  # may be multiple: ["brand", "strategy"]
+```
+
 ## Step 2: Initialize Session
 
 ```
@@ -60,6 +79,64 @@ The facilitator must follow these behavioral rules:
 - Capture explicit decisions with confidence levels
 - End with open questions and next steps
 
+### Grounded Pushback (Perplexity MCP)
+
+Use Perplexity MCP tools to make challenges specific and evidence-based rather than generic.
+Do NOT announce "let me search for that" — weave results into the conversation naturally.
+
+**Which Perplexity tool to use:**
+
+| Situation | Tool | Why |
+|-----------|------|-----|
+| Quick fact check, verify a claim | `perplexity_ask` | Fast, cheap, good for single data points |
+| Find competitor URLs, recent news | `perplexity_search` | Returns ranked results with snippets |
+| Compare approaches, evaluate trade-offs | `perplexity_reason` | Chain-of-thought reasoning with web data |
+| Deep dive into a market/domain (use sparingly) | `perplexity_research` | Slow (30s+) but thorough — only for major topic shifts |
+
+Default to `perplexity_ask` for most pushback. Use `perplexity_research` only when the user is exploring a major new direction and you need comprehensive grounding.
+
+**When to search:**
+
+| Trigger | Example query | How to use the result |
+|---------|---------------|----------------------|
+| User claims market position | `perplexity_ask`: "How does [competitor] position itself in the [segment] market?" | "Actually, [competitor] already positions as [X]. How do you differentiate?" |
+| User assumes best practice | `perplexity_ask`: "What are current best practices for [domain] in 2026?" | "The current thinking has shifted — [data]. Does that change your approach?" |
+| User names a competitor | `perplexity_ask`: "What is [competitor]'s brand strategy and positioning?" | "Their brand is built around [Y]. You're either competing head-on or flanking. Which?" |
+| User picks a framework/approach | `perplexity_reason`: "Compare [framework] vs alternatives for [use case]" | "Have you considered [Z]? It trades off [A] for [B], which fits your constraint about [C]" |
+| User makes a bold claim | `perplexity_ask`: "[specific claim] — is this supported by data?" | Challenge or confirm — "that's backed up by [source]" or "the data suggests otherwise" |
+| User exploring a new market | `perplexity_research`: "Comprehensive analysis of [market segment]" | Deep context for sustained pushback across multiple sub-topics |
+
+**Rules for search behavior:**
+- Search 1-3 times per major topic shift, not every exchange
+- Prefer specific queries over broad ones — "SaaS project management tool brand positioning" not "brand strategy"
+- Never dump raw search results — synthesize into a challenge or data point
+- If search returns nothing useful, don't mention it — fall back to principle-based pushback
+- Cite sources naturally: "Basecamp built their brand on being the anti-enterprise tool — is that a lane you want?"
+- Search is a supporting tool, not the main event — conversation flow always takes priority
+- **Log every search to findings.md immediately** — tool used, query, key data points, and how it was used (see below)
+
+**Examples of grounded pushback (good):**
+- "You said 'simple and clean' — I just checked, and Notion, Linear, and Coda all use those exact words. What makes your 'simple' different from theirs?"
+- "The market data shows [segment] growing at [X]% — but the tools targeting it are all going premium. Your pricing undercuts that. Intentional or oversight?"
+- "I looked at how [competitor] handles onboarding — they skip the setup wizard entirely. Worth considering whether your 'guided setup' is actually a friction point."
+
+**Examples of bad search behavior (avoid):**
+- "Let me search for that..." [breaks conversation flow]
+- "According to my research, here are 5 findings:" [too formal, not sparring]
+- Searching after every user message [disruptive]
+- Presenting search results as authoritative truth [it's a conversation, not a report]
+
+### Live Transcription
+
+Append to `brainstorm-transcript-{date}.md` continuously during the session:
+- Create the transcript file at session start (header + context section)
+- **After each exchange**, append the user message and Claude's response
+- At minimum, append every 2 exchanges (2-Action Rule) — but every exchange is preferred
+- Include research results inline where they influenced the response
+- On session end, append the closing sections (Decisions Made, Research Conducted, Open Questions, Next Steps)
+
+This is non-negotiable. The transcript is the primary artifact. If context compresses mid-session, the transcript is how we recover.
+
 ### Real-time Tracking
 After every 2 discussion rounds, update findings.md:
 
@@ -73,14 +150,31 @@ After every 2 discussion rounds, update findings.md:
 ### Trade-offs Explored
 - Option A vs Option B: [trade-off summary]
 
+### Research Log
+- **Tool:** perplexity_ask | **Query:** "[query]"
+  **Found:** [key data point or insight]
+  **Used as:** [how it shaped the pushback]
+- **Tool:** perplexity_reason | **Query:** "[query]"
+  **Found:** [key data point or insight]
+  **Used as:** [confirmed/challenged user's claim about X]
+
 ### Open Questions
 - [question 1]
 ```
 
-## Step 4: Write Transcript
+**Research Log rule:** Every Perplexity call gets an entry in findings.md — tool used, query, what was found, and how it was used. This preserves research across `/compact` and makes it available to `brainstorm-decision-writer` later.
+
+## Step 4: Live Transcript (continuous, not end-of-session)
+
+The transcript is written **during** the brainstorm, not after it ends.
+This protects against context compression (`/compact`) and long sessions where early exchanges would be lost.
 
 ```
 transcript_path = .ai/brainstorm/{topic_slug}/brainstorm-transcript-{date}.md
+
+# Create the file at session start with the header.
+# Append each exchange as it happens — every user message + claude response gets appended immediately.
+# The 2-Action Rule applies: append at least every 2 exchanges, but preferably after each one.
 
 # Transcript format:
 ---
@@ -132,6 +226,11 @@ participants: [user, claude]
 
 ### {Sub-topic 2}
 ...
+
+## Research Conducted
+| Query | Key Finding | Impact on Discussion |
+|-------|------------|---------------------|
+| [search query] | [what was found] | [how it changed/confirmed the direction] |
 
 ## Decisions Made
 - [Decision 1]: [rationale] (confidence: high/medium/low)

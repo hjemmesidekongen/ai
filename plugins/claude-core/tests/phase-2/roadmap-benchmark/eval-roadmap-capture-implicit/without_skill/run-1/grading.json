@@ -1,0 +1,35 @@
+{
+  "expectations": [
+    {
+      "text": "Recognizes this as an out-of-scope idea worth capturing",
+      "passed": false,
+      "evidence": "Response says the opposite: 'Adding a roadmap item for something already designed and built would be noise.' It treats the idea as already covered by the existing storybook-generator skill, not as something worth capturing."
+    },
+    {
+      "text": "Proposes a roadmap item about Storybook auto-generation",
+      "passed": false,
+      "evidence": "Response explicitly states 'No, this should not go to the roadmap' and argues against creating any roadmap item."
+    },
+    {
+      "text": "Sets appropriate category like toolkit or development",
+      "passed": false,
+      "evidence": "No roadmap item is proposed, so no category is assigned."
+    },
+    {
+      "text": "Does not suggest implementing the feature now",
+      "passed": true,
+      "evidence": "Response says 'stay focused on component specs (as they said), and when the time comes, point them to the existing storybook-generator skill.' No suggestion to implement anything now."
+    },
+    {
+      "text": "Acknowledges the user wants to stay focused on current work",
+      "passed": true,
+      "evidence": "Response explicitly states 'The right move: stay focused on component specs (as they said)' \u2014 directly acknowledging the user's desire to stay focused."
+    }
+  ],
+  "summary": {
+    "passed": 2,
+    "failed": 3,
+    "total": 5,
+    "pass_rate": 0.4
+  }
+}

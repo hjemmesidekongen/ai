@@ -1,0 +1,35 @@
+{
+  "expectations": [
+    {
+      "text": "Logs the error with timestamp and skill name",
+      "passed": true,
+      "evidence": "YAML entry includes `timestamp: \"2026-03-08T...\"` and the light trace annotation includes `verification-runner` as the skill/tool name. The YAML also identifies `task: \"t3\"` as the violating task."
+    },
+    {
+      "text": "Identifies the file-ownership violation specifically",
+      "passed": true,
+      "evidence": "Explicitly sets `type: \"file_ownership_violation\"`, names the file (`config.yml`), the owner (`t4`), and the violator (`t3`). Message field reads: \"t3 wrote to config.yml but ownership is assigned to t4\"."
+    },
+    {
+      "text": "Sets result to unresolved",
+      "passed": true,
+      "evidence": "`resolution: null` in the YAML entry, with explanation: \"stays null until the conflict is resolved\"."
+    },
+    {
+      "text": "Suggests a next approach like reassigning ownership or splitting the file",
+      "passed": true,
+      "evidence": "States: \"either t3's write is reverted, or ownership is reassigned in the plan\" \u2014 two concrete next approaches for resolving the violation."
+    },
+    {
+      "text": "Keeps the error entry even after resolution",
+      "passed": true,
+      "evidence": "The `resolution: null` field design implies the entry persists and gets updated rather than deleted \u2014 \"stays null until the conflict is resolved\" indicates the entry remains and resolution is recorded in-place. The error is never described as being removed."
+    }
+  ],
+  "summary": {
+    "passed": 5,
+    "failed": 0,
+    "total": 5,
+    "pass_rate": 1.0
+  }
+}

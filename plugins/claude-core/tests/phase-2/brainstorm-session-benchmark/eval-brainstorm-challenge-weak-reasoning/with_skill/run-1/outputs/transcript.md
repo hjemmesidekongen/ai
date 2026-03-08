@@ -1,0 +1,40 @@
+# Execution Transcript
+
+## Prompt
+
+You are executing the 'brainstorm-session' skill. Follow these instructions:
+
+# SKILL.md
+
+---
+name: brainstorm-session
+user_invocable: false
+interactive: true
+depends_on: []
+reads: []
+writes:
+  - ".ai/brainstorm/{topic}/brainstorm-state.yml"
+  - ".ai/brainstorm/{topic}/brainstorm-transcript-{date}.md"
+checkpoint: data_validation
+model_tier: principal
+_source:
+  origin: "claude-core"
+  inspired_by: "task-planner/brainstorm-session"
+  iteration: 1
+  changes: "Optional context loading, cleaner stat...
+
+## Response
+
+Two red flags in that sentence.
+
+**"Webscale"** — what does that actually mean for your use case? MongoDB can scale horizontally, sure. But so can Postgres with Citus, CockroachDB, or even just read replicas. The question isn't whether a database *can* scale — it's whether *your* workload needs that kind of scaling, and at what cost. Most projects never hit the scale where Mongo's sharding model pays off. And if your data has relationships (which most application data does), you'll end up reimplementing joins in application code, which is slower and buggier than just letting a relational database do its job.
+
+What's your actual data shape? Is it genuinely document-oriented — varying schemas, deeply nested structures, no cross-entity queries? Or are you building something with users, projects, permissions, and relations between them? Because if it's the latter, you're picking the wrong tool and you'll feel it six months in.
+
+**"Everyone uses it"** — that's not a technical argument. Plenty of teams chose Mongo in 2014 for the same reason and spent years migrating back to Postgres. Popularity is a trailing indicator, not a quality signal. What specific problem does Mongo solve for you that alternatives don't?
+
+What's the actual project? Let's start from the requirements, not the database.
+
+## Stderr
+
+None

@@ -1,0 +1,19 @@
+| Task | Tier | Model |
+|------|------|-------|
+| t1: Scaffold directory structure | **Junior** | Haiku |
+| t2: Implement authentication middleware | **Senior** | Sonnet |
+| t3: Review and verify all security controls | **Principal** | Opus |
+| t4: Generate config from template | **Junior** | Haiku |
+| t5: Architect the database schema | **Principal** | Opus |
+
+**Reasoning:**
+
+**t1 — Haiku (junior).** Pure mechanical work. Create folders, drop in boilerplate files. Zero judgment calls, zero risk of subtle bugs. A checklist task.
+
+**t2 — Sonnet (senior).** Auth middleware requires real engineering judgment — token validation, session handling, error responses, middleware ordering. Getting it wrong has security consequences, but it's a well-understood pattern with clear best practices. Senior-level, not principal.
+
+**t3 — Opus (principal).** Security review demands the broadest context awareness and adversarial thinking. The reviewer needs to reason about attack surfaces across the whole system, spot subtle flaws (timing attacks, race conditions, privilege escalation), and make judgment calls about acceptable risk. This is the task where a miss costs the most.
+
+**t4 — Haiku (junior).** Template interpolation — read a template, fill in values, write the output. Deterministic, low-risk, no design decisions.
+
+**t5 — Opus (principal).** Schema design locks in structural decisions that are expensive to change later. Requires reasoning about data relationships, access patterns, normalization tradeoffs, indexing strategy, and future extensibility. Bad schema = compounding technical debt across every feature built on top of it.
