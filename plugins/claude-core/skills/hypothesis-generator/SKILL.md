@@ -73,11 +73,7 @@ Synthesize → select confirmed hypothesis → enter Phase 4
 
 ## Synthesis Rules
 
-- One confirmed → use it as Phase 3 hypothesis
-- Two confirmed → find unifying root cause
-- All refuted → return to Phase 1 (new evidence needed)
-- All possible → run most discriminating test to break tie
+One confirmed → Phase 3 hypothesis. Two confirmed → find unifying root cause.
+All refuted → return to Phase 1. All possible → run most discriminating test.
 
-## Full Process
-
-See `root-cause-debugging/references/process.md` — Hypothesis-Driven Extension section.
+Full process: `root-cause-debugging/references/process.md` — Hypothesis-Driven Extension.

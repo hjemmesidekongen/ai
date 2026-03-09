@@ -9,6 +9,12 @@ description: >
 user_invocable: false
 interactive: false
 depends_on: []
+triggers:
+  - "check docs stale"
+  - "doc-checkpoint"
+  - "documentation update needed"
+  - "ecosystem.json mismatch"
+  - "post-task docs"
 reads:
   - "~/CLAUDE.md"
   - "CLAUDE.md"

@@ -5,9 +5,12 @@ set -euo pipefail
 
 PROJECT_DIR="${CLAUDE_PROJECT_DIR:-.}"
 
-# Find all ecosystem.json files
-ECOSYSTEM_FILES=$(find "$PROJECT_DIR/plugins" -path '*/.claude-plugin/ecosystem.json' 2>/dev/null || true)
-[ -z "$ECOSYSTEM_FILES" ] && exit 0
+# Find all ecosystem.json files into an array
+ECOSYSTEM_FILES=()
+while IFS= read -r f; do
+  ECOSYSTEM_FILES+=("$f")
+done < <(find "$PROJECT_DIR/plugins" -path '*/.claude-plugin/ecosystem.json' 2>/dev/null || true)
+[ ${#ECOSYSTEM_FILES[@]} -eq 0 ] && exit 0
 
 # Extract and compare component names across plugins
 DUPES=$(python3 -c "
@@ -30,9 +33,9 @@ dupes = {k: v for k, v in components.items() if len(v) > 1}
 if dupes:
     parts = []
     for comp, plugins in dupes.items():
-        parts.append(f'{comp} in [{", ".join(plugins)}]')
+        parts.append(f'{comp} in [{\", \".join(plugins)}]')
     print('; '.join(parts))
-" $ECOSYSTEM_FILES 2>/dev/null || true)
+" "${ECOSYSTEM_FILES[@]}" 2>/dev/null || true)
 
 if [ -n "$DUPES" ]; then
   DUPES="${DUPES//\"/\'}"

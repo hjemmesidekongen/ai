@@ -11,6 +11,12 @@ description: >
 user_invocable: false
 interactive: false
 depends_on: []
+triggers:
+  - "verify before done"
+  - "proof of completion"
+  - "run verification"
+  - "task not verified"
+  - "claim done"
 reads:
   - ".ai/plans/{name}/state.yml"
   - ".ai/traces/trace-light.log"

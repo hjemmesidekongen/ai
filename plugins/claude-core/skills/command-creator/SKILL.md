@@ -9,6 +9,12 @@ description: >
 user_invocable: false
 interactive: false
 depends_on: []
+triggers:
+  - "create command"
+  - "add slash command"
+  - "fix broken command"
+  - "command not showing"
+  - "command arguments"
 reads:
   - "plugins/*/commands/**/*.md"
   - ".claude/commands/**/*.md"

@@ -9,6 +9,12 @@ description: >
 user_invocable: false
 interactive: false
 depends_on: []
+triggers:
+  - "create skill"
+  - "modify skill"
+  - "skill eval"
+  - "skill triggering accuracy"
+  - "benchmark skill"
 reads:
   - "plugins/*/skills/*/SKILL.md"
 writes: []
@@ -68,13 +74,4 @@ After creating a skill, run evaluations to verify triggering accuracy and task c
 | Benchmark | A/B comparison across multiple runs | `scripts/aggregate_benchmark.py` |
 | Description optimization | Iterative improvement of trigger phrases | `scripts/improve_description.py` |
 
-Eval agents (`agents/grader.md`, `comparator.md`, `analyzer.md`) handle grading, blind
-comparison, and post-hoc analysis. See `references/process.md` for the full eval pipeline
-and `references/schemas.md` for eval JSON schemas.
-
-## Process
-
-See `references/process.md` for the full specification: frontmatter fields, description
-writing, content organization, the 80-line rule, progressive disclosure, checkpoint
-patterns, ecosystem.json registration, the 6-step creation workflow, and the evaluation
-pipeline.
+Eval agents (`agents/grader.md`, `comparator.md`, `analyzer.md`) handle grading, blind comparison, and post-hoc analysis. Full process, eval pipeline, and schemas: `references/process.md`.

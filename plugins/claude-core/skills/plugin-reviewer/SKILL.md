@@ -10,6 +10,12 @@ user_invocable: false
 interactive: false
 depends_on:
   - plugin-creator
+triggers:
+  - "review plugin"
+  - "audit plugin"
+  - "validate plugin manifest"
+  - "ecosystem.json audit"
+  - "plugin portability check"
 reads:
   - "plugins/*/.claude-plugin/plugin.json"
   - "plugins/*/.claude-plugin/ecosystem.json"

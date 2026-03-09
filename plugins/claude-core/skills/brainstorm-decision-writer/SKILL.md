@@ -11,6 +11,12 @@ user_invocable: false
 interactive: true
 depends_on:
   - brainstorm-session
+triggers:
+  - "extract decisions"
+  - "formalize brainstorm"
+  - "record decisions"
+  - "close brainstorm"
+  - "decisions from discussion"
 reads:
   - ".ai/brainstorm/{topic}/brainstorm-state.yml"
   - ".ai/brainstorm/{topic}/brainstorm-transcript-{date}.md"

@@ -59,6 +59,12 @@ case "$ACTION" in
   discard)
     echo "Discarding worktree and branch '$BRANCH'..."
     git worktree remove "$WORKTREE_DIR" --force 2>/dev/null || true
+    # Check for unmerged commits before force-deleting
+    MAIN_REF=$(git rev-parse --abbrev-ref HEAD)
+    if ! git merge-base --is-ancestor "$BRANCH" "$MAIN_REF" 2>/dev/null; then
+      echo "Warning: branch '$BRANCH' has unmerged commits not in '$MAIN_REF'."
+      echo "Proceeding with delete as requested (discard action)."
+    fi
     git branch -D "$BRANCH" 2>/dev/null || echo "Branch '$BRANCH' already deleted or not found."
     echo "Discarded."
     ;;

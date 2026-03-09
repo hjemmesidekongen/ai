@@ -8,8 +8,39 @@ description: >
   Use when: reviewing accumulated observations, running the learning
   pipeline, updating instinct confidence, extracting patterns from recent
   session data, or seeding new instincts before instinct-evolve.
-model_tier: junior
+user_invocable: false
+interactive: false
 depends_on: []
+triggers:
+  - "extract instincts"
+  - "learning pipeline"
+  - "process observations"
+  - "update instinct confidence"
+  - "pattern extraction"
+reads:
+  - ".ai/instincts/observations.jsonl"
+  - ".ai/instincts/instincts.yml"
+  - "plugins/claude-core/resources/instincts-schema.yml"
+writes:
+  - ".ai/instincts/instincts.yml"
+checkpoint:
+  type: data_validation
+  required_checks:
+    - name: "schema_compliant"
+      verify: "Each instinct has all required fields from instincts-schema.yml"
+      fail_action: "Add missing fields before writing instincts.yml"
+    - name: "instincts_updated"
+      verify: "At least one instinct created, updated, or decayed"
+      fail_action: "Re-run pattern identification with lower threshold"
+  on_fail: "Fix schema issues before writing output."
+  on_pass: "Report counts: new, updated, decayed, total active."
+model_tier: junior
+_source:
+  origin: "claude-core"
+  inspired_by: "observation-recorder.sh + instincts-schema.yml"
+  ported_date: "2026-03-09"
+  iteration: 1
+  changes: "New skill for learning pipeline. Reads observations, outputs structured instincts."
 ---
 
 # instinct-extractor
@@ -39,20 +70,7 @@ as atomic instincts with confidence weights.
    - For each candidate: create new instinct or increment `evidence_count`
    - For contradictions: increment `contradiction_count`, apply confidence decay
    - Set `status: decayed` for instincts below 0.2 confidence
-   - Preserve existing instincts not in current observation window
 
-4. **Checkpoint**
-   Before writing: verify each instinct has all required fields from schema.
-   Verdict: `instincts_updated: N` or `instincts_decayed: N`.
+4. **Output** — Write updated `.ai/instincts/instincts.yml`. Report: new, updated, decayed, total active.
 
-5. **Output**
-   - Write updated `.ai/instincts/instincts.yml`
-   - Report: new instincts added, updated, decayed, total active
-
-## Output format
-
-```
-Instinct extraction complete.
-New: N | Updated: N | Decayed: N | Total active: N
-Ready for instinct-evolve (N qualify for evolution).
-```
+Output: `Instinct extraction complete. New: N | Updated: N | Decayed: N | Total active: N`

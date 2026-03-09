@@ -13,6 +13,12 @@ description: >
 user_invocable: false
 interactive: false
 depends_on: []
+triggers:
+  - "worktree isolation"
+  - "isolated branch work"
+  - "experimental branch"
+  - "risky refactor branch"
+  - "parallel feature branch"
 reads:
   - ".gitignore"
   - "package.json|Gemfile|requirements.txt|go.mod (optional)"

@@ -8,6 +8,7 @@
 trap 'exit 0' ERR
 
 PROJECT_DIR="${CLAUDE_PROJECT_DIR:-.}"
+LOG_FILE="$PROJECT_DIR/.ai/traces/hook-errors.log"
 INPUT=$(cat)
 
 # Extract file path
@@ -96,6 +97,10 @@ done
 
 # File not found in declared scope — advisory only
 PLAN_NAME=$(basename "$(dirname "$ACTIVE_PLAN")")
+# Log to hook-errors.log
+mkdir -p "$(dirname "$LOG_FILE")" 2>/dev/null || true
+printf '%s|scope-guard|warn|%s|not in declared writes for %s (plan: %s)\n' \
+  "$(date -u +%Y-%m-%dT%H:%M:%SZ)" "$FILE_PATH" "$WAVE" "$PLAN_NAME" >> "$LOG_FILE" 2>/dev/null || true
 printf 'SCOPE GUARD: "%s" not in declared writes for wave "%s" (plan: %s).\n' \
   "$(basename "$FILE_PATH")" "$WAVE" "$PLAN_NAME" >&2
 printf '  Confirm intent or add path to the task writes list in state.yml.\n' >&2

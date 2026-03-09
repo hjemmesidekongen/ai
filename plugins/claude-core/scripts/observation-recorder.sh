@@ -5,12 +5,19 @@
 
 set -euo pipefail
 
-OBSERVATIONS_FILE=".ai/instincts/observations.jsonl"
+PROJECT_DIR="${CLAUDE_PROJECT_DIR:-.}"
+OBSERVATIONS_FILE="$PROJECT_DIR/.ai/instincts/observations.jsonl"
 TOOL_NAME="${CLAUDE_TOOL_NAME:-unknown}"
 TOOL_OUTPUT="${CLAUDE_TOOL_OUTPUT:-}"
 
+# Sanitize tool name for JSON safety
+TOOL_NAME="${TOOL_NAME//\"/\'}"
+
+# Truncate tool output before processing (prevent memory issues)
+TOOL_OUTPUT="${TOOL_OUTPUT:0:2000}"
+
 # Create storage dir if needed
-mkdir -p ".ai/instincts"
+mkdir -p "$PROJECT_DIR/.ai/instincts"
 
 # Determine outcome from tool output (error indicators)
 outcome="success"
@@ -28,8 +35,8 @@ if echo "$TOOL_NAME" | grep -qiE "read"; then context_type="review"; fi
 
 # Approximate sequence key from last 3 tools in trace-light.log
 seq_key="none"
-if [[ -f ".ai/traces/trace-light.log" ]]; then
-  seq_key=$(tail -3 ".ai/traces/trace-light.log" 2>/dev/null | awk -F'|' '{print $2}' | tr '\n' '-' | sed 's/-$//' | md5 2>/dev/null || echo "none")
+if [[ -f "$PROJECT_DIR/.ai/traces/trace-light.log" ]]; then
+  seq_key=$(tail -3 "$PROJECT_DIR/.ai/traces/trace-light.log" 2>/dev/null | awk -F'|' '{print $2}' | tr '\n' '-' | sed 's/-$//' | md5 2>/dev/null || echo "none")
 fi
 
 # Build JSON observation
@@ -42,7 +49,8 @@ echo "$observation" >> "$OBSERVATIONS_FILE"
 if [[ -f "$OBSERVATIONS_FILE" ]]; then
   line_count=$(wc -l < "$OBSERVATIONS_FILE" 2>/dev/null || echo 0)
   if (( line_count > 500 )); then
-    tail -500 "$OBSERVATIONS_FILE" > "${OBSERVATIONS_FILE}.tmp" && mv "${OBSERVATIONS_FILE}.tmp" "$OBSERVATIONS_FILE"
+    TMP=$(mktemp "${OBSERVATIONS_FILE}.XXXXXX")
+    tail -500 "$OBSERVATIONS_FILE" > "$TMP" && mv "$TMP" "$OBSERVATIONS_FILE"
   fi
 fi
 

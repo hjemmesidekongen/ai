@@ -10,6 +10,12 @@ user_invocable: false
 interactive: false
 depends_on:
   - hook-creator
+triggers:
+  - "review hook"
+  - "audit hook"
+  - "hook security check"
+  - "validate hook script"
+  - "hook exit codes"
 reads:
   - "plugins/*/.claude-plugin/plugin.json"
   - "plugins/*/scripts/*.sh"

@@ -10,6 +10,12 @@ user_invocable: false
 interactive: false
 depends_on:
   - skill-creator
+triggers:
+  - "review skill"
+  - "audit skill"
+  - "validate skill"
+  - "skill frontmatter check"
+  - "skill quality audit"
 reads:
   - "plugins/*/skills/*/SKILL.md"
   - "plugins/*/skills/*/references/*.md"

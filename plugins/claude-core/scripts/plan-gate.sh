@@ -7,6 +7,7 @@
 trap 'exit 0' ERR
 
 PROJECT_DIR="${CLAUDE_PROJECT_DIR:-.}"
+LOG_FILE="$PROJECT_DIR/.ai/traces/hook-errors.log"
 INPUT=$(cat)
 
 # Extract file path
@@ -39,6 +40,10 @@ for state_file in "$PROJECT_DIR"/.ai/plans/*/state.yml; do
 done
 
 if [ "$HAS_ACTIVE_PLAN" -eq 0 ]; then
+  # Log to hook-errors.log
+  mkdir -p "$(dirname "$LOG_FILE")" 2>/dev/null || true
+  printf '%s|plan-gate|warn|%s|no active plan found\n' \
+    "$(date -u +%Y-%m-%dT%H:%M:%SZ)" "$FILE_PATH" >> "$LOG_FILE" 2>/dev/null || true
   printf '\nPLAN GATE: Modifying "%s" without an active plan.\n' "$(basename "$FILE_PATH")" >&2
   printf '  For multi-file tasks, consider /plan:create before implementing.\n' >&2
   printf '  (Advisory only — does not block)\n\n' >&2

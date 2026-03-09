@@ -9,6 +9,12 @@ description: >
 user_invocable: true
 interactive: false
 depends_on: []
+triggers:
+  - "plugin settings"
+  - "local.md config"
+  - "plugin configuration"
+  - "toggle plugin feature"
+  - "per-project plugin state"
 reads: []
 writes: []
 checkpoint:
@@ -68,9 +74,4 @@ VALUE=$(echo "$FRONTMATTER" | grep '^field:' | sed 's/field: *//' | sed 's/^"\(.
 BODY=$(awk '/^---$/{i++; next} i>=2' "$FILE")
 ```
 
-## Security
-
-Sanitize input before writing (`sed 's/"/\\"/g'`). Validate paths (reject `..`).
-No secrets — files are plaintext and project-local.
-
-Full detail: [references/process.md](references/process.md)
+Sanitize input before writing (`sed 's/"/\\"/g'`). Validate paths (reject `..`). No secrets — plaintext. Full detail: [references/process.md](references/process.md)

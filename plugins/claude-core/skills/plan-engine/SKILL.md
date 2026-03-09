@@ -10,6 +10,12 @@ description: >
 user_invocable: false
 interactive: false
 depends_on: []
+triggers:
+  - "create plan"
+  - "wave plan"
+  - "task dependencies"
+  - "parallel execution waves"
+  - "file-ownership conflicts"
 reads: []
 writes:
   - ".ai/plans/{name}/plan.yml"
@@ -70,11 +76,5 @@ A task list (provided inline or as a file) with:
 ## Output
 
 - `.ai/plans/{name}/plan.yml` — the wave plan (what to do)
-- `.ai/plans/{name}/plan.md` — implementation rules (how to do it)
+- `.ai/plans/{name}/plan.md` — implementation contract (standards, sync constraints, what NOT to do)
 - `.ai/plans/{name}/state.yml` — execution state (all pending)
-
-## plan.md
-
-Every plan gets a `plan.md` — the implementation contract read before executing
-any task. Contains implementation standards, sync constraints, and what NOT to do.
-See `references/process.md` for the plan.md template.

@@ -12,6 +12,12 @@ description: >
 user_invocable: false
 interactive: false
 depends_on: [verification-gate]
+triggers:
+  - "root cause analysis"
+  - "bug keeps returning"
+  - "investigate failure"
+  - "band-aid fix failing"
+  - "unexpected behavior"
 reads:
   - "logs, stack traces, error output (context-dependent)"
 writes: []

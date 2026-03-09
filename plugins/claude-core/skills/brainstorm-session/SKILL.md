@@ -11,6 +11,12 @@ description: >
 user_invocable: false
 interactive: true
 depends_on: []
+triggers:
+  - "brainstorm"
+  - "explore problem space"
+  - "think through options"
+  - "challenge assumptions"
+  - "compare tradeoffs"
 reads: []
 writes:
   - ".ai/brainstorm/{topic}/brainstorm-state.yml"

@@ -7,8 +7,39 @@ description: >
   Use when: promoting instincts to skills, promoting patterns to CLAUDE.md rules,
   running the evolution phase of the learning pipeline, reviewing which instincts
   qualify for evolution, or closing out the instinct review cycle.
-model_tier: senior
+user_invocable: false
+interactive: true
 depends_on: [instinct-extractor]
+triggers:
+  - "promote instinct"
+  - "evolve instinct"
+  - "instinct to skill"
+  - "instinct to rule"
+  - "instinct review cycle"
+reads:
+  - ".ai/instincts/instincts.yml"
+writes:
+  - ".ai/instincts/instincts.yml"
+  - "MEMORY.md (conditional)"
+  - "CLAUDE.md (conditional)"
+checkpoint:
+  type: data_validation
+  required_checks:
+    - name: "evolved_to_set"
+      verify: "All approved instincts have evolved_to field set"
+      fail_action: "Set evolved_to on each approved promotion"
+    - name: "human_approved"
+      verify: "Each promotion was presented to and approved by user"
+      fail_action: "Present proposals before applying changes"
+  on_fail: "Do not apply promotions without user approval."
+  on_pass: "Report counts: qualified, proposed, approved, rejected."
+model_tier: senior
+_source:
+  origin: "claude-core"
+  inspired_by: "instinct-extractor + skill-creator promotion flow"
+  ported_date: "2026-03-09"
+  iteration: 1
+  changes: "New skill for learning pipeline. Promotes qualified instincts to durable artifacts."
 ---
 
 # instinct-evolve
@@ -30,31 +61,14 @@ to durable artifacts. Requires human approval for each promotion.
    - Filter to qualifying instincts (criteria above)
    - If none qualify: report count + highest-confidence instinct. Stop.
 
-2. **For each qualifying instinct, propose evolution target**
-   (see `references/process.md` for target selection rules)
-   - MEMORY.md entry — for facts, counts, version numbers, file paths
-   - CLAUDE.md rule — for behavioral patterns that should always apply
-   - New skill — for multi-step workflows worth capturing
-   - New command — for user-invocable workflows
-   - Discard — if the instinct isn't generalizable
+2. **Propose evolution targets** (see `references/process.md` for rules)
+   - MEMORY.md entry — facts, counts, paths
+   - CLAUDE.md rule — behavioral patterns
+   - New skill/command — multi-step workflows
+   - Discard — if not generalizable
 
-3. **Present proposals to user**
-   Show each instinct with its proposed target and a draft of the artifact.
-   Wait for approval/rejection/modification per instinct.
+3. **Present proposals** — show each instinct with target and draft artifact. Wait for approval.
 
-4. **Apply approved promotions**
-   - MEMORY.md / CLAUDE.md: append the entry at the appropriate section
-   - New skill: create the skeleton SKILL.md (use skill-creator)
-   - New command: note for command-creator
-   - Update instinct: set `status: evolved`, `evolved_to: <target>`
+4. **Apply approved promotions** — write artifacts, set `status: evolved`, `evolved_to: <target>`.
 
-5. **Checkpoint**
-   Verify `evolved_to` is set on all approved instincts before reporting done.
-
-## Output format
-
-```
-Instinct evolution complete.
-Qualified: N | Proposed: N | Approved: N | Rejected: N
-Evolved to: [MEMORY.md x2] [CLAUDE.md x1] [new skill x1]
-```
+Output: `Instinct evolution complete. Qualified: N | Proposed: N | Approved: N | Rejected: N`

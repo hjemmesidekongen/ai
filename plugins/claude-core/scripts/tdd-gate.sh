@@ -3,24 +3,43 @@
 # claude-core PreToolUse hook (Write|Edit)
 # Exits 2 (block) when no test file found for the target production file.
 # Opt-out: set CLAUDE_NO_TDD_GATE=1 or create .claude/no-tdd-gate in project root.
-# Source: adapted from claude-code-templates-main quality-gates/tdd-gate.sh
 
-trap 'exit 0' ERR
+set -euo pipefail
 
 PROJECT_DIR="${CLAUDE_PROJECT_DIR:-.}"
+LOG_FILE="$PROJECT_DIR/.ai/traces/hook-errors.log"
 
 # Opt-out checks
 [ "${CLAUDE_NO_TDD_GATE:-}" = "1" ] && exit 0
 [ -f "$PROJECT_DIR/.claude/no-tdd-gate" ] && exit 0
 
 INPUT=$(cat)
-TOOL=$(printf '%s' "$INPUT" | jq -r '.tool_name // empty' 2>/dev/null)
+
+# Extract tool_name — jq with bash fallback
+TOOL=""
+if command -v jq &>/dev/null; then
+  TOOL=$(printf '%s' "$INPUT" | jq -r '.tool_name // empty' 2>/dev/null) || true
+else
+  case "$INPUT" in *'"tool_name":"'*)
+    TOOL="${INPUT#*\"tool_name\":\"}"
+    TOOL="${TOOL%%\"*}" ;;
+  esac
+fi
 case "$TOOL" in
   Edit|MultiEdit|Write) ;;
   *) exit 0 ;;
 esac
 
-FILE_PATH=$(printf '%s' "$INPUT" | jq -r '.tool_input.file_path // empty' 2>/dev/null)
+# Extract file_path — jq with bash fallback
+FILE_PATH=""
+if command -v jq &>/dev/null; then
+  FILE_PATH=$(printf '%s' "$INPUT" | jq -r '.tool_input.file_path // empty' 2>/dev/null) || true
+else
+  case "$INPUT" in *'"file_path":"'*)
+    FILE_PATH="${INPUT#*\"file_path\":\"}"
+    FILE_PATH="${FILE_PATH%%\"*}" ;;
+  esac
+fi
 [ -z "$FILE_PATH" ] && exit 0
 
 EXT="${FILE_PATH##*.}"
@@ -67,7 +86,7 @@ TESTS_FOUND=$(find "$FILE_DIR" \
     -name "${NAME_NO_EXT}.spec.*" -o \
     -name "${NAME_NO_EXT}_test.*" -o \
     -name "test_${NAME_NO_EXT}.*" \
-  \) 2>/dev/null | head -1)
+  \) 2>/dev/null | head -1) || true
 
 # Fallback: project-wide search
 if [ -z "$TESTS_FOUND" ]; then
@@ -78,14 +97,17 @@ if [ -z "$TESTS_FOUND" ]; then
     -name "${NAME_NO_EXT}.spec.*" -o \
     -name "${NAME_NO_EXT}_test.*" -o \
     -name "test_${NAME_NO_EXT}.*" \
-  \) 2>/dev/null | head -1)
+  \) 2>/dev/null | head -1) || true
 fi
 
 if [ -z "$TESTS_FOUND" ]; then
-  printf 'TDD GATE: No test file found for "%s".\n' "$BASENAME" >&2
-  printf '  Write tests BEFORE implementing production code.\n' >&2
-  printf '  Expected: %s.test.%s or %s_test.%s\n' "$NAME_NO_EXT" "$EXT" "$NAME_NO_EXT" "$EXT" >&2
-  printf '  Opt-out: CLAUDE_NO_TDD_GATE=1 or create .claude/no-tdd-gate\n' >&2
+  # Log to hook-errors.log
+  mkdir -p "$(dirname "$LOG_FILE")" 2>/dev/null || true
+  printf '%s|tdd-gate|block|%s|no test file found for %s\n' \
+    "$(date -u +%Y-%m-%dT%H:%M:%SZ)" "$FILE_PATH" "$BASENAME" >> "$LOG_FILE" 2>/dev/null || true
+  # Stdout JSON for Claude Code visibility
+  printf '{"decision":"block","reason":"TDD GATE: No test file found for %s. Create %s.test.%s or %s_test.%s. Opt-out: CLAUDE_NO_TDD_GATE=1"}\n' \
+    "$BASENAME" "$NAME_NO_EXT" "$EXT" "$NAME_NO_EXT" "$EXT"
   exit 2
 fi
 

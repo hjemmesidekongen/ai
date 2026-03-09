@@ -9,6 +9,12 @@ description: >
 user_invocable: false
 interactive: false
 depends_on: []
+triggers:
+  - "create agent"
+  - "add subagent"
+  - "agent system prompt"
+  - "agent vs command"
+  - "configure agent tools"
 reads:
   - "plugins/*/agents/**/*.md"
 writes: []

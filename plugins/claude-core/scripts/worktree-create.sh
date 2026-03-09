@@ -12,6 +12,13 @@ if [ -z "$NAME" ] || [ -z "$BRANCH" ]; then
   exit 1
 fi
 
+# Validate inputs: alphanumeric, dots, underscores, hyphens, slashes only
+VALID_PATTERN='^[a-zA-Z0-9._/-]+$'
+if [[ ! "$NAME" =~ $VALID_PATTERN ]] || [[ ! "$BRANCH" =~ $VALID_PATTERN ]]; then
+  echo "Error: name and branch must match [a-zA-Z0-9._/-]+" >&2
+  exit 1
+fi
+
 WORKTREE_DIR=".worktrees/${NAME}"
 
 # --- Step 1: Gitignore safety check ---

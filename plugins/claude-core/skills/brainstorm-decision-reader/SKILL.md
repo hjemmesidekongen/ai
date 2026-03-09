@@ -14,6 +14,12 @@ description: >
   decided, checking what decisions exist for a domain, or reviewing past conclusions
   before making new ones.
 depends_on: []
+triggers:
+  - "load past decisions"
+  - "what was decided"
+  - "prior decisions"
+  - "decision context"
+  - "review past conclusions"
 reads:
   - ".ai/brainstorm/*/decisions.yml"
 writes: []
@@ -65,16 +71,6 @@ The caller may provide:
 
 ## Domain Mapping
 
-When a domain is specified, related domains are included automatically:
+Related domains auto-included: dev→security,strategy | design→brand,content | content→brand,design | brand→design | devops→dev,security.
 
-| Domain | Also includes |
-|--------|---------------|
-| dev | security, strategy |
-| design | brand, content |
-| content | brand, design |
-| brand | design |
-| devops | dev, security |
-
-## Error Logging — Log errors to state.yml errors array if within a plan context.
-
-## Execution — [references/process.md](references/process.md)
+Full process and error logging: [references/process.md](references/process.md).

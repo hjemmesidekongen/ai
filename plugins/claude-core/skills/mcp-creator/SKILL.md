@@ -9,6 +9,12 @@ description: >
 user_invocable: false
 interactive: false
 depends_on: [plugin-creator]
+triggers:
+  - "create MCP server"
+  - "configure MCP"
+  - "mcp.json setup"
+  - "MCP tool integration"
+  - "MCP connectivity issue"
 reads:
   - "plugins/*/.claude-plugin/plugin.json"
   - "plugins/*/.mcp.json"
@@ -70,12 +76,4 @@ Pre-allow specific tools in command frontmatter via `allowed-tools`. Avoid wildc
 
 ## Tool annotations
 
-Add hints so Claude reasons about safety: `readOnlyHint`, `destructiveHint`, `idempotentHint`, `openWorldHint`. See `references/process.md`.
-
-## Evaluation
-
-After build + tests pass, create `evaluation.xml` with 10 read-only Q&A pairs. See `references/evaluation.md`.
-
-## References
-
-- `references/process.md` — workflow, auth, tool annotations; `references/evaluation.md` — eval; `references/server-types.md` — types; `assets/*.json` — configs
+Add hints so Claude reasons about safety: `readOnlyHint`, `destructiveHint`, `idempotentHint`, `openWorldHint`. After build + tests pass, create `evaluation.xml` with 10 read-only Q&A pairs. Full process: `references/process.md`.

@@ -9,6 +9,13 @@ description: >
 user_invocable: false
 interactive: false
 depends_on: []
+triggers:
+  - "create hook"
+  - "add PreToolUse hook"
+  - "fix silent hook"
+  - "hook not firing"
+  - "blocking hook"
+  - "SessionStart hook"
 reads:
   - "plugins/*/.claude-plugin/plugin.json"
 writes: []

@@ -10,6 +10,12 @@ description: >
 user_invocable: false
 interactive: false
 depends_on: []
+triggers:
+  - "add to roadmap"
+  - "track for later"
+  - "out of scope idea"
+  - "defer this feature"
+  - "capture roadmap item"
 reads:
   - ".ai/roadmap.yml"
 writes:

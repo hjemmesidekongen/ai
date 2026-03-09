@@ -3,6 +3,8 @@ set -euo pipefail
 # claude-core — Stop hook: clear plugin cache at session end
 # Prevents stale cache from persisting across sessions in this dev workspace.
 
-rm -rf ~/.claude/plugins/cache/local-workspace/ 2>/dev/null || true
+[ -z "${HOME:-}" ] && exit 0
+CACHE_DIR="$HOME/.claude/plugins/cache/local-workspace"
+[ -d "$CACHE_DIR" ] && rm -rf "$CACHE_DIR"
 
 exit 0

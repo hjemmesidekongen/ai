@@ -10,6 +10,12 @@ description: >
 user_invocable: false
 interactive: false
 depends_on: []
+triggers:
+  - "verify wave"
+  - "check wave complete"
+  - "plan verification"
+  - "spec compliance check"
+  - "wave quality review"
 reads:
   - ".ai/plans/{name}/plan.yml"
   - ".ai/plans/{name}/state.yml"

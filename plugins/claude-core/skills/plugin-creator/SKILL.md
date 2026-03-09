@@ -13,6 +13,12 @@ depends_on:
   - skill-creator
   - agent-creator
   - hook-creator
+triggers:
+  - "create plugin"
+  - "scaffold plugin"
+  - "plugin.json setup"
+  - "marketplace registration"
+  - "ecosystem.json config"
 reads:
   - "plugins/*/.claude-plugin/plugin.json"
   - "plugins/*/.claude-plugin/ecosystem.json"
@@ -59,9 +65,6 @@ Creates and validates Claude Code plugins for any plugin in this workspace.
 | **Agents** | Autonomous multi-step workers | agent-creator |
 | **Hooks** | Event-driven automation | hook-creator |
 
-For component-specific guidance, load the corresponding creator skill.
-Do not duplicate component-level details here — delegate to the specialist.
-
 ## Plugin structure
 
 | Path | Purpose |
@@ -73,8 +76,4 @@ Do not duplicate component-level details here — delegate to the specialist.
 | `agents/` | Agent markdown files |
 | `scripts/` | Hook scripts and utilities |
 
-## Process
-
-See `references/process.md` for the full specification: plugin.json fields,
-ecosystem.json format, marketplace registration, naming conventions, creation
-workflow, ${CLAUDE_PLUGIN_ROOT} usage, cache management, and pre-commit checklist.
+Full process: `references/process.md` (plugin.json fields, ecosystem.json, marketplace, naming, cache, pre-commit checklist).

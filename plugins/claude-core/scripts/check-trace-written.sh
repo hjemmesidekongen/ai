@@ -24,6 +24,10 @@ TRACES_DIR=$(grep 'traces_dir:' "$STATE_FILE" 2>/dev/null | awk '{print $2}' | t
 [ -z "$TRACES_DIR" ] && TRACES_DIR="$PROJECT_DIR/.ai/projects/$ACTIVE/traces/"
 # Resolve relative paths against project dir
 [[ "$TRACES_DIR" != /* ]] && TRACES_DIR="$PROJECT_DIR/$TRACES_DIR"
+# Canonicalize and bounds check — must be inside PROJECT_DIR
+TRACES_DIR=$(cd "$TRACES_DIR" 2>/dev/null && pwd -P) || exit 0
+CANONICAL_PROJECT=$(cd "$PROJECT_DIR" 2>/dev/null && pwd -P) || exit 0
+case "$TRACES_DIR" in "$CANONICAL_PROJECT"/*) ;; *) exit 0 ;; esac
 [ ! -d "$TRACES_DIR" ] && exit 0
 
 # Only check traces modified in the last 60 minutes (current session)
