@@ -1146,6 +1146,20 @@ items:
     added: "2026-03-09"
     tags: [context, compaction, hooks, external-reference]
 
+  - id: RL-099
+    title: "Plan-gate PreToolUse hook"
+    description: >
+      Advisory PreToolUse hook that warns when modifying plugin source files
+      (skills, commands, agents, scripts, resources) without an active plan.
+      Non-blocking. Encourages plan-first discipline for multi-file tasks.
+    category: core
+    plugin: claude-core
+    priority: done
+    completed: "2026-03-09"
+    source: ".ai/research/external-reference-findings.md (L4)"
+    added: "2026-03-09"
+    tags: [hooks, planning, quality-gate, external-reference]
+
   - id: RL-098
     title: "TDD pre-hook validator"
     description: >
@@ -1179,16 +1193,16 @@ items:
 # ============================================================
 # STATS (updated 2026-03-09)
 # ============================================================
-# Total items: 96
+# Total items: 97
 #
-# Done: 46
+# Done: 47
 #   Phase 1: 9 (RL-001–009)
 #   Phase 2: 8 (RL-010–017)
 #   Phase 3: 2 (RL-020, RL-021)
 #   Phase 4: 7 (RL-022–025, RL-074, RL-085-gate, RL-023)
 #   Iteration-2: 3 (RL-069, RL-071, RL-072)
 #   Context compaction: 6 (RL-079–082, RL-084, RL-085)
-#   External references: 12 (RL-087–RL-098)
+#   External references: 13 (RL-087–RL-099)
 #
 # Later: 7
 #   Phase 3: 2 (RL-018 project-scan, RL-019 self-documenting)
