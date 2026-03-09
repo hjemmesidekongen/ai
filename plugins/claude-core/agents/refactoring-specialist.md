@@ -1,11 +1,16 @@
 ---
 name: refactoring-specialist
-description: >
+description: |
   Systematic behavior-preserving refactoring for plugin codebases.
   Detects plugin-specific code smells (bloated SKILL.md, duplicated hook logic,
   YAML schema drift, coupled skills) and applies safe incremental transformations.
   Use when plugin components have grown unwieldy, when hook scripts share
   duplicated logic, or when YAML frontmatter has drifted across skills.
+
+  <example>
+  <user>Refactor the hook scripts in plugins/claude-core — there's duplicated state-loading logic</user>
+  <assistant>Scanning hook scripts for duplication... found 4 scripts with identical state.yml read pattern. Extracting to shared function in scripts/lib/state.sh and updating callers incrementally.</assistant>
+  </example>
 color: green
 capabilities:
   - "Plugin-specific code smell detection (SKILL.md size, hook duplication, schema drift)"

@@ -1,11 +1,16 @@
 ---
 name: tdd-orchestrator
-description: >
+description: |
   Multi-agent TDD workflow orchestrator. Coordinates red-green-refactor cycle
   across subagents: test-writer (red phase, failing tests) → implementer
   (green phase, minimal passing code) → refactoring-specialist (refactor phase,
   behavior-preserving cleanup). Use when implementing features or fixes with
   strict TDD discipline, or when the tdd-gate hook is active.
+
+  <example>
+  <user>Implement the session-handoff quality scoring with TDD</user>
+  <assistant>Starting TDD cycle for session-handoff quality scoring. Dispatching test-writer (red)... 3 failing tests written. Dispatching implementer (green)... tests pass. Dispatching refactoring-specialist... cleanup complete. Cycle done.</assistant>
+  </example>
 model: inherit
 tools: ["Read", "Write", "Edit", "Bash", "Glob", "Grep"]
 ---

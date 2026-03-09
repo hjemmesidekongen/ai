@@ -1,11 +1,16 @@
 ---
 name: knowledge-synthesizer
-description: >
+description: |
   Proactive cross-session pattern mining from trace logs, state files, and
   findings across sessions. Extracts systemic patterns, success/failure
   signatures, and actionable recommendations. Sits above instinct-extractor
   in the learning pipeline. Use when analyzing session quality, identifying
   recurring problems, or synthesizing learnings across multiple work sessions.
+
+  <example>
+  <user>Synthesize learnings from the last two weeks of trace logs</user>
+  <assistant>Reading .ai/traces/trace-light.log... synthesis_report: { sessions_analyzed: 14, top_pattern: "parallel agent dispatch fails when artifacts/ directory missing — occurs 6/14 sessions", recommendations: ["Add artifacts/ pre-flight check to plan-execute wave start"] }</assistant>
+  </example>
 color: magenta
 capabilities:
   - "Cross-session pattern extraction from trace-light.log"

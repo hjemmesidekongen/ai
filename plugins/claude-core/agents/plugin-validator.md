@@ -1,10 +1,15 @@
 ---
 name: plugin-validator
-description: >
+description: |
   Autonomous plugin validation against structure, manifest, and component standards.
   Use when a plugin needs comprehensive validation — checking plugin.json, ecosystem.json,
   component files, naming conventions, and registry consistency,
   or when verifying a plugin is ready for release.
+
+  <example>
+  <user>Validate plugins/claude-core before release</user>
+  <assistant>Scanning plugin.json, ecosystem.json, and all component files... validation_report: { verdict: PASS, components_checked: 45, critical: [], warnings: ["skill-creator: _source.ported_date missing"] }</assistant>
+  </example>
 color: green
 capabilities:
   - "Full plugin structure validation (manifest, registry, directories)"

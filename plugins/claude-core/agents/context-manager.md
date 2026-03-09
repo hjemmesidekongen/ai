@@ -1,10 +1,15 @@
 ---
 name: context-manager
-description: >
+description: |
   Dynamic context assembly for multi-agent workflows. Use proactively before
   dispatching parallel agents to assemble shared context packages from state.yml,
   snapshot.yml, findings.md, and instincts.yml. Prevents each subagent from
   redundantly reading the same files. Manages token budgets and context freshness.
+
+  <example>
+  <user>Assemble context for the wave-3 parallel agents before dispatch</user>
+  <assistant>Reading state.yml, snapshot.yml, findings.md... context_package: { token_budget: 4200, freshness: FRESH, shared_state: { active_plan: "external-ref-batch-4", current_wave: "wave-3" }, instincts_loaded: 5 }</assistant>
+  </example>
 model: inherit
 tools: ["Read", "Glob", "Grep"]
 ---
