@@ -4,7 +4,10 @@ description: >
   Run an open-ended brainstorm session where Claude acts as a sparring
   partner. Challenges assumptions, pushes back on weak reasoning, and
   follows the user's lead. No predefined questions or structured output.
-  Use when exploring a problem space or thinking through decisions.
+  Use when exploring a problem space, thinking through architectural
+  decisions, comparing tradeoffs between approaches, challenging
+  assumptions about a design, or hashing out options before committing
+  to a direction.
 user_invocable: false
 interactive: true
 depends_on: []
