@@ -33,7 +33,8 @@
     "root-cause-debugging",
     "instinct-extractor",
     "instinct-evolve",
-    "reasoning-trace-optimizer"
+    "reasoning-trace-optimizer",
+    "hypothesis-generator"
   ],
   "agents": ["plugin-validator", "skill-auditor", "security-auditor", "component-reviewer"],
   "dependencies": []

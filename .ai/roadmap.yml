@@ -1146,6 +1146,22 @@ items:
     added: "2026-03-09"
     tags: [context, compaction, hooks, external-reference]
 
+  - id: RL-104
+    title: "Hypothesis-driven debugging extension (M1)"
+    description: >
+      Extended root-cause-debugging/references/process.md with 3-hypothesis
+      parallel investigation methodology. New hypothesis-generator skill manages
+      the full protocol: generate 3 competing hypotheses, investigate each,
+      score (CONFIRMED/POSSIBLE/REFUTED), synthesize, then fix. Eliminates
+      confirmation bias in complex bug investigations.
+    category: core
+    plugin: claude-core
+    priority: done
+    completed: "2026-03-09"
+    source: ".ai/research/external-reference-findings.md (M1)"
+    added: "2026-03-09"
+    tags: [skills, debugging, hypothesis, external-reference]
+
   - id: RL-103
     title: "Reasoning-trace optimization skill"
     description: >
@@ -1255,16 +1271,16 @@ items:
 # ============================================================
 # STATS (updated 2026-03-09)
 # ============================================================
-# Total items: 101
+# Total items: 102
 #
-# Done: 51
+# Done: 52
 #   Phase 1: 9 (RL-001–009)
 #   Phase 2: 8 (RL-010–017)
 #   Phase 3: 2 (RL-020, RL-021)
 #   Phase 4: 7 (RL-022–025, RL-074, RL-085-gate, RL-023)
 #   Iteration-2: 3 (RL-069, RL-071, RL-072)
 #   Context compaction: 6 (RL-079–082, RL-084, RL-085)
-#   External references: 17 (RL-087–RL-103)
+#   External references: 18 (RL-087–RL-104)
 #
 # Later: 7
 #   Phase 3: 2 (RL-018 project-scan, RL-019 self-documenting)

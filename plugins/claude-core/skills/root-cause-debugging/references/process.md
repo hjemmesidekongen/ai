@@ -150,3 +150,79 @@ If three separate fix attempts all fail to resolve the problem:
    architectural change for review
 
 Do not attempt a 4th fix without the user's input.
+
+---
+
+## Hypothesis-Driven Extension: 3-Hypothesis Parallel Investigation
+
+For complex bugs where the root cause is genuinely unclear after Phase 1,
+generate **three competing hypotheses** before investigating any single one.
+Then investigate each in parallel (or sequentially if resources are limited).
+Synthesize evidence from all three before committing to a fix.
+
+### Why three hypotheses
+
+A single hypothesis creates confirmation bias — evidence gets interpreted to
+support it. Three competing hypotheses force you to look for disconfirming
+evidence and consider multiple mechanisms simultaneously.
+
+### Hypothesis generation protocol
+
+After completing Phase 1 (evidence gathering), generate exactly three hypotheses:
+
+```
+Hypothesis A: [most obvious explanation]
+  Cause:      [component/condition]
+  Mechanism:  [how it produces the symptom]
+  Prediction: [what you'd observe if A is true]
+  Test:       [how to confirm or refute A]
+
+Hypothesis B: [second-most likely explanation — different mechanism]
+  Cause:      [different component/condition from A]
+  Mechanism:  [different pathway to the same symptom]
+  Prediction: [what you'd observe if B is true, different from A's prediction]
+  Test:       [how to confirm or refute B]
+
+Hypothesis C: [less obvious but possible — often a deeper/systemic cause]
+  Cause:      [systemic or upstream cause]
+  Mechanism:  [how a deeper issue produces the visible symptom]
+  Prediction: [what you'd observe if C is true]
+  Test:       [how to confirm or refute C]
+```
+
+**Rules for good hypotheses:**
+- Each hypothesis must have a different root cause — not just different symptoms
+- Tests must be distinct — running one test can't confirm/refute another's hypothesis
+- At least one hypothesis should be "the obvious culprit" and one should be surprising
+
+### Parallel investigation
+
+If parallelizable, dispatch all three investigations simultaneously:
+- Assign each hypothesis to an independent investigation thread/subagent
+- Each thread collects only the evidence relevant to its hypothesis
+- Do not mix evidence between threads during investigation
+
+### Evidence synthesis
+
+After all three investigations complete:
+
+1. Score each hypothesis: CONFIRMED / POSSIBLE / REFUTED
+2. Look for evidence overlap: does evidence for A also support/refute B or C?
+3. If exactly one is CONFIRMED: proceed to Phase 4 with that hypothesis
+4. If two are CONFIRMED: look for a unifying root cause that explains both
+5. If all three are REFUTED: return to Phase 1 — the root cause is not yet visible
+6. If all three are POSSIBLE: run the most discriminating test to break the tie
+
+### Integration with the 4-phase protocol
+
+This extension sits between Phase 1 and Phase 3:
+
+```
+Phase 1: INVESTIGATE  → gather evidence
+[Extension]: GENERATE THREE HYPOTHESES → before any single investigation
+Phase 2: PATTERN      → evidence informs hypothesis scoring
+Phase 3: HYPOTHESIS   → now select the confirmed hypothesis from the three
+Phase 4: IMPLEMENT    → fix the confirmed root cause
+```
+
+Use the extension when Phase 1 evidence doesn't clearly point to a single cause.
