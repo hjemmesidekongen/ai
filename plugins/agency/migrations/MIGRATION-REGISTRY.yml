@@ -5,10 +5,12 @@ _meta:
   plugin: "agency"
   current_version: "1.0.0"
 
-migrations: []
-# Future migrations will be added here as:
-# - from_version: "1.0.0"
-#   to_version: "1.1.0"
-#   type: "minor"
-#   script: "scripts/migrate-1.0.0-to-1.1.0.sh"
-#   description: "..."
+migrations:
+  - from_version: "1.0.0"
+    to_version: "1.0.1"
+    type: "port"
+    description: "security-reviewer agent ported to claude-core as security-auditor"
+    ported_to: "plugins/claude-core/agents/security-auditor.md"
+    partial: true
+    not_ported: "OWASP Top 10 web-specific checks, dependency scanning, SaaS code review focus"
+    date: "2026-03-09"

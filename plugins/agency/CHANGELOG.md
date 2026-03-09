@@ -2,6 +2,14 @@
 
 All notable changes to the agency plugin will be documented in this file.
 
+## [1.0.1] - 2026-03-09
+
+### Changed
+- security-reviewer agent ported to claude-core as security-auditor (plugin infrastructure focus)
+- Agency agents reduced from 12 to 11 — security review now cross-plugin via claude-core
+- Updated agent references in backend-tech-lead, frontend-tech-lead, project-manager, agent-dispatcher
+- Partial port: OWASP Top 10 web checks, dependency scanning, SaaS code review remain agency-scoped (deferred)
+
 ## [1.1.1] - 2026-03-05
 
 ### Added

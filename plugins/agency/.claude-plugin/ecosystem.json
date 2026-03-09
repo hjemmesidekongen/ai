@@ -61,7 +61,7 @@
   "agents": {
     "dev": {
       "leadership": ["project-manager", "software-architect", "frontend-tech-lead", "backend-tech-lead", "qa-lead"],
-      "specialist": ["frontend-worker", "backend-worker", "security-reviewer", "devops", "ux-qa", "design-ux", "documentation-specialist"]
+      "specialist": ["frontend-worker", "backend-worker", "devops", "ux-qa", "design-ux", "documentation-specialist"]
     }
   },
   "dependencies": []

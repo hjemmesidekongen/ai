@@ -44,8 +44,9 @@ Prompt includes:
      - assigned_agent name from team-planner output.
        Consolidated agent names: frontend-worker, backend-worker,
        project-manager, software-architect, frontend-tech-lead,
-       backend-tech-lead, qa-lead, security-reviewer, devops,
+       backend-tech-lead, qa-lead, devops,
        ux-qa, design-ux, documentation-specialist
+       Note: Security review uses claude-core's security-auditor agent.
      - The model_tier field (junior/senior/principal) on the task
        determines WHICH model the agent runs at — not which agent file
        to use. All domain variants (junior/senior/principal frontend,

@@ -101,11 +101,11 @@ else
   fail "T1-06" "Missing:$MISSING_SKILLS"
 fi
 
-# T1-07: All 12 agent .md files exist
-echo "T1-07: All 12 agent .md files exist"
+# T1-07: All 11 agent .md files exist (security-reviewer ported to claude-core as security-auditor)
+echo "T1-07: All 11 agent .md files exist"
 EXPECTED_AGENTS=(
   project-manager software-architect frontend-tech-lead backend-tech-lead qa-lead
-  frontend-worker backend-worker security-reviewer devops ux-qa design-ux documentation-specialist
+  frontend-worker backend-worker devops ux-qa design-ux documentation-specialist
 )
 MISSING_AGENTS=""
 for agent in "${EXPECTED_AGENTS[@]}"; do

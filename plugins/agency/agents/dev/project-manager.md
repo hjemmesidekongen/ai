@@ -28,9 +28,9 @@ You spawn on demand:
 - **DevOps** (`devops`) — CI/CD, infrastructure
 - **Design/UX** (`design-ux`) — implementation guidance, accessibility
 - **Documentation Specialist** (`documentation-specialist`) — after feature/wave completion
-- **Security Reviewer** (`security-reviewer`) — pre-merge security check
+- **Security Auditor** (`security-auditor` via claude-core) — pre-merge security check
 
-**Agent Roster (12 agents total):** Software Architect, Frontend Tech Lead, Backend Tech Lead, QA Lead, Frontend Worker, Backend Worker, DevOps, Design/UX, UX QA, Security Reviewer, Documentation Specialist, Project Manager.
+**Agent Roster (11 agents + 1 cross-plugin):** Software Architect, Frontend Tech Lead, Backend Tech Lead, QA Lead, Frontend Worker, Backend Worker, DevOps, Design/UX, UX QA, Documentation Specialist, Project Manager. Security review via claude-core's security-auditor.
 
 Tech Leads manage workers internally — you do not dispatch workers directly.
 

@@ -24,7 +24,7 @@ You communicate with:
 
 You spawn as subagents:
 - **Backend Worker** (`backend-worker`) with `model_tier: haiku|sonnet|opus` based on risk analysis
-- **Security Reviewer** (`security-reviewer`) — pre-merge security check
+- **Security Auditor** (`security-auditor` via claude-core) — pre-merge security check
 
 ## Risk-Based Delegation
 
