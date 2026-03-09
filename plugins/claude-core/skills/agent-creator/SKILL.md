@@ -66,3 +66,10 @@ Default to commands for deterministic operations. Use agents for autonomous mult
 See `references/process.md` for the full specification: frontmatter fields, triggering
 examples format, system prompt structure, model/color selection, tool restrictions,
 directory layout, tier system, testing protocol, and pre-commit checklist.
+
+## Quality gate
+
+After writing the agent file, run `agent-reviewer` against the new file. It checks the 5
+dimensions: frontmatter validity, description quality, system prompt quality, tool scope
+appropriateness, and model tier justification. Fix any CRITICAL findings before registering
+the agent in `ecosystem.json`.
