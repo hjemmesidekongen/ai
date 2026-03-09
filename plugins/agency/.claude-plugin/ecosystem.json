@@ -44,7 +44,8 @@
       "code-audit",
       "error-logging",
       "analytics",
-      "visual-verification"
+      "visual-verification",
+      "full-stack-orchestration"
     ],
     "devops": ["deploy-config", "deploy-execute", "observability"]
   },
