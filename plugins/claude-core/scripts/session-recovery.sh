@@ -1,31 +1,36 @@
 #!/usr/bin/env bash
 # claude-core — SessionStart hook: report context for resumed sessions
-# Handles three recovery scenarios:
-# 1. Compact recovery — snapshot from PreCompact hook (consumed once, then deleted)
-# 2. Active plan recovery — in-progress plan state
-# 3. Agency project recovery — active project state
+# 1. Refreshes snapshot via assembler (source=session-start)
+# 2. Reads enriched snapshot and outputs structured context
+# 3. Stale check: deletes snapshots older than 48h
+# 4. Falls back to plan/project recovery if no snapshot
 # Always exits 0.
 
 set -euo pipefail
 
 PROJECT_DIR="${CLAUDE_PROJECT_DIR:-.}"
-
-# --- Compact snapshot recovery (highest priority) ---
-SNAPSHOT="$PROJECT_DIR/.ai/compact-snapshot.yml"
+PLUGIN_ROOT="${CLAUDE_PLUGIN_ROOT:-$(cd "$(dirname "$0")/.." && pwd)}"
+SNAPSHOT="$PROJECT_DIR/.ai/context/snapshot.yml"
 FLAG="$PROJECT_DIR/.ai/compact-needed"
 
+# --- Stale check: delete snapshots older than 48h ---
+find "$PROJECT_DIR/.ai/context" -name "snapshot.yml" -mmin +2880 -delete 2>/dev/null || true
+
+# --- Clean up legacy path ---
+rm -f "$PROJECT_DIR/.ai/compact-snapshot.yml" 2>/dev/null
+
+# --- Refresh snapshot via assembler ---
+ASSEMBLER="$PLUGIN_ROOT/scripts/assemble-context.sh"
+if [ -f "$ASSEMBLER" ]; then
+  bash "$ASSEMBLER" session-start 2>/dev/null || true
+fi
+
+# --- Output snapshot if it exists ---
 if [ -f "$SNAPSHOT" ]; then
-  echo "=== Compact Recovery ==="
-  echo "Context restored from pre-compaction snapshot:"
-  echo "---"
+  echo "=== Context Snapshot ==="
   cat "$SNAPSHOT"
-  echo "---"
-  # Clean up: delete snapshot (consumed) and clear compact-needed flag
-  rm -f "$SNAPSHOT" 2>/dev/null
+  echo "=== End Snapshot ==="
   rm -f "$FLAG" 2>/dev/null
-  echo "Snapshot consumed. Flag cleared."
-  echo "=== End Compact Recovery ==="
-  # Fall through to normal recovery — plan/agency state still useful
 fi
 
 echo "=== Session Recovery Check ==="

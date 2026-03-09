@@ -920,17 +920,16 @@ items:
   - id: RL-082
     title: "Smart session injection — three-layer context architecture"
     description: >
-      Replace static session-recovery.sh with relevance-aware injection across three layers:
-      1. Workspace memory: global patterns, permanent conventions, ~200 tokens, always injected.
-      2. Project memory: per-project, Tier 1 injected (budgeted ~150 lines), Tier 2 searchable.
-      3. Compact snapshot: point-in-time working state, consumed once then deleted.
-      Priority ordering: CLAUDE.md > MEMORY.md > compact snapshot > project memory > workspace.
-      Layer 1 is generic (works in any git repo), Layer 2 is project-aware (opt-in via
-      .ai/session-config.yml). Layer 1 never exceeds ~800 tokens.
-      Delivery: additionalContext injection pattern (proven via external plugin references).
+      Shared assembler (assemble-context.sh) builds enriched snapshot with three layers:
+      Layer 1 (workspace): git branch, dirty files, identity. Layer 2 (project): name,
+      status, current module, completed modules. Layer 3 (working state): active plan/wave,
+      modified files, error count. Written by PreCompact, Stop, and SessionStart hooks.
+      Persists at .ai/context/snapshot.yml. CLAUDE.md pointer survives compaction.
+      Stale snapshots (>48h) auto-deleted. Output capped at 50 lines.
     category: core
     plugin: claude-core
-    priority: later
+    priority: done
+    completed: "2026-03-09"
     source: "brainstorm/smart-context-compaction"
     added: "2026-03-09"
     tags: [session-recovery, context, injection, memory]
@@ -958,6 +957,22 @@ items:
       inspiration: "https://dev.to/suede/the-architecture-of-persistent-memory-for-claude-code-17d"
       also_see: [mem0, claude-mem, contextstream]
 
+  - id: RL-085
+    title: "Compact gate: exempt in-plan writes from blocking"
+    description: >
+      The compact-gate-pre.sh hook blocks all non-unit-completion writes when
+      the compact-needed flag is set. This incorrectly blocks mid-plan execution
+      (e.g. wave-2 rewiring scripts) because those files aren't in the allowlist.
+      Fix: either expand the allowlist to include files listed in the active plan's
+      task writes array, or add a plan-execution bypass that checks if the target
+      file is owned by a current-wave task.
+    category: core
+    plugin: claude-core
+    priority: next
+    source: "plan-execution/smart-session-context"
+    added: "2026-03-09"
+    tags: [compact-gate, hooks, plan-execution, bug]
+
   - id: RL-084
     title: "Fix trace-light.sh duration field"
     description: >
@@ -977,7 +992,7 @@ items:
 # ============================================================
 # STATS
 # ============================================================
-# Total items: 84
+# Total items: 85
 # Phase 1 (done): 9
 # Phase 2 (done): 8
 # Iteration-2 (done): 2 (RL-071, RL-072)
@@ -986,7 +1001,8 @@ items:
 # Phase 4 (now): 4 (RL-022, RL-024, RL-025, RL-074)
 # Phase 4 (later): 4 (RL-023, RL-073, RL-075, RL-076, RL-077)
 # Phase 4 (backlog): 1 (RL-078)
-# Context compaction (done): 4 (RL-079, RL-080, RL-081, RL-084)
-# Context compaction (later): 2 (RL-082, RL-083)
+# Context compaction (done): 5 (RL-079, RL-080, RL-081, RL-082, RL-084)
+# Context compaction (next): 1 (RL-085 — compact gate plan-aware bypass)
+# Context compaction (later): 1 (RL-083)
 # Phase 5+ (backlog): 44
 # ============================================================

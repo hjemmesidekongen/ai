@@ -5,6 +5,9 @@ Two plugins in a monorepo:
 - **claude-core** (`plugins/claude-core/`) — Foundation plugin: planning, brainstorm, tracing, memory governance, roadmap, doc governance, creator/reviewer tooling, and validation agents (17 skills, 9 commands, 3 agents).
 - **agency** (`plugins/agency/`) — Digital agency plugin: brand, design, content, dev, deploy pipelines (11 agents — security-reviewer ported to claude-core).
 
+## Context Recovery
+After `/compact` or when context seems incomplete, read `.ai/context/snapshot.yml` for working state (workspace, project, active plan, modified files). This file is written by PreCompact, Stop, and SessionStart hooks via `assemble-context.sh` and persists on disk.
+
 ## Architecture Rules
 - State persists via `.ai/projects/<name>/state.yml` — always check at session start
 - Active project tracked in `.ai/agency.yml`
@@ -25,6 +28,7 @@ Two plugins in a monorepo:
 ```
 .ai/                                 # Project-specific generated data
   agency.yml                         # Active project pointer + project registry
+  context/                           # Session context (snapshot.yml — survives compaction via CLAUDE.md pointer)
   projects/                          # Per-project data (state.yml, brand/, design/, etc.)
   brainstorm/                        # Brainstorm sessions and decisions
   plans/                             # Wave plan state files

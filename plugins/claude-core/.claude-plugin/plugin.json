@@ -82,12 +82,17 @@
         "hooks": [
           {
             "type": "command",
-            "command": "bash ${CLAUDE_PLUGIN_ROOT}/scripts/check-wave-complete.sh 2>/dev/null",
+            "command": "bash ${CLAUDE_PLUGIN_ROOT}/scripts/session-context-stop.sh 2>/dev/null || true",
+            "timeout": 10
+          },
+          {
+            "type": "command",
+            "command": "bash ${CLAUDE_PLUGIN_ROOT}/scripts/check-wave-complete.sh 2>/dev/null || true",
             "timeout": 30
           },
           {
             "type": "command",
-            "command": "bash ${CLAUDE_PLUGIN_ROOT}/scripts/check-trace-written.sh 2>/dev/null",
+            "command": "bash ${CLAUDE_PLUGIN_ROOT}/scripts/check-trace-written.sh 2>/dev/null || true",
             "timeout": 10
           },
           {
