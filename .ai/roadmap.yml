@@ -993,6 +993,22 @@ items:
 
   # --- External reference findings ---
 
+  - id: RL-089
+    title: "Verification-before-completion gate"
+    description: >
+      New skill (verification-gate) enforcing a 5-step proof protocol before
+      any task is claimed done: IDENTIFY proof command, RUN it, READ full output,
+      VERIFY it matches expected, ONLY THEN claim done. Bans inference-based
+      completion phrases. Stop hook detects write-only sessions with no
+      verification step and emits an advisory.
+    category: core
+    plugin: claude-core
+    priority: done
+    completed: "2026-03-09"
+    source: ".ai/research/external-reference-findings.md (D1)"
+    added: "2026-03-09"
+    tags: [verification, quality, hooks, skills, external-reference]
+
   - id: RL-088
     title: "Artifact trail in compact snapshots"
     description: >
@@ -1026,16 +1042,16 @@ items:
 # ============================================================
 # STATS (updated 2026-03-09)
 # ============================================================
-# Total items: 87
+# Total items: 88
 #
-# Done: 37
+# Done: 38
 #   Phase 1: 9 (RL-001–009)
 #   Phase 2: 8 (RL-010–017)
 #   Phase 3: 2 (RL-020, RL-021)
 #   Phase 4: 7 (RL-022–025, RL-074, RL-085-gate, RL-023)
 #   Iteration-2: 3 (RL-069, RL-071, RL-072)
 #   Context compaction: 6 (RL-079–082, RL-084, RL-085)
-#   External references: 2 (RL-087, RL-088)
+#   External references: 3 (RL-087, RL-088, RL-089)
 #
 # Later: 7
 #   Phase 3: 2 (RL-018 project-scan, RL-019 self-documenting)

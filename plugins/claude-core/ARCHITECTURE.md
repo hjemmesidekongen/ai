@@ -43,6 +43,7 @@ plugins/claude-core/
 │   ├── doc-stale-check.sh        # Stop: warn if plugin files changed without doc updates
 │   ├── port-dedup-check.sh       # Stop: warn if component duplicated across plugins
 │   ├── strategic-compact-trigger.sh # PostToolUse: suggest /compact at depth thresholds
+│   ├── verification-gate-stop.sh    # Stop: remind to run proof before claiming done
 │   └── cache-clear.sh            # Stop: clear plugin cache at session end
 ├── commands/                # User-invocable commands (markdown)
 │   ├── brainstorm-start.md
@@ -72,6 +73,7 @@ plugins/claude-core/
 │   ├── hook-reviewer/
 │   ├── skill-reviewer/
 │   ├── plugin-reviewer/
+│   ├── verification-gate/
 │   ├── plugin-settings/
 │   ├── plan-engine/
 │   ├── plan-verifier/
@@ -108,6 +110,7 @@ plugins/claude-core/
 | PostToolUse | `claude-md-guardian.sh` | Write\|Edit on CLAUDE.md | Advisory: validate edits |
 | PostToolUse | `trace-light.sh` | All tools | Append trace entry (<30ms) |
 | PostToolUse | `strategic-compact-trigger.sh` | All tools | Suggest /compact at depth thresholds (<10ms) |
+| Stop | `verification-gate-stop.sh` | Session end | Remind to run proof before claiming done |
 | SessionStart | `session-recovery.sh` | Session start | Report plan + project state |
 | Stop | `check-wave-complete.sh` | Session end | Warn if work in progress (informational) |
 | Stop | `check-trace-written.sh` | Session end | Remind about missing reflections |

@@ -27,7 +27,8 @@
     "skill-reviewer",
     "plugin-reviewer",
     "mcp-creator",
-    "plugin-settings"
+    "plugin-settings",
+    "verification-gate"
   ],
   "agents": ["plugin-validator", "skill-auditor", "security-auditor"],
   "dependencies": []
