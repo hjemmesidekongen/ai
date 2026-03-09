@@ -116,6 +116,67 @@ When running multiple agents for a quality gate:
 | Only WARNING/MEDIUM | Gate passes with notes — fix soon |
 | Only INFO/LOW | Gate passes clean |
 
+## Forward-Message Pattern
+
+**The problem:** When sub-agents return results, the coordinator synthesizes their output into a summary before acting. This paraphrasing loses ~50% of the signal — the telephone game. Each synthesis step degrades fidelity.
+
+**The fix:** Sub-agents write findings directly to shared artifact files on disk. The coordinator reads from disk instead of relying on the response text.
+
+### Convention
+
+Artifact files go in `.ai/plans/<name>/artifacts/`:
+
+```
+.ai/plans/my-plan/artifacts/
+  wave1-task1-findings.md
+  wave1-task2-findings.md
+  wave2-task1-findings.md
+```
+
+### Sub-agent responsibility
+
+At the end of every research or analysis task, write a findings file:
+
+```markdown
+# Findings: <task-name>
+
+## Summary
+One sentence.
+
+## Key Results
+- Finding 1
+- Finding 2
+
+## Recommendations
+- Action A
+- Action B
+```
+
+### Coordinator responsibility
+
+**Never paraphrase sub-agent responses when the artifact file is available.**
+
+Read the file directly:
+```
+Read tool → .ai/plans/<name>/artifacts/wave1-task1-findings.md
+```
+
+This preserves full fidelity. The sub-agent's exact words and structure reach
+the next stage without degradation.
+
+### When to apply
+
+- Any parallel wave with 2+ agents writing independent findings
+- Research tasks where findings feed into implementation tasks
+- Any agent chain longer than 2 steps
+
+### When NOT to apply
+
+- Single-step tasks with no downstream consumers
+- Tasks where the output is a file change (not a findings report)
+
+---
+
 ## Error Handling
 
 | Situation | Response |

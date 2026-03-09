@@ -34,8 +34,11 @@ Execute a wave plan sequentially. Each wave completes and passes verification be
    For each wave:
    a. Update state: wave status → `in_progress`, `current_phase` → wave name
    b. If `parallel: true` → dispatch tasks as parallel Agent subagents
+      - Each agent writes findings to `.ai/plans/<name>/artifacts/<wave>-<task>-findings.md`
+      - See forward-message pattern in `resources/agent-orchestration.md`
    c. If `parallel: false` → execute tasks sequentially
-   d. After all tasks complete → run **plan-verifier** skill
+   d. After all tasks complete → **read artifact files directly** (never paraphrase agent responses)
+      → run **plan-verifier** skill
    e. If verification type is `ab_benchmark`:
       - Run `run_ab_benchmark.py` for each skill in the wave
       - Run `run_eval.py` for trigger evaluation
