@@ -4,7 +4,9 @@ description: >
   Two-stage verification for completed plan waves. Stage 1 runs fast
   mechanical checks (file existence, schema, ownership). Stage 2 runs
   quality review. Logs failures to state.yml. Use when verifying completed
-  waves before advancing to the next wave.
+  waves before advancing to the next wave, checking if a wave passed spec
+  compliance, running quality review on completed work, or diagnosing why
+  a wave verification failed.
 user_invocable: false
 interactive: false
 depends_on: []
