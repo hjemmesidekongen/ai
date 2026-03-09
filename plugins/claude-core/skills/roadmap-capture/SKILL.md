@@ -3,7 +3,10 @@ name: roadmap-capture
 description: >
   Automatically captures out-of-scope ideas, deferred features, and future
   work items into the project roadmap during conversation. Use when an idea
-  surfaces that is outside the current task scope and should be tracked for later.
+  surfaces that is outside the current task scope and should be tracked for
+  later, when the user says "add this to the roadmap" or "track this for
+  later", or when a deferred item from a brainstorm or plan needs persistent
+  tracking.
 user_invocable: false
 interactive: false
 depends_on: []
