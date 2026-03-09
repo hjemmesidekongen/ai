@@ -202,10 +202,11 @@ items:
 
   - id: RL-021
     title: "Source attribution system"
-    description: "_source block in SKILL.md frontmatter: origin URL, ported date, version hash, modifications. Enables upstream update checking."
+    description: "_source block in SKILL.md frontmatter: origin URL, ported date, version hash, modifications. Enables upstream update checking. Implemented across all 17 SKILL.md files."
     category: core
     plugin: claude-core
-    priority: later
+    priority: done
+    completed: "2026-03-09"
     source: "brainstorm/streamline-local-claude-workflow"
     added: "2026-03-08"
     tags: [attribution, provenance, phase-3]
@@ -236,7 +237,7 @@ items:
     title: "Skill enhance + audit"
     description: "Improve existing skills. Audit quality with stored results. Check for overlap with existing functionality."
     category: toolkit
-    plugin: claude-toolkit
+    plugin: claude-core
     priority: done
     completed: "2026-03-09"
     source: "brainstorm/streamline-local-claude-workflow"
@@ -311,7 +312,7 @@ items:
     title: "Auto-clear plugin cache after create/edit operations"
     description: "All toolkit create/edit workflows (skill, command, hook, plugin) must automatically run rm -rf ~/.claude/plugins/cache/local-workspace/ as a post-step. Never require manual cache clearing."
     category: toolkit
-    plugin: claude-toolkit
+    plugin: claude-core
     priority: later
     source: "user-request/2026-03-08"
     added: "2026-03-08"
@@ -406,14 +407,14 @@ items:
     tags: [claude-ai, portability, mcp]
 
   - id: RL-033
-    title: "Database-backed tracing UI (Blik)"
-    description: "Full tracing UI with database storage, expiry, duplicate detection, status management, task conversion. MCP server for log viewing. Part of Blik project."
+    title: "Database-backed tracing UI"
+    description: "Full tracing UI with database storage, expiry, duplicate detection, status management, task conversion. MCP server for log viewing."
     category: dev
-    plugin: blik
+    plugin: claude-core
     priority: backlog
     source: "brainstorm/streamline-local-claude-workflow"
     added: "2026-03-08"
-    tags: [blik, tracing, ui, database]
+    tags: [tracing, ui, database]
 
   - id: RL-034
     title: "Error-to-task conversion"
@@ -457,9 +458,9 @@ items:
 
   - id: RL-038
     title: "Upstream skill diffing (/dev:skills check)"
-    description: "Diff forked skills against upstream sources (skills.sh) and cherry-pick updates. Enabled by source attribution frontmatter."
+    description: "Diff forked skills against upstream sources (skills.sh) and cherry-pick updates. Enabled by source attribution frontmatter (RL-021)."
     category: toolkit
-    plugin: claude-toolkit
+    plugin: claude-core
     priority: backlog
     source: "brainstorm/dev-hardening"
     added: "2026-03-08"
@@ -991,19 +992,31 @@ items:
     tags: [tracing, bug, trace-light]
 
 # ============================================================
-# STATS
+# STATS (updated 2026-03-09)
 # ============================================================
 # Total items: 85
-# Phase 1 (done): 9
-# Phase 2 (done): 8
-# Iteration-2 (done): 2 (RL-071, RL-072)
-# Iteration-2 (next): 1 (RL-069)
-# Phase 3 (later): 4
-# Phase 4 (now): 4 (RL-022, RL-024, RL-025, RL-074)
-# Phase 4 (later): 4 (RL-023, RL-073, RL-075, RL-076, RL-077)
-# Phase 4 (backlog): 1 (RL-078)
-# Context compaction (done): 5 (RL-079, RL-080, RL-081, RL-082, RL-084)
-# Context compaction (done): RL-085 — compact gate plan-aware bypass
-# Context compaction (later): 1 (RL-083)
-# Phase 5+ (backlog): 44
+#
+# Done: 35
+#   Phase 1: 9 (RL-001–009)
+#   Phase 2: 8 (RL-010–017)
+#   Phase 3: 2 (RL-020, RL-021)
+#   Phase 4: 7 (RL-022–025, RL-074, RL-085-gate, RL-023)
+#   Iteration-2: 3 (RL-069, RL-071, RL-072)
+#   Context compaction: 6 (RL-079–082, RL-084, RL-085)
+#
+# Later: 7
+#   Phase 3: 2 (RL-018 project-scan, RL-019 self-documenting)
+#   Phase 4: 3 (RL-073 cache-clear, RL-075 conventions, RL-076 agent-examples, RL-077 create-plugin-cmd)
+#   Memory: 2 (RL-031 episodic, RL-083 project-memory)
+#
+# Backlog: 43
+#   Core enhancements: 8 (RL-030, RL-034, RL-066–068, RL-070, RL-078)
+#   Research/speculative: 7 (RL-032, RL-033, RL-042–048)
+#   Domain plugins: 3 (RL-026–028)
+#   Marketing/brand: 8 (RL-049–055, RL-064)
+#   Media: 3 (RL-041, RL-056, RL-057)
+#   Dev tooling: 6 (RL-037–040, RL-058–060)
+#   DevOps: 3 (RL-061–063)
+#   Design: 2 (RL-029, RL-065)
+#   Self-improvement: 3 (RL-035, RL-036, RL-045)
 # ============================================================
