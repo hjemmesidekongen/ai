@@ -3,7 +3,9 @@ name: hook-reviewer
 description: >
   Review and validate Claude Code hooks for correctness, security, and reliability.
   Use when reviewing hook scripts after creation, auditing existing hooks for issues,
-  or validating hook changes before committing.
+  validating hook changes before committing, checking exit codes and JSON output
+  schemas, diagnosing silent or failing hooks, or verifying hook security against
+  injection and path traversal.
 user_invocable: false
 interactive: false
 depends_on:
