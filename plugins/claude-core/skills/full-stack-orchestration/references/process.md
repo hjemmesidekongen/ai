@@ -8,7 +8,7 @@ Complete 9-step specification for end-to-end feature development.
 2. Write output files. Each step produces its numbered `.full-stack-feature/NN-*.md` file before the next step begins. Read from prior step files — do not rely on context memory.
 3. Stop at phase checkpoints. Present results and wait for explicit user approval.
 4. Halt on failure. If any step fails, stop and present the error with options.
-5. Use agency agents. Map to existing agency agents (software-architect, backend-worker, frontend-worker, qa-lead, devops, documentation-specialist).
+5. Use general-purpose agents for each step. Specialize via prompt, not agent type.
 
 ## Pre-flight checks
 
@@ -36,7 +36,7 @@ If `.full-stack-feature/state.json` exists:
 }
 ```
 
-Auto-detect stack from project-scanner output or `.ai/projects/*/stack.yml`.
+Auto-detect stack from project structure (package.json, requirements.txt, go.mod, etc.).
 
 ---
 
@@ -59,7 +59,7 @@ Structure: Problem Statement, Acceptance Criteria (checkboxes), In/Out of Scope,
 
 ### Step 2: Database & data model design
 
-**Agent**: `agency:dev:software-architect`
+**Agent**: general-purpose (database architect prompt)
 
 **Input**: Read `01-requirements.md`
 
@@ -75,7 +75,7 @@ Structure: Problem Statement, Acceptance Criteria (checkboxes), In/Out of Scope,
 
 ### Step 3: Backend & frontend architecture
 
-**Agent**: `agency:dev:software-architect`
+**Agent**: general-purpose (full-stack architect prompt)
 
 **Input**: Read `01-requirements.md` + `02-database-design.md`
 
@@ -124,7 +124,7 @@ Do NOT proceed until user approves. On changes: revise and re-checkpoint.
 
 ### Step 4: Database implementation
 
-**Agent**: `agency:dev:backend-worker` (senior tier)
+**Agent**: general-purpose (database engineer prompt)
 
 **Input**: `01-requirements.md` + `02-database-design.md`
 
@@ -140,7 +140,7 @@ Do NOT proceed until user approves. On changes: revise and re-checkpoint.
 
 ### Step 5: Backend implementation
 
-**Agent**: `agency:dev:backend-worker` (senior tier)
+**Agent**: general-purpose (backend developer prompt)
 
 **Input**: `01-requirements.md` + `03-architecture.md` + `04-database-impl.md`
 
@@ -157,7 +157,7 @@ Do NOT proceed until user approves. On changes: revise and re-checkpoint.
 
 ### Step 6: Frontend implementation
 
-**Agent**: `agency:dev:frontend-worker` (senior tier)
+**Agent**: general-purpose (frontend developer prompt)
 
 **Input**: `01-requirements.md` + `03-architecture.md` + `05-backend-impl.md`
 
@@ -178,7 +178,7 @@ If the feature has no frontend component, skip — write a note in `06-frontend-
 
 Launch three agents in parallel:
 
-**7a. Test suite** — Agent: `agency:dev:qa-lead`
+**7a. Test suite** — general-purpose (test engineer prompt)
 - Unit tests for all new backend functions
 - Integration tests for API endpoints
 - Database tests for migrations and queries
@@ -186,13 +186,13 @@ Launch three agents in parallel:
 - Cover: happy path, edge cases, error handling, boundary conditions
 - Target 80%+ coverage for new code
 
-**7b. Security review** — Agent: `claude-core:security-auditor`
+**7b. Security review** — claude-core:security-auditor
 - OWASP Top 10 review
 - Auth/authz flaws, input validation gaps
 - SQL injection, XSS/CSRF vulnerabilities
 - Data protection issues, dependency vulnerabilities
 
-**7c. Performance review** — Agent: `agency:dev:software-architect`
+**7c. Performance review** — general-purpose (performance engineer prompt)
 - N+1 queries, missing indexes, unoptimized queries
 - Memory leaks, missing caching opportunities
 - Large payloads, slow rendering paths
@@ -224,7 +224,7 @@ Performance findings: [X critical, Y high, Z medium]
 
 ### Step 8: Deployment & infrastructure
 
-**Agent**: `agency:dev:devops`
+**Agent**: general-purpose (deployment engineer prompt)
 
 **Input**: `03-architecture.md` + `07-testing.md`
 
@@ -240,7 +240,7 @@ Performance findings: [X critical, Y high, Z medium]
 
 ### Step 9: Documentation & handoff
 
-**Agent**: `agency:dev:documentation-specialist`
+**Agent**: general-purpose (technical writer prompt)
 
 **Input**: All previous `.full-stack-feature/*.md` files
 
@@ -266,16 +266,3 @@ Present final summary with all 9 output files listed and next steps:
 2. Run the full test suite
 3. Create a pull request
 4. Deploy using the runbook in `08-deployment.md`
-
-## Agent mapping
-
-| Step | Source agent type | Agency agent |
-|------|------------------|--------------|
-| 2, 3 | general-purpose | software-architect |
-| 4, 5 | general-purpose | backend-worker (senior) |
-| 6 | general-purpose | frontend-worker (senior) |
-| 7a | test-automator | qa-lead |
-| 7b | security-auditor | security-auditor (claude-core) |
-| 7c | performance-engineer | software-architect |
-| 8 | deployment-engineer | devops |
-| 9 | general-purpose | documentation-specialist |

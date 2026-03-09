@@ -1421,12 +1421,155 @@ items:
     added: "2026-03-09"
     tags: [skills, mindset, code-quality, external-reference]
 
+  - id: RL-116
+    title: "Mermaid diagrams skill"
+    description: >
+      General-purpose Mermaid diagramming skill with 7 reference files.
+      Covers class, sequence, flowchart, ERD, C4, architecture, advanced features.
+    category: core
+    plugin: claude-core
+    priority: done
+    completed: "2026-03-09"
+    source: ".ai/research/external-reference-findings.md (T6)"
+    added: "2026-03-09"
+    tags: [skills, diagrams, mermaid, external-reference]
+
+  - id: RL-117
+    title: "Writing-clearly-and-concisely skill"
+    description: >
+      Strunk's 18 rules + AI writing anti-patterns skill.
+      References: elements-of-style chapters, signs-of-ai-writing.
+    category: core
+    plugin: claude-core
+    priority: done
+    completed: "2026-03-09"
+    source: ".ai/research/external-reference-findings.md (T7)"
+    added: "2026-03-09"
+    tags: [skills, writing, style, external-reference]
+
+  - id: RL-118
+    title: "Skill-judge 8-dimension evaluation framework"
+    description: >
+      Enhanced skill-auditor with 8-dimension scoring (120 points),
+      9 failure patterns, grade scale A-F. quality-dimensions.md reference.
+    category: core
+    plugin: claude-core
+    priority: done
+    completed: "2026-03-09"
+    source: ".ai/research/external-reference-findings.md (T2)"
+    added: "2026-03-09"
+    tags: [agents, quality, evaluation, external-reference]
+
+  - id: RL-119
+    title: "Context-manager agent"
+    description: >
+      Dynamic context assembly for multi-agent workflows.
+      Reads state.yml/snapshot.yml/findings.md, produces structured context packages.
+    category: core
+    plugin: claude-core
+    priority: done
+    completed: "2026-03-09"
+    source: ".ai/research/external-reference-findings.md (R1)"
+    added: "2026-03-09"
+    tags: [agents, context, orchestration, external-reference]
+
+  - id: RL-120
+    title: "Session-handoff skill"
+    description: >
+      Session handoff with chaining (Continues-from links), staleness classification,
+      quality scoring 0-100. Proactive trigger after 5+ file edits.
+    category: core
+    plugin: claude-core
+    priority: done
+    completed: "2026-03-09"
+    source: ".ai/research/external-reference-findings.md (T4)"
+    added: "2026-03-09"
+    tags: [skills, session, handoff, external-reference]
+
+  - id: RL-121
+    title: "TDD-orchestrator agent"
+    description: >
+      Coordinates red-green-refactor across subagents with validation gates.
+      Anti-pattern detection, metrics tracking in .tdd-cycle/.
+    category: core
+    plugin: claude-core
+    priority: done
+    completed: "2026-03-09"
+    source: ".ai/research/external-reference-findings.md (R2)"
+    added: "2026-03-09"
+    tags: [agents, tdd, testing, external-reference]
+
+  - id: RL-122
+    title: "Error-detective + incident-responder agents"
+    description: >
+      Coupled agent pair. Error-detective (read-only investigation),
+      incident-responder (severity-based coordination, post-mortem).
+    category: core
+    plugin: claude-core
+    priority: done
+    completed: "2026-03-09"
+    source: ".ai/research/external-reference-findings.md (R3)"
+    added: "2026-03-09"
+    tags: [agents, debugging, incidents, external-reference]
+
+  - id: RL-123
+    title: "Agent Teams skill"
+    description: >
+      7 preset team compositions, file ownership cardinal rule,
+      integration patterns for parallel agent dispatch.
+    category: core
+    plugin: claude-core
+    priority: done
+    completed: "2026-03-09"
+    source: ".ai/research/external-reference-findings.md (S2)"
+    added: "2026-03-09"
+    tags: [skills, agents, teams, external-reference]
+
+  - id: RL-124
+    title: "5-phase full-review command"
+    description: >
+      5 sequential phases with 2 parallel reviewers each.
+      Severity gates between phases, consolidated report output.
+    category: core
+    plugin: claude-core
+    priority: done
+    completed: "2026-03-09"
+    source: ".ai/research/external-reference-findings.md (Q2)"
+    added: "2026-03-09"
+    tags: [commands, review, quality, external-reference]
+
+  - id: RL-125
+    title: "Progressive disclosure 3-tier architecture docs"
+    description: >
+      Formalized 3-tier skill loading model documentation.
+      skill-architecture.md resource + progressive-disclosure.md reference.
+    category: core
+    plugin: claude-core
+    priority: done
+    completed: "2026-03-09"
+    source: ".ai/research/external-reference-findings.md (S1)"
+    added: "2026-03-09"
+    tags: [architecture, skills, progressive-disclosure, external-reference]
+
+  - id: RL-126
+    title: "Full-stack feature orchestration skill"
+    description: >
+      9-step pipeline for end-to-end feature development.
+      3 phases with user approval gates, file-based state.
+    category: core
+    plugin: claude-core
+    priority: done
+    completed: "2026-03-09"
+    source: ".ai/research/external-reference-findings.md (Q3)"
+    added: "2026-03-09"
+    tags: [skills, orchestration, full-stack, external-reference]
+
 # ============================================================
 # STATS (updated 2026-03-09)
 # ============================================================
-# Total items: 113
+# Total items: 124
 #
-# Done: 63
+# Done: 74
 #   Phase 1: 9 (RL-001–009)
 #   Phase 2: 8 (RL-010–017)
 #   Phase 3: 2 (RL-020, RL-021)
@@ -1435,6 +1578,7 @@ items:
 #   Context compaction: 6 (RL-079–082, RL-084, RL-085)
 #   External references Batch 1+2: 20 (RL-087–RL-106)
 #   External references Batch 3: 9 (RL-107–RL-115)
+#   External references Batch 4: 11 (RL-116–RL-126)
 #
 # Later: 7
 #   Phase 3: 2 (RL-018 project-scan, RL-019 self-documenting)
