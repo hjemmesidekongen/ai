@@ -10,7 +10,9 @@ description: >
   Load and filter past brainstorm decisions relevant to the current task. Scans
   all decisions.yml files across brainstorm topics, filters by domain relevance,
   and returns a structured summary. Use when starting new work, before architectural
-  decisions, or when any skill/agent needs prior context about what was already decided.
+  decisions, when any skill or agent needs prior context about what was already
+  decided, checking what decisions exist for a domain, or reviewing past conclusions
+  before making new ones.
 depends_on: []
 reads:
   - ".ai/brainstorm/*/decisions.yml"
