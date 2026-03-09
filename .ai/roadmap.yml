@@ -968,7 +968,8 @@ items:
       file is owned by a current-wave task.
     category: core
     plugin: claude-core
-    priority: next
+    priority: done
+    completed: "2026-03-09"
     source: "plan-execution/smart-session-context"
     added: "2026-03-09"
     tags: [compact-gate, hooks, plan-execution, bug]
@@ -1002,7 +1003,7 @@ items:
 # Phase 4 (later): 4 (RL-023, RL-073, RL-075, RL-076, RL-077)
 # Phase 4 (backlog): 1 (RL-078)
 # Context compaction (done): 5 (RL-079, RL-080, RL-081, RL-082, RL-084)
-# Context compaction (next): 1 (RL-085 — compact gate plan-aware bypass)
+# Context compaction (done): RL-085 — compact gate plan-aware bypass
 # Context compaction (later): 1 (RL-083)
 # Phase 5+ (backlog): 44
 # ============================================================
