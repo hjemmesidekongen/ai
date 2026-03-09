@@ -177,7 +177,8 @@ items:
     description: "Auto-update READMEs and user guides during implementation. Both user-facing (Quick Start, How-To, FAQ) and developer-facing (internals, architecture). Triggered at task completion."
     category: core
     plugin: claude-core
-    priority: later
+    priority: done
+    completed: "2026-03-09"
     source: "brainstorm/streamline-local-claude-workflow"
     added: "2026-03-08"
     tags: [documentation, user-guide, dev-docs, phase-3]
@@ -1565,24 +1566,80 @@ items:
     added: "2026-03-09"
     tags: [skills, orchestration, full-stack, external-reference, dev-plugin]
 
+  - id: RL-127
+    title: "Prevent-direct-push PreToolUse hook"
+    description: >
+      Blocks git push to protected branches (main, master, production, release/*).
+      Force push always blocked. Feature branch pushes allowed.
+    category: core
+    plugin: claude-core
+    priority: done
+    completed: "2026-03-09"
+    source: ".ai/research/external-reference-findings.md (G2)"
+    added: "2026-03-09"
+    tags: [hooks, git, safety, external-reference]
+
+  - id: RL-128
+    title: "Debug-window PostToolUse hook"
+    description: >
+      Captures test/build/lint failures to .ai/traces/debug-failures.log
+      with structured entries (timestamp, command, exit code, stderr snippet).
+    category: core
+    plugin: claude-core
+    priority: done
+    completed: "2026-03-09"
+    source: ".ai/research/external-reference-findings.md (M4)"
+    added: "2026-03-09"
+    tags: [hooks, debugging, testing, external-reference]
+
+  - id: RL-129
+    title: "Confidence-based filtering for reviewer agents"
+    description: >
+      All 4 reviewer agents (skill-auditor, security-auditor, architect-reviewer,
+      component-reviewer) now include confidence levels on findings. Default
+      surfaces only high/medium confidence.
+    category: core
+    plugin: claude-core
+    priority: done
+    completed: "2026-03-09"
+    source: ".ai/research/external-reference-findings.md (D2)"
+    added: "2026-03-09"
+    tags: [agents, quality, filtering, external-reference]
+
+  - id: RL-130
+    title: "Auto-doc skill"
+    description: >
+      Automated documentation updates after task completion. Syncs CLAUDE.md
+      counts/tree, ecosystem.json arrays, MEMORY.md facts, roadmap.yml statuses
+      with filesystem reality. Complements doc-checkpoint (detection).
+      Implements RL-019.
+    category: core
+    plugin: claude-core
+    priority: done
+    completed: "2026-03-09"
+    source: ".ai/research/external-reference-findings.md (H3)"
+    added: "2026-03-09"
+    tags: [skills, documentation, automation, external-reference]
+
 # ============================================================
 # STATS (updated 2026-03-09)
 # ============================================================
-# Total items: 124
+# Total items: 128
 #
-# Done: 73
+# Done: 77
 #   Phase 1: 9 (RL-001–009)
 #   Phase 2: 8 (RL-010–017)
-#   Phase 3: 2 (RL-020, RL-021)
+#   Phase 3: 3 (RL-019, RL-020, RL-021)
 #   Phase 4: 7 (RL-022–025, RL-074, RL-085-gate, RL-023)
 #   Iteration-2: 3 (RL-069, RL-071, RL-072)
 #   Context compaction: 6 (RL-079–082, RL-084, RL-085)
 #   External references Batch 1+2: 20 (RL-087–RL-106)
 #   External references Batch 3: 9 (RL-107–RL-115)
 #   External references Batch 4: 10 (RL-116–RL-125, RL-126 deferred to dev plugin)
+#   External references Batch 5: 4 (RL-127–RL-130)
 #
-# Later: 7
-#   Phase 3: 2 (RL-018 project-scan, RL-019 self-documenting)
+# Later: 6
+#   Phase 3: 1 (RL-018 project-scan)
 #   Phase 4: 3 (RL-073 cache-clear, RL-075 conventions, RL-076 agent-examples, RL-077 create-plugin-cmd)
 #   Memory: 2 (RL-031 episodic, RL-083 project-memory)
 #

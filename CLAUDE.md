@@ -2,7 +2,7 @@
 
 ## What This Is
 Two plugins in a monorepo:
-- **claude-core** (`plugins/claude-core/`) — Foundation plugin: planning, brainstorm, tracing, memory governance, roadmap, doc governance, creator/reviewer tooling, and validation agents (32 skills, 10 commands, 12 agents).
+- **claude-core** (`plugins/claude-core/`) — Foundation plugin: planning, brainstorm, tracing, memory governance, roadmap, doc governance, creator/reviewer tooling, and validation agents (33 skills, 10 commands, 12 agents).
 - **agency** (`plugins/agency/`) — Digital agency plugin: brand, design, content, dev, deploy pipelines (11 agents — security-reviewer ported to claude-core).
 
 ## Context Recovery
@@ -36,7 +36,7 @@ After `/compact` or when context seems incomplete, read `.ai/context/snapshot.ym
   prompts/                           # Prompt templates
   roadmap.yml                        # 124-item roadmap across 5 phases
 plugins/
-  claude-core/                       # Foundation plugin (32 skills, 10 commands, 12 agents)
+  claude-core/                       # Foundation plugin (33 skills, 10 commands, 12 agents)
     .claude-plugin/
       plugin.json                    # v0.3.0, hooks: PreToolUse, PostToolUse, PreCompact, SessionStart, Stop
       ecosystem.json                 # Component registry
@@ -80,10 +80,11 @@ plugins/
       writing-clearly-and-concisely/ # Strunk's 18 rules + AI anti-patterns
       session-handoff/               # Chained session handoffs with staleness classification
       agent-teams/                   # Preset team compositions for parallel agent dispatch
-
+      auto-doc/                        # Automated documentation updates (complements doc-checkpoint)
     scripts/                         # session-recovery, trace-light, check-wave-complete, check-trace-written,
                                      # doc-stale-check, port-dedup-check, cache-clear, verification-gate-stop,
-                                     # observation-recorder, scope-guard, tdd-gate, plan-gate, compact-gate-pre/post
+                                     # observation-recorder, scope-guard, tdd-gate, plan-gate, compact-gate-pre/post,
+                                     # prevent-direct-push, debug-window
       tests/                         # Hook unit tests (test-tdd-gate.sh, test-scope-guard.sh, test-plan-gate.sh)
     resources/                       # error-annotation-format, memory-rules, agent-orchestration, instincts-schema
   agency/                            # Digital agency plugin
