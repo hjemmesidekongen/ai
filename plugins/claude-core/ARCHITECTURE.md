@@ -36,7 +36,6 @@ plugins/claude-core/
 ├── scripts/                 # Shell scripts for hooks
 │   ├── claude-md-guardian.sh    # PostToolUse: CLAUDE.md edit validation
 │   ├── trace-light.sh          # PostToolUse: append-only tool trace
-│   ├── pre-completion-review.sh # Pre-completion error review
 │   ├── memory-health-check.sh  # Memory bloat/stale detection
 │   ├── session-recovery.sh     # SessionStart: report plan + project state
 │   ├── check-wave-complete.sh  # Stop: warn if plan/project work in progress
@@ -83,7 +82,6 @@ plugins/claude-core/
 │   ├── plan-schema.yml      # Canonical plan schema
 │   ├── state-schema.yml     # Canonical state schema
 │   └── brainstorm-schema.yml
-├── tests/
 ├── ARCHITECTURE.md          # This file
 └── README.md
 ```
@@ -130,7 +128,6 @@ plugins/claude-core/
 | Commands | `kebab-case.md` | `trace-full.md` |
 | Skills | `kebab-case/SKILL.md` | `planning/SKILL.md` |
 | Resources | `kebab-case.{yml,md}` | `error-annotation-format.yml` |
-| Tests | `phase-N-results.yml` | `phase-1-results.yml` |
 | State files | `kebab-case.yml` in `.ai/` | `.ai/traces/trace-config.yml` |
 
 ## State File Locations
@@ -172,7 +169,6 @@ Every feature must have:
 2. **Functional test** — does it work as specified?
 3. **Uninstall test** — does removing it break anything else?
 4. **Performance test** — hooks <100ms, scripts <500ms
-5. **Test results** — stored in `tests/` directory
 
 ## CLAUDE.md Governance
 

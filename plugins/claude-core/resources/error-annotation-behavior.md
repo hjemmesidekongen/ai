@@ -35,7 +35,5 @@ the format in `plugins/claude-core/resources/error-annotation-format.yml`.
 - This rule depends on trace-light.sh (t5) already being active
 - The light trace hook writes standard entries automatically; this rule tells Claude
   to write *enhanced* error entries when errors are encountered
-- The pre-completion-review hook (t8) will read these annotations to surface
-  unresolved errors before task completion
 - When full tracing is enabled (t6), Claude writes the structured YAML entry
   in addition to the light trace line

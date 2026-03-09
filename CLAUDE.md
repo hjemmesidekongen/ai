@@ -75,7 +75,7 @@ plugins/
       dev/                           # project-scanner, config-generator, scaffold, storybook-generator,
                                      # feature-decomposer, team-planner, agent-dispatcher, completion-gate,
                                      # code-review, qa-validation
-      devops/                        # deploy-config, deploy-execute
+      devops/                        # deploy-config, deploy-execute, observability
     agents/dev/                      # 5 leadership + 6 specialist agents (security-reviewer → claude-core)
     migrations/                      # MIGRATION-REGISTRY.yml
     resources/
