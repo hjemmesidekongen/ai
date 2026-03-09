@@ -993,6 +993,22 @@ items:
 
   # --- External reference findings ---
 
+  - id: RL-092
+    title: "File-based step outputs in plans"
+    description: >
+      Added optional artifact field to plan-schema.yml task definition and
+      state-schema.yml phase tracking. Updated plan-engine process.md with
+      artifact declaration convention. Updated plan-execute.md to create
+      artifacts/ dir at pre-flight, read dependency artifacts before tasks,
+      and write step outputs to .ai/plans/<name>/artifacts/<wave>-<task>-output.md.
+    category: core
+    plugin: claude-core
+    priority: done
+    completed: "2026-03-09"
+    source: ".ai/research/external-reference-findings.md (A2)"
+    added: "2026-03-09"
+    tags: [planning, artifacts, context, external-reference]
+
   - id: RL-091
     title: "Forward-message pattern for agent orchestration"
     description: >
@@ -1072,16 +1088,16 @@ items:
 # ============================================================
 # STATS (updated 2026-03-09)
 # ============================================================
-# Total items: 90
+# Total items: 91
 #
-# Done: 40
+# Done: 41
 #   Phase 1: 9 (RL-001–009)
 #   Phase 2: 8 (RL-010–017)
 #   Phase 3: 2 (RL-020, RL-021)
 #   Phase 4: 7 (RL-022–025, RL-074, RL-085-gate, RL-023)
 #   Iteration-2: 3 (RL-069, RL-071, RL-072)
 #   Context compaction: 6 (RL-079–082, RL-084, RL-085)
-#   External references: 5 (RL-087, RL-088, RL-089, RL-090, RL-091)
+#   External references: 6 (RL-087, RL-088, RL-089, RL-090, RL-091, RL-092)
 #
 # Later: 7
 #   Phase 3: 2 (RL-018 project-scan, RL-019 self-documenting)
