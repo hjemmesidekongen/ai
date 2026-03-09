@@ -43,6 +43,6 @@
     "writing-clearly-and-concisely",
     "session-handoff"
   ],
-  "agents": ["plugin-validator", "skill-auditor", "security-auditor", "component-reviewer", "architect-reviewer", "refactoring-specialist", "knowledge-synthesizer", "context-manager"],
+  "agents": ["plugin-validator", "skill-auditor", "security-auditor", "component-reviewer", "architect-reviewer", "refactoring-specialist", "knowledge-synthesizer", "context-manager", "tdd-orchestrator", "error-detective", "incident-responder"],
   "dependencies": []
 }
