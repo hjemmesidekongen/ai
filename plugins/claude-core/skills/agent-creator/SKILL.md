@@ -3,7 +3,9 @@ name: agent-creator
 description: >
   Create autonomous Claude Code agents with correct frontmatter, triggering examples,
   system prompts, and tool restrictions. Use when adding agents to any plugin,
-  defining agent behavior, or configuring agent model and tool access.
+  defining agent behavior, writing system prompts, configuring model tier and tool
+  access, setting up auto-triggering descriptions, or choosing between agent vs
+  command for a task.
 user_invocable: false
 interactive: false
 depends_on: []
