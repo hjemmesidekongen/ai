@@ -44,6 +44,8 @@ plugins/claude-core/
 │   ├── port-dedup-check.sh       # Stop: warn if component duplicated across plugins
 │   ├── strategic-compact-trigger.sh # PostToolUse: suggest /compact at depth thresholds
 │   ├── verification-gate-stop.sh    # Stop: remind to run proof before claiming done
+│   ├── worktree-create.sh           # Utility: create isolated git worktree with setup
+│   ├── worktree-finish.sh           # Utility: finish worktree (merge/pr/keep/discard)
 │   └── cache-clear.sh            # Stop: clear plugin cache at session end
 ├── commands/                # User-invocable commands (markdown)
 │   ├── brainstorm-start.md
@@ -74,6 +76,7 @@ plugins/claude-core/
 │   ├── skill-reviewer/
 │   ├── plugin-reviewer/
 │   ├── verification-gate/
+│   ├── git-worktree-isolation/
 │   ├── plugin-settings/
 │   ├── plan-engine/
 │   ├── plan-verifier/

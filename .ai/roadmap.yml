@@ -993,6 +993,21 @@ items:
 
   # --- External reference findings ---
 
+  - id: RL-090
+    title: "Git worktree isolation skill"
+    description: >
+      New skill (git-worktree-isolation) providing structured worktree lifecycle:
+      create with gitignore safety check + setup detection + baseline verify,
+      finish with 4 options (merge/pr/keep/discard). Supporting scripts:
+      worktree-create.sh and worktree-finish.sh.
+    category: core
+    plugin: claude-core
+    priority: done
+    completed: "2026-03-09"
+    source: ".ai/research/external-reference-findings.md (G1)"
+    added: "2026-03-09"
+    tags: [git, workflow, skills, external-reference]
+
   - id: RL-089
     title: "Verification-before-completion gate"
     description: >
@@ -1042,16 +1057,16 @@ items:
 # ============================================================
 # STATS (updated 2026-03-09)
 # ============================================================
-# Total items: 88
+# Total items: 89
 #
-# Done: 38
+# Done: 39
 #   Phase 1: 9 (RL-001–009)
 #   Phase 2: 8 (RL-010–017)
 #   Phase 3: 2 (RL-020, RL-021)
 #   Phase 4: 7 (RL-022–025, RL-074, RL-085-gate, RL-023)
 #   Iteration-2: 3 (RL-069, RL-071, RL-072)
 #   Context compaction: 6 (RL-079–082, RL-084, RL-085)
-#   External references: 3 (RL-087, RL-088, RL-089)
+#   External references: 4 (RL-087, RL-088, RL-089, RL-090)
 #
 # Later: 7
 #   Phase 3: 2 (RL-018 project-scan, RL-019 self-documenting)
