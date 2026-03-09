@@ -13,11 +13,22 @@ reads:
   - ".ai/plans/{name}/state.yml"
 writes:
   - ".ai/plans/{name}/state.yml"
-checkpoint: data_validation
+checkpoint:
+  type: data_validation
+  required_checks:
+    - name: "stage1_complete"
+      verify: "Spec compliance checks all passed (file existence, schema, ownership)"
+      fail_action: "Fix structural issues before proceeding to Stage 2"
+    - name: "verdict_recorded"
+      verify: "Verification result written to state.yml wave checkpoint"
+      fail_action: "Write checkpoint result to state.yml"
+  on_fail: "Fix issues and re-run checkpoint"
+  on_pass: "Report stage 1/2 results and any warnings."
 model_tier: principal
 _source:
   origin: "claude-core"
   inspired_by: "task-planner/verification-runner + spec-compliance-reviewer + qa-agent"
+  ported_date: "2026-03-08"
   iteration: 1
   changes: "Merged three components into one skill with two internal phases. Cleaner error logging."
 ---

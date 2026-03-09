@@ -1,43 +1,48 @@
 #!/usr/bin/env bash
+set -euo pipefail
 # claude-core — Stop hook: remind about missing trace reflections
 # Checks agency project traces for missing reflections section.
-# Always exits 0 (informational, never blocks).
+# Output: JSON with decision (approve/block) per Stop hook spec.
+# Exit 0 always — signaling is via JSON decision field.
 
-# --- Check agency project traces ---
-AGENCY_FILE=".ai/agency.yml"
+PROJECT_DIR="${CLAUDE_PROJECT_DIR:-.}"
+AGENCY_FILE="$PROJECT_DIR/.ai/agency.yml"
 [ ! -f "$AGENCY_FILE" ] && exit 0
 
-ACTIVE=$(grep 'active:' "$AGENCY_FILE" 2>/dev/null | awk '{print $2}' | tr -d '"' || true)
+ACTIVE=$(grep 'active:' "$AGENCY_FILE" 2>/dev/null | awk '{print $2}' | tr -d '"') || true
 [ -z "$ACTIVE" ] && exit 0
 
-STATE_FILE=".ai/projects/$ACTIVE/state.yml"
+STATE_FILE="$PROJECT_DIR/.ai/projects/$ACTIVE/state.yml"
 [ ! -f "$STATE_FILE" ] && exit 0
 
 # Check if tracing is enabled
-TRACE_ENABLED=$(grep 'enabled: true' "$STATE_FILE" 2>/dev/null | head -1 | awk '{print $2}' || true)
+TRACE_ENABLED=$(grep 'enabled: true' "$STATE_FILE" 2>/dev/null | head -1 | awk '{print $2}') || true
 [ "$TRACE_ENABLED" != "true" ] && exit 0
 
 # Get traces directory
-TRACES_DIR=$(grep 'traces_dir:' "$STATE_FILE" 2>/dev/null | awk '{print $2}' | tr -d '"' || true)
-[ -z "$TRACES_DIR" ] && TRACES_DIR=".ai/projects/$ACTIVE/traces/"
+TRACES_DIR=$(grep 'traces_dir:' "$STATE_FILE" 2>/dev/null | awk '{print $2}' | tr -d '"') || true
+[ -z "$TRACES_DIR" ] && TRACES_DIR="$PROJECT_DIR/.ai/projects/$ACTIVE/traces/"
+# Resolve relative paths against project dir
+[[ "$TRACES_DIR" != /* ]] && TRACES_DIR="$PROJECT_DIR/$TRACES_DIR"
 [ ! -d "$TRACES_DIR" ] && exit 0
 
 # Only check traces modified in the last 60 minutes (current session)
-RECENT_TRACES=$(find "$TRACES_DIR" -name "*.yml" -mmin -60 2>/dev/null)
-[ -z "$RECENT_TRACES" ] && exit 0
+RECENT_COUNT=$(find "$TRACES_DIR" -name "*.yml" -mmin -60 2>/dev/null | wc -l) || true
+[ "$RECENT_COUNT" -eq 0 ] 2>/dev/null && exit 0
 
 INCOMPLETE=""
-for trace_file in $RECENT_TRACES; do
+while IFS= read -r trace_file; do
   [ ! -f "$trace_file" ] && continue
   if ! grep -q 'reflections:' "$trace_file" 2>/dev/null; then
     SKILL=$(basename "$trace_file" | sed 's/-[0-9T].*\.yml$//')
     INCOMPLETE="${INCOMPLETE}${SKILL}, "
   fi
-done
+done < <(find "$TRACES_DIR" -name "*.yml" -mmin -60 2>/dev/null)
 
 if [ -n "$INCOMPLETE" ]; then
   INCOMPLETE=$(echo "$INCOMPLETE" | sed 's/, $//')
-  echo "{\"systemMessage\": \"Trace reminder: ${INCOMPLETE} missing reflections section\"}"
+  INCOMPLETE="${INCOMPLETE//\"/\'}"
+  echo "{\"decision\": \"approve\", \"reason\": \"Traces missing reflections.\", \"systemMessage\": \"Trace reminder: ${INCOMPLETE} missing reflections section.\"}"
 fi
 
 exit 0

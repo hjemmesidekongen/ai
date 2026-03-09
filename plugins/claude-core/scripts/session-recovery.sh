@@ -4,18 +4,20 @@
 
 set -euo pipefail
 
+PROJECT_DIR="${CLAUDE_PROJECT_DIR:-.}"
+
 echo "=== Session Recovery Check ==="
 
 FOUND_CONTEXT=0
 
 # --- Check active plans ---
-for state_file in .ai/plans/*/state.yml; do
+for state_file in "$PROJECT_DIR"/.ai/plans/*/state.yml; do
   [ ! -f "$state_file" ] && continue
-  STATUS=$(grep '^status:' "$state_file" 2>/dev/null | head -1 | awk '{print $2}' | tr -d '"')
+  STATUS=$(grep '^status:' "$state_file" 2>/dev/null | head -1 | awk '{print $2}' | tr -d '"') || true
   if [ "$STATUS" = "in_progress" ]; then
-    PLAN=$(grep '^plan:' "$state_file" 2>/dev/null | head -1 | awk '{print $2}' | tr -d '"')
-    WAVE=$(grep '^current_wave:' "$state_file" 2>/dev/null | head -1 | awk '{print $2}' | tr -d '"')
-    TASK=$(grep '^current_task:' "$state_file" 2>/dev/null | head -1 | awk '{print $2}' | tr -d '"')
+    PLAN=$(grep '^plan:' "$state_file" 2>/dev/null | head -1 | awk '{print $2}' | tr -d '"') || true
+    WAVE=$(grep '^current_wave:' "$state_file" 2>/dev/null | head -1 | awk '{print $2}' | tr -d '"') || true
+    TASK=$(grep '^current_task:' "$state_file" 2>/dev/null | head -1 | awk '{print $2}' | tr -d '"') || true
     echo "Active plan: $PLAN (wave: $WAVE, task: $TASK)"
 
     ERRORS=$(grep -c '  - timestamp:' "$state_file" 2>/dev/null) || ERRORS=0
@@ -25,11 +27,11 @@ for state_file in .ai/plans/*/state.yml; do
 done
 
 # --- Check active agency project ---
-AGENCY_FILE=".ai/agency.yml"
+AGENCY_FILE="$PROJECT_DIR/.ai/agency.yml"
 if [ -f "$AGENCY_FILE" ]; then
-  ACTIVE=$(grep 'active:' "$AGENCY_FILE" 2>/dev/null | awk '{print $2}' | tr -d '"' || true)
+  ACTIVE=$(grep 'active:' "$AGENCY_FILE" 2>/dev/null | awk '{print $2}' | tr -d '"') || true
   if [ -n "$ACTIVE" ]; then
-    STATE_FILE=".ai/projects/$ACTIVE/state.yml"
+    STATE_FILE="$PROJECT_DIR/.ai/projects/$ACTIVE/state.yml"
     if [ -f "$STATE_FILE" ]; then
       echo "Active project: $ACTIVE"
       echo "--- Project State ---"

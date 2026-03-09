@@ -191,10 +191,14 @@ items:
     description: "Core agent definitions and dispatch patterns. Agents defined once in claude-core, reused by domain plugins. Sub-agent coordination rules. Re-implement from agency agents/."
     category: core
     plugin: claude-core
-    priority: later
+    priority: done
+    completed: "2026-03-09"
     source: "brainstorm/streamline-local-claude-workflow"
     added: "2026-03-08"
     tags: [agents, orchestration, phase-3]
+    partial:
+      delivered: "3 audit agents (plugin-validator, skill-auditor, security-auditor) + agent-orchestration.md"
+      remaining: "Domain agent porting from agency (leadership/specialist agents)"
 
   - id: RL-021
     title: "Source attribution system"
@@ -214,18 +218,27 @@ items:
     title: "Skill create + A/B testing"
     description: "Build new skills with validation. A/B split testing approach. Test results stored alongside skill. Re-testable at any time."
     category: toolkit
-    plugin: claude-toolkit
-    priority: later
+    plugin: claude-core
+    priority: done
+    completed: "2026-03-09"
     source: "brainstorm/streamline-local-claude-workflow"
     added: "2026-03-08"
     tags: [skills, testing, ab-test, phase-4]
+    partial:
+      skill_creator: "plugins/claude-core/skills/skill-creator/ (delivered 2026-03-09)"
+      eval_infrastructure: "7 scripts, 3 agents, schemas, HTML viewers (delivered 2026-03-09)"
+      ab_testing: "delivered via eval scripts (run_loop.py, aggregate_benchmark.py)"
+    _source:
+      inspiration: "https://skills.sh/anthropics/claude-plugins-official/skill-development"
+      ported_date: "2026-03-09"
 
   - id: RL-023
     title: "Skill enhance + audit"
     description: "Improve existing skills. Audit quality with stored results. Check for overlap with existing functionality."
     category: toolkit
     plugin: claude-toolkit
-    priority: later
+    priority: done
+    completed: "2026-03-09"
     source: "brainstorm/streamline-local-claude-workflow"
     added: "2026-03-08"
     tags: [skills, audit, phase-4]
@@ -234,21 +247,65 @@ items:
     title: "Plugin create + enhance + audit"
     description: "Same create/enhance/audit pattern applied to plugins."
     category: toolkit
-    plugin: claude-toolkit
-    priority: later
+    plugin: claude-core
+    priority: done
+    completed: "2026-03-09"
     source: "brainstorm/streamline-local-claude-workflow"
     added: "2026-03-08"
     tags: [plugins, phase-4]
+    partial:
+      plugin_creator: "plugins/claude-core/skills/plugin-creator/ (delivered 2026-03-09)"
+      enhance_audit: "not started (RL-023)"
+    _source:
+      inspiration: "https://skills.sh/josiahsiegel/claude-plugin-marketplace/plugin-master"
+      ported_date: "2026-03-09"
 
   - id: RL-025
     title: "Command/Hook create + enhance + audit"
-    description: "Same create/enhance/audit pattern applied to commands and hooks."
+    description: "Same create/enhance/audit pattern applied to commands and hooks. Hook-creator and command-creator both delivered 2026-03-09."
     category: toolkit
-    plugin: claude-toolkit
-    priority: later
+    plugin: claude-core
+    priority: done
+    completed: "2026-03-09"
     source: "brainstorm/streamline-local-claude-workflow"
     added: "2026-03-08"
     tags: [commands, hooks, phase-4]
+    partial:
+      hook_creator: "plugins/claude-core/skills/hook-creator/ (delivered 2026-03-09)"
+      command_creator: "plugins/claude-core/skills/command-creator/ (delivered 2026-03-09)"
+      enhance_audit: "not started (RL-023)"
+    _source:
+      hook: "https://skills.sh/anthropics/claude-code/hook-development"
+      command: "https://skills.sh/anthropics/claude-plugins-official/command-development"
+      ported_date: "2026-03-09"
+
+  - id: RL-074
+    title: "Agent create + enhance + audit"
+    description: "Create agent definitions with proper frontmatter, triggering examples, system prompts, and tool restrictions. Agent-creator delivered 2026-03-09."
+    category: toolkit
+    plugin: claude-core
+    priority: done
+    completed: "2026-03-09"
+    source: "user-request/2026-03-09"
+    added: "2026-03-09"
+    tags: [agents, phase-4]
+    partial:
+      agent_creator: "plugins/claude-core/skills/agent-creator/ (delivered 2026-03-09)"
+      enhance_audit: "not started (RL-023)"
+    _source:
+      inspiration: "https://skills.sh/anthropics/claude-plugins-official/agent-development"
+      ported_date: "2026-03-09"
+
+  - id: RL-085
+    title: "Phase 4 Gate complete — v0.3.0"
+    description: "Hardening audit passed. 3 validation agents, hardening-sweep.sh, security audit, all structural fixes, creator self-validation gates, eval infrastructure validated."
+    category: core
+    plugin: claude-core
+    priority: done
+    completed: "2026-03-09"
+    source: "plan/hardening-audit"
+    added: "2026-03-09"
+    tags: [gate, phase-4, v0.3.0]
 
   - id: RL-073
     title: "Auto-clear plugin cache after create/edit operations"
@@ -320,13 +377,23 @@ items:
 
   - id: RL-031
     title: "Episodic memory layer"
-    description: "Structured log of 'we tried X on project Y, it failed because Z' — experience memory beyond facts (MEMORY.md) and decisions (decisions.yml). Research showed this as distinct memory type."
+    description: >
+      Structured log of 'we tried X on project Y, it failed because Z' — experience memory
+      beyond facts (MEMORY.md) and decisions (decisions.yml). Distinct memory type.
+      Design clarified in brainstorm/smart-context-compaction (D-012): requires its own
+      store, capture hooks (Stop/PreCompact/SessionEnd), and relevance injection logic.
+      Prerequisite for truly smart relevance filtering at session start — matching session
+      context to past experience semantically, not just by file path. Overlaps heavily
+      with immune system plugin (RL-035) — should be designed together.
+      Deferred until compact trigger discipline (RL-079–081) and smart session injection
+      (RL-082) are stable.
     category: core
     plugin: claude-core
-    priority: backlog
-    source: "brainstorm/streamline-local-claude-workflow"
+    priority: later
+    source: "brainstorm/streamline-local-claude-workflow, brainstorm/smart-context-compaction"
     added: "2026-03-08"
-    tags: [memory, episodic, research]
+    updated: "2026-03-09"
+    tags: [memory, episodic, research, context-compaction]
 
   - id: RL-032
     title: "MCP bridge for Claude AI portability"
@@ -754,15 +821,173 @@ items:
     completed: "2026-03-08"
     tags: [memory, claude-md, iteration-2]
 
+  # ============================================================
+  # FROM ANTHROPIC REFERENCE ANALYSIS (2026-03-09)
+  # ============================================================
+
+  - id: RL-075
+    title: "Formalize writing conventions as shared resource"
+    description: "Third-person description rule, imperative body style, trigger phrase requirements. Create a shared resource in claude-core/resources/ referenced by all creator skills."
+    category: toolkit
+    plugin: claude-core
+    priority: later
+    source: "anthropic-reference-analysis/2026-03-09"
+    added: "2026-03-09"
+    tags: [conventions, writing-style, creators, phase-4]
+
+  - id: RL-076
+    title: "Example blocks in agent-creator"
+    description: "Ensure agent-creator teaches 2-4 <example> blocks with <commentary> for agent triggering. Currently missing from our agent-creator but present in Anthropic's reference."
+    category: toolkit
+    plugin: claude-core
+    priority: later
+    source: "anthropic-reference-analysis/2026-03-09"
+    added: "2026-03-09"
+    tags: [agents, examples, agent-creator, phase-4]
+
+  - id: RL-077
+    title: "/create-plugin orchestrated command"
+    description: "8-phase workflow matching Anthropic's /create-plugin: plan, scaffold, hooks, skills, commands, agents, ecosystem, verification. plan-engine could drive this as an orchestrator."
+    category: toolkit
+    plugin: claude-core
+    priority: later
+    source: "anthropic-reference-analysis/2026-03-09"
+    added: "2026-03-09"
+    tags: [plugins, orchestration, command, phase-4]
+
+  - id: RL-078
+    title: "Parallel baseline testing in skill-creator"
+    description: "Spawn with-skill and baseline subagents simultaneously for A/B comparison. Currently sequential. Would halve benchmark wall time."
+    category: toolkit
+    plugin: claude-core
+    priority: backlog
+    source: "anthropic-reference-analysis/2026-03-09"
+    added: "2026-03-09"
+    tags: [skills, testing, performance, phase-4]
+
+  # ============================================================
+  # FROM BRAINSTORM: smart-context-compaction (2026-03-09)
+  # ============================================================
+
+  - id: RL-079
+    title: "Compact gate hooks — boundary enforcement"
+    description: >
+      Two-hook system enforcing compaction at unit boundaries.
+      PostToolUse on unit-completion artifacts (SKILL.md, commands/*.md, agents/*.md,
+      decisions.yml, state.yml wave-done, findings.md) writes .ai/compact-needed flag.
+      PreToolUse on next unit's primary write checks flag, exits 2 with:
+      "Compact required before starting next unit. Run /compact, then retry."
+      Also: set CLAUDE_AUTOCOMPACT_PCT_OVERRIDE=0.92 in workspace env to push auto-compact
+      to last-resort only (reclaims ~45k tokens of reserved headroom).
+      Auto-compact default ~0.78 fires mid-task and disrupts flow — this eliminates that.
+    category: core
+    plugin: claude-core
+    priority: next
+    source: "brainstorm/smart-context-compaction"
+    added: "2026-03-09"
+    tags: [compaction, hooks, context, quality]
+
+  - id: RL-080
+    title: "PreCompact snapshot writer"
+    description: >
+      PreCompact hook writes a lean point-in-time snapshot to .ai/compact-snapshot.yml
+      before any compaction event (manual or auto). Captures exactly five things:
+      current task (one sentence), next concrete step, paths of files actively modified
+      this session, decisions made this session only, and open blockers.
+      Max ~300–500 tokens. No file contents — paths only. Claude re-reads files as needed.
+      Self-deletes after being consumed by SessionStart compact handler (RL-081).
+      Makes compaction transparent — Claude resumes where it left off, not from scratch.
+    category: core
+    plugin: claude-core
+    priority: next
+    source: "brainstorm/smart-context-compaction"
+    added: "2026-03-09"
+    tags: [compaction, hooks, recovery, context]
+
+  - id: RL-081
+    title: "SessionStart compact handler — snapshot restore"
+    description: >
+      Upgrade session-recovery.sh to handle the compact case specifically.
+      SessionStart with matcher 'compact' reads .ai/compact-snapshot.yml and injects
+      it via additionalContext, enabling seamless resume after any compaction.
+      Clears the .ai/compact-needed flag and deletes the snapshot after injection.
+      Completes the compact loop: PreCompact saves → SessionStart compact restores.
+    category: core
+    plugin: claude-core
+    priority: next
+    source: "brainstorm/smart-context-compaction"
+    added: "2026-03-09"
+    tags: [compaction, session-recovery, hooks, context]
+
+  - id: RL-082
+    title: "Smart session injection — three-layer context architecture"
+    description: >
+      Replace static session-recovery.sh with relevance-aware injection across three layers:
+      1. Workspace memory: global patterns, permanent conventions, ~200 tokens, always injected.
+      2. Project memory: per-project, Tier 1 injected (budgeted ~150 lines), Tier 2 searchable.
+      3. Compact snapshot: point-in-time working state, consumed once then deleted.
+      Priority ordering: CLAUDE.md > MEMORY.md > compact snapshot > project memory > workspace.
+      Layer 1 is generic (works in any git repo), Layer 2 is project-aware (opt-in via
+      .ai/session-config.yml). Layer 1 never exceeds ~800 tokens.
+      Delivery: additionalContext injection pattern (proven via external plugin references).
+    category: core
+    plugin: claude-core
+    priority: later
+    source: "brainstorm/smart-context-compaction"
+    added: "2026-03-09"
+    tags: [session-recovery, context, injection, memory]
+
+  - id: RL-083
+    title: "Project memory system — temporal decay, two-tier, dedup"
+    description: >
+      Memory system for per-project knowledge with intelligent staleness handling.
+      Inspired by memory-mcp (yuvalsuede): https://dev.to/suede/the-architecture-of-persistent-memory-for-claude-code-17d
+      Tier 1: auto-generated CLAUDE.md section, fixed line budgets per category
+      (architecture: 25, decisions: 25, patterns: 25, gotchas: 20, progress: 30, context: 15).
+      Tier 2: persistent JSON store (.memory/state.json), unlimited, searchable on demand.
+      Temporal decay: architecture/decisions/patterns/gotchas = permanent; progress = 7-day half-life;
+      context = 30-day half-life. Below 0.3 confidence: hidden from Tier 1, still searchable.
+      Ranking: confidence * accessCount. Dedup: Jaccard >60% token overlap → supersede.
+      Haiku consolidation every 10 extractions or >80 memories. Cost ~$0.001/extraction.
+      Scoping: every entry tagged workspace or project-specific — never mix in injection.
+    category: core
+    plugin: claude-core
+    priority: later
+    source: "brainstorm/smart-context-compaction"
+    added: "2026-03-09"
+    tags: [memory, decay, two-tier, dedup, context]
+    _source:
+      inspiration: "https://dev.to/suede/the-architecture-of-persistent-memory-for-claude-code-17d"
+      also_see: [mem0, claude-mem, contextstream]
+
+  - id: RL-084
+    title: "Fix trace-light.sh duration field"
+    description: >
+      duration_ms is not populated in PostToolUse hook JSON — all trace-light.log entries
+      show duration '-'. Extraction logic in trace-light.sh is syntactically correct but
+      the field is absent from hook input. Either remove the duration field from the log
+      format (prevents misleading dashes) or investigate if duration_ms becomes available
+      in a different hook event or future Claude Code version.
+    category: core
+    plugin: claude-core
+    priority: next
+    source: "brainstorm/smart-context-compaction"
+    added: "2026-03-09"
+    tags: [tracing, bug, trace-light]
+
 # ============================================================
 # STATS
 # ============================================================
-# Total items: 73
+# Total items: 84
 # Phase 1 (done): 9
 # Phase 2 (done): 8
 # Iteration-2 (done): 2 (RL-071, RL-072)
 # Iteration-2 (next): 1 (RL-069)
 # Phase 3 (later): 4
-# Phase 4 (later): 4
+# Phase 4 (now): 4 (RL-022, RL-024, RL-025, RL-074)
+# Phase 4 (later): 4 (RL-023, RL-073, RL-075, RL-076, RL-077)
+# Phase 4 (backlog): 1 (RL-078)
+# Context compaction (next): 3 (RL-079, RL-080, RL-081, RL-084)
+# Context compaction (later): 2 (RL-082, RL-083)
 # Phase 5+ (backlog): 44
 # ============================================================

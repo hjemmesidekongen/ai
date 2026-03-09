@@ -39,9 +39,20 @@ Record what was loaded in `context_loaded` array in state.
 - Don't switch to solution mode unless the user explicitly asks
 
 **Research integration:**
-- If a factual question comes up during brainstorming, use available tools (web search, codebase search) to ground the discussion
-- Save key findings to prevent loss during `/compact`
-- Use the 2-Action Rule: every 2 research operations, save findings to the transcript
+- If a factual question comes up during brainstorming, use available tools (web search, Perplexity, WebFetch, codebase search) to ground the discussion
+- **Research is expensive** — both in tokens and in paid tool costs (Perplexity). Every source found must be persisted immediately, not left in context where it can be lost to compaction.
+- After every research operation, append to `.ai/brainstorm/{topic}/findings.md`:
+  - The source URL or repo
+  - The tool used to find it (Perplexity / WebFetch / search)
+  - 2–4 sentences on what was found and why it matters
+- Do not wait for end-of-session. Write findings the moment they land. Context compaction can happen at any point.
+- **Format** (append, never overwrite):
+  ```
+  ### {Source name or short title}
+  - **URL**: {url}
+  - **Found via**: {Perplexity / WebFetch / Grep / etc.}
+  - **What it contains**: {2–4 sentences — what the source says, what's relevant, what we learned}
+  ```
 
 ### 4. End session
 

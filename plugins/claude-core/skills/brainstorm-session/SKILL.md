@@ -12,11 +12,23 @@ reads: []
 writes:
   - ".ai/brainstorm/{topic}/brainstorm-state.yml"
   - ".ai/brainstorm/{topic}/brainstorm-transcript-{date}.md"
-checkpoint: data_validation
+  - ".ai/brainstorm/{topic}/findings.md"
+checkpoint:
+  type: data_validation
+  required_checks:
+    - name: "state_written"
+      verify: "brainstorm-state.yml created or updated with session metadata"
+      fail_action: "Write state file with topic, started_at, active flag"
+    - name: "transcript_saved"
+      verify: "Transcript file exists with conversation content"
+      fail_action: "Save conversation to brainstorm-transcript-{date}.md"
+  on_fail: "Fix issues and re-run checkpoint"
+  on_pass: "Report session topic and transcript location."
 model_tier: principal
 _source:
   origin: "claude-core"
   inspired_by: "task-planner/brainstorm-session"
+  ported_date: "2026-03-08"
   iteration: 1
   changes: "Optional context loading, cleaner state management, research integration"
 ---

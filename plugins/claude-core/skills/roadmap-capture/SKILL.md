@@ -11,12 +11,24 @@ reads:
   - ".ai/roadmap.yml"
 writes:
   - ".ai/roadmap.yml"
-checkpoint: data_validation
+checkpoint:
+  type: data_validation
+  required_checks:
+    - name: "item_appended"
+      verify: "New roadmap item appended to .ai/roadmap.yml with valid ID"
+      fail_action: "Write item with auto-generated RL-NNN ID"
+    - name: "no_duplicates"
+      verify: "Item title does not duplicate an existing roadmap entry"
+      fail_action: "Skip capture or merge with existing entry"
+  on_fail: "Fix issues and re-run checkpoint"
+  on_pass: "Report captured item ID and title."
 model_tier: junior
 _source:
   origin: "claude-core"
   inspired_by: "brainstorm/D-011"
+  ported_date: "2026-03-08"
   iteration: 1
+  changes: "Auto-capture of out-of-scope ideas with dedup and categorization"
 ---
 
 # roadmap-capture

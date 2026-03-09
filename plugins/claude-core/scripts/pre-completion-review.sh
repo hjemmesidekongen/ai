@@ -1,10 +1,9 @@
 #!/usr/bin/env bash
+set -euo pipefail
 # claude-core — pre-completion trace review
 # Reads trace log, filters today's errors/warnings, outputs summary as systemMessage JSON.
 # Called before marking a task complete (manually or via plan:execute).
 # Performance target: <200ms. Always exits 0.
-
-set -o pipefail
 
 TRACE_DIR=".ai/traces"
 TRACE_LOG="${TRACE_DIR}/trace-light.log"

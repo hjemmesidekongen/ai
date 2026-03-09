@@ -16,8 +16,19 @@
     "brainstorm-decision-writer",
     "plan-engine",
     "plan-verifier",
-    "decision-reader"
+    "brainstorm-decision-reader",
+    "doc-checkpoint",
+    "hook-creator",
+    "command-creator",
+    "skill-creator",
+    "agent-creator",
+    "plugin-creator",
+    "hook-reviewer",
+    "skill-reviewer",
+    "plugin-reviewer",
+    "mcp-creator",
+    "plugin-settings"
   ],
-  "agents": [],
+  "agents": ["plugin-validator", "skill-auditor", "security-auditor"],
   "dependencies": []
 }

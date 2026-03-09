@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+set -euo pipefail
 # claude-core — light tracing hook (PostToolUse, always-on)
 # Appends one line per tool invocation to .ai/traces/trace-light.log
 # Format: timestamp|tool_name|status|duration|context
@@ -7,6 +8,7 @@
 
 # Read hook input JSON from stdin
 INPUT=$(cat)
+PROJECT_DIR="${CLAUDE_PROJECT_DIR:-.}"
 
 # Timestamp (UTC ISO 8601)
 TS=$(date -u +%Y-%m-%dT%H:%M:%SZ)
@@ -19,11 +21,21 @@ TOOL="${INPUT#*\"tool_name\":\"}"
 TOOL="${TOOL%%\"*}"
 [ -z "$TOOL" ] && exit 0
 
-# status — check for error signals in one grep call
+# status — prefer explicit is_error field, fall back to tool_result error signals
 STATUS="success"
-if echo "$INPUT" | grep -qi '"is_error": *true\|"error":\|"not found"\|"No such file"\|Permission denied\|command not found\|ENOENT\|EACCES' 2>/dev/null; then
-  STATUS="error"
-fi
+case "$INPUT" in
+  *'"is_error"'*true*|*'"is_error": true'*)
+    STATUS="error" ;;
+  *)
+    # Check tool_result only (not tool_input) for error signals
+    RESULT="${INPUT#*\"tool_result\"}"
+    if [ "$RESULT" != "$INPUT" ]; then
+      case "$RESULT" in
+        *'Exit code'*|*'No such file'*|*'Permission denied'*|*'command not found'*|*'ENOENT'*|*'EACCES'*)
+          STATUS="error" ;;
+      esac
+    fi ;;
+esac
 
 # duration_ms (optional field)
 DURATION="-"
@@ -95,9 +107,10 @@ esac
 CONTEXT="${CONTEXT//|//}"
 [ -z "$CONTEXT" ] && CONTEXT="-"
 [ ${#CONTEXT} -gt 120 ] && CONTEXT="${CONTEXT:0:117}..."
+# Note: 80-char truncation for Bash/Agent already adds "..." (lines 56, 78)
 
 # Ensure trace directory exists
-TRACE_DIR=".ai/traces"
+TRACE_DIR="$PROJECT_DIR/.ai/traces"
 [ ! -d "$TRACE_DIR" ] && mkdir -p "$TRACE_DIR" 2>/dev/null
 
 # Log rotation — date-based (one read + conditional mv)

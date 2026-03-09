@@ -64,10 +64,20 @@ claude-core (previously split across task-planner and agency plugins).
   isolation. Tasks in the same wave run in parallel safely.
 - **Brainstorm sessions** — open-ended sparring where Claude pushes back on weak
   reasoning. Formalize conclusions into structured decisions.
-- **Decision reader** — load past brainstorm decisions relevant to the current task.
-  Filter by domain, sort by confidence. Utility for any skill or agent.
+- **Brainstorm decision reader** — load past brainstorm decisions relevant to the
+  current task. Filter by domain, sort by confidence. Utility for any skill or agent.
 - **Roadmap capture** — when out-of-scope ideas surface, Claude adds them to
   `roadmap.yml` automatically. Tagged, categorized, searchable.
+
+### Autonomous Agents
+
+Three validation agents that run independently as subagents for quality gates:
+
+- **Plugin Validator** — full plugin structure and registry validation
+- **Skill Auditor** — deep skill quality review against conventions
+- **Security Auditor** — infrastructure security scan (hooks, scripts, configs)
+
+See `resources/agent-orchestration.md` for dispatch patterns and tier selection.
 
 ### Session Lifecycle
 
@@ -136,8 +146,9 @@ validated before the next one begins.
 | Phase | Status | What's Included |
 |-------|--------|----------------|
 | **Phase 1** | Complete | Tracing (light + full), memory discipline, CLAUDE.md guardian, status bar, error annotation, pre-completion review |
-| **Phase 2** | Complete | Planning (create/execute/status/resume), brainstorm (start/decide), roadmap capture, decision-reader |
-| **Phase 3** | Planned | Project scanning, self-documenting, agent orchestration, source attribution |
+| **Phase 2** | Complete | Planning (create/execute/status/resume), brainstorm (start/decide), roadmap capture, brainstorm-decision-reader |
+| **Phase 3** | Complete | Creator skills (hook/command/skill/agent/plugin/MCP), reviewer skills (hook/skill/plugin), plugin-settings, doc-checkpoint |
+| **Phase 4** | Complete | Eval infrastructure, hardening audit, 3 validation agents, agent orchestration |
 
 For the full roadmap across all plugins: [`.ai/roadmap.yml`](../../.ai/roadmap.yml)
 

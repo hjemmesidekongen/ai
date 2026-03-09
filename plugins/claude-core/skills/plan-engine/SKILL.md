@@ -13,11 +13,25 @@ writes:
   - ".ai/plans/{name}/plan.yml"
   - ".ai/plans/{name}/plan.md"
   - ".ai/plans/{name}/state.yml"
-checkpoint: data_validation
+checkpoint:
+  type: data_validation
+  required_checks:
+    - name: "plan_emitted"
+      verify: "plan.yml written with at least 1 wave containing tasks"
+      fail_action: "Re-run dependency resolution and wave assignment"
+    - name: "no_file_conflicts"
+      verify: "No two tasks in the same wave write to the same file"
+      fail_action: "Re-run file-ownership conflict resolution"
+    - name: "state_initialized"
+      verify: "state.yml created with all tasks set to pending"
+      fail_action: "Generate state.yml from plan.yml"
+  on_fail: "Fix issues and re-run checkpoint"
+  on_pass: "Report wave count, task count, and any resolved conflicts."
 model_tier: principal
 _source:
   origin: "claude-core"
   inspired_by: "task-planner/wave-decomposer + file-ownership"
+  ported_date: "2026-03-08"
   iteration: 1
   changes: "Merged three skills into one. Simplified conflict resolution. Cleaner model-tier heuristics."
 ---
@@ -59,13 +73,6 @@ A task list (provided inline or as a file) with:
 
 ## plan.md
 
-Every plan gets a `plan.md` — the implementation contract. It's read before
-executing any task in the plan. Contains:
-
-- Implementation standards (documentation inline, verification before advancing, etc.)
-- Files that must stay in sync when certain areas are modified
-- Plan-specific constraints (e.g., "always A/B benchmark new skills")
-- What NOT to do
-
-This is the plan's equivalent of CLAUDE.md — behavioral rules scoped to this
-specific body of work. Without it, important standards get forgotten mid-execution.
+Every plan gets a `plan.md` — the implementation contract read before executing
+any task. Contains implementation standards, sync constraints, and what NOT to do.
+See `references/process.md` for the plan.md template.

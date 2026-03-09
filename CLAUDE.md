@@ -1,7 +1,9 @@
-# Agency Plugin Project
+# Claude Local Workspace
 
 ## What This Is
-A unified digital agency plugin (`plugins/agency/`) that handles brand loading, design systems, content, development, and deployment — all in one plugin.
+Two plugins in a monorepo:
+- **claude-core** (`plugins/claude-core/`) — Foundation plugin: planning, brainstorm, tracing, memory governance, roadmap, doc governance, creator/reviewer tooling, and validation agents (17 skills, 9 commands, 3 agents).
+- **agency** (`plugins/agency/`) — Digital agency plugin: brand, design, content, dev, deploy pipelines (11 agents — security-reviewer ported to claude-core).
 
 ## Architecture Rules
 - State persists via `.ai/projects/<name>/state.yml` — always check at session start
@@ -17,6 +19,7 @@ A unified digital agency plugin (`plugins/agency/`) that handles brand loading, 
 - 2-Action Rule: save to findings.md every 2 research operations
 - All errors logged to state.yml errors array — never repeat a failed approach
 - SKILL.md ≤80 lines, overflow goes to references/process.md
+- Check `MIGRATION-REGISTRY.yml` before porting agency components to claude-core
 
 ## Project Structure
 ```
@@ -24,12 +27,42 @@ A unified digital agency plugin (`plugins/agency/`) that handles brand loading, 
   agency.yml                         # Active project pointer + project registry
   projects/                          # Per-project data (state.yml, brand/, design/, etc.)
   brainstorm/                        # Brainstorm sessions and decisions
+  plans/                             # Wave plan state files
   prompts/                           # Prompt templates
+  roadmap.yml                        # 72-item roadmap across 5 phases
 plugins/
-  agency/                            # The plugin
+  claude-core/                       # Foundation plugin (17 skills, 9 commands, 3 agents)
     .claude-plugin/
-      plugin.json                    # v1.0.0, hooks: PreToolUse, PostToolUse (SessionStart/Stop moved to claude-core)
-      ecosystem.json                 # Component registry (commands, skills, agents)
+      plugin.json                    # v0.3.0, hooks: SessionStart, Stop, PostToolUse
+      ecosystem.json                 # Component registry
+    agents/                          # plugin-validator, skill-auditor, security-auditor
+    commands/                        # trace-full, roadmap-add, roadmap-view, brainstorm-start,
+                                     # brainstorm-decide, plan-create, plan-execute, plan-status, plan-resume
+    skills/
+      roadmap-capture/               # Auto-capture out-of-scope ideas
+      brainstorm-session/            # Open-ended brainstorm
+      brainstorm-decision-writer/    # Extract decisions from brainstorms
+      plan-engine/                   # Task → wave plan conversion
+      plan-verifier/                 # Two-stage wave verification
+      brainstorm-decision-reader/     # Load past decisions for context
+      doc-checkpoint/                # Evaluate docs state after task completion
+      hook-creator/                  # Create/modify hooks
+      command-creator/               # Create/modify commands
+      skill-creator/                 # Create/modify skills
+      agent-creator/                 # Create/modify agents
+      plugin-creator/                # Create/modify plugins
+      mcp-creator/                   # Create MCP server integrations
+      plugin-settings/               # .local.md config pattern for plugins
+      hook-reviewer/                 # Review hooks (read-only)
+      skill-reviewer/                # Review skills (read-only)
+      plugin-reviewer/               # Review plugins (read-only)
+    scripts/                         # session-recovery, trace-light, check-wave-complete, check-trace-written,
+                                     # doc-stale-check, port-dedup-check, cache-clear, hardening-sweep
+    resources/                       # error-annotation-format, memory-rules, agent-orchestration
+  agency/                            # Digital agency plugin
+    .claude-plugin/
+      plugin.json                    # v1.0.0, hooks: PreToolUse, PostToolUse
+      ecosystem.json                 # Component registry
     commands/                        # init, design, content, build, deploy, status, switch, scan
     skills/
       brand/                         # brand-loader
@@ -37,9 +70,9 @@ plugins/
       content/                       # app-copy, ux-writing
       dev/                           # project-scanner, config-generator, scaffold, storybook-generator,
                                      # feature-decomposer, team-planner, agent-dispatcher, completion-gate,
-                                     # code-review, qa-validation (brainstorm/decision skills moved to claude-core)
+                                     # code-review, qa-validation
       devops/                        # deploy-config, deploy-execute
-    agents/dev/                      # 5 leadership + 7 specialist agents
+    agents/dev/                      # 5 leadership + 6 specialist agents (security-reviewer → claude-core)
     migrations/                      # MIGRATION-REGISTRY.yml
     resources/
       templates/                     # agency-registry, project-state, asset-registry schemas
@@ -47,7 +80,7 @@ plugins/
       deferred-backlog.yml           # 20 deferred features for post-MVP
     scripts/
       project-isolation-check.sh
-      inject-trace-timestamp.sh     # (session-recovery, check-wave-complete, check-trace-written moved to claude-core)
+      inject-trace-timestamp.sh
     CHANGELOG.md
     README.md
 docs/
@@ -84,7 +117,7 @@ docs/
 - [x] Step 85: Dev agents (5 leadership + 7 specialist)
 
 ### Remaining
-- [ ] Step 86: Self-review audit
+- [x] Step 86: Self-review audit (Phase 4 Gate — v0.3.0)
 
 ## Specs
 | File | What It Covers |

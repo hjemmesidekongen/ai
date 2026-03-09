@@ -40,7 +40,10 @@ plugins/claude-core/
 │   ├── memory-health-check.sh  # Memory bloat/stale detection
 │   ├── session-recovery.sh     # SessionStart: report plan + project state
 │   ├── check-wave-complete.sh  # Stop: warn if plan/project work in progress
-│   └── check-trace-written.sh  # Stop: remind about missing trace reflections
+│   ├── check-trace-written.sh  # Stop: remind about missing trace reflections
+│   ├── doc-stale-check.sh        # Stop: warn if plugin files changed without doc updates
+│   ├── port-dedup-check.sh       # Stop: warn if component duplicated across plugins
+│   └── cache-clear.sh            # Stop: clear plugin cache at session end
 ├── commands/                # User-invocable commands (markdown)
 │   ├── brainstorm-start.md
 │   ├── brainstorm-decide.md
@@ -51,16 +54,32 @@ plugins/claude-core/
 │   ├── roadmap-add.md
 │   ├── roadmap-view.md
 │   └── trace-full.md
+├── agents/                  # Autonomous validation agents
+│   ├── plugin-validator.md    # Full plugin structure validation
+│   ├── skill-auditor.md       # Deep skill quality review
+│   └── security-auditor.md    # Infrastructure security scan
 ├── skills/                  # Re-usable skills (SKILL.md + references/)
 │   ├── brainstorm-session/
 │   ├── brainstorm-decision-writer/
-│   ├── decision-reader/
+│   ├── brainstorm-decision-reader/
+│   ├── doc-checkpoint/
+│   ├── hook-creator/
+│   ├── command-creator/
+│   ├── skill-creator/
+│   ├── agent-creator/
+│   ├── plugin-creator/
+│   ├── mcp-creator/
+│   ├── hook-reviewer/
+│   ├── skill-reviewer/
+│   ├── plugin-reviewer/
+│   ├── plugin-settings/
 │   ├── plan-engine/
 │   ├── plan-verifier/
 │   └── roadmap-capture/
 ├── resources/               # Static resources, formats, rules
 │   ├── error-annotation-format.yml
 │   ├── memory-rules.md
+│   ├── agent-orchestration.md # How to discover, dispatch, and use agents
 │   ├── plan-schema.yml      # Canonical plan schema
 │   ├── state-schema.yml     # Canonical state schema
 │   └── brainstorm-schema.yml
@@ -78,7 +97,7 @@ plugins/claude-core/
   "hooks": {
     "PostToolUse": ["claude-md-guardian.sh (Write|Edit)", "trace-light.sh (all)"],
     "SessionStart": ["session-recovery.sh"],
-    "Stop": ["check-wave-complete.sh", "check-trace-written.sh"]
+    "Stop": ["check-wave-complete.sh", "check-trace-written.sh", "doc-stale-check.sh", "port-dedup-check.sh", "cache-clear.sh"]
   }
 }
 ```
@@ -90,8 +109,11 @@ plugins/claude-core/
 | PostToolUse | `claude-md-guardian.sh` | Write\|Edit on CLAUDE.md | Advisory: validate edits |
 | PostToolUse | `trace-light.sh` | All tools | Append trace entry (<30ms) |
 | SessionStart | `session-recovery.sh` | Session start | Report plan + project state |
-| Stop | `check-wave-complete.sh` | Session end | Warn if work in progress (exit 2) |
+| Stop | `check-wave-complete.sh` | Session end | Warn if work in progress (informational) |
 | Stop | `check-trace-written.sh` | Session end | Remind about missing reflections |
+| Stop | `doc-stale-check.sh` | Session end | Warn if plugin files changed without doc updates |
+| Stop | `port-dedup-check.sh` | Session end | Warn if skill/command exists in multiple plugins |
+| Stop | `cache-clear.sh` | Session end | Clear plugin cache (dev workspace only) |
 
 **Hook rules:**
 - Scripts must execute in <100ms (ideally <50ms)
@@ -202,7 +224,8 @@ happened (skill-level reasoning within a project context).
 - Semver: `MAJOR.MINOR.PATCH`
 - `0.1.0` — Phase 1 (foundation: tracing, memory, guardian)
 - `0.2.0` — Phase 2 (planning, brainstorm, roadmap) + migration cleanup
-- `1.0.0` when Phases 1-3 are complete and battle-tested
+- `0.3.0` — Phase 4 gate (hardening audit, 3 agents, eval validation)
+- `1.0.0` when all phases are complete and battle-tested
 - Breaking changes bump MINOR during 0.x (pre-1.0)
 
 ## Migration from Legacy Plugins
@@ -214,8 +237,37 @@ plugins as scaffolding for their unique features.
 **Migrated to claude-core (removed from legacy):**
 - Planning: plan-engine, plan-verifier (from task-planner's wave-decomposer, file-ownership, verification-runner, spec-compliance-reviewer)
 - Brainstorm: brainstorm-session, brainstorm-decision-writer (from both task-planner and agency)
-- Utilities: decision-reader (from both), session-recovery, check-wave-complete, check-trace-written (from both)
+- Utilities: brainstorm-decision-reader (from both), session-recovery, check-wave-complete, check-trace-written (from both)
 - Schemas: plan-schema.yml, state-schema.yml (from task-planner)
 
 **Remaining in task-planner:** plugin-* commands/skills, version-* skills, agents
-**Remaining in agency:** brand/design/content/dev/devops skills, agency:* commands, agents
+**Remaining in agency:** brand/design/content/dev/devops skills, agency:* commands, agents (security-reviewer ported as security-auditor)
+
+## Agent Architecture
+
+Claude-core provides autonomous validation agents for plugin quality gates.
+
+| Agent | Purpose | Model | Tools |
+|-------|---------|-------|-------|
+| `plugin-validator` | Full plugin structure and registry validation | inherit | Read, Grep, Glob, Bash |
+| `skill-auditor` | Deep skill quality review against conventions | inherit | Read, Grep, Glob |
+| `security-auditor` | Infrastructure security scan (hooks, scripts, configs) | opus | Read, Grep, Glob, Bash |
+
+**Agent directory:** `plugins/claude-core/agents/`
+**Orchestration guide:** `resources/agent-orchestration.md`
+
+Agents are auto-discovered from the filesystem. The ecosystem.json `agents` array
+is for documentation and validation tooling, not runtime discovery.
+
+### Agents vs Reviewer Skills
+
+Reviewer skills (hook-reviewer, skill-reviewer, plugin-reviewer) provide the
+review *methodology* — checklists, standards, process steps. Agents are the
+*autonomous execution* of those review processes. An agent can apply a reviewer
+skill's standards without human invocation, running independently as a subagent.
+
+### Eval Sub-agents
+
+The `skill-creator` skill has 3 eval agents under `skills/skill-creator/agents/`.
+These are scoped sub-agents for eval infrastructure, not top-level plugin agents.
+They do not appear in `ecosystem.json`.

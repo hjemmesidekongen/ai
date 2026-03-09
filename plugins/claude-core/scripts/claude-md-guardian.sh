@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+set -euo pipefail
 # claude-core — CLAUDE.md guardian hook (PostToolUse)
 # Fires when Write or Edit targets a file containing "CLAUDE.md" in the name.
 # Outputs advisory guidance for Claude to self-validate the change.
