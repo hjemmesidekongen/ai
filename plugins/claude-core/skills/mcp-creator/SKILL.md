@@ -3,7 +3,9 @@ name: mcp-creator
 description: >
   Create and configure MCP server integrations for Claude Code plugins. Use when
   adding external service connections, setting up .mcp.json, configuring stdio/SSE/HTTP/WebSocket
-  servers, or integrating MCP tools into commands and agents.
+  servers, integrating MCP tools into commands and agents, debugging MCP server
+  connectivity issues, adding tool annotations, or configuring OAuth and API key
+  authentication for MCP servers.
 user_invocable: false
 interactive: false
 depends_on: [plugin-creator]
