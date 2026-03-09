@@ -145,6 +145,7 @@ All runtime state lives in `.ai/` (project-scoped), never in the plugin director
 | Brainstorm | `.ai/brainstorm/{name}/` | Transcripts, decisions |
 | Roadmap | `.ai/roadmap.yml` | All future ideas and deferred work |
 | Memory | `~/.claude/projects/{project}/memory/MEMORY.md` | Auto-memory |
+| Context snapshot | `.ai/context/snapshot.yml` | Enriched session state — survives compaction. Sections: workspace, project, working_state, session_trail (intent, decisions_modified, next_step), probes. Target: <80 lines. |
 
 ## Hook Design Pattern
 

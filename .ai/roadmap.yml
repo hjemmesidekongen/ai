@@ -993,6 +993,22 @@ items:
 
   # --- External reference findings ---
 
+  - id: RL-088
+    title: "Artifact trail in compact snapshots"
+    description: >
+      Enhanced assemble-context.sh with session_trail section (intent, decisions_modified,
+      next_step) and compression probes. Intent extracted from active plan.md title.
+      Decisions detected from trace-light.log writes to *decision* files.
+      Next step from first pending task in active plan. Probes are contextual
+      self-check questions Claude verifies after /compact.
+    category: core
+    plugin: claude-core
+    priority: done
+    completed: "2026-03-09"
+    source: ".ai/research/external-reference-findings.md (C1)"
+    added: "2026-03-09"
+    tags: [context, compaction, snapshot, external-reference]
+
   - id: RL-087
     title: "Strategic compact trigger hook"
     description: >
@@ -1010,16 +1026,16 @@ items:
 # ============================================================
 # STATS (updated 2026-03-09)
 # ============================================================
-# Total items: 86
+# Total items: 87
 #
-# Done: 36
+# Done: 37
 #   Phase 1: 9 (RL-001–009)
 #   Phase 2: 8 (RL-010–017)
 #   Phase 3: 2 (RL-020, RL-021)
 #   Phase 4: 7 (RL-022–025, RL-074, RL-085-gate, RL-023)
 #   Iteration-2: 3 (RL-069, RL-071, RL-072)
 #   Context compaction: 6 (RL-079–082, RL-084, RL-085)
-#   External references: 1 (RL-087)
+#   External references: 2 (RL-087, RL-088)
 #
 # Later: 7
 #   Phase 3: 2 (RL-018 project-scan, RL-019 self-documenting)
