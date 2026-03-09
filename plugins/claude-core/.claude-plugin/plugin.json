@@ -135,6 +135,11 @@
         "hooks": [
           {
             "type": "command",
+            "command": "bash ${CLAUDE_PLUGIN_ROOT}/scripts/autopilot-stop-hook.sh",
+            "timeout": 30
+          },
+          {
+            "type": "command",
             "command": "bash ${CLAUDE_PLUGIN_ROOT}/scripts/session-context-stop.sh 2>/dev/null || true",
             "timeout": 10
           },

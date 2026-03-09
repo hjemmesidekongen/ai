@@ -9,7 +9,9 @@
     "plan-execute",
     "plan-status",
     "plan-resume",
-    "full-review"
+    "full-review",
+    "autopilot-run",
+    "autopilot-cancel"
   ],
   "skills": [
     "roadmap-capture",
@@ -46,6 +48,19 @@
     "agent-teams",
     "auto-doc"
   ],
-  "agents": ["plugin-validator", "skill-auditor", "security-auditor", "component-reviewer", "architect-reviewer", "refactoring-specialist", "knowledge-synthesizer", "context-manager", "tdd-orchestrator", "error-detective", "incident-responder", "agent-reviewer"],
+  "agents": [
+    "plugin-validator",
+    "skill-auditor",
+    "security-auditor",
+    "component-reviewer",
+    "architect-reviewer",
+    "refactoring-specialist",
+    "knowledge-synthesizer",
+    "context-manager",
+    "tdd-orchestrator",
+    "error-detective",
+    "incident-responder",
+    "agent-reviewer"
+  ],
   "dependencies": []
 }

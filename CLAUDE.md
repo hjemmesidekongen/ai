@@ -1,9 +1,11 @@
 # Claude Local Workspace
 
 ## What This Is
-Two plugins in a monorepo:
-- **claude-core** (`plugins/claude-core/`) — Foundation plugin: planning, brainstorm, tracing, memory governance, roadmap, doc governance, creator/reviewer tooling, and validation agents (33 skills, 10 commands, 12 agents).
+Four plugins in a monorepo (two active, two planned):
+- **claude-core** (`plugins/claude-core/`) — Foundation plugin: planning, brainstorm, tracing, memory governance, roadmap, doc governance, creator/reviewer tooling, autopilot, and validation agents (33 skills, 12 commands, 12 agents).
 - **agency** (`plugins/agency/`) — Digital agency plugin: brand, design, content, dev, deploy pipelines (11 agents — security-reviewer ported to claude-core).
+- **dev-engine** (`plugins/dev-engine/`) — (planned) Generic development execution: task decomposition, agent dispatch, tech knowledge, disciplines, visual verification, completion gates.
+- **taskflow** (`plugins/taskflow/`) — (planned) Task management and workplace integration: Jira ingestion, local task storage, contradiction detection, project profiles, QA handover.
 
 ## Context Recovery
 After `/compact` or when context seems incomplete, read `.ai/context/snapshot.yml` for working state (workspace, project, active plan, modified files). This file is written by PreCompact, Stop, and SessionStart hooks via `assemble-context.sh` and persists on disk.
@@ -46,6 +48,7 @@ plugins/
                                      # agent-reviewer
     commands/                        # trace-full, roadmap-add, roadmap-view, brainstorm-start,
                                      # brainstorm-decide, plan-create, plan-execute, plan-status, plan-resume,
+                                     # autopilot-run, autopilot-cancel,
                                      # full-review
     skills/
       roadmap-capture/               # Auto-capture out-of-scope ideas
@@ -84,6 +87,7 @@ plugins/
     scripts/                         # session-recovery, trace-light, check-wave-complete, check-trace-written,
                                      # doc-stale-check, port-dedup-check, cache-clear, verification-gate-stop,
                                      # observation-recorder, scope-guard, tdd-gate, plan-gate, compact-gate-pre/post,
+                                     # setup-autopilot, autopilot-stop-hook,
                                      # prevent-direct-push, debug-window
       tests/                         # Hook unit tests (test-tdd-gate.sh, test-scope-guard.sh, test-plan-gate.sh)
     resources/                       # error-annotation-format, memory-rules, agent-orchestration, instincts-schema
@@ -127,6 +131,8 @@ docs/
 | `/agency:status` | Show project status |
 | `/agency:switch` | Switch active project |
 | `/agency:scan` | Scan existing project for agency integration |
+| `/claude-core:autopilot-run` | Start autopilot loop (autonomous iteration with stop hook) |
+| `/claude-core:autopilot-cancel` | Cancel active autopilot loop |
 
 ## Progress
 
