@@ -26,6 +26,7 @@ Execute a wave plan sequentially. Each wave completes and passes verification be
    - Verify plan.yml and state.yml exist
    - **Read plan.md** — this contains the implementation rules for this plan.
      These rules apply to every task. Load them into context now.
+   - Create `.ai/plans/<name>/artifacts/` directory if it doesn't exist
    - Check for unresolved errors from prior attempts
    - If errors exist → show them and ask whether to proceed or fix first
 
@@ -34,9 +35,11 @@ Execute a wave plan sequentially. Each wave completes and passes verification be
    For each wave:
    a. Update state: wave status → `in_progress`, `current_phase` → wave name
    b. If `parallel: true` → dispatch tasks as parallel Agent subagents
-      - Each agent writes findings to `.ai/plans/<name>/artifacts/<wave>-<task>-findings.md`
+      - Each agent writes findings to `.ai/plans/<name>/artifacts/<wave>-<task>-output.md`
       - See forward-message pattern in `resources/agent-orchestration.md`
    c. If `parallel: false` → execute tasks sequentially
+      - Before starting each task: check if any `depends_on` tasks declared an `artifact`
+        → read those artifact files before proceeding (forward-message pattern)
    d. After all tasks complete → **read artifact files directly** (never paraphrase agent responses)
       → run **plan-verifier** skill
    e. If verification type is `ab_benchmark`:

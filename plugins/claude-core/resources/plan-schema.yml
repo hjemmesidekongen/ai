@@ -22,6 +22,9 @@ plan:
       files_read: [string]   # paths this task reads (no ownership)
       status: pending | in_progress | completed | failed | skipped
       model_tier: junior | senior | principal  # junior=Haiku, senior=Sonnet, principal=Opus
+      artifact: string         # optional — path for step output file (relative to plan dir)
+                               # convention: artifacts/<wave>-<task>-output.md
+                               # downstream tasks read this file before starting
 
   # --- Waves (ordered execution groups) ---
   # Tasks within a wave run in parallel (if parallel: true) after

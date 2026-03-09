@@ -98,6 +98,13 @@ Conforming to `plugins/claude-core/resources/plan-schema.yml`:
 - Flat task list with status, model_tier added
 - Wave definitions with verification blocks
 - All statuses set to `pending`
+- For tasks that produce intermediate findings for downstream tasks, set `artifact`:
+  ```yaml
+  - id: t1
+    name: "Research phase"
+    artifact: "artifacts/wave1-t1-output.md"   # downstream tasks read this
+  ```
+  The artifacts directory (`.ai/plans/<name>/artifacts/`) is created at plan init time.
 
 ### state.yml
 Conforming to `plugins/claude-core/resources/state-schema.yml`:

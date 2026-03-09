@@ -27,6 +27,9 @@ state:
         passed: boolean
         details: string
       artifacts: [string]   # files created or modified
+      step_artifacts: [string] # intermediate output files written during this phase
+                                # convention: .ai/plans/<name>/artifacts/<wave>-<task>-output.md
+                                # downstream phases read these before executing
 
   # --- Error tracking ---
   # Survives /compact and session restarts.
