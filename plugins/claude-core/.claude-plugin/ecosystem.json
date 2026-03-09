@@ -29,7 +29,8 @@
     "mcp-creator",
     "plugin-settings",
     "verification-gate",
-    "git-worktree-isolation"
+    "git-worktree-isolation",
+    "root-cause-debugging"
   ],
   "agents": ["plugin-validator", "skill-auditor", "security-auditor"],
   "dependencies": []
