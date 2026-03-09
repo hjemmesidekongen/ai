@@ -77,6 +77,7 @@ plugins/claude-core/
 │   ├── plugin-reviewer/
 │   ├── verification-gate/
 │   ├── git-worktree-isolation/
+│   ├── root-cause-debugging/
 │   ├── plugin-settings/
 │   ├── plan-engine/
 │   ├── plan-verifier/

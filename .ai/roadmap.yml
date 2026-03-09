@@ -993,6 +993,21 @@ items:
 
   # --- External reference findings ---
 
+  - id: RL-093
+    title: "Root-cause-first debugging skill"
+    description: >
+      New skill (root-cause-debugging) enforcing 4-phase protocol before any fix:
+      Investigate (gather all evidence) → Pattern analysis → Hypothesis (testable,
+      specific) → Implement. Includes root-cause tracing, defense-in-depth layers,
+      condition-based waiting, and 3-failures architecture escalation rule.
+    category: core
+    plugin: claude-core
+    priority: done
+    completed: "2026-03-09"
+    source: ".ai/research/external-reference-findings.md (B1)"
+    added: "2026-03-09"
+    tags: [debugging, quality, skills, external-reference]
+
   - id: RL-092
     title: "File-based step outputs in plans"
     description: >
@@ -1088,16 +1103,16 @@ items:
 # ============================================================
 # STATS (updated 2026-03-09)
 # ============================================================
-# Total items: 91
+# Total items: 92
 #
-# Done: 41
+# Done: 42
 #   Phase 1: 9 (RL-001–009)
 #   Phase 2: 8 (RL-010–017)
 #   Phase 3: 2 (RL-020, RL-021)
 #   Phase 4: 7 (RL-022–025, RL-074, RL-085-gate, RL-023)
 #   Iteration-2: 3 (RL-069, RL-071, RL-072)
 #   Context compaction: 6 (RL-079–082, RL-084, RL-085)
-#   External references: 6 (RL-087, RL-088, RL-089, RL-090, RL-091, RL-092)
+#   External references: 7 (RL-087–RL-093)
 #
 # Later: 7
 #   Phase 3: 2 (RL-018 project-scan, RL-019 self-documenting)

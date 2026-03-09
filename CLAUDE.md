@@ -2,7 +2,7 @@
 
 ## What This Is
 Two plugins in a monorepo:
-- **claude-core** (`plugins/claude-core/`) — Foundation plugin: planning, brainstorm, tracing, memory governance, roadmap, doc governance, creator/reviewer tooling, and validation agents (19 skills, 9 commands, 3 agents).
+- **claude-core** (`plugins/claude-core/`) — Foundation plugin: planning, brainstorm, tracing, memory governance, roadmap, doc governance, creator/reviewer tooling, and validation agents (20 skills, 9 commands, 3 agents).
 - **agency** (`plugins/agency/`) — Digital agency plugin: brand, design, content, dev, deploy pipelines (11 agents — security-reviewer ported to claude-core).
 
 ## Context Recovery
@@ -35,7 +35,7 @@ After `/compact` or when context seems incomplete, read `.ai/context/snapshot.ym
   prompts/                           # Prompt templates
   roadmap.yml                        # 72-item roadmap across 5 phases
 plugins/
-  claude-core/                       # Foundation plugin (19 skills, 9 commands, 3 agents)
+  claude-core/                       # Foundation plugin (20 skills, 9 commands, 3 agents)
     .claude-plugin/
       plugin.json                    # v0.3.0, hooks: SessionStart, Stop, PostToolUse
       ecosystem.json                 # Component registry
@@ -62,6 +62,7 @@ plugins/
       plugin-reviewer/               # Review plugins (read-only)
       verification-gate/             # 5-step proof protocol before claiming done
       git-worktree-isolation/        # Isolated branch work via git worktrees
+      root-cause-debugging/          # 4-phase investigation before any fix
     scripts/                         # session-recovery, trace-light, check-wave-complete, check-trace-written,
                                      # doc-stale-check, port-dedup-check, cache-clear, verification-gate-stop
     resources/                       # error-annotation-format, memory-rules, agent-orchestration
