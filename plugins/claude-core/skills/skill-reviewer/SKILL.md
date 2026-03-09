@@ -3,7 +3,9 @@ name: skill-reviewer
 description: >
   Review and validate Claude Code skills for structure, content quality, and
   progressive disclosure. Use when reviewing skills after creation, auditing existing
-  skills for issues, or validating skill changes before committing.
+  skills for issues, validating skill changes before committing, checking description
+  trigger quality, verifying frontmatter compliance, or auditing all skills in a
+  plugin for consistency.
 user_invocable: false
 interactive: false
 depends_on:
