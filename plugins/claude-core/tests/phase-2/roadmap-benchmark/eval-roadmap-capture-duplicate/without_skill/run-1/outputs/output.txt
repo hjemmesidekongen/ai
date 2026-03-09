@@ -1,3 +1,0 @@
-Already tracked — `RL-025` in `.ai/roadmap.yml` covers exactly this: "Screenshot loop for visual regression — Automated visual comparison of component states before/after changes."
-
-No action needed. Want to bump its priority or start scoping it?

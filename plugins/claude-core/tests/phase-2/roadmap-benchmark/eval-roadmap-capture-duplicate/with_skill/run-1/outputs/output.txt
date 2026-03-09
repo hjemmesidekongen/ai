@@ -1,3 +1,0 @@
-Already tracked as **RL-025**: "Screenshot loop for visual regression — Automated visual comparison of component states before/after changes."
-
-No new entry added — this covers the same idea. If you want to refine the scope or add detail to RL-025, let me know.
