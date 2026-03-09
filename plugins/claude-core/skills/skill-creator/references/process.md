@@ -294,7 +294,44 @@ If the skill is user-invocable (`user_invocable: true`), also add a command entr
 
 Internal skills (`user_invocable: false`) do not need command entries.
 
-## 6-step creation workflow
+## 7-step creation workflow (TDD-first)
+
+### Step 0 — Write baseline eval (TDD)
+
+Before writing any skill content, write the evaluation first.
+
+**Why:** Skills written before tests are optimised to pass the tests you wrote,
+not to fix actual behavior gaps. Baseline-first ensures the skill targets real
+violations, not invented ones.
+
+**How:**
+
+1. Create `evals.json` in the skill directory with test cases representing the
+   behavior you want the skill to produce. See `references/schemas.md`.
+
+2. Run the eval **without** the skill active:
+   ```bash
+   python3 scripts/run_eval.py --skill-dir plugins/<plugin>/skills/<skill-name> --no-skill
+   ```
+
+3. Record which cases fail (violations). These are your red tests.
+
+4. Write SKILL.md (Step 3) targeting those specific violations — not generic
+   "best practice" content.
+
+5. Run the eval **with** the skill:
+   ```bash
+   python3 scripts/run_eval.py --skill-dir plugins/<plugin>/skills/<skill-name>
+   ```
+
+6. All previously failing cases should now pass (green). Previously passing
+   cases should still pass (no regression).
+
+**Loophole closing:** After the skill passes, run the eval with one adversarial
+variant per violation: can the behavior still occur through an indirect path?
+If yes, add that case to evals.json and iterate.
+
+---
 
 ### Step 1 — Define purpose and triggers
 
