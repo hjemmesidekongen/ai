@@ -43,7 +43,8 @@
     "mermaid-diagrams",
     "writing-clearly-and-concisely",
     "session-handoff",
-    "agent-teams"
+    "agent-teams",
+    "auto-doc"
   ],
   "agents": ["plugin-validator", "skill-auditor", "security-auditor", "component-reviewer", "architect-reviewer", "refactoring-specialist", "knowledge-synthesizer", "context-manager", "tdd-orchestrator", "error-detective", "incident-responder", "agent-reviewer"],
   "dependencies": []
