@@ -8,3 +8,6 @@
 ._*
 .Spotlight-V100
 .Trashes
+external-references/
+__pycache__/
+*.pyc
