@@ -1,10 +1,10 @@
-active: "blik"
+active: "claude-local-workspace"
 projects:
-  blik:
+  claude-local-workspace:
     app_path: "apps/blik-web"
     brand_package_path: null
-    brand_reference: ".ai/projects/blik/brand/brand-reference.yml"
-    project_dir: ".ai/projects/blik"
+    brand_reference: ".ai/projects/claude-local-workspace/brand/brand-reference.yml"
+    project_dir: ".ai/projects/claude-local-workspace"
     created_at: "2026-03-03T17:30:00Z"
     modules:
       brand: "completed"
