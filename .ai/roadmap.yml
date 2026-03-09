@@ -1146,6 +1146,21 @@ items:
     added: "2026-03-09"
     tags: [context, compaction, hooks, external-reference]
 
+  - id: RL-102
+    title: "Lazy-load skill activation triggers"
+    description: >
+      Added optional triggers: field to skill YAML schema. Updated skill-creator
+      process.md with trigger guide (quality rules, example, when to use).
+      Updated skill-auditor to validate triggers field when present.
+      Added trigger-based dispatch section to agent-orchestration.md.
+    category: core
+    plugin: claude-core
+    priority: done
+    completed: "2026-03-09"
+    source: ".ai/research/external-reference-findings.md (K3)"
+    added: "2026-03-09"
+    tags: [skills, schema, context-optimization, external-reference]
+
   - id: RL-101
     title: "Component reviewer validation agent"
     description: >
@@ -1224,16 +1239,16 @@ items:
 # ============================================================
 # STATS (updated 2026-03-09)
 # ============================================================
-# Total items: 99
+# Total items: 100
 #
-# Done: 49
+# Done: 50
 #   Phase 1: 9 (RL-001–009)
 #   Phase 2: 8 (RL-010–017)
 #   Phase 3: 2 (RL-020, RL-021)
 #   Phase 4: 7 (RL-022–025, RL-074, RL-085-gate, RL-023)
 #   Iteration-2: 3 (RL-069, RL-071, RL-072)
 #   Context compaction: 6 (RL-079–082, RL-084, RL-085)
-#   External references: 15 (RL-087–RL-101)
+#   External references: 16 (RL-087–RL-102)
 #
 # Later: 7
 #   Phase 3: 2 (RL-018 project-scan, RL-019 self-documenting)

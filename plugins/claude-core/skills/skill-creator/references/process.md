@@ -31,6 +31,7 @@ SKILL.md is the only mandatory file. Everything else is optional and created as 
 | `writes` | list | Yes | `[]` | Glob patterns of files this skill creates or modifies |
 | `checkpoint` | object | Yes | — | Verification gate (see checkpoint pattern below) |
 | `model_tier` | string | Yes | — | `junior`, `senior`, or `principal` — see selection guide below |
+| `triggers` | list | No | `[]` | Activation keywords for lazy-load dispatch — see trigger guide below |
 | `_source` | object | Yes | — | Provenance tracking (see below) |
 
 ### model_tier selection
@@ -45,6 +46,31 @@ Pick the lowest tier that can reliably complete the skill's task:
 
 Default to `junior`. Escalate only when the task genuinely requires reasoning depth.
 See `resources/agent-orchestration.md` for the full three-tier decision matrix.
+
+### triggers field (optional)
+
+The `triggers` field declares activation keywords — short context signals that
+indicate this skill is needed. This reduces loaded skill context footprint by
+enabling lazy-load dispatch based on keyword matching.
+
+```yaml
+triggers:
+  - "debugging"
+  - "root cause"
+  - "bug investigation"
+  - "test failing"
+```
+
+**When to add triggers:**
+- Skills with narrow activation contexts (not called constantly)
+- Skills where `description` alone may not surface the right signal
+- Skills competing with other skills for similar trigger phrases
+
+**Trigger quality rules:**
+- Use 1-4 words per trigger, not full sentences
+- Prefer nouns and verb phrases over adjectives
+- Cover the user intent, not the implementation ("debugging" not "4-phase protocol")
+- 3-8 triggers is a good range; fewer if description is highly specific
 
 ### _source block
 

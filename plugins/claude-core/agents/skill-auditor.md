@@ -31,20 +31,26 @@ Review skills for structural compliance, content quality, and adherence to proje
 - Read frontmatter and body content
 - Check for supporting directories (references/, examples/, scripts/)
 
-### 2. Validate Frontmatter (10 Required Fields)
+### 2. Validate Frontmatter (10 Required + 1 Optional Fields)
 
-| Field | Validation |
-|-------|-----------|
-| `name` | Matches directory name, kebab-case |
-| `description` | Non-empty, 50-1024 chars, no angle brackets |
-| `user_invocable` | Boolean, uses underscore not hyphen |
-| `interactive` | Boolean |
-| `depends_on` | Array (may be empty) |
-| `reads` | Array (may be empty) |
-| `writes` | Array (may be empty) |
-| `checkpoint` | Object with `required_checks` array |
-| `model_tier` | One of: junior, senior, principal |
-| `_source` | Object with required subfields |
+| Field | Required | Validation |
+|-------|----------|-----------|
+| `name` | Yes | Matches directory name, kebab-case |
+| `description` | Yes | Non-empty, 50-1024 chars, no angle brackets |
+| `user_invocable` | Yes | Boolean, uses underscore not hyphen |
+| `interactive` | Yes | Boolean |
+| `depends_on` | Yes | Array (may be empty) |
+| `reads` | Yes | Array (may be empty) |
+| `writes` | Yes | Array (may be empty) |
+| `checkpoint` | Yes | Object with `required_checks` array |
+| `model_tier` | Yes | One of: junior, senior, principal |
+| `_source` | Yes | Object with required subfields |
+| `triggers` | Optional | Array of keyword strings for lazy-load activation |
+
+For `triggers`: if present, validate it is an array of non-empty strings.
+Each trigger should be a short keyword or phrase (2-30 chars). Flag as WARNING
+if triggers are present but description already covers all triggers redundantly,
+or if triggers contain full sentences instead of keywords.
 
 ### 3. Validate Checkpoint Structure
 - Must be an object, not a bare string

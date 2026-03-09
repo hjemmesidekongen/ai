@@ -58,6 +58,21 @@ to sonnet when haiku fails costs less than starting at opus for every task.
 - _Does it require reading across 3+ files and forming a judgment?_ → senior
 - _Would an architect make a different call than a developer?_ → principal
 
+### Trigger-Based Dispatch
+
+Skills may declare a `triggers:` array in their frontmatter with activation keywords.
+When selecting a skill to dispatch, match context keywords against trigger lists
+before falling back to description scanning. Triggers reduce false-positive activations
+and allow precise targeting when multiple skills cover adjacent domains.
+
+```yaml
+# Dispatch based on triggers, then description
+triggers: ["hypothesis", "parallel investigation", "3 hypotheses"]
+```
+
+Dispatch the skill whose triggers best match the current task context. When no
+triggers match, use description similarity as the fallback.
+
 ## Dispatch Patterns
 
 ### Single Agent
