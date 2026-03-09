@@ -1146,6 +1146,22 @@ items:
     added: "2026-03-09"
     tags: [context, compaction, hooks, external-reference]
 
+  - id: RL-105
+    title: "Parallel code review orchestration skill"
+    description: >
+      New parallel-reviewer skill dispatches 4 specialized reviewers in parallel:
+      security (OWASP), performance (N+1, blocking calls), architecture (coupling,
+      boundaries), testing (coverage gaps). Each writes to an artifact file.
+      Coordinator reads artifacts directly (forward-message pattern), deduplicates,
+      ranks by severity, and writes consolidated review report.
+    category: core
+    plugin: claude-core
+    priority: done
+    completed: "2026-03-09"
+    source: ".ai/research/external-reference-findings.md (M2)"
+    added: "2026-03-09"
+    tags: [skills, code-review, orchestration, parallel, external-reference]
+
   - id: RL-104
     title: "Hypothesis-driven debugging extension (M1)"
     description: >
@@ -1271,16 +1287,16 @@ items:
 # ============================================================
 # STATS (updated 2026-03-09)
 # ============================================================
-# Total items: 102
+# Total items: 103
 #
-# Done: 52
+# Done: 53
 #   Phase 1: 9 (RL-001–009)
 #   Phase 2: 8 (RL-010–017)
 #   Phase 3: 2 (RL-020, RL-021)
 #   Phase 4: 7 (RL-022–025, RL-074, RL-085-gate, RL-023)
 #   Iteration-2: 3 (RL-069, RL-071, RL-072)
 #   Context compaction: 6 (RL-079–082, RL-084, RL-085)
-#   External references: 18 (RL-087–RL-104)
+#   External references: 19 (RL-087–RL-105)
 #
 # Later: 7
 #   Phase 3: 2 (RL-018 project-scan, RL-019 self-documenting)

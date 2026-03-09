@@ -34,7 +34,8 @@
     "instinct-extractor",
     "instinct-evolve",
     "reasoning-trace-optimizer",
-    "hypothesis-generator"
+    "hypothesis-generator",
+    "parallel-reviewer"
   ],
   "agents": ["plugin-validator", "skill-auditor", "security-auditor", "component-reviewer"],
   "dependencies": []
