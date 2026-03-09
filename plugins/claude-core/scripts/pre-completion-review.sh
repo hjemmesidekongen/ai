@@ -19,14 +19,14 @@ WARNING_LINES=""
 
 # ── Step 1: Read light trace log ──
 if [ -f "$TRACE_LOG" ]; then
-  while IFS='|' read -r ts tool status duration context severity summary rest; do
+  while IFS='|' read -r ts tool status context severity summary rest; do
     # Only today's entries
     case "$ts" in
       "${TODAY}"*) ;;
       *) continue ;;
     esac
 
-    # Error-annotated lines: status == "error" AND has severity + summary (field_count >= 7)
+    # Error-annotated lines: status == "error" AND has severity + summary (field_count >= 6)
     [ "$status" != "error" ] && continue
     [ -z "$severity" ] && continue
     [ -z "$summary" ] && continue

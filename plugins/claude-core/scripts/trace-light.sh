@@ -2,7 +2,7 @@
 set -euo pipefail
 # claude-core — light tracing hook (PostToolUse, always-on)
 # Appends one line per tool invocation to .ai/traces/trace-light.log
-# Format: timestamp|tool_name|status|duration|context
+# Format: timestamp|tool_name|status|context
 # Optimized for <30ms — minimal subprocesses, bash builtins where possible.
 # Always exits 0.
 
@@ -35,17 +35,6 @@ case "$INPUT" in
           STATUS="error" ;;
       esac
     fi ;;
-esac
-
-# duration_ms (optional field)
-DURATION="-"
-case "$INPUT" in
-  *'"duration_ms":'*)
-    D="${INPUT#*\"duration_ms\":}"
-    D="${D%%[,\}]*}"
-    D="${D%%[^0-9]*}"
-    [ -n "$D" ] && DURATION="${D}ms"
-    ;;
 esac
 
 # Extract context field based on tool type
@@ -125,6 +114,6 @@ if [ -f "$TRACE_FILE" ]; then
 fi
 
 # Append trace entry
-echo "${TS}|${TOOL}|${STATUS}|${DURATION}|${CONTEXT}" >> "$TRACE_FILE" 2>/dev/null
+echo "${TS}|${TOOL}|${STATUS}|${CONTEXT}" >> "$TRACE_FILE" 2>/dev/null
 
 exit 0

@@ -12,25 +12,25 @@
 # ----------------------------------------------------------
 # LIGHT TRACE FORMAT (extends the standard pipe-delimited line)
 # ----------------------------------------------------------
-# Standard: timestamp|tool_name|status|duration|context
-# Error:    timestamp|tool_name|error|duration|context|severity|error_summary
+# Standard: timestamp|tool_name|status|context
+# Error:    timestamp|tool_name|error|context|severity|error_summary
 #
 # The two extra pipe fields (severity, error_summary) distinguish
 # error-annotated lines from standard lines. Parsers detect error
-# annotations by: status == "error" AND field_count >= 7.
+# annotations by: status == "error" AND field_count >= 6.
 
 light_trace:
-  standard_fields: "timestamp|tool_name|status|duration|context"
-  error_fields: "timestamp|tool_name|error|duration|context|severity|error_summary"
+  standard_fields: "timestamp|tool_name|status|context"
+  error_fields: "timestamp|tool_name|error|context|severity|error_summary"
   field_count:
-    standard: 5
-    error_annotated: 7
-  detection_rule: "status == 'error' AND field_count >= 7"
+    standard: 4
+    error_annotated: 6
+  detection_rule: "status == 'error' AND field_count >= 6"
 
   examples:
-    standard_error: "2026-03-08T14:22:01Z|Bash|error|-|npm test|critical|Tests fail — 3 assertions broken in auth module"
-    warning: "2026-03-08T14:22:01Z|Edit|error|-|src/api.ts|warning|Deprecated fetch wrapper used — works but will break in v3"
-    info: "2026-03-08T14:22:01Z|Read|error|-|config.json|info|Unexpected format (JSONC not JSON) — handled by stripping comments"
+    standard_error: "2026-03-08T14:22:01Z|Bash|error|npm test|critical|Tests fail — 3 assertions broken in auth module"
+    warning: "2026-03-08T14:22:01Z|Edit|error|src/api.ts|warning|Deprecated fetch wrapper used — works but will break in v3"
+    info: "2026-03-08T14:22:01Z|Read|error|config.json|info|Unexpected format (JSONC not JSON) — handled by stripping comments"
 
 # ----------------------------------------------------------
 # FULL TRACE FORMAT (structured YAML entry)

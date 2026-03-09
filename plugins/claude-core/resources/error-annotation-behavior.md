@@ -17,8 +17,8 @@ the format in `plugins/claude-core/resources/error-annotation-format.yml`.
 - Write the annotation in the moment — do not rationalize or reconstruct after the fact
 - Grade severity honestly: critical (blocks completion), warning (review later), info (noted)
 - For light tracing: append an error-annotated line to `.ai/traces/trace-light.log`
-  Format: `timestamp|tool_name|error|duration|context|severity|error_summary`
-  The two extra pipe fields (severity, error_summary) extend the standard 5-field format
+  Format: `timestamp|tool_name|error|context|severity|error_summary`
+  The two extra pipe fields (severity, error_summary) extend the standard 4-field format
 - For full tracing: add a structured error entry to the session YAML at
   `.ai/traces/sessions/trace-full-{date}.yml` under the `errors:` array
 - The annotation is shared knowledge across sub-agents — write clearly enough that
