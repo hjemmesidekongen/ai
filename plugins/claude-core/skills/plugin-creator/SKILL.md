@@ -3,7 +3,9 @@ name: plugin-creator
 description: >
   Create Claude Code plugins with correct directory structure, plugin.json manifest,
   component organization, and marketplace registration. Use when scaffolding new plugins,
-  adding components to existing plugins, or troubleshooting plugin loading issues.
+  adding components to existing plugins, troubleshooting plugin loading or registration
+  issues, configuring ecosystem.json, publishing to the marketplace, or setting up
+  plugin.json hooks and metadata.
 user_invocable: false
 interactive: false
 depends_on:
