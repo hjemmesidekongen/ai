@@ -15,6 +15,11 @@
             "type": "command",
             "command": "bash ${CLAUDE_PLUGIN_ROOT}/scripts/compact-gate-pre.sh 2>/dev/null",
             "timeout": 30
+          },
+          {
+            "type": "command",
+            "command": "bash ${CLAUDE_PLUGIN_ROOT}/scripts/scope-guard.sh 2>/dev/null || true",
+            "timeout": 15
           }
         ]
       }

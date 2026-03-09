@@ -37,7 +37,7 @@ After `/compact` or when context seems incomplete, read `.ai/context/snapshot.ym
 plugins/
   claude-core/                       # Foundation plugin (20 skills, 9 commands, 3 agents)
     .claude-plugin/
-      plugin.json                    # v0.3.0, hooks: SessionStart, Stop, PostToolUse
+      plugin.json                    # v0.3.0, hooks: PreToolUse, PostToolUse, PreCompact, SessionStart, Stop
       ecosystem.json                 # Component registry
     agents/                          # plugin-validator, skill-auditor, security-auditor
     commands/                        # trace-full, roadmap-add, roadmap-view, brainstorm-start,

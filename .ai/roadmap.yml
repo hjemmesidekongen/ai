@@ -1146,19 +1146,34 @@ items:
     added: "2026-03-09"
     tags: [context, compaction, hooks, external-reference]
 
+  - id: RL-097
+    title: "Scope-guard PreToolUse hook"
+    description: >
+      Advisory PreToolUse hook (Write|Edit) that warns when a file being
+      written is not in the current wave's declared task writes list.
+      Non-blocking (exit 0). Reads active plan state.yml. Only fires when
+      writes arrays are non-empty to avoid false positives.
+    category: core
+    plugin: claude-core
+    priority: done
+    completed: "2026-03-09"
+    source: ".ai/research/external-reference-findings.md (L2)"
+    added: "2026-03-09"
+    tags: [hooks, scope, quality-gate, external-reference]
+
 # ============================================================
 # STATS (updated 2026-03-09)
 # ============================================================
-# Total items: 94
+# Total items: 95
 #
-# Done: 44
+# Done: 45
 #   Phase 1: 9 (RL-001–009)
 #   Phase 2: 8 (RL-010–017)
 #   Phase 3: 2 (RL-020, RL-021)
 #   Phase 4: 7 (RL-022–025, RL-074, RL-085-gate, RL-023)
 #   Iteration-2: 3 (RL-069, RL-071, RL-072)
 #   Context compaction: 6 (RL-079–082, RL-084, RL-085)
-#   External references: 10 (RL-087–RL-096)
+#   External references: 11 (RL-087–RL-097)
 #
 # Later: 7
 #   Phase 3: 2 (RL-018 project-scan, RL-019 self-documenting)
