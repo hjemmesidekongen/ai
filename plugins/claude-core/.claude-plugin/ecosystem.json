@@ -42,6 +42,6 @@
     "mermaid-diagrams",
     "writing-clearly-and-concisely"
   ],
-  "agents": ["plugin-validator", "skill-auditor", "security-auditor", "component-reviewer", "architect-reviewer", "refactoring-specialist", "knowledge-synthesizer"],
+  "agents": ["plugin-validator", "skill-auditor", "security-auditor", "component-reviewer", "architect-reviewer", "refactoring-specialist", "knowledge-synthesizer", "context-manager"],
   "dependencies": []
 }
