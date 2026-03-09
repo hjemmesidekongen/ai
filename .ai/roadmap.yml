@@ -1146,6 +1146,22 @@ items:
     added: "2026-03-09"
     tags: [context, compaction, hooks, external-reference]
 
+  - id: RL-106
+    title: "File-ownership strategy for parallel development"
+    description: >
+      New file-ownership skill for conflict-free parallel agent dispatch.
+      Strict one-stream-one-file ownership model. Interface contracts at
+      stream boundaries written before implementation. ownership.yml schema
+      with stream assignments, reads, depends_on. Integration guide for
+      plan-engine wave planning. Conflict resolution rules for shared files.
+    category: core
+    plugin: claude-core
+    priority: done
+    completed: "2026-03-09"
+    source: ".ai/research/external-reference-findings.md (M3)"
+    added: "2026-03-09"
+    tags: [skills, parallel-dev, file-ownership, plan-engine, external-reference]
+
   - id: RL-105
     title: "Parallel code review orchestration skill"
     description: >
@@ -1287,16 +1303,16 @@ items:
 # ============================================================
 # STATS (updated 2026-03-09)
 # ============================================================
-# Total items: 103
+# Total items: 104
 #
-# Done: 53
+# Done: 54
 #   Phase 1: 9 (RL-001–009)
 #   Phase 2: 8 (RL-010–017)
 #   Phase 3: 2 (RL-020, RL-021)
 #   Phase 4: 7 (RL-022–025, RL-074, RL-085-gate, RL-023)
 #   Iteration-2: 3 (RL-069, RL-071, RL-072)
 #   Context compaction: 6 (RL-079–082, RL-084, RL-085)
-#   External references: 19 (RL-087–RL-105)
+#   External references: 20 (RL-087–RL-106)
 #
 # Later: 7
 #   Phase 3: 2 (RL-018 project-scan, RL-019 self-documenting)
