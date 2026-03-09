@@ -35,6 +35,29 @@ Default to `inherit` unless the agent has a strong reason for a specific model.
 Leadership agents (tech leads, architects) use `opus`. Workers use `haiku` or
 `sonnet` based on task risk.
 
+### Three-Tier Decision Matrix
+
+Use this matrix to select model tier for any dispatch. Match the first row that fits.
+
+| Signal | Tier | Rationale |
+|--------|------|-----------|
+| Read-only scan, counting, pattern match, format check | junior | No judgment, fast, cheap |
+| Single-file edit, template fill, boilerplate generation | junior | Mechanical, low risk |
+| Multi-file implementation, logic decisions, test writing | senior | Judgment needed |
+| Code review with reasoning, quality assessment, debugging | senior | Multi-step analysis |
+| Architecture decision, security review, cross-system design | principal | Max reasoning depth |
+| Orchestration of other agents, critical gate decisions | principal | Accountability required |
+
+**Cost impact**: junior is ~20x cheaper than principal. Default to junior and escalate
+only when the task genuinely requires judgment or reasoning depth. Escalating haiku
+to sonnet when haiku fails costs less than starting at opus for every task.
+
+### Quick selection heuristic
+
+- _Can I specify the output format completely?_ → junior
+- _Does it require reading across 3+ files and forming a judgment?_ → senior
+- _Would an architect make a different call than a developer?_ → principal
+
 ## Dispatch Patterns
 
 ### Single Agent

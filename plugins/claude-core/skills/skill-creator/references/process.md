@@ -30,8 +30,21 @@ SKILL.md is the only mandatory file. Everything else is optional and created as 
 | `reads` | list | Yes | `[]` | Glob patterns of files this skill reads |
 | `writes` | list | Yes | `[]` | Glob patterns of files this skill creates or modifies |
 | `checkpoint` | object | Yes | — | Verification gate (see checkpoint pattern below) |
-| `model_tier` | string | Yes | — | `junior`, `senior`, or `principal` — complexity indicator |
+| `model_tier` | string | Yes | — | `junior`, `senior`, or `principal` — see selection guide below |
 | `_source` | object | Yes | — | Provenance tracking (see below) |
+
+### model_tier selection
+
+Pick the lowest tier that can reliably complete the skill's task:
+
+| Tier | When to use |
+|------|-------------|
+| `junior` | Mechanical tasks: file validation, syntax checks, format compliance, boilerplate generation |
+| `senior` | Judgment tasks: multi-file analysis, code review, quality assessment, debugging |
+| `principal` | Architectural tasks: security review, cross-system design, orchestration decisions |
+
+Default to `junior`. Escalate only when the task genuinely requires reasoning depth.
+See `resources/agent-orchestration.md` for the full three-tier decision matrix.
 
 ### _source block
 
