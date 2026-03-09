@@ -38,7 +38,8 @@
     "parallel-reviewer",
     "file-ownership",
     "c4-architecture",
-    "reducing-entropy"
+    "reducing-entropy",
+    "mermaid-diagrams"
   ],
   "agents": ["plugin-validator", "skill-auditor", "security-auditor", "component-reviewer", "architect-reviewer", "refactoring-specialist", "knowledge-synthesizer"],
   "dependencies": []
