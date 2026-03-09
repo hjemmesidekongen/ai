@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 set -euo pipefail
+trap 'exit 0' ERR
 # claude-core — compact gate (PreToolUse on Write|Edit)
 # Blocks writes when compact is needed AND the target file is not part of the current unit.
 # Unit-completion artifacts (SKILL.md, commands/*.md, agents/*.md, etc.) are allowed through
