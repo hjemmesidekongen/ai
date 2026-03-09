@@ -79,3 +79,7 @@ Eval agents (`agents/grader.md`, `comparator.md`, `analyzer.md`) handle grading,
 ## Quality dimensions
 
 Skills are scored on 8 dimensions (120 points). The most important: **knowledge delta** — does this add expert-only knowledge, or does it repeat what Claude already knows? Five skill patterns exist (Mindset, Navigation, Philosophy, Process, Tool). Full framework: `references/quality-dimensions.md`.
+
+## Progressive disclosure
+
+Skills follow a 3-tier loading model: metadata (always), SKILL.md ≤80 lines (on activate), references/ (on demand). Every reference file needs a loading trigger in SKILL.md. Full architecture: `references/progressive-disclosure.md`.
