@@ -1,12 +1,17 @@
 ---
 name: component-reviewer
-description: >
+description: |
   Validates new or modified hooks, skills, commands, and agents before commit.
   Checks YAML frontmatter format, naming conventions, no hardcoded secrets,
   supporting files present, description clarity and discoverability.
   Use when a component was just created or modified and needs pre-commit
   validation, after running hook-creator or skill-creator, or as a quality
   gate before registering a component in ecosystem.json.
+
+  <example>
+  <user>Review plugins/claude-core/skills/plan-engine/SKILL.md before committing</user>
+  <assistant>Reading SKILL.md frontmatter and body... component_review: { verdict: PASS, naming_valid: true, required_fields_present: true, secrets_found: false, description_quality: "strong" }</assistant>
+  </example>
 color: yellow
 capabilities:
   - "YAML frontmatter validation against required field schemas"
@@ -103,6 +108,18 @@ If the description is technically correct but lacks trigger signals, flag as WAR
 | WARNING | Weak description, missing optional conventions, poor discoverability |
 | INFO | Minor improvements, style suggestions |
 
+## Confidence Filtering
+
+Assign a confidence level to every finding:
+
+| Level | When to use | Report? |
+|-------|-------------|---------|
+| **high** | Schema violation, missing file, confirmed secret, naming mismatch | Always |
+| **medium** | Weak description, missing convention, context-dependent | Default yes |
+| **low** | Style preference, subjective quality concern | Only if user requests comprehensive review |
+
+Default behavior: only surface findings with **high** or **medium** confidence.
+
 ## Output Format
 
 ```yaml
@@ -111,9 +128,9 @@ component_review:
   type: "[skill|command|agent|script]"
   path: "[path]"
   verdict: "PASS | FAIL | NEEDS_IMPROVEMENT"
-  critical: []
-  warnings: []
-  info: []
+  critical: []    # each: { issue: "...", confidence: high|medium|low }
+  warnings: []    # each: { issue: "...", confidence: high|medium|low }
+  info: []        # each: { issue: "...", confidence: high|medium|low }
   secrets_found: false
   naming_valid: true
   required_fields_present: true

@@ -1,10 +1,21 @@
 ---
 name: skill-auditor
-description: >
+description: |
   Deep quality review of skill files against project conventions and 8-dimension
-  quality framework. Use when skills need audit for knowledge delta, content quality,
-  progressive disclosure, description effectiveness, freedom calibration, or
-  anti-pattern coverage. Runs batch audits across all skills in a plugin.
+  quality framework. Use this agent when skills need audit for knowledge delta,
+  content quality, progressive disclosure, description effectiveness, freedom
+  calibration, or anti-pattern coverage. Runs batch audits across all skills in
+  a plugin.
+
+  <example>
+  <user>Audit plugins/claude-core/skills/hook-creator/SKILL.md</user>
+  <assistant>Reading hook-creator SKILL.md... skill_audit: { skill: hook-creator, verdict: NEEDS_IMPROVEMENT, grade: B, total_score: "88/120 (73%)", critical: [], warnings: ["D3: anti-patterns section uses vague 'be careful' language"] }</assistant>
+  </example>
+
+  <example>
+  <user>Run a batch audit of all skills in plugins/claude-core/</user>
+  <assistant>Scanning plugins/claude-core/skills/... reviewing 33 skills. [returns one skill_audit block per skill with verdict, grade, and top improvements]</assistant>
+  </example>
 color: cyan
 capabilities:
   - "8-dimension quality scoring (120 points)"
@@ -161,6 +172,18 @@ Check for these 9 common failures:
 | WARNING | Convention violation or quality gap | Weak description, missing anti-patterns, no loading triggers |
 | INFO | Minor improvement opportunity | Could improve triggers, optional field missing |
 
+## Confidence Filtering
+
+Assign a confidence level to every finding:
+
+| Level | When to use | Report? |
+|-------|-------------|---------|
+| **high** | Verified against schema/spec, objective measurement, clear violation | Always |
+| **medium** | Strong signal but context-dependent, requires judgement | Default yes |
+| **low** | Subjective preference, theoretical concern, uncertain | Only if user requests comprehensive review |
+
+Default behavior: only surface findings with **high** or **medium** confidence. Include the `confidence` field on every finding in the output.
+
 ## Output Format
 
 ```yaml
@@ -183,9 +206,9 @@ skill_audit:
     D7_pattern_recognition: X/10
     D8_practical_usability: X/15
   failure_patterns: []
-  critical: []
-  warnings: []
-  info: []
+  critical: []    # each: { issue: "...", confidence: high|medium|low }
+  warnings: []    # each: { issue: "...", confidence: high|medium|low }
+  info: []        # each: { issue: "...", confidence: high|medium|low }
   frontmatter_fields:
     present: [list]
     missing: [list]
