@@ -991,18 +991,35 @@ items:
     added: "2026-03-09"
     tags: [tracing, bug, trace-light]
 
+  # --- External reference findings ---
+
+  - id: RL-087
+    title: "Strategic compact trigger hook"
+    description: >
+      PostToolUse hook that counts trace-light.log lines and suggests /compact
+      at every 50-call threshold. Advisory only (exit 0), samples every 10th call.
+      Prevents silent context degradation in long sessions.
+    category: core
+    plugin: claude-core
+    priority: done
+    completed: "2026-03-09"
+    source: ".ai/research/external-reference-findings.md (F4)"
+    added: "2026-03-09"
+    tags: [context, compaction, hooks, external-reference]
+
 # ============================================================
 # STATS (updated 2026-03-09)
 # ============================================================
-# Total items: 85
+# Total items: 86
 #
-# Done: 35
+# Done: 36
 #   Phase 1: 9 (RL-001–009)
 #   Phase 2: 8 (RL-010–017)
 #   Phase 3: 2 (RL-020, RL-021)
 #   Phase 4: 7 (RL-022–025, RL-074, RL-085-gate, RL-023)
 #   Iteration-2: 3 (RL-069, RL-071, RL-072)
 #   Context compaction: 6 (RL-079–082, RL-084, RL-085)
+#   External references: 1 (RL-087)
 #
 # Later: 7
 #   Phase 3: 2 (RL-018 project-scan, RL-019 self-documenting)

@@ -42,6 +42,7 @@ plugins/claude-core/
 │   ├── check-trace-written.sh  # Stop: remind about missing trace reflections
 │   ├── doc-stale-check.sh        # Stop: warn if plugin files changed without doc updates
 │   ├── port-dedup-check.sh       # Stop: warn if component duplicated across plugins
+│   ├── strategic-compact-trigger.sh # PostToolUse: suggest /compact at depth thresholds
 │   └── cache-clear.sh            # Stop: clear plugin cache at session end
 ├── commands/                # User-invocable commands (markdown)
 │   ├── brainstorm-start.md
@@ -93,7 +94,7 @@ plugins/claude-core/
   "name": "claude-core",
   "version": "0.2.0",
   "hooks": {
-    "PostToolUse": ["claude-md-guardian.sh (Write|Edit)", "trace-light.sh (all)"],
+    "PostToolUse": ["claude-md-guardian.sh (Write|Edit)", "compact-gate-post.sh (Write|Edit)", "trace-light.sh (all)", "strategic-compact-trigger.sh (all)"],
     "SessionStart": ["session-recovery.sh"],
     "Stop": ["check-wave-complete.sh", "check-trace-written.sh", "doc-stale-check.sh", "port-dedup-check.sh", "cache-clear.sh"]
   }
@@ -106,6 +107,7 @@ plugins/claude-core/
 |------|--------|---------|----------|
 | PostToolUse | `claude-md-guardian.sh` | Write\|Edit on CLAUDE.md | Advisory: validate edits |
 | PostToolUse | `trace-light.sh` | All tools | Append trace entry (<30ms) |
+| PostToolUse | `strategic-compact-trigger.sh` | All tools | Suggest /compact at depth thresholds (<10ms) |
 | SessionStart | `session-recovery.sh` | Session start | Report plan + project state |
 | Stop | `check-wave-complete.sh` | Session end | Warn if work in progress (informational) |
 | Stop | `check-trace-written.sh` | Session end | Remind about missing reflections |
