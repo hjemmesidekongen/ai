@@ -61,7 +61,7 @@ plugins/
       skill-reviewer/                # Review skills (read-only)
       plugin-reviewer/               # Review plugins (read-only)
     scripts/                         # session-recovery, trace-light, check-wave-complete, check-trace-written,
-                                     # doc-stale-check, port-dedup-check, cache-clear, hardening-sweep
+                                     # doc-stale-check, port-dedup-check, cache-clear
     resources/                       # error-annotation-format, memory-rules, agent-orchestration
   agency/                            # Digital agency plugin
     .claude-plugin/

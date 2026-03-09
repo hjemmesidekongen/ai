@@ -439,7 +439,7 @@ Before committing any new or modified plugin:
 - [ ] Marketplace `source` is relative (`"./plugin-name"`)
 - [ ] Both JSON files pass `python3 -m json.tool` validation
 - [ ] Hook scripts pass `bash -n` syntax check
-- [ ] `hardening-sweep.sh` passes clean on all plugin components
+- [ ] Validation agents (plugin-validator, skill-auditor) pass on all components
 - [ ] Plugin cache cleared: `rm -rf ~/.claude/plugins/cache/local-workspace/`
 - [ ] Claude Code restarted and plugin loads without errors
 - [ ] Commands visible in `/help`

@@ -337,7 +337,7 @@ Execute each `required_checks` item from the frontmatter checkpoint:
 - Verify line count is within budget
 - Verify description has concrete triggers
 - Verify references exist for overflow content
-- Run `hardening-sweep.sh` on the plugin to validate the created skill passes all checks
+- Run skill-auditor agent to validate the created skill passes all checks
 - Clear plugin cache: `rm -rf ~/.claude/plugins/cache/local-workspace/`
 
 ## Common mistakes

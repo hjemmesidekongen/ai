@@ -299,7 +299,7 @@ items:
 
   - id: RL-085
     title: "Phase 4 Gate complete — v0.3.0"
-    description: "Hardening audit passed. 3 validation agents, hardening-sweep.sh, security audit, all structural fixes, creator self-validation gates, eval infrastructure validated."
+    description: "Hardening audit passed. 3 validation agents, security audit, all structural fixes, creator self-validation gates, eval infrastructure validated."
     category: core
     plugin: claude-core
     priority: done
