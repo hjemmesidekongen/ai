@@ -4,7 +4,9 @@ description: >
   Converts a flat task list with dependencies into an optimized wave plan.
   Handles dependency resolution via topological sort, file-ownership conflict
   detection, model-tier assignment, and verification setup. Use when organizing
-  tasks into parallel-safe execution waves or creating wave-based plans.
+  tasks into parallel-safe execution waves, creating wave-based plans, resolving
+  file-ownership conflicts between parallel agents, or assigning model tiers
+  to tasks based on complexity.
 user_invocable: false
 interactive: false
 depends_on: []
