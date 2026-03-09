@@ -3,8 +3,9 @@ name: doc-checkpoint
 description: >
   Evaluate documentation state after task completion. Compares changed files against
   CLAUDE.md, MEMORY.md, roadmap.yml, and ecosystem.json to produce a structured
-  checklist of needed updates. Use after multi-file tasks, roadmap deliveries, or
-  when adding new capabilities.
+  checklist of needed updates. Use after multi-file tasks, roadmap deliveries, when
+  adding or removing skills, commands, hooks, or agents, checking if docs are stale,
+  or verifying ecosystem.json registration matches files on disk.
 user_invocable: false
 interactive: false
 depends_on: []
