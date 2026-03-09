@@ -101,6 +101,11 @@
           },
           {
             "type": "command",
+            "command": "bash ${CLAUDE_PLUGIN_ROOT}/scripts/verification-gate-stop.sh 2>/dev/null || true",
+            "timeout": 15
+          },
+          {
+            "type": "command",
             "command": "bash ${CLAUDE_PLUGIN_ROOT}/scripts/check-trace-written.sh 2>/dev/null || true",
             "timeout": 10
           },
