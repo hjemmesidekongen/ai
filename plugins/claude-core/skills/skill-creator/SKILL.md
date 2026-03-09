@@ -75,3 +75,7 @@ After creating a skill, run evaluations to verify triggering accuracy and task c
 | Description optimization | Iterative improvement of trigger phrases | `scripts/improve_description.py` |
 
 Eval agents (`agents/grader.md`, `comparator.md`, `analyzer.md`) handle grading, blind comparison, and post-hoc analysis. Full process, eval pipeline, and schemas: `references/process.md`.
+
+## Quality dimensions
+
+Skills are scored on 8 dimensions (120 points). The most important: **knowledge delta** — does this add expert-only knowledge, or does it repeat what Claude already knows? Five skill patterns exist (Mindset, Navigation, Philosophy, Process, Tool). Full framework: `references/quality-dimensions.md`.
