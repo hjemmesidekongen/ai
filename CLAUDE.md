@@ -2,7 +2,7 @@
 
 ## What This Is
 Two plugins in a monorepo:
-- **claude-core** (`plugins/claude-core/`) — Foundation plugin: planning, brainstorm, tracing, memory governance, roadmap, doc governance, creator/reviewer tooling, and validation agents (28 skills, 9 commands, 7 agents).
+- **claude-core** (`plugins/claude-core/`) — Foundation plugin: planning, brainstorm, tracing, memory governance, roadmap, doc governance, creator/reviewer tooling, and validation agents (33 skills, 10 commands, 11 agents).
 - **agency** (`plugins/agency/`) — Digital agency plugin: brand, design, content, dev, deploy pipelines (11 agents — security-reviewer ported to claude-core).
 
 ## Context Recovery
@@ -34,16 +34,18 @@ After `/compact` or when context seems incomplete, read `.ai/context/snapshot.ym
   brainstorm/                        # Brainstorm sessions and decisions
   plans/                             # Wave plan state files
   prompts/                           # Prompt templates
-  roadmap.yml                        # 72-item roadmap across 5 phases
+  roadmap.yml                        # 124-item roadmap across 5 phases
 plugins/
-  claude-core/                       # Foundation plugin (28 skills, 9 commands, 7 agents)
+  claude-core/                       # Foundation plugin (33 skills, 10 commands, 11 agents)
     .claude-plugin/
       plugin.json                    # v0.3.0, hooks: PreToolUse, PostToolUse, PreCompact, SessionStart, Stop
       ecosystem.json                 # Component registry
     agents/                          # plugin-validator, skill-auditor, security-auditor, component-reviewer,
-                                     # architect-reviewer, refactoring-specialist, knowledge-synthesizer
+                                     # architect-reviewer, refactoring-specialist, knowledge-synthesizer,
+                                     # context-manager, tdd-orchestrator, error-detective, incident-responder
     commands/                        # trace-full, roadmap-add, roadmap-view, brainstorm-start,
-                                     # brainstorm-decide, plan-create, plan-execute, plan-status, plan-resume
+                                     # brainstorm-decide, plan-create, plan-execute, plan-status, plan-resume,
+                                     # full-review
     skills/
       roadmap-capture/               # Auto-capture out-of-scope ideas
       brainstorm-session/            # Open-ended brainstorm
@@ -73,6 +75,11 @@ plugins/
       file-ownership/                # File boundary decomposition for conflict-free parallel dev
       c4-architecture/               # C4 model Mermaid diagrams (implements H1)
       reducing-entropy/              # Manual-only mindset: bias toward deletion
+      mermaid-diagrams/              # General-purpose Mermaid diagrams (7 diagram types)
+      writing-clearly-and-concisely/ # Strunk's 18 rules + AI anti-patterns
+      session-handoff/               # Chained session handoffs with staleness classification
+      agent-teams/                   # Preset team compositions for parallel agent dispatch
+      full-stack-orchestration/      # 9-step end-to-end feature development pipeline
     scripts/                         # session-recovery, trace-light, check-wave-complete, check-trace-written,
                                      # doc-stale-check, port-dedup-check, cache-clear, verification-gate-stop,
                                      # observation-recorder, scope-guard, tdd-gate, plan-gate, compact-gate-pre/post
