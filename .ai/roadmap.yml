@@ -877,12 +877,10 @@ items:
       decisions.yml, state.yml wave-done, findings.md) writes .ai/compact-needed flag.
       PreToolUse on next unit's primary write checks flag, exits 2 with:
       "Compact required before starting next unit. Run /compact, then retry."
-      Also: set CLAUDE_AUTOCOMPACT_PCT_OVERRIDE=0.92 in workspace env to push auto-compact
-      to last-resort only (reclaims ~45k tokens of reserved headroom).
-      Auto-compact default ~0.78 fires mid-task and disrupts flow — this eliminates that.
     category: core
     plugin: claude-core
-    priority: next
+    priority: done
+    completed: "2026-03-09"
     source: "brainstorm/smart-context-compaction"
     added: "2026-03-09"
     tags: [compaction, hooks, context, quality]
@@ -891,15 +889,14 @@ items:
     title: "PreCompact snapshot writer"
     description: >
       PreCompact hook writes a lean point-in-time snapshot to .ai/compact-snapshot.yml
-      before any compaction event (manual or auto). Captures exactly five things:
-      current task (one sentence), next concrete step, paths of files actively modified
-      this session, decisions made this session only, and open blockers.
-      Max ~300–500 tokens. No file contents — paths only. Claude re-reads files as needed.
+      before any compaction event (manual or auto). Captures: active plan/wave/task,
+      active project, recently modified file paths (from trace log), error count.
+      Max ~300-500 tokens. Disk state only — in-flight reasoning not captured.
       Self-deletes after being consumed by SessionStart compact handler (RL-081).
-      Makes compaction transparent — Claude resumes where it left off, not from scratch.
     category: core
     plugin: claude-core
-    priority: next
+    priority: done
+    completed: "2026-03-09"
     source: "brainstorm/smart-context-compaction"
     added: "2026-03-09"
     tags: [compaction, hooks, recovery, context]
@@ -907,14 +904,14 @@ items:
   - id: RL-081
     title: "SessionStart compact handler — snapshot restore"
     description: >
-      Upgrade session-recovery.sh to handle the compact case specifically.
-      SessionStart with matcher 'compact' reads .ai/compact-snapshot.yml and injects
-      it via additionalContext, enabling seamless resume after any compaction.
-      Clears the .ai/compact-needed flag and deletes the snapshot after injection.
-      Completes the compact loop: PreCompact saves → SessionStart compact restores.
+      Upgraded session-recovery.sh to handle the compact case.
+      Reads .ai/compact-snapshot.yml, outputs recovery context,
+      clears .ai/compact-needed flag, deletes snapshot after consumption.
+      Completes the compact loop: PreCompact saves → SessionStart restores.
     category: core
     plugin: claude-core
-    priority: next
+    priority: done
+    completed: "2026-03-09"
     source: "brainstorm/smart-context-compaction"
     added: "2026-03-09"
     tags: [compaction, session-recovery, hooks, context]
@@ -963,14 +960,15 @@ items:
   - id: RL-084
     title: "Fix trace-light.sh duration field"
     description: >
-      duration_ms is not populated in PostToolUse hook JSON — all trace-light.log entries
-      show duration '-'. Extraction logic in trace-light.sh is syntactically correct but
-      the field is absent from hook input. Either remove the duration field from the log
-      format (prevents misleading dashes) or investigate if duration_ms becomes available
-      in a different hook event or future Claude Code version.
+      Removed duration_ms extraction and duration column from trace-light.sh.
+      Field was never present in PostToolUse hook JSON. Updated format from
+      5 fields to 4 fields (timestamp|tool|status|context). Updated all
+      consumers: error-annotation-format.yml, error-annotation-behavior.md,
+      pre-completion-review.sh, ~/CLAUDE.md.
     category: core
     plugin: claude-core
-    priority: next
+    priority: done
+    completed: "2026-03-09"
     source: "brainstorm/smart-context-compaction"
     added: "2026-03-09"
     tags: [tracing, bug, trace-light]
@@ -987,7 +985,7 @@ items:
 # Phase 4 (now): 4 (RL-022, RL-024, RL-025, RL-074)
 # Phase 4 (later): 4 (RL-023, RL-073, RL-075, RL-076, RL-077)
 # Phase 4 (backlog): 1 (RL-078)
-# Context compaction (next): 3 (RL-079, RL-080, RL-081, RL-084)
+# Context compaction (done): 4 (RL-079, RL-080, RL-081, RL-084)
 # Context compaction (later): 2 (RL-082, RL-083)
 # Phase 5+ (backlog): 44
 # ============================================================

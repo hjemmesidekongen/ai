@@ -1,10 +1,32 @@
 #!/usr/bin/env bash
 # claude-core — SessionStart hook: report context for resumed sessions
-# Checks plan state and agency project state. Always exits 0.
+# Handles three recovery scenarios:
+# 1. Compact recovery — snapshot from PreCompact hook (consumed once, then deleted)
+# 2. Active plan recovery — in-progress plan state
+# 3. Agency project recovery — active project state
+# Always exits 0.
 
 set -euo pipefail
 
 PROJECT_DIR="${CLAUDE_PROJECT_DIR:-.}"
+
+# --- Compact snapshot recovery (highest priority) ---
+SNAPSHOT="$PROJECT_DIR/.ai/compact-snapshot.yml"
+FLAG="$PROJECT_DIR/.ai/compact-needed"
+
+if [ -f "$SNAPSHOT" ]; then
+  echo "=== Compact Recovery ==="
+  echo "Context restored from pre-compaction snapshot:"
+  echo "---"
+  cat "$SNAPSHOT"
+  echo "---"
+  # Clean up: delete snapshot (consumed) and clear compact-needed flag
+  rm -f "$SNAPSHOT" 2>/dev/null
+  rm -f "$FLAG" 2>/dev/null
+  echo "Snapshot consumed. Flag cleared."
+  echo "=== End Compact Recovery ==="
+  # Fall through to normal recovery — plan/agency state still useful
+fi
 
 echo "=== Session Recovery Check ==="
 
