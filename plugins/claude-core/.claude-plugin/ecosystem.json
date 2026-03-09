@@ -39,7 +39,8 @@
     "file-ownership",
     "c4-architecture",
     "reducing-entropy",
-    "mermaid-diagrams"
+    "mermaid-diagrams",
+    "writing-clearly-and-concisely"
   ],
   "agents": ["plugin-validator", "skill-auditor", "security-auditor", "component-reviewer", "architect-reviewer", "refactoring-specialist", "knowledge-synthesizer"],
   "dependencies": []
