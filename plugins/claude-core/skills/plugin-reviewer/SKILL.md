@@ -3,7 +3,9 @@ name: plugin-reviewer
 description: >
   Review and validate Claude Code plugins for manifest correctness, component
   registration, portability, and settings patterns. Use when reviewing plugins after
-  creation, auditing existing plugins, or validating plugin changes before committing.
+  creation, auditing existing plugins, validating plugin changes before committing,
+  checking ecosystem.json against files on disk, verifying marketplace registration,
+  or auditing for hardcoded paths and portability issues.
 user_invocable: false
 interactive: false
 depends_on:
