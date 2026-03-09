@@ -3,7 +3,9 @@ name: command-creator
 description: >
   Create, modify, or debug Claude Code slash commands with correct frontmatter,
   dynamic arguments, file references, and bash execution. Use when adding commands
-  to any plugin, fixing broken commands, or building multi-step command workflows.
+  to any plugin, fixing broken or invisible commands, configuring argument-hint or
+  positional arguments, namespacing commands with subdirectory prefixes, or building
+  multi-step command workflows.
 user_invocable: false
 interactive: false
 depends_on: []
