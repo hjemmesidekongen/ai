@@ -1146,6 +1146,21 @@ items:
     added: "2026-03-09"
     tags: [context, compaction, hooks, external-reference]
 
+  - id: RL-098
+    title: "TDD pre-hook validator"
+    description: >
+      PreToolUse hook (Write|Edit) that blocks production code writes unless
+      a corresponding test file exists. Enforces red-green-refactor at the
+      tool level. Opt-out via CLAUDE_NO_TDD_GATE=1 or .claude/no-tdd-gate file.
+      Skips all non-code extensions (md, yml, json, sh) automatically.
+    category: core
+    plugin: claude-core
+    priority: done
+    completed: "2026-03-09"
+    source: ".ai/research/external-reference-findings.md (L3)"
+    added: "2026-03-09"
+    tags: [hooks, tdd, quality-gate, external-reference]
+
   - id: RL-097
     title: "Scope-guard PreToolUse hook"
     description: >
@@ -1164,16 +1179,16 @@ items:
 # ============================================================
 # STATS (updated 2026-03-09)
 # ============================================================
-# Total items: 95
+# Total items: 96
 #
-# Done: 45
+# Done: 46
 #   Phase 1: 9 (RL-001–009)
 #   Phase 2: 8 (RL-010–017)
 #   Phase 3: 2 (RL-020, RL-021)
 #   Phase 4: 7 (RL-022–025, RL-074, RL-085-gate, RL-023)
 #   Iteration-2: 3 (RL-069, RL-071, RL-072)
 #   Context compaction: 6 (RL-079–082, RL-084, RL-085)
-#   External references: 11 (RL-087–RL-097)
+#   External references: 12 (RL-087–RL-098)
 #
 # Later: 7
 #   Phase 3: 2 (RL-018 project-scan, RL-019 self-documenting)
