@@ -4,7 +4,9 @@ description: >
   Extracts structured decisions from a brainstorm session. Walks through
   the conversation with the user, identifies landing points, and co-authors
   a decisions.yml file with domain tags and confidence levels. Use when
-  formalizing brainstorm conclusions or extracting decisions from transcripts.
+  formalizing brainstorm conclusions, extracting decisions from transcripts,
+  recording what was decided after a discussion, detecting contradictions
+  with previous decisions, or closing out an active brainstorm session.
 user_invocable: false
 interactive: true
 depends_on:
