@@ -993,6 +993,21 @@ items:
 
   # --- External reference findings ---
 
+  - id: RL-091
+    title: "Forward-message pattern for agent orchestration"
+    description: >
+      Updated agent-orchestration.md with forward-message section: sub-agents
+      write findings to .ai/plans/<name>/artifacts/ files, coordinator reads
+      from disk directly instead of paraphrasing responses. Prevents ~50%
+      signal loss from synthesis. Updated plan-execute.md to reference pattern.
+    category: core
+    plugin: claude-core
+    priority: done
+    completed: "2026-03-09"
+    source: ".ai/research/external-reference-findings.md (E1)"
+    added: "2026-03-09"
+    tags: [agents, orchestration, context, external-reference]
+
   - id: RL-090
     title: "Git worktree isolation skill"
     description: >
@@ -1057,16 +1072,16 @@ items:
 # ============================================================
 # STATS (updated 2026-03-09)
 # ============================================================
-# Total items: 89
+# Total items: 90
 #
-# Done: 39
+# Done: 40
 #   Phase 1: 9 (RL-001–009)
 #   Phase 2: 8 (RL-010–017)
 #   Phase 3: 2 (RL-020, RL-021)
 #   Phase 4: 7 (RL-022–025, RL-074, RL-085-gate, RL-023)
 #   Iteration-2: 3 (RL-069, RL-071, RL-072)
 #   Context compaction: 6 (RL-079–082, RL-084, RL-085)
-#   External references: 4 (RL-087, RL-088, RL-089, RL-090)
+#   External references: 5 (RL-087, RL-088, RL-089, RL-090, RL-091)
 #
 # Later: 7
 #   Phase 3: 2 (RL-018 project-scan, RL-019 self-documenting)
