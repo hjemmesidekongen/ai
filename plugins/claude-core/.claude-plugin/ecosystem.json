@@ -30,7 +30,9 @@
     "plugin-settings",
     "verification-gate",
     "git-worktree-isolation",
-    "root-cause-debugging"
+    "root-cause-debugging",
+    "instinct-extractor",
+    "instinct-evolve"
   ],
   "agents": ["plugin-validator", "skill-auditor", "security-auditor"],
   "dependencies": []

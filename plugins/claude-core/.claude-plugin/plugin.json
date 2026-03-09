@@ -57,6 +57,15 @@
             "timeout": 10
           }
         ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash ${CLAUDE_PLUGIN_ROOT}/scripts/observation-recorder.sh 2>/dev/null || true",
+            "timeout": 10
+          }
+        ]
       }
     ],
     "PreCompact": [

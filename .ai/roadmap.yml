@@ -993,6 +993,21 @@ items:
 
   # --- External reference findings ---
 
+  - id: RL-096
+    title: "Instinct-based continuous learning pipeline"
+    description: >
+      Implemented F2 from external-reference-findings: observation-recorder.sh
+      PostToolUse hook records structured tool call observations to
+      .ai/instincts/observations.jsonl. instinct-extractor skill reads
+      observations, identifies recurring patterns, and writes atomic instincts
+      to .ai/instincts/instincts.yml with confidence weights and decay.
+      instinct-evolve skill promotes qualified instincts (confidence >= 0.75,
+      evidence >= 3) to MEMORY.md entries, CLAUDE.md rules, or new skills.
+    category: core
+    plugin: claude-core
+    priority: done
+    completed: 2026-03-09
+
   - id: RL-095
     title: "Subagent-per-task plan execution pattern"
     description: >
@@ -1134,16 +1149,16 @@ items:
 # ============================================================
 # STATS (updated 2026-03-09)
 # ============================================================
-# Total items: 93
+# Total items: 94
 #
-# Done: 43
+# Done: 44
 #   Phase 1: 9 (RL-001–009)
 #   Phase 2: 8 (RL-010–017)
 #   Phase 3: 2 (RL-020, RL-021)
 #   Phase 4: 7 (RL-022–025, RL-074, RL-085-gate, RL-023)
 #   Iteration-2: 3 (RL-069, RL-071, RL-072)
 #   Context compaction: 6 (RL-079–082, RL-084, RL-085)
-#   External references: 8 (RL-087–RL-094)
+#   External references: 10 (RL-087–RL-096)
 #
 # Later: 7
 #   Phase 3: 2 (RL-018 project-scan, RL-019 self-documenting)
