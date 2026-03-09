@@ -2,7 +2,7 @@
 
 ## What This Is
 Two plugins in a monorepo:
-- **claude-core** (`plugins/claude-core/`) — Foundation plugin: planning, brainstorm, tracing, memory governance, roadmap, doc governance, creator/reviewer tooling, and validation agents (22 skills, 9 commands, 4 agents).
+- **claude-core** (`plugins/claude-core/`) — Foundation plugin: planning, brainstorm, tracing, memory governance, roadmap, doc governance, creator/reviewer tooling, and validation agents (23 skills, 9 commands, 4 agents).
 - **agency** (`plugins/agency/`) — Digital agency plugin: brand, design, content, dev, deploy pipelines (11 agents — security-reviewer ported to claude-core).
 
 ## Context Recovery
@@ -65,6 +65,7 @@ plugins/
       root-cause-debugging/          # 4-phase investigation before any fix
       instinct-extractor/            # Extract behavioral instincts from observations
       instinct-evolve/               # Promote qualified instincts to skills/rules/memory
+      reasoning-trace-optimizer/     # Diagnose agent reasoning quality from trace-light.log
     scripts/                         # session-recovery, trace-light, check-wave-complete, check-trace-written,
                                      # doc-stale-check, port-dedup-check, cache-clear, verification-gate-stop,
                                      # observation-recorder

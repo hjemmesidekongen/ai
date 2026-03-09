@@ -1146,6 +1146,22 @@ items:
     added: "2026-03-09"
     tags: [context, compaction, hooks, external-reference]
 
+  - id: RL-103
+    title: "Reasoning-trace optimization skill"
+    description: >
+      New reasoning-trace-optimizer skill that analyzes .ai/traces/trace-light.log
+      for 6 degradation patterns: context degradation, tool confusion, instruction
+      drift, goal abandonment, circular reasoning, premature conclusions.
+      Writes structured diagnosis to .ai/traces/reasoning-diagnosis.md with
+      evidence, impact, and concrete fix for each pattern found.
+    category: core
+    plugin: claude-core
+    priority: done
+    completed: "2026-03-09"
+    source: ".ai/research/external-reference-findings.md (K4)"
+    added: "2026-03-09"
+    tags: [skills, tracing, quality, reasoning, external-reference]
+
   - id: RL-102
     title: "Lazy-load skill activation triggers"
     description: >
@@ -1239,16 +1255,16 @@ items:
 # ============================================================
 # STATS (updated 2026-03-09)
 # ============================================================
-# Total items: 100
+# Total items: 101
 #
-# Done: 50
+# Done: 51
 #   Phase 1: 9 (RL-001–009)
 #   Phase 2: 8 (RL-010–017)
 #   Phase 3: 2 (RL-020, RL-021)
 #   Phase 4: 7 (RL-022–025, RL-074, RL-085-gate, RL-023)
 #   Iteration-2: 3 (RL-069, RL-071, RL-072)
 #   Context compaction: 6 (RL-079–082, RL-084, RL-085)
-#   External references: 16 (RL-087–RL-102)
+#   External references: 17 (RL-087–RL-103)
 #
 # Later: 7
 #   Phase 3: 2 (RL-018 project-scan, RL-019 self-documenting)

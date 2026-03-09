@@ -32,7 +32,8 @@
     "git-worktree-isolation",
     "root-cause-debugging",
     "instinct-extractor",
-    "instinct-evolve"
+    "instinct-evolve",
+    "reasoning-trace-optimizer"
   ],
   "agents": ["plugin-validator", "skill-auditor", "security-auditor", "component-reviewer"],
   "dependencies": []
