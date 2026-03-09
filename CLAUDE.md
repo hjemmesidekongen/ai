@@ -2,7 +2,7 @@
 
 ## What This Is
 Two plugins in a monorepo:
-- **claude-core** (`plugins/claude-core/`) — Foundation plugin: planning, brainstorm, tracing, memory governance, roadmap, doc governance, creator/reviewer tooling, and validation agents (22 skills, 9 commands, 3 agents).
+- **claude-core** (`plugins/claude-core/`) — Foundation plugin: planning, brainstorm, tracing, memory governance, roadmap, doc governance, creator/reviewer tooling, and validation agents (22 skills, 9 commands, 4 agents).
 - **agency** (`plugins/agency/`) — Digital agency plugin: brand, design, content, dev, deploy pipelines (11 agents — security-reviewer ported to claude-core).
 
 ## Context Recovery
@@ -39,7 +39,7 @@ plugins/
     .claude-plugin/
       plugin.json                    # v0.3.0, hooks: PreToolUse, PostToolUse, PreCompact, SessionStart, Stop
       ecosystem.json                 # Component registry
-    agents/                          # plugin-validator, skill-auditor, security-auditor
+    agents/                          # plugin-validator, skill-auditor, security-auditor, component-reviewer
     commands/                        # trace-full, roadmap-add, roadmap-view, brainstorm-start,
                                      # brainstorm-decide, plan-create, plan-execute, plan-status, plan-resume
     skills/

@@ -34,6 +34,6 @@
     "instinct-extractor",
     "instinct-evolve"
   ],
-  "agents": ["plugin-validator", "skill-auditor", "security-auditor"],
+  "agents": ["plugin-validator", "skill-auditor", "security-auditor", "component-reviewer"],
   "dependencies": []
 }

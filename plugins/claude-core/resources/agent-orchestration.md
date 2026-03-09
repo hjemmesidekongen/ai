@@ -270,3 +270,4 @@ If an agent fails at its assigned tier:
 | `plugin-validator` | Full plugin structure validation | inherit | Plugin releases, post-creation checks |
 | `skill-auditor` | Deep skill quality review | inherit | Batch skill audits, post-creation review |
 | `security-auditor` | Infrastructure security scan | opus | Pre-release security gates, hook changes |
+| `component-reviewer` | Pre-commit component validation | inherit | After hook-creator, skill-creator, or agent-creator |

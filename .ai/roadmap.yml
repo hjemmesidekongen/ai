@@ -1146,6 +1146,21 @@ items:
     added: "2026-03-09"
     tags: [context, compaction, hooks, external-reference]
 
+  - id: RL-101
+    title: "Component reviewer validation agent"
+    description: >
+      New component-reviewer agent in claude-core that validates hooks, skills,
+      commands, and agents before commit. Checks YAML frontmatter, naming
+      conventions, secret detection, supporting file existence, description
+      quality, and discoverability. Returns structured YAML verdict.
+    category: core
+    plugin: claude-core
+    priority: done
+    completed: "2026-03-09"
+    source: ".ai/research/external-reference-findings.md (O1)"
+    added: "2026-03-09"
+    tags: [agents, validation, quality-gate, external-reference]
+
   - id: RL-100
     title: "Three-tier model strategy doc"
     description: >
@@ -1209,16 +1224,16 @@ items:
 # ============================================================
 # STATS (updated 2026-03-09)
 # ============================================================
-# Total items: 98
+# Total items: 99
 #
-# Done: 48
+# Done: 49
 #   Phase 1: 9 (RL-001–009)
 #   Phase 2: 8 (RL-010–017)
 #   Phase 3: 2 (RL-020, RL-021)
 #   Phase 4: 7 (RL-022–025, RL-074, RL-085-gate, RL-023)
 #   Iteration-2: 3 (RL-069, RL-071, RL-072)
 #   Context compaction: 6 (RL-079–082, RL-084, RL-085)
-#   External references: 14 (RL-087–RL-100)
+#   External references: 15 (RL-087–RL-101)
 #
 # Later: 7
 #   Phase 3: 2 (RL-018 project-scan, RL-019 self-documenting)
