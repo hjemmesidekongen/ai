@@ -1556,20 +1556,21 @@ items:
     description: >
       9-step pipeline for end-to-end feature development.
       3 phases with user approval gates, file-based state.
-    category: core
-    plugin: claude-core
-    priority: done
-    completed: "2026-03-09"
+      Removed from claude-core — belongs in future dev plugin.
+      Source material: external-references/agents-main/plugins/full-stack-orchestration/commands/full-stack-feature.md
+    category: dev
+    plugin: development
+    priority: next
     source: ".ai/research/external-reference-findings.md (Q3)"
     added: "2026-03-09"
-    tags: [skills, orchestration, full-stack, external-reference]
+    tags: [skills, orchestration, full-stack, external-reference, dev-plugin]
 
 # ============================================================
 # STATS (updated 2026-03-09)
 # ============================================================
 # Total items: 124
 #
-# Done: 74
+# Done: 73
 #   Phase 1: 9 (RL-001–009)
 #   Phase 2: 8 (RL-010–017)
 #   Phase 3: 2 (RL-020, RL-021)
@@ -1578,7 +1579,7 @@ items:
 #   Context compaction: 6 (RL-079–082, RL-084, RL-085)
 #   External references Batch 1+2: 20 (RL-087–RL-106)
 #   External references Batch 3: 9 (RL-107–RL-115)
-#   External references Batch 4: 11 (RL-116–RL-126)
+#   External references Batch 4: 10 (RL-116–RL-125, RL-126 deferred to dev plugin)
 #
 # Later: 7
 #   Phase 3: 2 (RL-018 project-scan, RL-019 self-documenting)

@@ -43,9 +43,8 @@
     "mermaid-diagrams",
     "writing-clearly-and-concisely",
     "session-handoff",
-    "agent-teams",
-    "full-stack-orchestration"
+    "agent-teams"
   ],
-  "agents": ["plugin-validator", "skill-auditor", "security-auditor", "component-reviewer", "architect-reviewer", "refactoring-specialist", "knowledge-synthesizer", "context-manager", "tdd-orchestrator", "error-detective", "incident-responder"],
+  "agents": ["plugin-validator", "skill-auditor", "security-auditor", "component-reviewer", "architect-reviewer", "refactoring-specialist", "knowledge-synthesizer", "context-manager", "tdd-orchestrator", "error-detective", "incident-responder", "agent-reviewer"],
   "dependencies": []
 }
