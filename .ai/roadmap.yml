@@ -1300,19 +1300,141 @@ items:
     added: "2026-03-09"
     tags: [hooks, scope, quality-gate, external-reference]
 
+  - id: RL-115
+    title: "Architect-reviewer agent"
+    description: >
+      New read-only agent for macro-level architecture review of plugin ecosystems.
+      Reviews plugin boundaries, skill decomposition, hook architecture, state
+      management, YAML schema quality, and technical debt.
+    category: core
+    plugin: claude-core
+    priority: done
+    completed: "2026-03-09"
+    source: ".ai/research/external-reference-findings.md (P1)"
+    added: "2026-03-09"
+    tags: [agents, architecture, review, external-reference]
+
+  - id: RL-114
+    title: "Refactoring-specialist agent"
+    description: >
+      New agent for systematic behavior-preserving refactoring of plugin codebases.
+      Plugin-specific code smell detection. Incremental transformations with
+      component-reviewer verification after each change.
+    category: core
+    plugin: claude-core
+    priority: done
+    completed: "2026-03-09"
+    source: ".ai/research/external-reference-findings.md (P2)"
+    added: "2026-03-09"
+    tags: [agents, refactoring, quality, external-reference]
+
+  - id: RL-113
+    title: "Knowledge-synthesizer agent"
+    description: >
+      Proactive cross-session pattern mining agent. Reads trace logs, state
+      histories, findings, instincts, decisions, and roadmap. Produces synthesis
+      reports. Sits above instinct-extractor in the learning pipeline.
+    category: core
+    plugin: claude-core
+    priority: done
+    completed: "2026-03-09"
+    source: ".ai/research/external-reference-findings.md (P3)"
+    added: "2026-03-09"
+    tags: [agents, learning, synthesis, external-reference]
+
+  - id: RL-112
+    title: "Phase checkpoint pattern for plan-execute"
+    description: >
+      Added checkpoint: true flag support to wave definitions. Pauses after wave
+      verification with Continue/Revise/Abort options. Backward compatible.
+    category: core
+    plugin: claude-core
+    priority: done
+    completed: "2026-03-09"
+    source: ".ai/research/external-reference-findings.md (Q1)"
+    added: "2026-03-09"
+    tags: [commands, plan-execute, orchestration, external-reference]
+
+  - id: RL-111
+    title: "Perplexity conservative defaults and tool selection chain"
+    description: >
+      Enhanced ~/CLAUDE.md Perplexity policy with parameter defaults (max_results: 3,
+      max_tokens_per_page: 512), codebase-first priority chain, and stronger
+      perplexity_research prohibition.
+    category: core
+    plugin: claude-core
+    priority: done
+    completed: "2026-03-09"
+    source: ".ai/research/external-reference-findings.md (T1)"
+    added: "2026-03-09"
+    tags: [rules, perplexity, cost-optimization, external-reference]
+
+  - id: RL-110
+    title: "C4 architecture documentation skill"
+    description: >
+      New skill for C4 model architecture diagrams in Mermaid syntax. All 5 levels.
+      SKILL.md under 80 lines with references/c4-syntax.md. Implements H1.
+    category: core
+    plugin: claude-core
+    priority: done
+    completed: "2026-03-09"
+    source: ".ai/research/external-reference-findings.md (T3)"
+    added: "2026-03-09"
+    tags: [skills, architecture, documentation, external-reference]
+
+  - id: RL-109
+    title: "Post-mortem learning extension for error-annotation-format"
+    description: >
+      Extended error-annotation-format.yml with post-mortem learning fields:
+      pattern_extracted, runbook_entry, hardening_recommendation, feeds_instinct.
+    category: core
+    plugin: claude-core
+    priority: done
+    completed: "2026-03-09"
+    source: ".ai/research/external-reference-findings.md (P4)"
+    added: "2026-03-09"
+    tags: [resources, error-handling, learning, external-reference]
+
+  - id: RL-108
+    title: "Context hub pattern (E2) in agent-orchestration"
+    description: >
+      Added Context Hub Pattern to agent-orchestration.md. Coordinator assembles
+      shared context once before dispatching sub-agents. Implements E2.
+    category: core
+    plugin: claude-core
+    priority: done
+    completed: "2026-03-09"
+    source: ".ai/research/external-reference-findings.md (P5)"
+    added: "2026-03-09"
+    tags: [resources, orchestration, context-management, external-reference]
+
+  - id: RL-107
+    title: "Reducing-entropy mindset skill"
+    description: >
+      Manual-only mindset skill biasing toward deletion and minimal codebase size.
+      Three questions framework. Red flags for status quo bias and YAGNI.
+    category: core
+    plugin: claude-core
+    priority: done
+    completed: "2026-03-09"
+    source: ".ai/research/external-reference-findings.md (T5)"
+    added: "2026-03-09"
+    tags: [skills, mindset, code-quality, external-reference]
+
 # ============================================================
 # STATS (updated 2026-03-09)
 # ============================================================
-# Total items: 104
+# Total items: 113
 #
-# Done: 54
+# Done: 63
 #   Phase 1: 9 (RL-001–009)
 #   Phase 2: 8 (RL-010–017)
 #   Phase 3: 2 (RL-020, RL-021)
 #   Phase 4: 7 (RL-022–025, RL-074, RL-085-gate, RL-023)
 #   Iteration-2: 3 (RL-069, RL-071, RL-072)
 #   Context compaction: 6 (RL-079–082, RL-084, RL-085)
-#   External references: 20 (RL-087–RL-106)
+#   External references Batch 1+2: 20 (RL-087–RL-106)
+#   External references Batch 3: 9 (RL-107–RL-115)
 #
 # Later: 7
 #   Phase 3: 2 (RL-018 project-scan, RL-019 self-documenting)

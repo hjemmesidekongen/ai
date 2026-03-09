@@ -49,7 +49,15 @@ Execute a wave plan sequentially. Each wave completes and passes verification be
       - If fail: attempt `improve_description.py` (max 3 iterations)
    f. If verification passes → update state: wave status → `completed`
    g. If verification fails → log errors, halt, suggest fixes
-   h. Update recovery_notes with progress summary
+   h. **Phase checkpoint** (if `checkpoint: true` on the wave):
+      - Display a summary of what the wave accomplished (tasks completed, files written, key outcomes)
+      - Present three options to the user:
+        1. **Continue** → proceed to the next wave
+        2. **Revise** → user describes what to change, revise and re-verify the wave
+        3. **Abort** → update state to `paused`, stop execution
+      - Do NOT proceed to the next wave until the user explicitly selects Continue
+      - If no `checkpoint` flag on the wave, proceed automatically (backward compatible)
+   i. Update recovery_notes with progress summary
 
 4. **Final wave:**
    - Always runs QA review (Stage 2)

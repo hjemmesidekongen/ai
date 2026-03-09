@@ -262,6 +262,64 @@ the next stage without degradation.
 
 ---
 
+## Context Hub Pattern (E2)
+
+When orchestrating multi-agent workflows, the coordinator should assemble shared
+context once and pass it forward — not have each sub-agent independently discover
+context from scratch.
+
+### The problem
+
+Without a hub, each sub-agent reads state.yml, snapshot.yml, and findings files
+independently. This wastes tokens, produces inconsistent context (if files change
+mid-workflow), and leads to divergent interpretations.
+
+### The fix
+
+The coordinator (plan-execute, or any orchestrating command) reads shared state
+files once before dispatching sub-agents, then includes the relevant context in
+each agent's prompt.
+
+### What to assemble
+
+Before dispatching any wave of sub-agents, read:
+
+| Source | What it provides |
+|--------|-----------------|
+| `.ai/plans/<name>/state.yml` | Current plan progress, completed tasks, errors |
+| `.ai/plans/<name>/plan.md` | Implementation rules, sync constraints, what NOT to do |
+| `.ai/context/snapshot.yml` | Session context (branch, dirty files, active plan) |
+| `.ai/plans/<name>/artifacts/*.md` | Prior wave outputs (forward-message pattern) |
+
+### How to pass
+
+Include assembled context in each sub-agent's prompt:
+
+```
+"You are implementing task <id>: <name>.
+
+Context:
+  Plan rules: [plan.md content]
+  Prior outputs: [relevant artifact contents]
+  Current state: [wave progress, errors to avoid]
+
+Task: [task description]
+Output: write to .ai/plans/<name>/artifacts/<wave>-<task>-output.md"
+```
+
+### When to apply
+
+- Any orchestrated workflow with 2+ parallel agents
+- Wave-based plan execution (plan-execute)
+- Sequential chains where later agents need earlier context
+
+### When NOT to apply
+
+- Single agent dispatch with no shared state
+- Read-only agents that don't need workflow context (e.g., skill-auditor on a standalone audit)
+
+---
+
 ## Error Handling
 
 | Situation | Response |

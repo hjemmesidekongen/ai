@@ -88,6 +88,15 @@ Assign verification type per wave based on the output patterns of its tasks:
 - Final wave: always `qa_review: true`
 - Other waves: `qa_review: false` unless the plan explicitly requests it
 
+**Phase checkpoint flag:**
+- Set `checkpoint: true` on a wave to pause plan-execute after verification and require
+  explicit user approval before continuing to the next wave.
+- When the user creates the plan with phase gates requested, or when the plan spans
+  high-risk implementation waves, add checkpoints on key boundaries.
+- Default: no checkpoint (automatic advancement). Backward compatible — plans without
+  checkpoint flags behave exactly as before.
+- plan-execute presents three options at each checkpoint: Continue, Revise, or Abort.
+
 ## Step 5: Emit plan
 
 Write two files:

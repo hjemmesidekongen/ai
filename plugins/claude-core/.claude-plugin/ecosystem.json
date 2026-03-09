@@ -36,8 +36,10 @@
     "reasoning-trace-optimizer",
     "hypothesis-generator",
     "parallel-reviewer",
-    "file-ownership"
+    "file-ownership",
+    "c4-architecture",
+    "reducing-entropy"
   ],
-  "agents": ["plugin-validator", "skill-auditor", "security-auditor", "component-reviewer"],
+  "agents": ["plugin-validator", "skill-auditor", "security-auditor", "component-reviewer", "architect-reviewer", "refactoring-specialist", "knowledge-synthesizer"],
   "dependencies": []
 }

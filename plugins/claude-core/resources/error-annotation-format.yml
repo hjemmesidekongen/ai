@@ -135,6 +135,29 @@ severity_guidelines:
       - "Configuration auto-corrected"
 
 # ----------------------------------------------------------
+# HOOK-ERRORS.LOG FORMAT (hook-level decision trace)
+# ----------------------------------------------------------
+# Written by PreToolUse hooks when they warn or block.
+# File: .ai/traces/hook-errors.log
+# Each line is one hook decision event.
+
+hook_errors_log:
+  location: ".ai/traces/hook-errors.log"
+  format: "timestamp|hook_name|decision|file_path|reason"
+  field_count: 5
+  decisions:
+    block: "Hook returned exit 2 — tool call was prevented"
+    warn: "Hook logged advisory warning — tool call proceeded"
+  hooks_that_write:
+    - "tdd-gate (block: no test found)"
+    - "scope-guard (warn: file not in plan scope)"
+    - "plan-gate (warn: no active plan)"
+  examples:
+    block: "2026-03-09T14:31:42Z|tdd-gate|block|src/auth/handler.ts|no test file found for handler.ts"
+    warn_scope: "2026-03-09T14:23:01Z|scope-guard|warn|plugins/claude-core/skills/foo/SKILL.md|not in declared writes for wave-1 (plan: my-plan)"
+    warn_plan: "2026-03-09T14:25:11Z|plan-gate|warn|plugins/claude-core/skills/bar/SKILL.md|no active plan found"
+
+# ----------------------------------------------------------
 # CONSTRAINTS
 # ----------------------------------------------------------
 
@@ -146,3 +169,70 @@ constraints:
   - "No pipe characters (|) in error_summary — use dashes or commas instead"
   - "Annotations are shared knowledge — write clearly enough for another agent to understand without context"
   - "Full trace entries go under the errors: array in the session YAML"
+  - "Post-mortem learning fields are optional — add when an error reveals a systemic pattern"
+
+# ----------------------------------------------------------
+# POST-MORTEM LEARNING (extends full trace error entries)
+# ----------------------------------------------------------
+# When a resolved error reveals a recurring pattern or systemic
+# issue, add learning fields to the full trace error entry.
+# These fields feed the instinct pipeline (instinct-extractor)
+# and help harden the system against repeat failures.
+#
+# Source: error-coordinator pattern (P4, external-reference-findings)
+
+post_mortem_learning:
+  description: >
+    Optional fields added to full trace error entries after resolution.
+    Captures the learning from the error, not just the error itself.
+
+  fields:
+    pattern_extracted:
+      type: "string"
+      description: >
+        The systemic pattern this error revealed. Not the specific error,
+        but the class of problem. E.g. "Hook scripts that read state.yml
+        without checking file existence first" — not "scope-guard.sh crashed".
+      examples:
+        - "Skills with depends_on arrays referencing deleted skills"
+        - "Shell hooks that assume jq is installed without fallback"
+        - "YAML frontmatter iteration field stored as string instead of integer"
+
+    runbook_entry:
+      type: "string"
+      description: >
+        A concrete, actionable step to diagnose or fix this class of error
+        in the future. Written as an imperative instruction.
+      examples:
+        - "Check all depends_on arrays after renaming or deleting a skill — grep for the old name across all SKILL.md files"
+        - "When hook exits non-zero unexpectedly, check stderr first — hook-errors.log may not capture the real cause"
+        - "After porting a skill, run skill-auditor before component-reviewer — auditor catches frontmatter issues that reviewer misses"
+
+    hardening_recommendation:
+      type: "string"
+      description: >
+        A structural change that would prevent this class of error entirely.
+        May reference hooks, validation agents, schema changes, or process changes.
+      examples:
+        - "Add depends_on validation to component-reviewer — flag references to non-existent skills"
+        - "Add jq availability check to all hook scripts that parse JSON"
+        - "Add iteration type check to skill-auditor — must be integer, not string"
+
+    feeds_instinct:
+      type: "boolean"
+      description: >
+        Whether this learning should be forwarded to instinct-extractor
+        as an observation. Set true when the pattern is recurring (seen 2+ times)
+        or when the hardening recommendation is not yet implemented.
+      default: false
+
+  example:
+    timestamp: "2026-03-09T14:22:01Z"
+    severity: "critical"
+    error_summary: "scope-guard crashes when state.yml missing — unhandled file read"
+    context: "Running plan-execute with no active plan"
+    suggested_fix: "Add file existence check before reading state.yml in scope-guard.sh"
+    pattern_extracted: "Hook scripts that read state files without checking existence first"
+    runbook_entry: "When a hook crashes silently, check if it reads files that may not exist — add -f guards"
+    hardening_recommendation: "Add file existence pre-check to all PreToolUse hooks that read state.yml or plan files"
+    feeds_instinct: true
