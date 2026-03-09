@@ -1,0 +1,18 @@
+{
+  "_comment": "Example WebSocket MCP server configuration for real-time bidirectional communication",
+  "realtime-updates": {
+    "type": "ws",
+    "url": "wss://mcp.example.com/ws",
+    "headers": {
+      "Authorization": "Bearer ${WS_TOKEN}",
+      "X-Client-ID": "${CLIENT_ID}"
+    }
+  },
+  "collaboration": {
+    "type": "ws",
+    "url": "wss://collab.example.com/ws",
+    "headers": {
+      "Authorization": "Bearer ${COLLAB_TOKEN}"
+    }
+  }
+}

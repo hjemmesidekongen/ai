@@ -1,6 +1,11 @@
 ---
-name: decision-reader
-user-invocable: false
+name: brainstorm-decision-reader
+user_invocable: false
+_source:
+  origin: "task-planner/skills/decision-reader + agency/skills/dev/decision-reader"
+  ported_date: "2026-03-08"
+  iteration: 2
+  changes: "merged TP read-only utility with agency findings.md writer, domain-agnostic, added domain mapping"
 description: >
   Load and filter past brainstorm decisions relevant to the current task. Scans
   all decisions.yml files across brainstorm topics, filters by domain relevance,
@@ -9,6 +14,7 @@ description: >
 depends_on: []
 reads:
   - ".ai/brainstorm/*/decisions.yml"
+writes: []
 model_tier: junior
 interactive: false
 checkpoint:

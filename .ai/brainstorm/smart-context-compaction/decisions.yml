@@ -1,0 +1,299 @@
+project: "smart-context-compaction"
+session_date: "2026-03-09"
+decided_by: "user + claude"
+roadmap_ported: true
+roadmap_ported_date: "2026-03-09"
+
+decisions:
+
+  # ============================================================
+  # COMPACTION DISCIPLINE
+  # ============================================================
+
+  - id: D-001
+    domain: compaction
+    roadmap_item: RL-079
+    title: "Compact at unit boundaries, never mid-unit"
+    decision: >
+      Context compaction happens at the completion of discrete work units only.
+      Never compact mid-task, mid-reasoning, or mid-wave. A unit is anything
+      that produces a self-contained artifact on disk: a skill, command, agent,
+      hook, plan wave, brainstorm session, research session, or review.
+    confidence: high
+    context: >
+      Accumulated context hurts output quality via the "lost in the middle"
+      effect — older tokens become invisible to the model. Compacting at unit
+      boundaries means the reasoning that produced an artifact is now on disk
+      and no longer needed in memory. Compacting mid-unit destroys the
+      reasoning thread without gaining anything.
+    rationale: >
+      Discovered during brand plugin build: Claude asked for compact before
+      each skill and produced measurably better output. Narrower context =
+      narrower focus = higher quality per unit.
+
+  - id: D-002
+    domain: compaction
+    roadmap_item: RL-079
+    title: "Raise auto-compact threshold to push it to last resort"
+    decision: >
+      Set CLAUDE_AUTOCOMPACT_PCT_OVERRIDE=0.92 in the workspace environment.
+      Auto-compact becomes a safety net only — it fires when context is
+      genuinely critical, not as a routine participant. Proactive voluntary
+      compact at unit boundaries replaces it as the primary mechanism.
+    confidence: high
+    context: >
+      Default auto-compact fires at ~78–80%, often mid-task. This interrupts
+      flow and loses working context. Raising to 0.92 reclaims ~45k tokens of
+      headroom (22.5% of 200k) and eliminates most mid-task interruptions.
+      The voluntary compact discipline makes the threshold rarely reached.
+    alternatives_considered:
+      - "DISABLE_AUTO_COMPACT=true — rejected: dangerous if voluntary discipline fails, context fills up and breaks"
+      - "Keep default — rejected: fires at inconvenient moments, not our timing"
+
+  - id: D-003
+    domain: compaction
+    roadmap_item: RL-079
+    title: "Boundary detection via flag-gate mechanism"
+    decision: >
+      When a unit completes (PostToolUse on the unit's primary artifact write),
+      a hook writes .ai/compact-needed. Before the next unit's primary write
+      starts (PreToolUse), the hook checks for the flag and exits 2 if found:
+      "Compact required before starting next unit. Run /compact, then retry."
+      After compact, SessionStart compact handler clears the flag.
+    confidence: high
+    context: >
+      Claude cannot trigger /compact programmatically. The flag-gate converts
+      the voluntary compact discipline into an automatic checkpoint without
+      requiring model judgment. The gate is deterministic and path-based, not
+      reliant on Claude deciding to compact at the right moment.
+    trigger_map:
+      - event: "Skill complete" artifact: "*/skills/*/SKILL.md"
+      - event: "Command complete" artifact: "*/commands/*.md"
+      - event: "Agent complete" artifact: "*/agents/*.md"
+      - event: "Hook complete" artifact: "hook .sh registered in plugin.json"
+      - event: "Plan created" artifact: ".ai/plans/*/state.yml (new file)"
+      - event: "Wave complete" artifact: "state.yml wave status → done"
+      - event: "Brainstorm concluded" artifact: "decisions.yml written"
+      - event: "Research session done" artifact: "findings.md written"
+      - event: "Review complete" artifact: "reviewer output written"
+
+  - id: D-004
+    domain: compaction
+    roadmap_item: "RL-080, RL-081"
+    title: "Compact recovery: seamless resume with lean snapshot"
+    decision: >
+      PreCompact hook writes a point-in-time snapshot to
+      .ai/compact-snapshot.yml containing exactly five things:
+      current task (one sentence), next concrete step, paths of files
+      actively modified this session, decisions made this session (not all
+      of decisions.yml — only today's), and open blockers.
+      SessionStart compact injects the snapshot via additionalContext.
+      The snapshot self-deletes after being consumed.
+      Max size: ~300–500 tokens. No file contents — paths only.
+    confidence: high
+    context: >
+      Restart-cleanly has a hidden cost: Claude re-reads all files to
+      reconstruct context it already had. Seamless resume with a lean
+      snapshot is more economic. The snapshot must be deliberately lean
+      or it recreates the context bloat it's meant to solve. Claude reads
+      the files it needs — the snapshot tells it which files matter and
+      where it was, nothing more.
+    alternatives_considered:
+      - "Restart cleanly — rejected: burns context re-reading files already seen"
+      - "Full context dump in snapshot — rejected: defeats the purpose, heavy injection"
+
+  # ============================================================
+  # MEMORY ARCHITECTURE
+  # ============================================================
+
+  - id: D-005
+    domain: memory
+    roadmap_item: RL-082
+    title: "Three-layer injection architecture"
+    decision: >
+      Session context is populated from three independent layers at start:
+      1. Workspace memory — global patterns and permanent conventions that
+         apply everywhere, regardless of project. ~200 tokens. Always injected.
+      2. Project memory — per-project, confidence*access ranked, temporally
+         decaying by entry type. Budgeted ~150 lines (Tier 1). Injected when
+         project is recognized.
+      3. Compact snapshot — point-in-time working state from PreCompact.
+         Injected only after compaction event. Self-deletes once consumed.
+      Priority order: CLAUDE.md > MEMORY.md > compact snapshot > project
+      memory Tier 1 > workspace generic context.
+    confidence: high
+    context: >
+      Current session-recovery.sh is static — same output every session
+      regardless of what the session is about. The three-layer model makes
+      injection relevant, size-bounded, and scope-aware. Priority ordering
+      prevents injection conflicts when multiple sources say contradictory things.
+
+  - id: D-006
+    domain: memory
+    roadmap_item: RL-083
+    title: "Temporal decay model for project memory"
+    decision: >
+      Memory entries decay by type, not by age alone:
+      - Permanent (no decay): architecture decisions, patterns, gotchas — these
+        are deliberate choices that don't go stale
+      - 7-day half-life: progress entries
+      - 30-day half-life: context entries
+      Confidence scores 0–1. Below 0.3: hidden from Tier 1 injection but
+      remain searchable in Tier 2. This prevents context waste while
+      preserving retrievable knowledge.
+    confidence: high
+    context: >
+      Inspired by memory-mcp (yuvalsuede). The key insight: not all memory
+      types decay the same way. A decision to use a specific pattern doesn't
+      get stale the way "currently working on wave 3" does. Distinguishing
+      permanent from ephemeral prevents both staleness and premature pruning.
+    source: "https://dev.to/suede/the-architecture-of-persistent-memory-for-claude-code-17d"
+
+  - id: D-007
+    domain: memory
+    roadmap_item: RL-083
+    title: "Two-tier memory storage with budgeted injection"
+    decision: >
+      Tier 1: Auto-generated CLAUDE.md section with fixed line budgets per
+      category (architecture: 25, decisions: 25, patterns: 25, gotchas: 20,
+      progress: 30, context: 15). Entries ranked by confidence * accessCount.
+      Unused budget redistributes; overflow truncated with pointer to Tier 2.
+      Tier 2: Persistent JSON store (.memory/state.json or equivalent),
+      unlimited, searchable on demand via tool. Not auto-injected.
+      80% of sessions need only Tier 1.
+    confidence: high
+    context: >
+      Fixed budgets prevent size creep. The confidence*accessCount ranking
+      ensures what gets injected is what was both reliable and frequently
+      useful — not just recent. Tier 2 preserves history without polluting
+      every session with it.
+
+  - id: D-008
+    domain: memory
+    roadmap_item: RL-083
+    title: "Deduplication at write time + periodic consolidation"
+    decision: >
+      Write-time: Jaccard similarity check on new entries — if >60% token
+      overlap with an existing entry of the same type, supersede rather than
+      append. Every 10 extractions or when >80 total memories: Haiku
+      consolidation pass that merges overlapping entries, drops outdated facts,
+      and resolves contradictions.
+    confidence: high
+    context: >
+      "Drowning in duplicates within days" is the primary failure mode of naive
+      memory systems (per memory-mcp author). Write-time dedup prevents
+      accumulation; periodic consolidation handles semantic duplicates that
+      Jaccard misses. The combination keeps the store lean without manual curation.
+
+  - id: D-009
+    domain: memory
+    roadmap_item: RL-083
+    title: "Scoping: workspace-level vs project-level memory"
+    decision: >
+      Every episodic/pattern entry has a scope tag: workspace (applies
+      everywhere) or project-specific (applies only to this project type
+      or named project). The generic session injection layer (D-005 Layer 1)
+      draws only from workspace-scoped entries. Project memory draws only
+      from project-scoped entries. Never mix scopes in the same injection.
+    confidence: high
+    context: >
+      Without scoping, patterns learned in the claude-core build pollute
+      a React project in the same workspace. "Skills always need
+      references/process.md" is a claude-core convention, not a universal truth.
+      Cross-project contamination is a silent failure — confident wrong injection.
+
+  # ============================================================
+  # SIDE EFFECTS & MITIGATIONS
+  # ============================================================
+
+  - id: D-010
+    domain: risk
+    roadmap_item: "RL-082, RL-083 (design context only — no standalone build item)"
+    title: "Known side effects and their mitigations"
+    decision: >
+      Six failure modes are accepted as known risks, each with a specific
+      mitigation built into the design:
+      1. Confident-but-wrong resume (stale snapshot) → lean snapshot + Claude
+         re-reads files; snapshot has paths not contents
+      2. Circular reasoning (injected patterns become constraints) → only
+         deliberate decisions are marked permanent; observations decay
+      3. Sequential dependency loss (cross-unit contracts not captured) →
+         snapshot explicitly includes active conventions, not just task state
+      4. Injection conflicts (multiple sources contradict) → explicit priority
+         order (D-005), CLAUDE.md always wins
+      5. Trigger false positives (path-match fires on non-completion writes) →
+         gates use completion events, not raw file-write events
+      6. Size creep (permissive matching accumulates over months) → fixed
+         budgets (D-007) + periodic consolidation (D-008)
+    confidence: high
+    context: >
+      These were identified through adversarial analysis during brainstorm.
+      All six have mitigations built into the design. The episodic memory
+      auto-approve risk (bad patterns becoming permanent fixtures) is
+      addressed by the confidence threshold: new entries start low and earn
+      their way into Tier 1 injection.
+
+  # ============================================================
+  # RESEARCH DISCIPLINE
+  # ============================================================
+
+  - id: D-011
+    domain: methodology
+    roadmap_item: "implemented (brainstorm-session skill updated 2026-03-09)"
+    title: "Research sources persisted immediately to findings.md"
+    decision: >
+      Every research operation (Perplexity, WebFetch, search) must write
+      its sources to .ai/brainstorm/{topic}/findings.md immediately —
+      not at end of session. Format: source name, URL, tool used,
+      2–4 sentence summary of what was found and why it matters.
+      Never leave sources only in conversation context.
+    confidence: high
+    context: >
+      Research is expensive: both token cost and paid tool cost (Perplexity).
+      Context compaction can happen at any point. Sources lost to compaction
+      must be re-fetched at full cost. Immediate persistence is the only
+      reliable protection. This rule is now encoded in brainstorm-session
+      skill (references/process.md) and declared in SKILL.md writes list.
+
+  # ============================================================
+  # DEFERRED / FUTURE WORK
+  # ============================================================
+
+  - id: D-012
+    domain: architecture
+    roadmap_item: "RL-031 (updated with richer design from this session)"
+    title: "Episodic memory layer — designed, not yet built"
+    decision: >
+      Episodic memory ("we tried X on project Y, it failed because Z") is
+      a distinct memory type from facts (MEMORY.md) and decisions
+      (decisions.yml). It requires its own store, capture hooks, and
+      relevance injection logic. This is the component that enables truly
+      smart relevance filtering — matching session context to past experience.
+      Deferred: build after the compact trigger discipline and three-layer
+      injection are stable.
+    confidence: high
+    context: >
+      Without episodic memory, injection is rule-based (file-path detection).
+      With it, injection becomes experience-based (semantic match to past
+      outcomes). The rule-based approach is 80% of the value with 20% of the
+      complexity. Episodic memory is the remaining 20% value requiring
+      significant additional architecture. The immune system brainstorm
+      (self-improvement plugin) overlaps heavily with this — both should be
+      designed together.
+
+  - id: D-013
+    domain: observability
+    roadmap_item: RL-084
+    title: "Trace duration bug — separate fix needed"
+    decision: >
+      duration_ms is not populated in PostToolUse hook JSON, causing
+      trace-light.log to show "-" on every entry. Fix trace-light.sh to
+      either correctly extract duration_ms if it becomes available, or
+      remove the field from the log format to avoid misleading dashes.
+      Tracked separately from this brainstorm.
+    confidence: high
+    context: >
+      Observed during session: all 320+ log entries have duration "-".
+      The extraction logic in trace-light.sh is correct syntactically but
+      the field is not present in the hook input. Low priority but creates
+      misleading observability data.
