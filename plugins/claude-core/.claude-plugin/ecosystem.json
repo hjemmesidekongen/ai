@@ -28,7 +28,8 @@
     "plugin-reviewer",
     "mcp-creator",
     "plugin-settings",
-    "verification-gate"
+    "verification-gate",
+    "git-worktree-isolation"
   ],
   "agents": ["plugin-validator", "skill-auditor", "security-auditor"],
   "dependencies": []
