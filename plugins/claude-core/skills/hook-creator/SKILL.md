@@ -3,7 +3,9 @@ name: hook-creator
 description: >
   Create, modify, or debug Claude Code hooks with correct event types, exit codes,
   JSON output formats, and shell best practices. Use when adding hooks to any plugin,
-  fixing broken hooks, or converting hooks between types (command, prompt, HTTP, agent).
+  fixing broken or silent hooks, blocking or allowing specific tools via PreToolUse,
+  adding guards for SessionStart or Stop events, registering hooks in plugin.json,
+  or converting hooks between types (command, prompt, HTTP, agent).
 user_invocable: false
 interactive: false
 depends_on: []
