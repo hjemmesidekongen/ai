@@ -786,14 +786,15 @@ items:
     tags: [pre-completion, errors, iteration-2]
 
   - id: RL-069
-    title: "Memory health: auto-run via /loop"
-    description: "Set up memory-health-check.sh as a daily cron via /loop for automated monitoring."
+    title: "Memory health: auto-run daily"
+    description: "memory-health-daily.sh runs via SessionStart with once-per-day gate. Reports line count, stale entries, and graduation candidates on first session each day."
     category: core
     plugin: claude-core
-    priority: next
+    priority: done
+    completed: "2026-03-09"
     source: "phase-1-implementation"
     added: "2026-03-08"
-    tags: [memory, cron, automation, iteration-2]
+    tags: [memory, automation, iteration-2]
 
   - id: RL-070
     title: "Status bar: show error count from session trace"
