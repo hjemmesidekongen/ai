@@ -993,6 +993,22 @@ items:
 
   # --- External reference findings ---
 
+  - id: RL-095
+    title: "Subagent-per-task plan execution pattern"
+    description: >
+      Updated plan-execute.md with subagent dispatch section: implementer
+      receives minimal context (task spec + plan.md + dependency artifacts),
+      followed by spec-reviewer then quality-reviewer loop. Coordinator reads
+      artifact files directly, never paraphrases. Added per-task reviewer
+      pattern to agent-orchestration.md.
+    category: core
+    plugin: claude-core
+    priority: done
+    completed: "2026-03-09"
+    source: ".ai/research/external-reference-findings.md (A3)"
+    added: "2026-03-09"
+    tags: [planning, agents, orchestration, context, external-reference]
+
   - id: RL-094
     title: "TDD baseline methodology for skill creation"
     description: >

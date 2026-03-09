@@ -116,6 +116,53 @@ When running multiple agents for a quality gate:
 | Only WARNING/MEDIUM | Gate passes with notes — fix soon |
 | Only INFO/LOW | Gate passes clean |
 
+## Per-Task Reviewer Pattern
+
+For complex implementation tasks, use a 3-stage loop per task:
+implementer → spec-reviewer → quality-reviewer. Each stage is a fresh
+agent that reads the prior stage's artifact file.
+
+### When to use
+
+- High-risk implementation tasks (new skills, hooks, schema changes)
+- Tasks where spec compliance is critical before quality review
+- Multi-wave plans where later waves depend on correct earlier outputs
+
+### Stage structure
+
+```
+Implementer
+  → writes .ai/plans/<name>/artifacts/<wave>-<task>-output.md
+  → verified via verification-gate before reporting done
+
+Spec Reviewer (reads implementer artifact)
+  → checks: does output match task spec? files written correctly?
+  → writes .ai/plans/<name>/artifacts/<wave>-<task>-spec-review.md
+  → verdict: PASS | FAIL (with specific issues)
+
+Quality Reviewer (reads both artifacts — only if spec review passes)
+  → checks: content quality, completeness, edge cases, consistency
+  → writes .ai/plans/<name>/artifacts/<wave>-<task>-quality-review.md
+  → verdict: PASS | PASS_WITH_NOTES | FAIL
+```
+
+### Coordinator reads all three artifacts directly
+
+Never paraphrase reviewer responses. Read the artifact files:
+```
+Read tool → .ai/plans/<name>/artifacts/<wave>-<task>-spec-review.md
+Read tool → .ai/plans/<name>/artifacts/<wave>-<task>-quality-review.md
+```
+
+Advance state based on the verdict fields in those files.
+
+### Fallback
+
+For simple, low-risk tasks (schema updates, doc edits), a single
+implementer without reviewer loop is sufficient.
+
+---
+
 ## Forward-Message Pattern
 
 **The problem:** When sub-agents return results, the coordinator synthesizes their output into a summary before acting. This paraphrasing loses ~50% of the signal — the telephone game. Each synthesis step degrades fidelity.

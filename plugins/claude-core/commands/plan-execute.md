@@ -60,6 +60,63 @@ Execute a wave plan sequentially. Each wave completes and passes verification be
    - Show summary: waves completed, tasks done, errors encountered
    - "Plan complete. All waves verified."
 
+## Subagent-Per-Task Execution
+
+For complex plans (3+ waves, high-risk implementation, or parallel agent work), dispatch each task as a fresh Agent subagent instead of executing inline. This prevents context accumulation from degrading quality on later tasks.
+
+### When to use
+
+- Plans with 3+ waves where later tasks need clean context
+- Implementation tasks that shouldn't see the coordinator's reasoning
+- Parallel waves where agents must not share context
+
+### Implementer dispatch
+
+Each task agent receives only what it needs:
+
+```
+Context package for task agent:
+  1. Task spec: id, name, description, files_written, files_read, model_tier
+  2. Plan rules: full plan.md content (implementation contract)
+  3. Dependency artifacts: read .ai/plans/<name>/artifacts/ for any depends_on tasks
+  4. Verification requirement: "Apply verification-gate before reporting done"
+
+Prompt structure:
+  "You are implementing task <id>: <name>.
+   Rules: [plan.md content]
+   Prior step outputs: [artifact file contents from depends_on tasks]
+   Write your output to: .ai/plans/<name>/artifacts/<wave>-<task>-output.md
+   Apply verification-gate before reporting complete."
+```
+
+### Reviewer loop (per task)
+
+After the implementer writes its artifact, dispatch two reviewers:
+
+```
+Stage 1 — Spec Reviewer:
+  Read: task spec + implementer artifact
+  Check: does the output match the spec? Are files correct?
+  Write: .ai/plans/<name>/artifacts/<wave>-<task>-spec-review.md
+
+Stage 2 — Quality Reviewer (only if Stage 1 passes):
+  Read: task spec + implementer artifact + spec-review artifact
+  Check: content quality, completeness, edge cases
+  Write: .ai/plans/<name>/artifacts/<wave>-<task>-quality-review.md
+```
+
+### Coordinator responsibility
+
+The coordinator:
+- Reads all artifact files directly (never paraphrases agent responses)
+- Advances state based on review verdicts
+- Retries failed tasks (max 3, then escalate)
+- Never implements — only orchestrates
+
+### Fallback
+
+For simple single-wave plans, inline execution is fine. Use subagent dispatch when the plan's complexity warrants it.
+
 ## Error recovery
 
 - On failure: state.yml records the exact failure point
