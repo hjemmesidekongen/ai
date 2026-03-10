@@ -1,0 +1,117 @@
+---
+title: Installation
+description: Get the plugins cloned, installed, and verified in Claude Code.
+---
+
+# Installation
+
+## Prerequisites
+
+- [Claude Code](https://docs.anthropic.com/en/docs/claude-code) installed and authenticated
+- Node.js 18+
+- git
+
+No other tooling required. The plugins themselves are markdown files and YAML - no build step, no npm install.
+
+## Clone and install
+
+```bash
+git clone <repository-url>
+cd claude-local-workspace
+```
+
+Then, inside Claude Code (not your terminal):
+
+```bash
+/install
+```
+
+That's it. `/install` handles everything else.
+
+## What /install actually does
+
+Claude Code's plugin system works through a marketplace registry at `~/.claude/plugins/known_marketplaces.json`. That file points to the `plugins/` directory in this repo.
+
+When you run `/install`, Claude Code:
+
+1. Reads the marketplace registry to find the `plugins/` directory
+2. Scans each subdirectory for a `.claude-plugin/plugin.json`
+3. Reads each plugin's `ecosystem.json` to discover skills, commands, agents, and hooks
+4. Registers everything so it's available in the command palette and hook pipeline
+
+Nothing is compiled or bundled. Each skill is a markdown file loaded on demand.
+
+## What gets installed
+
+**claude-core** (v0.3.0) - the foundation layer
+
+- 35 skills: planning, brainstorm, verification, tracing, memory, code review, debugging, and more
+- 13 commands: `/plan:create`, `/plan:execute`, `/brainstorm:start`, `/brainstorm:decide`, and others
+- 12 agents: plugin-validator, security-auditor, error-detective, tdd-orchestrator, and others
+- 16 hooks: PreToolUse (scope guard, state checks), PostToolUse (tracing, observations), Stop (verification gate), PreCompact (context snapshot)
+
+**dev-engine** (v0.2.0) - multi-agent development pipeline
+
+- 53 skills across 7 categories: core execution, disciplines, tech knowledge (React, Next.js, NestJS, Prisma, Expo, and more), integration patterns
+- 6 agents: dispatcher, frontend, backend, testing, security, reviewer
+- 2 commands: `/dev:scan`, `/dev:run`
+
+**taskflow** (v0.1.0) - task management and workplace integration
+
+- 9 skills: Jira ingestion, contradiction detection, QA handover, PR workflows, bulk ingestion, project profiles
+- 8 commands: `/task:ingest`, `/task:start`, `/task:pr`, `/task:done`, and others
+
+## Verify the installation
+
+Run `/help` inside Claude Code. You should see commands listed under `claude-core`, `dev-engine`, and `taskflow`.
+
+Try a quick smoke test:
+
+```bash
+# Should respond with plan status (even if no active plan exists)
+/plan:status
+
+# Should open a brainstorm session
+/brainstorm:start
+```
+
+Check that hooks are active by attempting a direct push to main - it should be blocked with an explanation. That means the PreToolUse hooks registered correctly.
+
+## Updating
+
+Pull the latest changes, clear the plugin cache, and reinstall:
+
+```bash
+git pull
+rm -rf ~/.claude/plugins/cache/local-workspace/
+```
+
+Then restart Claude Code and run `/install` again.
+
+The cache clear is not optional. Claude Code caches plugin contents aggressively, and stale cache causes hooks and skills to silently run old versions even after you pull. This is the most common source of "why isn't my change working" issues.
+
+## Troubleshooting
+
+**Skills not showing up in the command palette**
+
+Check that `~/.claude/plugins/known_marketplaces.json` points to the correct absolute path for the `plugins/` directory. The path must match where you cloned the repo.
+
+**Hooks not firing**
+
+Clear the plugin cache and reinstall:
+
+```bash
+rm -rf ~/.claude/plugins/cache/local-workspace/
+# Restart Claude Code, then:
+/install
+```
+
+If hooks still don't fire after a reinstall, check `.ai/traces/hook-errors.log` - hook decisions and failures are logged there with timestamps and reasons.
+
+**Commands missing after install**
+
+Verify the plugin's `ecosystem.json` lists the command. Each command needs an entry in the `commands` array with the correct path. If the file exists but isn't in `ecosystem.json`, Claude Code won't discover it.
+
+**Plugin shows as installed but behaves unexpectedly**
+
+Check `plugins/<plugin-name>/.claude-plugin/plugin.json` for the plugin version. If you recently pulled changes and cleared cache but behavior didn't change, confirm you restarted Claude Code fully - not just reloaded the window.

@@ -2,6 +2,10 @@
   "title": "Documentation",
   "pages": [
     "index",
+    "install",
+    "configure",
+    "init-project",
+    "workflows",
     "claude-core",
     "dev-engine",
     "taskflow",

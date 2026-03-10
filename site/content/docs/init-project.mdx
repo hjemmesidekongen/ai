@@ -1,0 +1,127 @@
+---
+title: "Initialize in a New Project"
+description: "Scan your codebase, set up the .ai/ directory, run your first planning session, and pick up where you left off."
+---
+
+# Initialize in a New Project
+
+You don't run an install script. There's no config file to write before you start. The setup happens as you use the tools - each feature creates what it needs.
+
+The one thing worth doing upfront is scanning your project.
+
+## Scan Your Project
+
+```bash
+/dev:scan
+```
+
+This reads your config files - `package.json`, `tsconfig.json`, `next.config.*`, `turbo.json`, `prisma/schema.prisma`, and others - to build a picture of your tech stack, detect monorepo structure, and map module boundaries. The result goes to `.ai/project-map.yml` with a Mermaid C4 context diagram included.
+
+```yaml
+stack:
+  framework: "next.js"
+  runtime: "node.js"
+  css: "tailwind"
+modules:
+  - name: "web"
+    path: "apps/web"
+    type: "frontend"
+  - name: "api"
+    path: "apps/api"
+    type: "backend"
+diagram: |
+  C4Context
+    Person(user, "User")
+    System(web, "Web App", "Next.js frontend")
+    System(api, "API", "Node.js backend")
+    Rel(user, web, "Uses")
+    Rel(web, api, "Calls")
+```
+
+That project map feeds into agent dispatch. When agents run tasks, they get context about your actual codebase - what framework you're using, what modules exist, where the boundaries are. Without a scan, they're working from generic assumptions.
+
+Run it once when you start. Re-run it if you add packages or restructure significantly.
+
+## The .ai/ Directory
+
+Everything the tools produce lands in `.ai/`. Nothing gets created until you use the feature that needs it.
+
+```
+.ai/
+├── context/          # Session snapshots (auto-created by hooks)
+│   └── snapshot.yml
+├── plans/            # Wave plans (created when you /plan:create)
+├── tasks/            # Task files (created when you /task:ingest)
+├── handoffs/         # Session handoff documents
+├── instincts/        # Behavioral learning pipeline (auto-populated)
+├── brainstorm/       # Brainstorm sessions and decisions
+├── roadmap.yml       # Project roadmap
+└── project-map.yml   # From /dev:scan
+```
+
+Commit `.ai/` to your repo. The project map, plans, brainstorm decisions, and handoffs are all useful to keep alongside the code. The `context/` directory holds transient session state - commit it or not, up to you.
+
+Add `.ai/context/snapshot.yml` to `.gitignore` if you'd rather keep session state local.
+
+## Your First Planning Session
+
+For any non-trivial work - anything with tradeoffs, multiple approaches, or architectural impact - start with a brainstorm before writing code.
+
+```bash
+/brainstorm:start "How should we approach X?"
+```
+
+This opens an exploration session. Ask questions, challenge assumptions, think through tradeoffs. When you have enough to commit to a direction:
+
+```bash
+/brainstorm:decide
+```
+
+This extracts the conclusions into a `decisions.yml` file. Those decisions persist and feed into future sessions as context.
+
+Then turn the decision into an executable plan:
+
+```bash
+/plan:create "Do X"
+/plan:execute
+```
+
+The plan breaks work into waves with verification gates between them. Each wave is a set of tasks that can run in parallel. The full workflow detail is in [Workflows](/workflows).
+
+## Your First Task
+
+**With Jira:**
+
+```bash
+/task:ingest PROJ-123   # Pull the ticket and create a local task file
+/task:start             # Load the task, set up the branch
+# do the work
+/task:pr                # Create the PR with context from the task
+/task:done              # Mark complete, update Jira
+```
+
+**Without Jira:**
+
+```bash
+/dev:run "Build X"
+```
+
+This runs the full dev pipeline standalone - task decomposition, agent dispatch, verification gates, completion check. No ticket needed.
+
+## Session Continuity
+
+When a session ends or context compacts, a `PreCompact` hook saves the current state to `.ai/context/snapshot.yml`. When you start a new session, the `SessionStart` hook reads it back. Your CLAUDE.md includes a pointer that tells Claude Code to load the snapshot after compaction, so context survives `/compact` automatically.
+
+For explicit handoffs - when you're stopping mid-task and want to make sure the next session picks up cleanly:
+
+```bash
+/session-handoff
+```
+
+This creates a structured document at `.ai/handoffs/YYYY-MM-DD-HHMMSS-<slug>.md` with current state, key decisions, and the next concrete step. When you return:
+
+```bash
+/session-handoff  # triggers resume mode if handoff files exist
+```
+
+It checks staleness (commits since the handoff), loads the document, and picks up from "Immediate Next Steps". The full recipe for chained handoffs across longer gaps is in [Workflows](/workflows).

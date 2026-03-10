@@ -1,11 +1,11 @@
 ---
 title: dev-engine
-description: Multi-agent development execution — task decomposition, specialist agents, parallel dispatch, quality gates, and 50+ framework knowledge skills.
+description: Multi-agent development execution - task decomposition, specialist agents, parallel dispatch, quality gates, and 50+ framework knowledge skills.
 ---
 
 # dev-engine
 
-The execution arm of the hjemmesidekongen/ai methodology. Where claude-core provides the infrastructure and verification, dev-engine handles the actual development work — decomposing tasks, dispatching specialist agents, and enforcing quality gates before anything ships.
+The execution arm of the hjemmesidekongen/ai methodology. Where claude-core provides the infrastructure and verification, dev-engine handles the actual development work - decomposing tasks, dispatching specialist agents, and enforcing quality gates before anything ships.
 
 **Version:** 0.2.0 · **53 skills** · **6 agents** · **2 commands**
 
@@ -79,9 +79,9 @@ Six agents, each with a defined role and expertise:
 | **test-engineer** | sonnet | Unit, integration, E2E tests across all frameworks |
 | **architect** | opus | Design review, dependency analysis, module boundaries (read-only) |
 | **app-security-auditor** | opus | OWASP checks, dependency audit, auth review, secret detection (read-only) |
-| **code-reviewer** | opus | 10-point completion gate — the only agent that can approve work as done (read-only) |
+| **code-reviewer** | opus | 10-point completion gate - the only agent that can approve work as done (read-only) |
 
-The three read-only agents (architect, security, code-reviewer) never modify code. They analyze and report. This separation prevents conflicts of interest — the agent that writes the code never grades it.
+The three read-only agents (architect, security, code-reviewer) never modify code. They analyze and report. This separation prevents conflicts of interest - the agent that writes the code never grades it.
 
 ## Parallel Execution with File Ownership
 
@@ -95,7 +95,7 @@ test-engineer →  owns: tests/profile.test.ts, tests/api/profile.test.ts
 
 No two agents write to the same file. If a task decomposition creates file conflicts, the dispatcher serializes those tasks instead of parallelizing them.
 
-Interface contracts are defined at boundaries before implementation starts — agents agree on the API shape before building both sides.
+Interface contracts are defined at boundaries before implementation starts - agents agree on the API shape before building both sides.
 
 ## Tier-Based Model Assignment
 
@@ -109,26 +109,26 @@ Not every subtask needs the most expensive model. dev-engine uses a 5-factor ris
 | Impact | 20% | Blast radius of mistakes |
 | Dependencies | 15% | How many other tasks depend on this |
 
-**Junior (haiku):** Simple, well-defined tasks — rename a variable, add a CSS class, write a straightforward test.
+**Junior (haiku):** Simple, well-defined tasks - rename a variable, add a CSS class, write a straightforward test.
 
-**Senior (sonnet):** Typical development work — build a component, wire up an API endpoint, implement business logic.
+**Senior (sonnet):** Typical development work - build a component, wire up an API endpoint, implement business logic.
 
-**Principal (opus):** High-risk or complex tasks — architecture decisions, security reviews, design evaluations that affect multiple modules.
+**Principal (opus):** High-risk or complex tasks - architecture decisions, security reviews, design evaluations that affect multiple modules.
 
 ## 10-Point Completion Gate
 
 Every task passes through these checks before it's marked done:
 
-1. Spec compliance — does it match the requirements?
-2. Lint — no warnings, no errors
-3. Type check — TypeScript strict mode passes
-4. Unit tests — written and passing
-5. Integration tests — component interactions verified
-6. E2E tests — user flows tested
-7. Test coverage — meets threshold
-8. Visual verification — responsive at 3 breakpoints
-9. Security — no OWASP Top 10 violations
-10. Artifacts — all deliverables present
+1. Spec compliance - does it match the requirements?
+2. Lint - no warnings, no errors
+3. Type check - TypeScript strict mode passes
+4. Unit tests - written and passing
+5. Integration tests - component interactions verified
+6. E2E tests - user flows tested
+7. Test coverage - meets threshold
+8. Visual verification - responsive at 3 breakpoints
+9. Security - no OWASP Top 10 violations
+10. Artifacts - all deliverables present
 
 The code-reviewer agent runs this gate. It's the only agent authorized to approve work. Implementing agents cannot mark their own tasks done.
 
@@ -185,7 +185,7 @@ dev-engine doesn't give generic advice. Each framework skill contains verified, 
 | api-security | Rate limiting, input validation (zod/joi), CORS, Helmet.js |
 | web-security-owasp | XSS, CSRF, SQL/NoSQL injection, SSRF, clickjacking |
 
-### Expo (React Native) — 12 Skills
+### Expo (React Native) - 12 Skills
 
 Full coverage for React Native development with Expo:
 
@@ -218,7 +218,7 @@ Full coverage for React Native development with Expo:
 
 | Command | What It Does |
 |---------|-------------|
-| `/dev:run` | Full pipeline — decompose, assign, dispatch, verify. Supports `--dry-run` for preview. |
+| `/dev:run` | Full pipeline - decompose, assign, dispatch, verify. Supports `--dry-run` for preview. |
 | `/dev:scan` | Scan repo for tech stack and architecture. Outputs `.ai/project-map.yml` with Mermaid C4 diagram. |
 
 ## Integration with taskflow

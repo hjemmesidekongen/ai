@@ -1,11 +1,11 @@
 ---
 title: claude-core
-description: Foundation plugin — planning, brainstorming, verification, tracing, memory governance, debugging, learning pipelines, and workplace integrations.
+description: Foundation plugin - planning, brainstorming, verification, tracing, memory governance, debugging, learning pipelines, and workplace integrations.
 ---
 
 # claude-core
 
-The foundation of the hjemmesidekongen/ai methodology — the infrastructure that makes structured AI-assisted development possible. Without it, the other plugins have nothing to stand on: no state management, no verification protocol, no learning pipeline.
+The foundation of the hjemmesidekongen/ai methodology - the infrastructure that makes structured AI-assisted development possible. Without it, the other plugins have nothing to stand on: no state management, no verification protocol, no learning pipeline.
 
 **Version:** 0.3.0 · **35 skills** · **13 commands** · **12 agents** · **16 hooks**
 
@@ -21,11 +21,11 @@ Turn ideas into structured execution plans with dependency resolution and parall
 
 | Command | What It Does |
 |---------|-------------|
-| `/brainstorm:start` | Open-ended exploration. Claude acts as a sparring partner — challenges assumptions, pushes back on weak reasoning. |
+| `/brainstorm:start` | Open-ended exploration. Claude acts as a sparring partner - challenges assumptions, pushes back on weak reasoning. |
 | `/brainstorm:decide` | Extract structured decisions from a brainstorm session. Each decision gets user confirmation before it's saved. |
 | `/plan:create` | Convert a task into a wave-based plan. Resolves dependencies via topological sort, assigns model tiers, sets up verification gates. |
 | `/plan:execute` | Run the plan wave-by-wave with parallel agent dispatch and verification between waves. |
-| `/plan:status` | See where you are — wave progress, task status, errors, recovery options. |
+| `/plan:status` | See where you are - wave progress, task status, errors, recovery options. |
 | `/plan:resume` | Pick up an interrupted plan from exactly where it stopped. |
 
 The planning engine handles the hard parts: dependency ordering, file-ownership isolation (so parallel agents don't conflict), and automatic verification gates between waves.
@@ -49,25 +49,25 @@ Claude Code forgets everything when you start a new session. claude-core doesn't
 
 **session-handoff** creates structured handoff documents capturing: current state, blockers, open questions, and actionable next steps. When you resume, it loads the handoff, classifies staleness (FRESH → SLIGHTLY_STALE → STALE → VERY_STALE), and verifies assumptions still hold.
 
-**PreCompact snapshot** — before Claude Code compresses context, a hook saves the full session state to `.ai/context/snapshot.yml`. On session start, another hook restores it. Your working context survives compaction automatically.
+**PreCompact snapshot** - before Claude Code compresses context, a hook saves the full session state to `.ai/context/snapshot.yml`. On session start, another hook restores it. Your working context survives compaction automatically.
 
 ### Debugging & Investigation
 
 Three skills that enforce evidence-first debugging:
 
-**root-cause-debugging** — 4 mandatory phases: Investigate → Pattern Analysis → Hypothesis → Implement. You can't jump to a fix without understanding the problem first. If 3+ fixes fail, it escalates.
+**root-cause-debugging** - 4 mandatory phases: Investigate → Pattern Analysis → Hypothesis → Implement. You can't jump to a fix without understanding the problem first. If 3+ fixes fail, it escalates.
 
-**hypothesis-generator** — generates 3 competing hypotheses, investigates each in parallel, and synthesizes evidence. Eliminates confirmation bias by forcing you to consider alternatives before committing to one explanation.
+**hypothesis-generator** - generates 3 competing hypotheses, investigates each in parallel, and synthesizes evidence. Eliminates confirmation bias by forcing you to consider alternatives before committing to one explanation.
 
-**reasoning-trace-optimizer** — analyzes `trace-light.log` for reasoning degradation: context loss, tool confusion, instruction drift, goal abandonment, circular reasoning. Produces specific diagnosis with actionable fixes.
+**reasoning-trace-optimizer** - analyzes `trace-light.log` for reasoning degradation: context loss, tool confusion, instruction drift, goal abandonment, circular reasoning. Produces specific diagnosis with actionable fixes.
 
 ### Learning Pipeline
 
 claude-core observes how you work and extracts patterns:
 
-1. **observation-recorder** (hook) — captures tool call patterns automatically during every session
-2. **instinct-extractor** — reads observations, identifies recurring patterns (3+ occurrences), extracts them as "instincts" with confidence weights
-3. **instinct-evolve** — reviews mature instincts (confidence ≥0.75, evidence ≥3) and proposes promotion to CLAUDE.md rules, MEMORY.md entries, or new skills
+1. **observation-recorder** (hook) - captures tool call patterns automatically during every session
+2. **instinct-extractor** - reads observations, identifies recurring patterns (3+ occurrences), extracts them as "instincts" with confidence weights
+3. **instinct-evolve** - reviews mature instincts (confidence ≥0.75, evidence ≥3) and proposes promotion to CLAUDE.md rules, MEMORY.md entries, or new skills
 
 The pipeline is self-correcting: contradictions decay confidence, and instincts that don't recur expire naturally.
 
@@ -81,7 +81,7 @@ The pipeline is self-correcting: contradictions decay confidence, and instincts 
 4. Performance optimization
 5. Testing coverage & documentation
 
-Severity gates between phases — critical findings in Phase 1 block progression to Phase 2. Final consolidated report deduplicates across all reviewers.
+Severity gates between phases - critical findings in Phase 1 block progression to Phase 2. Final consolidated report deduplicates across all reviewers.
 
 **parallel-reviewer** dispatches 4 specialized reviewers (security, performance, architecture, testing) simultaneously for faster targeted review.
 
@@ -96,9 +96,9 @@ Create, review, and maintain plugin components:
 | command-creator | agent-reviewer |
 | agent-creator | plugin-reviewer |
 | plugin-creator | component-reviewer |
-| mcp-creator | — |
+| mcp-creator | - |
 
-Creators enforce correct frontmatter, naming conventions, and registration. Reviewers are read-only — they produce verdicts, never modifications.
+Creators enforce correct frontmatter, naming conventions, and registration. Reviewers are read-only - they produce verdicts, never modifications.
 
 ### Workplace Integrations
 
@@ -112,25 +112,25 @@ Five MCP-based skills for connecting to your existing tools:
 | bitbucket-basics | Bitbucket | Create PRs, check pipeline status, manage branches |
 | outlook-basics | Microsoft 365 | Search emails, read threads, check calendar |
 
-Each integration requires its MCP server configured. All degrade gracefully when the server isn't available — clear error messages, never fabricated data.
+Each integration requires its MCP server configured. All degrade gracefully when the server isn't available - clear error messages, never fabricated data.
 
 ### Architecture & Documentation
 
-- **c4-architecture** — generate C4 model diagrams (context, container, component, deployment) as Mermaid
-- **mermaid-diagrams** — 7 diagram types: class, sequence, flowchart, ERD, state, git graph, gantt
-- **doc-checkpoint** — after any task, compares changes against documentation files and produces a checklist of what needs updating
-- **auto-doc** — automatically syncs CLAUDE.md structure trees, component counts, and ecosystem.json entries
-- **reducing-entropy** — deletion-first mindset for codebase health: measure success by how much code remains
+- **c4-architecture** - generate C4 model diagrams (context, container, component, deployment) as Mermaid
+- **mermaid-diagrams** - 7 diagram types: class, sequence, flowchart, ERD, state, git graph, gantt
+- **doc-checkpoint** - after any task, compares changes against documentation files and produces a checklist of what needs updating
+- **auto-doc** - automatically syncs CLAUDE.md structure trees, component counts, and ecosystem.json entries
+- **reducing-entropy** - deletion-first mindset for codebase health: measure success by how much code remains
 
 ### Writing & Communication
 
-- **writing-clearly-and-concisely** — Strunk's 18 rules applied to technical writing, with AI anti-pattern detection
-- **prompt-optimizer** — sharpen vague prompts into precise instructions. Two modes: auto-sharpen (hook-triggered) and builder (`/prompt:create`)
+- **writing-clearly-and-concisely** - Strunk's 18 rules applied to technical writing, with AI anti-pattern detection
+- **prompt-optimizer** - sharpen vague prompts into precise instructions. Two modes: auto-sharpen (hook-triggered) and builder (`/prompt:create`)
 
 ### Automation
 
-- **`/autopilot-run`** — autonomous iteration loop. Give it a task, it works through iterations until completion, respecting stop hooks and verification gates.
-- **`/autopilot-cancel`** — stop the loop and get an iteration report.
+- **`/autopilot-run`** - autonomous iteration loop. Give it a task, it works through iterations until completion, respecting stop hooks and verification gates.
+- **`/autopilot-cancel`** - stop the loop and get an iteration report.
 
 ## Hooks Architecture
 

@@ -1,11 +1,11 @@
 ---
 title: taskflow
-description: Task management and workplace integration — Jira ingestion, contradiction detection, PR workflows, QA handover, and cross-session continuity.
+description: Task management and workplace integration - Jira ingestion, contradiction detection, PR workflows, QA handover, and cross-session continuity.
 ---
 
 # taskflow
 
-The task lifecycle layer of the hjemmesidekongen/ai methodology. The methodology says structure before code — taskflow is where that structure comes from. It connects your project management tools to the development workflow so every task starts with clear requirements, flagged contradictions, and a defined path to completion.
+The task lifecycle layer of the hjemmesidekongen/ai methodology. The methodology says structure before code - taskflow is where that structure comes from. It connects your project management tools to the development workflow so every task starts with clear requirements, flagged contradictions, and a defined path to completion.
 
 **Version:** 0.1.0 · **9 skills** · **8 commands**
 
@@ -13,7 +13,7 @@ The task lifecycle layer of the hjemmesidekongen/ai methodology. The methodology
 
 taskflow turns Jira tickets into local YAML files, analyzes them for contradictions, and provides a structured lifecycle from ingestion through completion. When you're done coding, it creates PRs with context-rich descriptions and generates QA handover documents grounded in acceptance criteria.
 
-Every MCP integration degrades gracefully. If Jira isn't configured, you get clear messages — never fabricated data.
+Every MCP integration degrades gracefully. If Jira isn't configured, you get clear messages - never fabricated data.
 
 ## The Workflow
 
@@ -45,9 +45,9 @@ This is the feature that pays for itself immediately.
 
 When you ingest a Jira ticket, taskflow reads the description and every comment. It identifies where later comments contradict, modify, or extend the original requirements. Each finding is classified by severity:
 
-- **Blocker** — direct contradiction that changes what you need to build
-- **Warning** — modification that shifts scope or priority
-- **Info** — addition or clarification that doesn't conflict
+- **Blocker** - direct contradiction that changes what you need to build
+- **Warning** - modification that shifts scope or priority
+- **Info** - addition or clarification that doesn't conflict
 
 You see contradictions when you `/task:start` and again in `/task:status`. No more discovering mid-implementation that comment #7 reversed the requirement from comment #3.
 
@@ -59,7 +59,7 @@ You see contradictions when you `/task:start` and again in `/task:status`. No mo
 - Test plan derived from criteria
 - Pipeline status (checks CI/CD after creation)
 
-The PR description is immediately useful to reviewers — not an empty "ready for review" with a Jira link.
+The PR description is immediately useful to reviewers - not an empty "ready for review" with a Jira link.
 
 Supports Bitbucket (via MCP) with draft mode. Posts the PR URL as a Jira comment automatically. Falls back to formatted output for manual submission when Bitbucket MCP isn't configured.
 
@@ -67,12 +67,12 @@ Supports Bitbucket (via MCP) with draft mode. Posts the PR URL as a Jira comment
 
 `/task:done` generates a structured QA handover document:
 
-- **What changed** — file-by-file summary from git diff
-- **Test scenarios** — mapped from acceptance criteria, not generic checklists
-- **Regression risks** — identified from the code diff
-- **Screenshots** — included for UI-heavy changes
+- **What changed** - file-by-file summary from git diff
+- **Test scenarios** - mapped from acceptance criteria, not generic checklists
+- **Regression risks** - identified from the code diff
+- **Screenshots** - included for UI-heavy changes
 
-Output format matches your project profile — Jira wiki markup, GitHub-flavored markdown, or plain markdown. Goes straight into the right system without reformatting.
+Output format matches your project profile - Jira wiki markup, GitHub-flavored markdown, or plain markdown. Goes straight into the right system without reformatting.
 
 ### Confluence Integration
 

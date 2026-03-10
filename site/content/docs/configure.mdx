@@ -1,0 +1,234 @@
+---
+title: Configuration
+description: MCP server setup, plugin settings, CLAUDE.md, memory, and project profiles.
+---
+
+# Configuration
+
+After installation, there are four things you may want to configure: MCP server connections, per-plugin settings, your CLAUDE.md files, and project profiles. None are required to start - the plugins work with defaults - but connecting external tools unlocks the Jira, Slack, Figma, and browser automation integrations.
+
+## MCP Server Setup
+
+The plugins connect to external tools through MCP servers. You configure them by adding entries to `.mcp.json` in your project root, or under **Settings > MCP** in Claude Code for global connections.
+
+Each template below is a drop-in entry. Merge the `mcpServers` block into your existing `.mcp.json` if you already have one.
+
+### Atlassian (Jira, Confluence, Bitbucket)
+
+Used by taskflow's Jira ingestion, PR workflows, and QA handover.
+
+```json
+{
+  "mcpServers": {
+    "atlassian": {
+      "command": "npx",
+      "args": ["-y", "mcp-remote", "https://mcp.atlassian.com/v1/sse"],
+      "env": {}
+    }
+  }
+}
+```
+
+This uses Atlassian's hosted MCP endpoint via `mcp-remote`. Authentication is handled via OAuth when you first connect.
+
+### Slack
+
+```json
+{
+  "mcpServers": {
+    "slack": {
+      "command": "npx",
+      "args": ["-y", "@anthropic-ai/mcp-remote", "<your-slack-mcp-endpoint>"],
+      "env": {}
+    }
+  }
+}
+```
+
+Replace `<your-slack-mcp-endpoint>` with your workspace's MCP endpoint URL.
+
+### Figma
+
+Figma's MCP server runs locally via the Figma desktop app. Start the local dev server from Figma's developer settings, then add:
+
+```json
+{
+  "mcpServers": {
+    "figma": {
+      "url": "http://127.0.0.1:3845/sse"
+    }
+  }
+}
+```
+
+No credentials needed - authentication happens through the running Figma desktop session.
+
+### Playwright (browser automation)
+
+Used by dev-engine's visual verification and testing skills.
+
+```json
+{
+  "mcpServers": {
+    "playwright": {
+      "command": "npx",
+      "args": ["@anthropic-ai/mcp-playwright"],
+      "env": {}
+    }
+  }
+}
+```
+
+### Storybook
+
+Storybook's MCP server is served by the running Storybook instance. Start Storybook first, then add:
+
+```json
+{
+  "mcpServers": {
+    "storybook": {
+      "url": "http://localhost:6006/mcp"
+    }
+  }
+}
+```
+
+Adjust the port if your Storybook runs on a different one.
+
+### Azure DevOps
+
+```json
+{
+  "mcpServers": {
+    "azure-devops": {
+      "command": "npx",
+      "args": ["-y", "@anthropic-ai/mcp-remote", "<your-azure-devops-mcp-endpoint>"],
+      "env": {
+        "AZURE_DEVOPS_ORG": "<org-name>",
+        "AZURE_DEVOPS_PAT": "<personal-access-token>"
+      }
+    }
+  }
+}
+```
+
+Generate a PAT in Azure DevOps under User Settings > Personal Access Tokens. Scope it to Work Items (read/write) and Code (read).
+
+### Microsoft 365
+
+```json
+{
+  "mcpServers": {
+    "microsoft365": {
+      "command": "npx",
+      "args": ["-y", "@anthropic-ai/mcp-remote", "<your-m365-mcp-endpoint>"],
+      "env": {}
+    }
+  }
+}
+```
+
+### Where to put .mcp.json
+
+For project-specific connections, put `.mcp.json` in the project root and add it to `.gitignore` if it contains tokens. For connections you want across all projects, configure them in Claude Code's global settings.
+
+## Plugin Settings
+
+Each plugin can be configured per-project using a `.claude/{plugin-name}.local.md` file. YAML frontmatter holds structured config; the markdown body can hold prompts or additional context for that plugin.
+
+```
+.claude/
+  claude-core.local.md
+  taskflow.local.md
+  dev-engine.local.md
+```
+
+Example `.claude/claude-core.local.md`:
+
+```markdown
+---
+enabled: true
+mode: standard
+max_retries: 3
+---
+
+# Plugin Notes
+
+Any markdown here is available as additional context for this plugin's skills.
+```
+
+Two things to know:
+
+- Add `.claude/*.local.md` to `.gitignore`. These files are per-developer and often contain project-specific notes that don't belong in source control.
+- Changes to these files require a Claude Code restart to take effect. The hooks read them at startup, not on every invocation.
+
+## CLAUDE.md Setup
+
+There are two CLAUDE.md files with different scopes.
+
+**`~/CLAUDE.md`** (global) - behaviors that apply in every session, every project. Your communication preferences, technical defaults, git workflow rules, and any hard constraints you want Claude to always follow.
+
+**`<project-root>/CLAUDE.md`** (project) - everything specific to this codebase. Plugin counts, directory structure, active commands, build steps, architectural decisions.
+
+The rough division: if a rule should follow you everywhere, put it in `~/CLAUDE.md`. If it only makes sense in this repo, put it in the project `CLAUDE.md`.
+
+Both files in this workspace are good examples of the structure - `~/CLAUDE.md` covers operator profile and behavioral rules, while the project `CLAUDE.md` covers the four-plugin architecture and current build state.
+
+## MEMORY.md
+
+Claude Code maintains a `MEMORY.md` file at `~/.claude/projects/<project-hash>/memory/MEMORY.md`. The plugins add facts here automatically during sessions.
+
+**What belongs in MEMORY.md:**
+- Specific file locations and paths (e.g., "active plan is at .ai/plans/build-taskflow/state.yml")
+- Decisions made that aren't yet in code (e.g., "using conventional commits for this project")
+- Workspace-specific facts that would otherwise need re-discovery every session
+
+**What doesn't belong:**
+- Rules and behaviors (those go in CLAUDE.md)
+- Implementation details, code snippets, or anything that changes frequently
+- Things already captured in config files or code
+
+The file has a hard 150-line limit. When it fills up, stale entries (unreferenced for 30+ days) or entries that have been promoted to rules or code should be pruned. Overstuffed memory files slow down sessions because the full content gets injected into every conversation.
+
+## Project Profiles
+
+For each codebase you work in, you can create a `rules.yml` file that tells the plugins how that project is configured - what tools it uses, how commits should be formatted, and which QA gates should run.
+
+Create `rules.yml` in your project root (or `.ai/rules.yml` if you prefer to keep it out of root):
+
+```yaml
+project_name: "customer-portal"
+context: "work"
+
+git:
+  branch_prefix: "feature/"
+  commit_style: "conventional"
+  main_branch: "develop"
+  require_pr: true
+
+qa:
+  format: "jira-comment"
+  require_screenshots: true
+
+dev:
+  test_command: "yarn test --coverage"
+  build_command: "yarn build"
+  lint_command: "yarn lint"
+  language: "typescript"
+  framework: "next"
+
+mcp_servers:
+  - "atlassian"
+
+completion_gates:
+  - "tests_pass"
+  - "build_succeeds"
+  - "lint_clean"
+  - "no_blockers"
+```
+
+All fields are optional. If you skip the file entirely, the plugins fall back to sensible defaults: `context: personal`, `commit_style: imperative`, `qa.format: markdown`, and only the `no_blockers` completion gate.
+
+The profile is read at session start and on task switches. taskflow's `project-profile-loader` skill exposes it to downstream skills - the QA handover generator reads `qa.format`, Jira ingestion checks `mcp_servers` to confirm the Atlassian connection is expected, and completion gates check `dev.*_command` to know what to run.
+
+For personal side projects, you can skip `rules.yml` entirely. The default profile works without any setup.
