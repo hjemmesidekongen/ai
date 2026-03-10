@@ -271,6 +271,11 @@
       "name": "fumadocs-patterns",
       "path": "skills/fumadocs-patterns/SKILL.md",
       "description": "Fumadocs documentation framework — MDX components, content structure, meta.json navigation, LLM integration"
+    },
+    {
+      "name": "web-copywriting",
+      "path": "skills/web-copywriting/SKILL.md",
+      "description": "Web copywriting — headlines, CTAs, microcopy, error messages, landing page structure, Seven Sweeps editing"
     }
   ],
   "agents": [
