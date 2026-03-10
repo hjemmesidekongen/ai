@@ -40,6 +40,24 @@ Triggered when a hook detects a vague or underspecified prompt.
 - The prompt is a question, not a task instruction
 - The user has explicitly said "do exactly this"
 
+### NEVER
+
+- **Never auto-sharpen direct commands.** "Run tests", "commit", "show status" are
+  instructions, not vague prompts. Sharpening them wastes time and annoys the user.
+- **Never change the user's core intent.** Sharpening adds structure and specificity —
+  it does not redirect the task. If the user said "refactor auth", the sharpened version
+  must still be about refactoring auth, not redesigning the auth architecture.
+- **Never over-engineer simple tasks.** A prompt asking to fix a typo does not need RISEN
+  with five steps. Match framework weight to task weight.
+- **Never ask more than 3 clarifying questions in Mode B.** Beyond 3, you're stalling
+  momentum. If you can't build a good prompt from the intent + 3 questions, the user
+  needs to think more, not answer more questions.
+- **Never output a sharpened prompt longer than the task warrants.** A 500-word structured
+  prompt for a 5-minute task is a smell. The prompt should be proportional to the work.
+- **Never apply frameworks mechanically.** The framework is a thinking aid, not a form to
+  fill in. Skip sections that don't apply. An RTF prompt with an empty Format field is
+  worse than a plain instruction with no framework at all.
+
 ---
 
 ## Mode B: Prompt Builder

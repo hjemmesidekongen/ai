@@ -74,10 +74,7 @@ guidance and example structures.
 
 See `references/templates.md` for reusable prompt templates organized by
 category: Technical, Creative, Analysis, Transformation.
-
 ## Key Principles
 
-Instruction hierarchy: `[System Context] > [Task] > [Examples] > [Input] > [Output Format]`
-
-Progressive disclosure — add complexity one level at a time:
-1. Direct instruction → 2. Add constraints → 3. Add reasoning (CoT) → 4. Add examples
+- Instruction hierarchy: `System Context > Task > Examples > Input > Output Format`
+- Progressive disclosure: direct instruction → constraints → reasoning → examples

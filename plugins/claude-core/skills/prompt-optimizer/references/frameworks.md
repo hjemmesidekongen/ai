@@ -145,38 +145,36 @@ Sense Check: Each message answers "what happened" and "what to do next" in
 
 ## 5. Chain-of-Thought (CoT)
 
-**Best for:** Reasoning-heavy tasks where showing work improves accuracy.
+**Best for:** Tasks where the reasoning path determines output quality — not all tasks.
 
-**When to use:**
-- Debugging or root cause analysis
-- Mathematical or logical reasoning
-- Multi-factor decisions where tradeoffs matter
-- Any task where the reasoning path matters as much as the answer
+**When CoT adds value:**
+- Root cause analysis where symptoms could point to multiple causes
+- Multi-factor decisions with competing tradeoffs (architecture, tool selection)
+- Tasks where the user needs to verify the reasoning, not just the answer
+- Debugging where the fix depends on correctly identifying the mechanism
 
-**Structure:**
-```
-[Task description]
+**When CoT hurts (skip it):**
+- Simple lookups, renames, deletions — CoT adds latency without accuracy gain
+- Tasks where the answer is obvious but the output format matters (use RTF instead)
+- Creative tasks where step-by-step thinking constrains divergent exploration
+- Code generation where the spec is already clear — just write the code
 
-Think through this step by step:
-1. [First reasoning step]
-2. [Second reasoning step]
-3. [Continue until conclusion]
-
-Show your reasoning before giving the final answer.
-```
+**Structure:** Don't use generic "think step by step." Instead, name the specific
+reasoning steps relevant to the task. Vague CoT produces vague reasoning.
 
 **Example:**
 ```
 This React component re-renders 47 times when the user types a single character
 in the search input. The component tree is: App → Dashboard → SearchPanel → ResultsList.
 
-Think through this step by step:
-1. Identify which component is likely causing unnecessary re-renders
-2. Trace the state flow from the search input through the component tree
-3. Identify the specific mechanism causing cascading re-renders
-4. Propose the minimal fix
+Reason through these specific steps:
+1. Which component owns the search input state? Where does setState fire?
+2. Trace the re-render cascade: which parent re-renders trigger which children?
+3. What mechanism causes the cascade — prop drilling, context, or missing memoization?
+4. What is the minimal change that breaks the cascade without restructuring?
 
-Show your reasoning at each step before giving the final recommendation.
+Show evidence at each step (component names, state locations, render triggers)
+before giving the fix.
 ```
 
 ---

@@ -195,30 +195,3 @@ Instructions:
 Constraints: Zero downtime. No data loss. Backward compatible during transition.
 Format: Numbered checklist. Each step: what to change, the code, rollback command.
 ```
-
-### Summarization
-
-**When to use:** Condensing long documents, threads, or codebases into key points.
-
-```
-Task: Summarize [source] into [target format]
-Constraints:
-  - Max [N] words/bullets/paragraphs
-  - Preserve: [key details that must not be lost]
-  - Audience: [who will read this — determines detail level]
-Format: [Bullet list / executive summary / TL;DR + details]
-```
-
-### Format Conversion
-
-**When to use:** Converting data or content between formats.
-
-```
-Task: Convert [input format] to [output format]
-Input: [the data or a representative sample]
-Constraints:
-  - Preserve [specific fields/structure/semantics]
-  - Handle edge cases: [nulls, special characters, nested structures]
-Format: Output in a code block with the target format. Note any lossy
-  conversions or edge cases encountered.
-```
