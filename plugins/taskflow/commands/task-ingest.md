@@ -15,12 +15,9 @@ Pulls Jira tickets into `.ai/tasks/` as local YAML files for offline work.
 2. **Bulk vs single mode**:
    - If `--bulk` flag is present OR argument is a JQL filter, invoke `jira-ingestion` skill in bulk mode with the filter.
    - Otherwise invoke `jira-ingestion` skill in single mode with the ticket key.
+   - Note: jira-ingestion runs contradiction-detection automatically — do not invoke it separately.
 
-3. **Run contradiction detection** on each ingested ticket:
-   - For every new or updated `.ai/tasks/KEY.yml`, invoke the `contradiction-detection` skill.
-   - Append any contradictions found to the task file under `contradictions:`.
-
-4. **Print summary**:
+3. **Print summary**:
    - Total tickets ingested
    - Tickets with contradictions (count + keys)
    - Example: `Ingested 12 tickets. 3 have contradictions: PROJ-101, PROJ-108, PROJ-112`

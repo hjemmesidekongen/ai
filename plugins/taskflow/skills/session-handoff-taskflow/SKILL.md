@@ -7,8 +7,8 @@ description: >
 user_invocable: true
 interactive: false
 model_tier: senior
-depends_on:
-  - "claude-core:session-handoff"
+depends_on: []
+# Complements claude-core:session-handoff — operates independently, not a call chain
 triggers:
   - "handoff"
   - "save progress"

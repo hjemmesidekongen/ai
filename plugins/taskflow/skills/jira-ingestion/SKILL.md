@@ -11,6 +11,7 @@ interactive: false
 model_tier: senior
 depends_on:
   - "contradiction-detection"
+  - "claude-core:jira-basics"
 triggers:
   - "ingest ticket"
   - "import jira"

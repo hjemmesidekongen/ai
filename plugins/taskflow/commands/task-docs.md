@@ -25,9 +25,9 @@ Searches Confluence for documentation related to the active task or a specific q
      ```
      Related docs for PROJ-123 "Implement user search":
      1. [HIGH] User Search API Design — Engineering Space
-        https://company.atlassian.net/wiki/spaces/ENG/pages/12345
+        https://example.atlassian.net/wiki/spaces/ENG/pages/12345
      2. [MED] Search Performance Guidelines — Platform Space
-        https://company.atlassian.net/wiki/spaces/PLAT/pages/67890
+        https://example.atlassian.net/wiki/spaces/PLAT/pages/67890
      ```
 
-4. **Link to task** — optionally append found docs to the task's context for dev-engine consumption.
+4. **Link to task** — append found docs to the task YAML under `confluence_docs:` (always, unless user passes `--no-link`).

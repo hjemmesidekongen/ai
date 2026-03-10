@@ -28,7 +28,7 @@ Displays full details of the currently active task.
 5. **Print attachments** (if any):
    - List linked files, screenshots, or referenced documents from the task file
 
-6. **Show dev-engine progress** (if applicable):
-   - Check if dev-engine plugin is tracking subtasks for this KEY
-   - If yes, print subtask breakdown: `Subtasks: 3/5 done (feature-decomposer)`
-   - If no, skip this section
+6. **Show dev-engine progress** (optional, graceful fallback):
+   - Check if `.ai/dev-engine/` state exists for this KEY
+   - If found, print subtask breakdown: `Subtasks: 3/5 done (feature-decomposer)`
+   - If not found or dev-engine not installed, skip silently — no error

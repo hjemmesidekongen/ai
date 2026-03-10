@@ -150,7 +150,7 @@ When the user switches active task context:
 | YAML parse error | Report syntax error with line number, use defaults |
 | Unknown context value | Warn, default to "personal" |
 | Unknown qa.format | Warn, default to "markdown" |
-| dev command contains shell injection patterns | Warn, set to null |
+| dev command contains shell injection patterns | Warn, set to null. Reject commands containing: `;` `\|` `&` `` ` `` `$(` `)` `{` `}` `<` `>` or newlines. Safe pattern: `/^[a-zA-Z0-9_./ -]+$/` |
 | File is empty | Treat as missing, use defaults |
 
 ---

@@ -56,4 +56,4 @@ epic: "PROJ-100"
 ingested_at: "2026-03-09T20:00:00Z"
 source:
   type: "jira"
-  url: "https://company.atlassian.net/browse/PROJ-456"
+  url: "https://example.atlassian.net/browse/PROJ-456"

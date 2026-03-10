@@ -2,6 +2,11 @@
 
 ## 1. Mode Selection
 
+### Key validation
+Before any operation, validate the ticket key matches `/^[A-Z][A-Z0-9]+-[0-9]+$/`.
+Reject keys containing path separators, dots, spaces, or special characters.
+This prevents path traversal in `.ai/tasks/<KEY>.yml` file writes.
+
 ### Single ticket
 Input: a Jira key like `PROJ-123`.
 Action: fetch that one ticket.
@@ -74,7 +79,7 @@ epic: "PROJ-100"
 ingested_at: "2026-03-09T20:00:00Z"
 source:
   type: "jira"
-  url: "https://company.atlassian.net/browse/PROJ-456"
+  url: "https://example.atlassian.net/browse/PROJ-456"
 ```
 
 ### Required fields
@@ -110,8 +115,11 @@ Extraction priority:
 for each attachment in ticket:
   1. Create directory: .ai/tasks/attachments/<KEY>/
   2. Download via MCP attachment URL
-  3. Save as: .ai/tasks/attachments/<KEY>/<original-filename>
-  4. Record in task YAML: {name: "<filename>", path: "<relative-path>"}
+  3. Sanitize filename: strip path separators (/ and \), leading dots, and non-alphanumeric
+     characters except hyphens, underscores, and single dots. Reject names that don't match
+     /^[a-zA-Z0-9][a-zA-Z0-9._-]*$/
+  4. Save as: .ai/tasks/attachments/<KEY>/<sanitized-filename>
+  5. Record in task YAML: {name: "<sanitized-filename>", path: "<relative-path>"}
 ```
 
 Skip binary files larger than 10MB — log a warning instead.

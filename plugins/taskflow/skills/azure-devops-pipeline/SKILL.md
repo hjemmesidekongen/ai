@@ -18,7 +18,7 @@ depends_on: []
 reads:
   - ".ai/tasks/<KEY>.yml"
 writes:
-  - ".ai/tasks/pipeline-status.yml"
+  - ".ai/tasks/<KEY>-pipeline-status.yml"
 checkpoint:
   type: data_validation
   required_checks:
@@ -29,7 +29,7 @@ checkpoint:
       verify: "At least one pipeline run found for the current branch"
       fail_action: "Report no runs found; suggest checking branch name"
     - name: "status_written"
-      verify: ".ai/tasks/pipeline-status.yml written with run ID, status, and timestamp"
+      verify: ".ai/tasks/<KEY>-pipeline-status.yml written with run ID, status, and timestamp"
       fail_action: "Retry write; log error if it persists"
   on_fail: "Report which check failed and stop — do not guess pipeline state."
   on_pass: "Report: pipeline name, run ID, status, test pass/fail counts."
@@ -59,7 +59,7 @@ Stop immediately. Do not simulate or guess pipeline state.
 
 1. **Check MCP** — call `list-pipelines` to verify the server is reachable
 2. **Get branch** — read current branch from `git branch --show-current`; cross-reference `.ai/tasks/active.yml` if present
-3. **Query runs** — fetch recent runs for the branch (last 5). Write result to `.ai/tasks/pipeline-status.yml`
+3. **Query runs** — fetch recent runs for the branch (last 5). Write result to `.ai/tasks/<KEY>-pipeline-status.yml`
 4. **Parse test results** — if the latest run has a test attachment, extract pass/fail/skipped counts
 5. **Trigger (if requested)** — call `trigger-pipeline` with branch and any supplied parameters
 6. **Report** — pipeline name, run ID, status (succeeded/failed/running), test counts, artifact links

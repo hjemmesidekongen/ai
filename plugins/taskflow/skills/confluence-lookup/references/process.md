@@ -88,13 +88,13 @@ Schema for each entry:
 ```yaml
 confluence_docs:
   - title: "User Search Implementation Guide"
-    url: "https://company.atlassian.net/wiki/spaces/PROJ/pages/123456"
+    url: "https://example.atlassian.net/wiki/spaces/PROJ/pages/123456"
     space: "PROJ"
     relevance_score: 75
     last_modified: "2026-02-28T10:00:00Z"
     keywords_matched: ["user search", "autocomplete"]
   - title: "Frontend Search Patterns"
-    url: "https://company.atlassian.net/wiki/spaces/FE/pages/789012"
+    url: "https://example.atlassian.net/wiki/spaces/FE/pages/789012"
     space: "FE"
     relevance_score: 55
     last_modified: "2026-01-15T14:30:00Z"

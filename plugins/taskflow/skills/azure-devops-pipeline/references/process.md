@@ -62,7 +62,7 @@ trigger-pipeline(
 Before triggering:
 1. Confirm pipeline name and branch with the user (or from active.yml)
 2. Check if a run is already in progress — warn before triggering a duplicate
-3. After dispatch, record run ID in `.ai/tasks/pipeline-status.yml`
+3. After dispatch, record run ID in `.ai/tasks/<KEY>-pipeline-status.yml`
 
 ## Test Result Parsing
 
@@ -91,7 +91,7 @@ If a run is in `running` or `queued` state and the user asks to "wait for it":
 - Stop after 20 polls (10 minutes) and report current status
 - Do not block the session — report intermediate status and continue
 
-## pipeline-status.yml Output Schema
+## &lt;KEY&gt;-pipeline-status.yml Output Schema
 
 ```yaml
 queried_at: "2026-03-10T14:22:00Z"
