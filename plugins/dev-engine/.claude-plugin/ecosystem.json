@@ -296,6 +296,11 @@
       "name": "brand-voice-implementation",
       "path": "skills/brand-voice-implementation/SKILL.md",
       "description": "Brand voice in code — tone selection, personality archetypes, plain speech vs brand voice, consistency"
+    },
+    {
+      "name": "social-media-patterns",
+      "path": "skills/social-media-patterns/SKILL.md",
+      "description": "Social media — platform strategies, post templates, hook formulas, content pillars, repurposing"
     }
   ],
   "agents": [
