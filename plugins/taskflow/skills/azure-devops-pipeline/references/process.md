@@ -1,5 +1,17 @@
 # azure-devops-pipeline — Process Detail
 
+## Output Format
+
+```
+Pipeline:    <name>
+Run ID:      <id>
+Branch:      <branch>
+Status:      <succeeded | failed | running | queued>
+Started:     <timestamp>
+Tests:       <pass>/<total> passed, <fail> failed, <skipped> skipped
+Artifacts:   <url or "none">
+```
+
 ## MCP Server Setup
 
 The skill requires an MCP server named `azure-devops` that exposes at minimum:

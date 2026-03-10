@@ -5,7 +5,7 @@ description: >
   task summary, description, and labels. Constructs CQL queries, scores results
   by relevance, and links matching docs to the task context for dev-engine
   consumption. Graceful fallback when Confluence MCP is not configured.
-user_invocable: false
+user_invocable: true
 interactive: false
 model_tier: senior
 depends_on: []

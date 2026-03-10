@@ -5,7 +5,7 @@ description: >
   from the task key, summary, acceptance criteria, and test plan. Checks
   pipeline status after creation and links back to Jira with a comment.
   Falls back gracefully when Bitbucket or Jira MCP is unavailable.
-user_invocable: false
+user_invocable: true
 interactive: false
 model_tier: senior
 depends_on: []

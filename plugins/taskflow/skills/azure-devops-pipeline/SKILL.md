@@ -12,8 +12,9 @@ triggers:
   - "azure devops"
   - "check build"
   - "devops pipeline"
+depends_on: []
 reads:
-  - ".ai/tasks/active.yml"
+  - ".ai/tasks/<KEY>.yml"
 writes:
   - ".ai/tasks/pipeline-status.yml"
 checkpoint:
@@ -68,13 +69,4 @@ and pipeline name before triggering. Report run ID immediately after dispatch.
 
 ## Output format
 
-```
-Pipeline:    <name>
-Run ID:      <id>
-Branch:      <branch>
-Status:      <succeeded | failed | running | queued>
-Started:     <timestamp>
-Tests:       <pass>/<total> passed, <fail> failed, <skipped> skipped
-Artifacts:   <url or "none">
-```
-See `references/process.md` for full details.
+See `references/process.md` for output schema, trigger parameters, and anti-patterns.
