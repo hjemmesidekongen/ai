@@ -1,0 +1,238 @@
+topic: "brand-plugin"
+decided_at: "2026-03-10"
+decided_by: ["user", "claude"]
+
+decisions:
+  - id: D-001
+    title: "Brand plugin scope: strategy only"
+    decision: >
+      Brand plugin produces brand guidelines — voice, tone, values, positioning,
+      personality, dos/donts, content pillars, audience definition. It never produces
+      design artifacts (colors, typography choices, tokens, CSS). Those belong in
+      a separate design plugin.
+    rationale: >
+      Maps to real agency discipline split: strategist writes the brief, art director
+      interprets it. Keeps brand stable and small. Avoids agency v1 mistake of coupling
+      everything in one pipeline.
+    alternatives_rejected:
+      - "Brand includes visual identity" — rejected because design decisions (hex codes,
+        font selection) are a different discipline that evolves independently.
+      - "One big plugin for everything" — rejected because agency v1 proved this creates
+        rigid coupling and phase dependencies.
+
+  - id: D-002
+    title: "Design plugin: separate from brand"
+    decision: >
+      A separate design plugin handles visual identity, design tokens, web design
+      (Pencil), component specs. It reads brand guidelines as input. This is the
+      art director that interprets the strategist's brief.
+    rationale: >
+      Design capability is horizontal — brand needs it, marketing needs it, web needs
+      it. If design agents/skills live inside brand, other domains can't reuse them.
+      Separate plugin makes design a shared capability.
+    scope: "Design plugin is out of scope for this brainstorm. Noted for future."
+
+  - id: D-003
+    title: "Toolkit, not product"
+    decision: >
+      Build as a toolkit of independent skills and commands. No enforced pipeline.
+      No phase state machine. Users run what they need, when they need it.
+      If someone wants a full pipeline, they create a wave plan via claude-core.
+    rationale: >
+      Agency v1 was a product pipeline (init → design → content → build → deploy).
+      The rigid ordering fought actual usage patterns. Toolkit approach means each
+      skill is independently valuable. Orchestration is optional via plan engine.
+
+  - id: D-004
+    title: "Brand truth location: .ai/brand/{brand-name}/"
+    decision: >
+      Brand guidelines live at .ai/brand/{brand-name}/ in the repo root.
+      Single brand projects use .ai/brand/default/ or .ai/brand/{project-name}/.
+      Monorepos can have multiple brands. NOT under .ai/projects/ — that path
+      ties to agency's project model which we're moving away from.
+    rationale: >
+      Clean, discoverable, no dependency on agency's project registry. Any plugin
+      can scan .ai/brand/ to find available brands. Convention over configuration.
+
+  - id: D-005
+    title: "Consumer declares brand dependency explicitly"
+    decision: >
+      A package/app that uses a brand declares it explicitly — either in its
+      local CLAUDE.md or a lightweight config. The brand plugin does NOT auto-detect
+      or guess which brand applies where. One line: `brand: ro`.
+    rationale: >
+      Magic discovery breaks silently. Auto-detection requires heuristics that will
+      be wrong. Explicit declaration is how every other dependency works (package.json,
+      tsconfig extends, etc.). One line to maintain, zero ambiguity.
+
+  - id: D-006
+    title: "Context resolution pattern for all skills"
+    decision: >
+      Every brand skill starts with context resolution: (1) look for existing
+      brand artifacts, (2) if found → load and use, (3) if not → gather minimum
+      from user and generate lightweight defaults. Same skill, same output,
+      different input source.
+    rationale: >
+      Eliminates the need for separate "guided" vs "direct" modes. Skills adapt
+      based on what exists. You can run any skill at any time — it degrades
+      gracefully when upstream artifacts are missing.
+    source: "Digital Brain skill pattern (Agent-Skills-for-Context-Engineering)"
+
+  - id: D-007
+    title: "Three brand entry points, one output format"
+    decision: >
+      Three commands map to three use cases:
+      - /brand:create — new brand from scratch (sparring + market research)
+      - /brand:audit — codify existing brand from materials/samples
+      - /brand:evolve — guided reinvention of existing brand guideline
+      All three produce the same guideline format in .ai/brand/{name}/.
+    rationale: >
+      Covers the three scenarios user identified: generation from idea, converting
+      existing brand, reinventing existing brand. Same output means downstream
+      consumers don't care how the guideline was created.
+
+  - id: D-008
+    title: "Market research as enrichment before sparring"
+    decision: >
+      Brand creation includes a research phase before the creative sparring session.
+      Claude detects the market/domain, runs Perplexity search for competitive
+      landscape, positioning gaps, audience signals. Research findings feed into
+      the sparring session as grounding context.
+    rationale: >
+      User requirement: "enlightened background." Sparring without market context
+      is just vibes. Research-first means Claude challenges brand choices against
+      competitive reality, not abstract preferences.
+    implementation: >
+      Perplexity search with focused queries (not research mode — too expensive).
+      Store findings in .ai/brand/{name}/market-research.md. Reference during
+      sparring. Keep queries tight per CLAUDE.md Perplexity policy.
+
+  - id: D-009
+    title: "Guideline schema based on Digital Brain templates"
+    decision: >
+      Brand guideline output uses adapted templates from Digital Brain skill:
+      - guideline.yml — positioning, audience, pillars, UVP, competitive matrix
+      - voice.yml — 1-10 attribute scales, writing patterns, vocabulary, platform
+        adaptations, anti-patterns
+      - values.yml — core values with "in practice" behaviors, beliefs, non-negotiables,
+        decision framework
+      Plus: dos-and-donts.md for human-readable rules.
+    rationale: >
+      Battle-tested templates. Numerical scales for voice (agents reason about numbers
+      better than prose). "In practice" values are actionable, not decorative.
+      Separate files enable progressive disclosure — load only what's needed.
+    source: "Digital Brain identity module + Anti-Gravity brand_guidelines.md"
+
+  - id: D-010
+    title: "Progressive disclosure architecture (L1/L2/L3)"
+    decision: >
+      Brand plugin uses 3-level loading:
+      - L1: SKILL.md metadata + router (always loaded, ~50 tokens)
+      - L2: Module instructions — when/how to use brand data (~80 tokens)
+      - L3: Actual brand data files (voice.yml, guideline.yml, values.yml)
+      Downstream skills load L1 to know brand exists, then only the L3 file
+      they actually need (e.g., content skills load voice.yml, not values.yml).
+    rationale: >
+      87% token reduction vs loading everything. Brand data can be substantial
+      (voice scales, examples, competitor analysis). Only load what's relevant
+      to the current task. Proven pattern from Digital Brain.
+
+  - id: D-011
+    title: "Studio skills live in dev-engine, not a separate plugin"
+    decision: >
+      Skills that consume brand guidelines for code-level implementation (design
+      token integration, component library patterns, brand voice in microcopy)
+      live in dev-engine as a studio/ skill category. No new plugin needed.
+    rationale: >
+      Dev-engine already has the dispatch infrastructure, agent routing, context
+      assembly, and completion gates. Adding studio skills is like adding expo
+      skills — a new knowledge category, not a new architecture. Avoids plugin
+      proliferation.
+    note: >
+      This covers code-level brand consumption only. Higher-level design work
+      (visual identity, web design in Pencil) belongs in the future design plugin.
+
+  - id: D-012
+    title: "No asset registry for brand"
+    decision: >
+      Brand plugin does NOT use an asset registry. Brand truth is files in a
+      known directory (.ai/brand/{name}/). Consumers read files directly by
+      convention. No manifest, no registry, no index file to maintain.
+    rationale: >
+      The asset registry was agency's coordination mechanism for tightly coupled
+      phases. Brand is standalone. The files ARE the contract. Adding a registry
+      creates maintenance burden with zero benefit when there's only one producer.
+
+  - id: D-013
+    title: "Monorepo brand mapping via explicit declaration"
+    decision: >
+      In a monorepo with multiple brands:
+      - Each brand has its own directory: .ai/brand/ro/, .ai/brand/acme/
+      - Each package declares its brand in local CLAUDE.md or a config
+      - Brand plugin provides /brand:apply to wire a brand into a package context
+      No profiles, no auto-detection, no repo-structure awareness needed.
+    rationale: >
+      Whether monorepo or single-repo, the pattern is identical: brand exists
+      at a path, consumer points to it. The plugin doesn't need to know about
+      turborepo vs single-repo. Eliminates the "profiles" complexity entirely.
+
+  - id: D-014
+    title: "Brand sparring uses brainstorm-session skill pattern"
+    decision: >
+      Brand creation sparring follows the Superpowers brainstorming pattern:
+      context → one question at a time (prefer multiple choice) → propose 2-3
+      approaches → present in sections → approve each → output final guideline.
+      No implementation until guideline approved.
+    rationale: >
+      Proven interactive pattern that avoids information overload. One question
+      at a time keeps the user engaged. Section-by-section approval prevents
+      big-bang rework. Maps to how real brand strategy workshops run.
+
+  - id: D-015
+    title: "Brand depends only on claude-core"
+    decision: >
+      Brand plugin has zero dependencies on agency, dev-engine, taskflow, or
+      any other plugin. It depends only on claude-core for plan engine, brainstorm
+      infrastructure, and hooks. Fully isolated.
+    rationale: >
+      User requirement: total isolation. Brand must work in any workspace that
+      has claude-core installed, regardless of what other plugins exist.
+
+  - id: D-016
+    title: "Personality archetypes as discovery tool"
+    decision: >
+      During brand creation sparring, use personality archetypes
+      (Expert/Friend/Innovator/Guide/Motivator) as a starting framework
+      for voice discovery. Not prescriptive — a conversation starter that
+      helps the user articulate their brand personality before diving into
+      numerical scales.
+    rationale: >
+      Archetypes are intuitive. "Are you more Expert or Friend?" is easier
+      to answer than "rate your formality on a 1-10 scale." Use archetypes
+      to seed the conversation, then refine into specific scales.
+    source: "Anti-Gravity brand_guidelines.md personality archetypes"
+
+  - id: D-017
+    title: "Single source of truth — no duplication"
+    decision: >
+      Brand assets exist in exactly one location. If a logo needs to be used
+      across packages, it's referenced by path — not copied. The /brand:apply
+      command wires references, not copies. If design tokens are generated from
+      brand, the generator reads from .ai/brand/{name}/ — it doesn't duplicate
+      the source values.
+    rationale: >
+      User requirement. Duplication creates sync problems. One source, many
+      consumers. If the source changes, consumers regenerate on next run.
+
+  - id: D-018
+    title: "Future pipeline is a wave plan, not plugin orchestration"
+    decision: >
+      The full flow (brand → visual identity → marketing → web design → code →
+      SEO → hosting) is orchestrated via claude-core wave plans when someone
+      wants the full pipeline. Not via a dedicated orchestration plugin.
+      Each step is an independent skill/command. The plan engine sequences them.
+    rationale: >
+      Claude-core's plan engine already handles sequencing, verification gates,
+      and resume. Building custom orchestration into each plugin repeats
+      agency's mistake. Wave plans are user-controlled and modifiable —
+      not rigid code paths.

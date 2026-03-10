@@ -1,0 +1,139 @@
+topic: "design-plugin"
+decided_at: "2026-03-10"
+decided_by: ["user", "claude"]
+context: "Derived from brand-plugin brainstorm. Design is the art director that interprets brand strategy into visual systems."
+
+decisions:
+  - id: D-001
+    title: "Design plugin scope: visual interpretation of brand"
+    decision: >
+      Design plugin reads brand guidelines and makes concrete visual decisions.
+      It picks hex codes, selects fonts, defines spacing scales, creates color
+      ramps, designs in Pencil, produces design tokens. It's the art director
+      interpreting the strategist's brief.
+    rationale: >
+      Clear discipline boundary from brand (strategy) and dev-engine (code).
+      Brand says "premium and trustworthy." Design says "#1e3a5f at 10 stops."
+      Dev-engine says "here's your CSS variables file."
+
+  - id: D-002
+    title: "Design plugin is a standalone plugin, not part of brand or dev-engine"
+    decision: >
+      Lives at plugins/design/. Separate from brand (different discipline) and
+      dev-engine (design is creative, dev-engine is execution). Can read brand
+      guidelines but doesn't require them — context resolution applies.
+    rationale: >
+      Design capability is horizontal. Brand needs it, marketing will need it,
+      web needs it. Keeping it separate makes it a shared resource. Also evolves
+      independently — design tooling (Pencil, Figma) changes faster than brand strategy.
+
+  - id: D-003
+    title: "Toolkit approach, not pipeline"
+    decision: >
+      Same as brand plugin. Each skill works independently. No enforced phase
+      ordering. Run what you need. Use wave plans for sequencing when desired.
+    rationale: >
+      Consistent with brand-plugin D-003. Toolkit over product.
+
+  - id: D-004
+    title: "Context resolution: use brand if exists, gather if not"
+    decision: >
+      Every design skill checks for brand guidelines at .ai/brand/{name}/.
+      If found, reads and uses as input. If not, asks user for minimum visual
+      direction (colors, typography preferences, mood) and proceeds.
+    rationale: >
+      No hard dependency on brand plugin existing. Design can work standalone.
+      But it gets better results when grounded in a brand guideline.
+
+  - id: D-005
+    title: "Pencil MCP as primary design tool"
+    decision: >
+      Web design and visual identity skills use the Pencil MCP for design work.
+      Pencil produces .pen files. The plugin also supports conceptual output
+      (YAML specs) for when Pencil isn't available.
+    rationale: >
+      Pencil is already integrated and provides real design capability.
+      But not every user has Pencil, so fallback to spec-based output.
+
+  - id: D-006
+    title: "Design outputs: tokens + specs + Pencil files"
+    decision: >
+      Design plugin produces three categories:
+      1. Design tokens (YAML/JSON) — colors, typography, spacing, shadows
+      2. Component specs (YAML) — props, variants, states, responsive behavior
+      3. Pencil designs (.pen) — visual mockups, layouts, pages
+      Tokens go to .ai/design/{name}/tokens/. Specs go to .ai/design/{name}/specs/.
+      Pencil files go to .ai/design/{name}/screens/.
+    rationale: >
+      Three distinct output types for three distinct consumers. Tokens → dev-engine
+      (CSS generation). Specs → dev-engine (component implementation). Pencil →
+      human review and code conversion.
+
+  - id: D-007
+    title: "Design truth location: .ai/design/{name}/"
+    decision: >
+      Follows brand convention. Design outputs live at .ai/design/{name}/.
+      Same {name} as brand when brand exists. For standalone design work,
+      {name} matches the project or is user-specified.
+    rationale: >
+      Consistent with .ai/brand/{name}/ pattern. Discoverable by convention.
+      No registry needed.
+
+  - id: D-008
+    title: "Depends only on claude-core"
+    decision: >
+      Design plugin has zero hard dependencies on brand, dev-engine, or agency.
+      It CAN read brand guidelines (soft dependency via context resolution).
+      It CAN produce tokens that dev-engine consumes. But neither is required.
+    rationale: >
+      Same isolation principle as brand plugin. Works in any workspace with
+      just claude-core installed.
+
+  - id: D-009
+    title: "Visual identity skill includes color theory and typography"
+    decision: >
+      The visual identity skill handles the full creative process: color
+      palette generation (from brand direction or from scratch), typography
+      pairing, spacing system definition. It should use Perplexity for
+      typography research (what pairs well, current trends) when appropriate.
+    rationale: >
+      These are inseparable design decisions. Color, type, and spacing form
+      a unified visual system. Splitting them into separate skills creates
+      artificial boundaries.
+
+  - id: D-010
+    title: "Web design skill uses Pencil for layout and pages"
+    decision: >
+      Web design skill reads design tokens + component specs + sitemap/content
+      plan (if exists), then creates page designs in Pencil. Interactive —
+      presents options, gets approval per page/section.
+    rationale: >
+      Pencil MCP provides real visual design output. Interactive approval
+      prevents full-page rework. Reads upstream artifacts when available
+      but can work from scratch with user input.
+
+  - id: D-011
+    title: "Design-to-code is a design plugin skill, not dev-engine"
+    decision: >
+      Converting Pencil designs to code is a design plugin responsibility.
+      It reads the .pen file, extracts structure, maps to components, and
+      produces implementation-ready specs or actual code. The design plugin
+      understands the design intent; dev-engine just executes.
+    rationale: >
+      Design-to-code requires understanding design intent, not just pixel
+      matching. The design plugin has that context. Dev-engine receives
+      clear specs and implements them.
+
+  - id: D-012
+    title: "Groundwork scope: scaffold, schemas, visual-identity, design-tokens skills"
+    decision: >
+      For overnight build, focus on groundwork:
+      1. Plugin scaffold (plugin.json, ecosystem.json)
+      2. Output schemas (token format, spec format)
+      3. Visual identity skill (color, typography, spacing)
+      4. Design tokens skill (generate CSS/Tailwind from visual identity)
+      Web design (Pencil), component specs, and design-to-code are phase 2.
+    rationale: >
+      Visual identity + tokens are the foundation. Everything else builds on
+      them. Ship the foundation first, iterate on higher-level skills later.
+      Also avoids Pencil complexity in the first build.

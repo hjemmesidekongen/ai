@@ -1,0 +1,99 @@
+topic: "studio-skills"
+decided_at: "2026-03-10"
+decided_by: ["user", "claude"]
+context: "Studio skills are a skill category in dev-engine. They handle code-level brand/design consumption and content/marketing execution."
+
+decisions:
+  - id: D-001
+    title: "Studio skills live in dev-engine as a category"
+    decision: >
+      Studio skills are added to dev-engine alongside existing categories
+      (core, discipline, tech, expo, integration). They follow the same
+      SKILL.md pattern, dispatch model, and completion gates.
+    rationale: >
+      Dev-engine already has agent dispatch, task decomposition, context
+      assembly, and completion gates. Adding studio is like adding expo —
+      a new knowledge domain, not new infrastructure.
+
+  - id: D-002
+    title: "Studio skills consume brand + design outputs"
+    decision: >
+      Studio skills read from .ai/brand/{name}/ and .ai/design/{name}/
+      by convention. They don't produce brand or design artifacts. They
+      translate brand/design decisions into code, content, and marketing.
+    rationale: >
+      Clear consumer role. Brand produces strategy, design produces visuals,
+      studio skills implement. Each domain has one owner.
+
+  - id: D-003
+    title: "Skill categories within studio"
+    decision: >
+      Studio skills cover these domains:
+      1. Content strategy — content plans, editorial calendars, pillar strategy
+      2. Marketing — marketing plans, campaign briefs, messaging frameworks
+      3. SEO — technical SEO, keyword strategy, content gap analysis
+      4. Brand implementation — voice in microcopy, brand consistency checking
+      5. Web planning — sitemaps, user flows, information architecture
+    rationale: >
+      These are the "make things" skills from the brainstorm pipeline that
+      aren't purely code (dev-engine core) or purely visual (design plugin).
+      They're the content and planning layer.
+
+  - id: D-004
+    title: "Context resolution same as brand and design"
+    decision: >
+      Every studio skill checks for upstream artifacts. If brand exists,
+      content is on-brand. If design tokens exist, web planning references
+      the visual system. If nothing exists, skills still work — just with
+      less grounding.
+    rationale: >
+      No hard dependencies. Skills degrade gracefully. Consistent pattern
+      across all three build streams.
+
+  - id: D-005
+    title: "Content frameworks adapted from external references"
+    decision: >
+      Steal the content_frameworks.md from antigravity wholesale. Blog/social/
+      email templates, pillar strategy (40/25/25/10), repurposing matrix,
+      pre-publishing checklists. These are production-ready.
+    rationale: >
+      Don't reinvent what's already well-structured. Adapt and attribute.
+
+  - id: D-006
+    title: "SEO skills use Perplexity for research"
+    decision: >
+      SEO audit and keyword strategy skills use Perplexity for competitive
+      analysis, keyword research, and content gap identification. Follow
+      CLAUDE.md Perplexity policy (search first, limited results).
+    rationale: >
+      SEO requires live web data. Perplexity provides it. But stay within
+      token budget constraints.
+
+  - id: D-007
+    title: "Studio skills are knowledge skills, not execution skills"
+    decision: >
+      Like react-patterns or tailwind-v4, studio skills are reference
+      material that agents load during context assembly. They don't execute
+      code or produce files directly. They teach agents how to do
+      brand-aware, design-aware, content-aware work.
+    rationale: >
+      Fits dev-engine's dispatch model. Context-assembler includes relevant
+      studio skill summaries when project has brand/design context. Agents
+      use that knowledge during implementation.
+
+  - id: D-008
+    title: "Overnight scope: 6-8 knowledge skills"
+    decision: >
+      Focus on the highest-value knowledge skills:
+      1. brand-voice-implementation — how to apply brand voice in UI copy
+      2. content-strategy-patterns — content planning, pillar strategy, calendars
+      3. marketing-plan-patterns — campaign briefs, messaging frameworks
+      4. seo-fundamentals — technical SEO, keyword strategy, E-E-A-T
+      5. sitemap-planning — information architecture, user flows
+      6. design-to-code-patterns — translating design specs into components
+      7. brand-consistency-checking — auditing output against brand guidelines
+      8. web-copywriting — headlines, CTAs, microcopy, error messages
+    rationale: >
+      Knowledge skills are self-contained and can be built in parallel.
+      No dependencies between them. Each one enriches agent context for
+      a different type of task.
