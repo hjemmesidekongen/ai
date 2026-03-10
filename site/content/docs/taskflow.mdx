@@ -15,9 +15,20 @@ taskflow turns Jira tickets into local YAML files, analyzes them for contradicti
 
 Every MCP integration degrades gracefully. If Jira isn't configured, you get clear messages - never fabricated data.
 
-## The Workflow
+## Commands
 
-### Single Task
+| Command | Usage | What It Does |
+|---------|-------|-------------|
+| `/task:ingest` | `/task:ingest PROJ-123` | Pull single ticket from Jira |
+| `/task:ingest-bulk` | `/task:ingest-bulk <board-url>` | Batch ingest from board/filter (deduplicates) |
+| `/task:list` | `/task:list [--status pending]` | List local tasks with status and contradiction count |
+| `/task:start` | `/task:start PROJ-123` | Activate task, load context, show contradictions |
+| `/task:status` | `/task:status` | Full active task details |
+| `/task:docs` | `/task:docs [search query]` | Find related Confluence pages |
+| `/task:pr` | `/task:pr [--draft]` | Create PR from active task context |
+| `/task:done` | `/task:done [--skip-jira]` | Complete task with QA handover |
+
+### Single Task Workflow
 
 ```bash
 /task:ingest PROJ-123          # Pull ticket from Jira → local YAML
@@ -28,7 +39,7 @@ Every MCP integration degrades gracefully. If Jira isn't configured, you get cle
 /task:done                     # Generate QA handover, close Jira ticket
 ```
 
-### Sprint Batch
+### Sprint Batch Workflow
 
 ```bash
 /task:ingest-bulk <board-url>  # Load entire sprint (deduplicates)
@@ -37,7 +48,7 @@ Every MCP integration degrades gracefully. If Jira isn't configured, you get cle
 /task:done                     # Complete with QA handover
 ```
 
-## Key Capabilities
+## Key Concepts
 
 ### Contradiction Detection
 
@@ -74,12 +85,6 @@ Supports Bitbucket (via MCP) with draft mode. Posts the PR URL as a Jira comment
 
 Output format matches your project profile - Jira wiki markup, GitHub-flavored markdown, or plain markdown. Goes straight into the right system without reformatting.
 
-### Confluence Integration
-
-`/task:docs` searches Confluence for pages related to your active task. It extracts keywords from the task summary, description, and labels, builds CQL queries, and scores results by relevance (keyword overlap + recency).
-
-Matched documents are linked back to the task YAML so they persist across sessions.
-
 ### Cross-Session Continuity
 
 `session-handoff-taskflow` extends claude-core's session-handoff with task-specific context:
@@ -91,6 +96,22 @@ Matched documents are linked back to the task YAML so they persist across sessio
 - Staleness classification on resume
 
 Proactively suggests handoff when 5+ files have been edited in a session.
+
+## Component Reference
+
+### Skills
+
+| Skill | Purpose |
+|-------|---------|
+| jira-ingest | Pull and normalize Jira tickets to local YAML |
+| bulk-ingest | Batch ingest from boards/filters with deduplication |
+| contradiction-detector | Analyze ticket comments for conflicting requirements |
+| pr-creator | Create PRs with structured descriptions from task context |
+| qa-handover | Generate QA handover documents from acceptance criteria and git diff |
+| confluence-search | Find related Confluence pages by keyword extraction and CQL |
+| session-handoff-taskflow | Cross-session continuity with task-specific context |
+| project-profile-loader | Read project conventions from rules.yml |
+| task-status | Full task state reporting |
 
 ### Project Profiles
 
@@ -104,20 +125,7 @@ Proactively suggests handoff when 5+ files have been edited in a session.
 
 All downstream skills consume this profile. Your PR descriptions, QA handovers, and git commits automatically follow your project's conventions.
 
-## Commands
-
-| Command | Usage | What It Does |
-|---------|-------|-------------|
-| `/task:ingest` | `/task:ingest PROJ-123` | Pull single ticket from Jira |
-| `/task:ingest-bulk` | `/task:ingest-bulk <board-url>` | Batch ingest from board/filter (deduplicates) |
-| `/task:list` | `/task:list [--status pending]` | List local tasks with status and contradiction count |
-| `/task:start` | `/task:start PROJ-123` | Activate task, load context, show contradictions |
-| `/task:status` | `/task:status` | Full active task details |
-| `/task:docs` | `/task:docs [search query]` | Find related Confluence pages |
-| `/task:pr` | `/task:pr [--draft]` | Create PR from active task context |
-| `/task:done` | `/task:done [--skip-jira]` | Complete task with QA handover |
-
-## MCP Integrations
+### MCP Integrations
 
 | Service | What taskflow Does With It | Fallback |
 |---------|---------------------------|----------|
@@ -128,7 +136,7 @@ All downstream skills consume this profile. Your PR descriptions, QA handovers, 
 
 No integration is required. taskflow works with whatever MCP servers you have configured and tells you clearly when one is missing.
 
-## Local Storage
+### Local Storage
 
 Everything lives in `.ai/tasks/`:
 
@@ -146,3 +154,9 @@ Everything lives in `.ai/tasks/`:
 ```
 
 All YAML, all local, all version-controllable. No database, no external state.
+
+## See also
+
+- [claude-core](/docs/claude-core) - the foundation plugin that provides MCP skills and session continuity
+- [dev-engine](/docs/dev-engine) - the execution pipeline that consumes task context from taskflow
+- [Workflows](/docs/workflows) - end-to-end recipes using taskflow commands

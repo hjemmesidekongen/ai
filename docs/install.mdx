@@ -92,26 +92,10 @@ The cache clear is not optional. Claude Code caches plugin contents aggressively
 
 ## Troubleshooting
 
-**Skills not showing up in the command palette**
+If something is not working after install, check the [Troubleshooting](/docs/troubleshooting) page for common issues with plugins, hooks, MCP connections, cache, and session state.
 
-Check that `~/.claude/plugins/known_marketplaces.json` points to the correct absolute path for the `plugins/` directory. The path must match where you cloned the repo.
+## See also
 
-**Hooks not firing**
-
-Clear the plugin cache and reinstall:
-
-```bash
-rm -rf ~/.claude/plugins/cache/local-workspace/
-# Restart Claude Code, then:
-/install
-```
-
-If hooks still don't fire after a reinstall, check `.ai/traces/hook-errors.log` - hook decisions and failures are logged there with timestamps and reasons.
-
-**Commands missing after install**
-
-Verify the plugin's `ecosystem.json` lists the command. Each command needs an entry in the `commands` array with the correct path. If the file exists but isn't in `ecosystem.json`, Claude Code won't discover it.
-
-**Plugin shows as installed but behaves unexpectedly**
-
-Check `plugins/<plugin-name>/.claude-plugin/plugin.json` for the plugin version. If you recently pulled changes and cleared cache but behavior didn't change, confirm you restarted Claude Code fully - not just reloaded the window.
+- [Configuration](/docs/configure) - MCP servers, plugin settings, CLAUDE.md, and project profiles
+- [Initialize in a New Project](/docs/init-project) - scan your codebase and run your first planning session
+- [Troubleshooting](/docs/troubleshooting) - fixes for common installation and runtime issues

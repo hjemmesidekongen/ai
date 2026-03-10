@@ -1,0 +1,189 @@
+---
+title: Troubleshooting
+description: Common issues with plugins, hooks, MCP connections, cache, and session state - with exact fixes.
+---
+
+# Troubleshooting
+
+## Installation Issues
+
+### Skills not showing in the command palette
+
+The marketplace registry path is wrong. Open `~/.claude/plugins/known_marketplaces.json` and confirm it points to the absolute path of the `plugins/` directory in your clone.
+
+```bash
+# Check the current path
+cat ~/.claude/plugins/known_marketplaces.json
+```
+
+The path must match where you actually cloned the repo. A mismatch (e.g., you moved the repo but the registry still points to the old location) silently hides all skills.
+
+### Commands missing after install
+
+The command exists on disk but is not listed in the plugin's component registry. Open `plugins/<plugin-name>/.claude-plugin/ecosystem.json` and verify the command has an entry in the `commands` array with the correct file path.
+
+If the file is listed but still missing, clear the cache and reinstall:
+
+```bash
+rm -rf ~/.claude/plugins/cache/local-workspace/
+# Restart Claude Code, then:
+/install
+```
+
+### Plugin version confusion
+
+You pulled changes and reinstalled, but behavior did not change. Two possible causes:
+
+1. **Stale cache.** Clear it explicitly (see [Cache Issues](#stale-cache-after-pulling-changes) below).
+2. **Claude Code not fully restarted.** Closing the tab is not enough. Quit the application and relaunch it. A window reload does not re-read plugin registrations.
+
+Check the active version in `plugins/<plugin-name>/.claude-plugin/plugin.json` under the `version` field.
+
+## Hook Issues
+
+### Hooks not firing
+
+Clear the plugin cache and reinstall:
+
+```bash
+rm -rf ~/.claude/plugins/cache/local-workspace/
+# Restart Claude Code, then:
+/install
+```
+
+If hooks still do not fire after reinstall, check the hook error log:
+
+```bash
+cat .ai/traces/hook-errors.log
+```
+
+Each entry is pipe-delimited: `timestamp|hook_name|decision|file_path|reason`. Look for `SKIP` or `ERROR` decisions that explain why a hook was suppressed.
+
+### Hook errors in trace log
+
+The hook ran but produced an error. Check `.ai/traces/hook-errors.log` for the specific failure. Common causes:
+
+- **Missing environment variable.** Hooks expect `CLAUDE_PROJECT_DIR` and `CLAUDE_PLUGIN_ROOT` to be set by Claude Code. If you are running a hook script manually for testing, export these first.
+- **Script not executable.** Run `chmod +x plugins/claude-core/scripts/<script>.sh`.
+- **Bash version.** Some scripts use bash 4+ features. macOS ships bash 3. The scripts in this repo are written for bash 3 compatibility, but if you added custom hooks, check for associative arrays or other bash 4 syntax.
+
+### Hooks running old versions after update
+
+This is almost always a stale cache problem. After any change to hook scripts:
+
+```bash
+rm -rf ~/.claude/plugins/cache/local-workspace/
+# Restart Claude Code, then:
+/install
+```
+
+Claude Code caches plugin contents aggressively. Without clearing, hooks silently run the old version even after you pull new code.
+
+## MCP Connection Issues
+
+### MCP server not configured
+
+The skill expects an MCP server but none is registered. Add the server to `.mcp.json` in your project root. See [Configuration - MCP Server Setup](/docs/configure#mcp-server-setup) for templates.
+
+After adding the entry, restart Claude Code. MCP connections are established at startup.
+
+### Authentication failures
+
+**Atlassian (OAuth):** The OAuth token expired. Remove the cached token and reconnect:
+
+```bash
+# Re-run the MCP connection - Claude Code will re-trigger OAuth
+# Just restart Claude Code after confirming .mcp.json is correct
+```
+
+**Azure DevOps (PAT):** Check that the `AZURE_DEVOPS_PAT` in `.mcp.json` has not expired. Generate a new one under User Settings > Personal Access Tokens in Azure DevOps. Scope it to Work Items (read/write) and Code (read).
+
+**Slack:** Verify the endpoint URL in `.mcp.json` matches your workspace's current MCP endpoint. These can rotate when workspace admins update integrations.
+
+### MCP endpoint not reachable
+
+**Local servers (Figma, Storybook, Playwright):** The application must be running before Claude Code starts. Figma's MCP server requires the desktop app with dev server enabled. Storybook must be running on the configured port (default 6006).
+
+Check the port:
+
+```bash
+# Storybook default
+curl -s http://localhost:6006/mcp | head -5
+
+# Figma default
+curl -s http://127.0.0.1:3845/sse | head -5
+```
+
+If the port is different, update the `url` field in `.mcp.json` to match.
+
+**Remote servers (Atlassian, Azure DevOps):** Check your network connection. If you are behind a corporate proxy, `npx mcp-remote` may need proxy configuration via `HTTPS_PROXY` environment variable.
+
+## Cache Issues
+
+### Stale cache after pulling changes
+
+The most common "it should work but doesn't" issue. Claude Code caches plugin files and does not automatically invalidate them on `git pull`.
+
+**Symptoms:**
+- Skills behave differently than the code on disk
+- New skills or commands you just added are not visible
+- Hook behavior does not match the current script content
+- Plugin version in `/help` does not match `plugin.json`
+
+**Fix:**
+
+```bash
+rm -rf ~/.claude/plugins/cache/local-workspace/
+# Restart Claude Code, then:
+/install
+```
+
+### When to clear cache
+
+Clear the cache any time you:
+
+- Pull new changes from the repo
+- Modify a skill, hook, command, or agent file
+- Edit `plugin.json` or `ecosystem.json`
+- Switch branches that have different plugin versions
+
+There is no downside to clearing cache. It rebuilds on the next `/install`.
+
+## Session State Issues
+
+### Snapshot not restoring after restart
+
+The context snapshot at `.ai/context/snapshot.yml` is generated by `assemble-context.sh` and read by the SessionStart hook. If it is not restoring:
+
+1. **Snapshot is stale.** Snapshots older than 48 hours are automatically deleted by the SessionStart hook. This is intentional - old context does more harm than good.
+2. **Snapshot file missing.** Check if `.ai/context/snapshot.yml` exists. If not, the PreCompact or Stop hook did not run in the previous session. This happens if Claude Code crashed or was force-quit.
+3. **SessionStart hook not firing.** See [Hooks not firing](#hooks-not-firing) above.
+
+To manually trigger a snapshot for debugging:
+
+```bash
+export CLAUDE_PROJECT_DIR="$(pwd)"
+export CLAUDE_PLUGIN_ROOT="plugins/claude-core"
+bash plugins/claude-core/scripts/assemble-context.sh manual
+cat .ai/context/snapshot.yml
+```
+
+### Session handoff not loading
+
+The `session-handoff` skill writes handoff data that the next session picks up. If the handoff is not loading:
+
+- **Handoff file not written.** The previous session must have run the session-handoff skill before ending. Check if a handoff file exists under `.ai/context/`.
+- **Staleness classification.** The handoff system classifies context by age. Content older than 48 hours is treated as stale and may be pruned. Start a new handoff if the gap between sessions is longer than two days.
+
+### Context lost after /compact
+
+The PreCompact hook writes a snapshot before compaction, and the CLAUDE.md file tells Claude to read `.ai/context/snapshot.yml` for recovery. If context is lost after `/compact`:
+
+1. **Check that the snapshot was written.** Look at `.ai/context/snapshot.yml` and verify the `generated` timestamp is recent.
+2. **Check CLAUDE.md has the recovery pointer.** The project CLAUDE.md should contain: "After `/compact` or when context seems incomplete, read `.ai/context/snapshot.yml`". If this line is missing, Claude has no instruction to check the snapshot.
+3. **Snapshot content is incomplete.** The assembler pulls from `trace-light.log`, active plans, and agency state. If those source files are empty or missing, the snapshot will be sparse. This is normal for sessions that did not use planning or tracing.
+
+## See also
+
+- [Installation](/docs/install) - the install process and verification steps
+- [Configuration](/docs/configure) - MCP server setup and plugin settings

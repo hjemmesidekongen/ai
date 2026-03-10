@@ -9,6 +9,8 @@
     "claude-core",
     "dev-engine",
     "taskflow",
-    "architecture"
+    "architecture",
+    "troubleshooting",
+    "maintaining-docs"
   ]
 }

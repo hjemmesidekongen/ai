@@ -31,6 +31,8 @@ Used by taskflow's Jira ingestion, PR workflows, and QA handover.
 
 This uses Atlassian's hosted MCP endpoint via `mcp-remote`. Authentication is handled via OAuth when you first connect.
 
+**Verify:** Run `/task:ingest <any-ticket-key>`. If it fetches the ticket, the connection works.
+
 ### Slack
 
 ```json
@@ -46,6 +48,8 @@ This uses Atlassian's hosted MCP endpoint via `mcp-remote`. Authentication is ha
 ```
 
 Replace `<your-slack-mcp-endpoint>` with your workspace's MCP endpoint URL.
+
+**Verify:** Ask Claude Code to list your Slack channels. If it returns results, the connection is live.
 
 ### Figma
 
@@ -63,6 +67,8 @@ Figma's MCP server runs locally via the Figma desktop app. Start the local dev s
 
 No credentials needed - authentication happens through the running Figma desktop session.
 
+**Verify:** Ask Claude Code to read a Figma file URL. If it returns frame data, the server is running.
+
 ### Playwright (browser automation)
 
 Used by dev-engine's visual verification and testing skills.
@@ -79,6 +85,8 @@ Used by dev-engine's visual verification and testing skills.
 }
 ```
 
+**Verify:** Ask Claude Code to take a screenshot of a URL. If it opens a browser and captures the page, Playwright is working.
+
 ### Storybook
 
 Storybook's MCP server is served by the running Storybook instance. Start Storybook first, then add:
@@ -94,6 +102,8 @@ Storybook's MCP server is served by the running Storybook instance. Start Storyb
 ```
 
 Adjust the port if your Storybook runs on a different one.
+
+**Verify:** Ask Claude Code to list your Storybook stories. If it returns component names, the connection is live.
 
 ### Azure DevOps
 
@@ -114,6 +124,8 @@ Adjust the port if your Storybook runs on a different one.
 
 Generate a PAT in Azure DevOps under User Settings > Personal Access Tokens. Scope it to Work Items (read/write) and Code (read).
 
+**Verify:** Ask Claude Code to check pipeline status for a known project. If it returns build results, the connection is working.
+
 ### Microsoft 365
 
 ```json
@@ -127,6 +139,8 @@ Generate a PAT in Azure DevOps under User Settings > Personal Access Tokens. Sco
   }
 }
 ```
+
+**Verify:** Ask Claude Code to search your recent emails. If it returns results, the connection is live.
 
 ### Where to put .mcp.json
 
@@ -232,3 +246,9 @@ All fields are optional. If you skip the file entirely, the plugins fall back to
 The profile is read at session start and on task switches. taskflow's `project-profile-loader` skill exposes it to downstream skills - the QA handover generator reads `qa.format`, Jira ingestion checks `mcp_servers` to confirm the Atlassian connection is expected, and completion gates check `dev.*_command` to know what to run.
 
 For personal side projects, you can skip `rules.yml` entirely. The default profile works without any setup.
+
+## See also
+
+- [Installation](/docs/install) - prerequisites and the install process
+- [Initialize in a New Project](/docs/init-project) - scan your project and set up the .ai/ directory
+- [Troubleshooting](/docs/troubleshooting) - fixes for MCP connections, cache, and hook issues

@@ -1,0 +1,57 @@
+---
+title: Maintaining These Docs
+description: What to update when plugin components change.
+---
+
+# Maintaining These Docs
+
+A checklist for keeping the documentation accurate after codebase changes. The most common drift is component counts going stale after adding skills or hooks.
+
+## When you add or remove a skill, command, agent, or hook
+
+1. Update the plugin's doc page (`claude-core.mdx`, `dev-engine.mdx`, or `taskflow.mdx`):
+   - Version/count line at the top
+   - Component Reference tables at the bottom
+2. Update `index.mdx` count in the plugin summary
+3. If it's a command, add or remove it from the "All Commands" table in `index.mdx`
+
+**Cross-check:** Count entries in `plugins/<plugin>/.claude-plugin/ecosystem.json` to verify your numbers match.
+
+## When you bump a plugin version
+
+Update the version in:
+- The plugin's doc page (version line near the top)
+- `plugins/<plugin>/.claude-plugin/plugin.json` (the source of truth)
+
+## When directory structure changes
+
+Update:
+- `architecture.mdx` State Management table
+- `init-project.mdx` .ai/ directory tree
+
+## When you add a new doc page
+
+1. Create the MDX file in `docs/` with YAML frontmatter (title, description)
+2. Add the page slug to `docs/meta.json` in the correct sidebar position
+3. Add a "See also" entry on 2-3 related pages that should link to it
+4. Run `node site/scripts/sync-docs.mjs` to copy to `site/content/docs/`
+
+## When you change MCP integrations
+
+Update:
+- `configure.mdx` with the config snippet and verification step
+- `troubleshooting.mdx` if there are known failure modes
+
+## Build and deploy
+
+```bash
+node site/scripts/sync-docs.mjs   # sync docs/ to site/content/docs/
+cd site && pnpm build              # verify all pages render
+```
+
+The source of truth is `docs/*.mdx`. Never edit `site/content/docs/` directly - those files are overwritten by the sync script.
+
+## See also
+
+- [Architecture](/docs/architecture) - plugin structure and state management
+- [Troubleshooting](/docs/troubleshooting) - common issues after changes
