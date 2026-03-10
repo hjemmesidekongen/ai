@@ -281,6 +281,11 @@
       "name": "content-strategy-patterns",
       "path": "skills/content-strategy-patterns/SKILL.md",
       "description": "Content strategy — pillar ratios, editorial calendars, blog/social/email templates, repurposing matrix"
+    },
+    {
+      "name": "seo-fundamentals",
+      "path": "skills/seo-fundamentals/SKILL.md",
+      "description": "SEO — E-E-A-T, Core Web Vitals, technical SEO, keywords, meta tags, Health Index scoring"
     }
   ],
   "agents": [
