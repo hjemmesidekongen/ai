@@ -1,0 +1,20 @@
+@import 'tailwindcss';
+@import 'fumadocs-ui/css/neutral.css';
+@import 'fumadocs-ui/css/preset.css';
+
+/* Brand color overrides — warm amber/gold */
+@theme {
+  --font-mono: var(--font-mono, ui-monospace, monospace);
+
+  /* Light mode brand accent */
+  --color-fd-primary: hsl(38, 75%, 42%);
+  --color-fd-primary-foreground: hsl(0, 0%, 98%);
+  --color-fd-ring: hsl(38, 75%, 42%);
+}
+
+.dark {
+  /* Dark mode brand accent — brighter amber */
+  --color-fd-primary: hsl(40, 95%, 68%);
+  --color-fd-primary-foreground: hsl(30, 20%, 8%);
+  --color-fd-ring: hsl(40, 95%, 68%);
+}

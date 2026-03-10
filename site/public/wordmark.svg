@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 380 36" width="380" height="36">
+  <!-- "hjemmesidekongen" in light text -->
+  <text
+    x="0"
+    y="26"
+    font-family="ui-monospace, 'Cascadia Code', 'SF Mono', 'Fira Mono', monospace"
+    font-size="22"
+    font-weight="600"
+    fill="#FAFAFA"
+    letter-spacing="-0.5"
+  >hjemmesidekongen</text>
+
+  <!-- "/ai" in amber, lighter weight -->
+  <text
+    x="282"
+    y="26"
+    font-family="ui-monospace, 'Cascadia Code', 'SF Mono', 'Fira Mono', monospace"
+    font-size="22"
+    font-weight="400"
+    fill="#F59E0B"
+    letter-spacing="-0.5"
+    opacity="0.85"
+  >/ai</text>
+</svg>

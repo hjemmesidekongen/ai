@@ -1,0 +1,117 @@
+---
+title: hjemmesidekongen/ai
+description: A personal methodology for AI-assisted development — structure before code, proof before done, agents work but humans decide.
+---
+
+# hjemmesidekongen/ai
+
+One developer's operating system for AI-assisted code.
+
+hjemmesidekongen is a Danish developer's personal methodology for making AI agents actually work — not as autocomplete, but as structured development partners. The plugins below are the implementation of that methodology, shared open-source.
+
+## The Methodology
+
+Three principles drive everything here:
+
+**Structure before code.** Every task gets planned, decomposed, and dependency-mapped before anyone writes a line. This applies whether "anyone" is a human or an AI agent. Ad-hoc prompting produces ad-hoc results.
+
+**Proof before done.** No task is complete until there's evidence — not inference, not "it should work," but actual test output, build results, and verification checks. The system enforces this structurally, not through discipline.
+
+**Agents work, humans decide.** AI agents handle execution — decomposing tasks, writing code, running reviews. But every decision point surfaces to the human. The agent that writes the code never grades it. The agent that plans the work never approves it as done.
+
+## The Plugins
+
+These three plugins implement the methodology inside Claude Code. They're the evidence, not the brand.
+
+### [claude-core](/docs/claude-core) — The Foundation
+
+The infrastructure layer everything else builds on. Planning engine, brainstorm sessions, verification gates, cross-session memory, error investigation, learning pipelines, and workplace integrations.
+
+**35 skills** · **13 commands** · **12 agents**
+
+Think of it as the operating system kernel — it handles state management, hooks, tracing, and the core workflows that other plugins depend on.
+
+### [dev-engine](/docs/dev-engine) — Development Execution
+
+A multi-agent development pipeline. Give it a task, and it decomposes it into subtasks, assigns each to the right specialist agent (frontend, backend, testing, security), dispatches them in parallel with file-ownership isolation, and runs a 10-point quality gate before anything ships.
+
+**53 skills** · **6 agents** · **2 commands**
+
+Covers React, Next.js, Vue, Nuxt, NestJS, Prisma, Expo, TypeScript, Tailwind, and 20+ more frameworks — not as generic advice, but as verified, framework-specific knowledge baked into each agent's context.
+
+### [taskflow](/docs/taskflow) — Task Management
+
+Bridges your project management tools with your development workflow. Pull Jira tickets locally, detect contradictions between descriptions and comments, create PRs with auto-populated descriptions, and generate structured QA handovers — all from the command line.
+
+**9 skills** · **8 commands**
+
+Works with Jira, Confluence, Bitbucket, and Azure DevOps. Every integration degrades gracefully when the MCP server isn't configured — no silent failures.
+
+## How They Work Together
+
+```
+┌─────────────────────────────────────────────────────────┐
+│                      You (developer)                     │
+│                                                          │
+│  /task:ingest PROJ-123        Pull ticket from Jira      │
+│  /task:start PROJ-123         Activate + review conflicts│
+│  /dev:run "Build the feature" Decompose + dispatch agents│
+│  /task:pr                     Create PR from task context │
+│  /task:done                   QA handover + close ticket  │
+└─────────────────────────────────────────────────────────┘
+
+taskflow pulls the ticket → dev-engine executes the work → claude-core
+provides the infrastructure (planning, verification, tracing, memory)
+```
+
+Each plugin works standalone. taskflow doesn't require dev-engine. dev-engine doesn't require taskflow. Both use claude-core as their foundation, but claude-core is valuable on its own for planning, brainstorming, and code review workflows.
+
+## What Makes This Different
+
+**Verification, not vibes.** Every completed task goes through a verification gate. The system won't claim "done" without proof — it runs the tests, checks the build, reads the output, and only then marks the task complete.
+
+**Parallel agents with file ownership.** When dev-engine dispatches multiple agents, each one owns specific files exclusively. No merge conflicts. No agents stepping on each other's work. Interface contracts are defined at boundaries before implementation starts.
+
+**Contradiction detection.** taskflow doesn't just pull your Jira ticket — it reads every comment and flags where later discussions contradict the original spec. You find out before you start coding, not after.
+
+**Cross-session memory.** Claude Code forgets everything between sessions. These plugins don't. State files, handoff documents, and snapshot contexts survive session boundaries. Pick up exactly where you left off.
+
+**Learning pipeline.** claude-core observes patterns in how you work, extracts recurring behaviors as "instincts," and can promote high-confidence patterns into rules, skills, or memory entries. The system gets better the more you use it.
+
+## Quick Start
+
+### Prerequisites
+
+- [Claude Code](https://docs.anthropic.com/en/docs/claude-code) installed and configured
+- Node.js 18+
+
+### Installation
+
+Clone the repository and install the plugins:
+
+```bash
+git clone <repository-url>
+cd claude-local-workspace
+
+# In Claude Code, install the plugins
+/install
+```
+
+Each plugin registers its skills, commands, agents, and hooks automatically. No manual configuration needed beyond the initial install.
+
+### First Steps
+
+1. **Start with claude-core** — try `/brainstorm:start` to explore a problem, then `/plan:create` to turn conclusions into an execution plan.
+
+2. **Add dev-engine** — run `/dev:scan` to map your project's tech stack, then `/dev:run` with a task description to see the full pipeline in action.
+
+3. **Connect taskflow** — configure your Jira MCP server, then `/task:ingest PROJ-123` to pull a ticket and start working.
+
+## Architecture
+
+All three plugins follow the same patterns:
+
+- **State as YAML files** — everything persists to `.ai/` directories. No databases, no external services required.
+- **Hooks for safety** — PreToolUse hooks prevent scope drift, direct pushes to main, and premature completion. PostToolUse hooks trace operations and record observations.
+- **Skills as knowledge** — each skill is a self-contained markdown file (≤80 lines) with a references/ directory for depth. Agents load only the skills relevant to their current task.
+- **Agents as specialists** — read-only reviewers never modify code. Implementing agents never mark their own work done. The separation prevents self-grading.

@@ -11,3 +11,4 @@
 external-references/
 __pycache__/
 *.pyc
+.vercel

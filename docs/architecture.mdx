@@ -1,0 +1,146 @@
+---
+title: Architecture
+description: How the hjemmesidekongen/ai plugins relate, communicate, and share data.
+---
+
+# Architecture
+
+The hjemmesidekongen/ai methodology is implemented as three plugins with one foundation. Each plugin has a clear responsibility boundary, communicates through data files, and never imports another plugin's skills directly. This architecture reflects the methodology's core constraint: agents work, but within strict boundaries.
+
+## Plugin Hierarchy
+
+```
+claude-core          ← foundation, always installed
+├── dev-engine       ← development execution, depends on claude-core
+├── taskflow         ← task management, depends on claude-core
+└── agency           ← digital agency (brand, design, content), depends on claude-core
+```
+
+**Rules:**
+- Every plugin depends on claude-core. Nothing else.
+- Plugins never depend on each other directly — they communicate through shared data files.
+- Cross-plugin coordination happens through bridge skills (e.g., `taskflow-bridge` in dev-engine reads taskflow's `active.yml` but never calls taskflow commands).
+
+## Responsibility Boundaries
+
+| Layer | Owner | Responsibility |
+|-------|-------|---------------|
+| **Infrastructure** | claude-core | Hooks, tracing, state management, planning, verification, session continuity |
+| **MCP interaction** | claude-core | Raw API calls to Jira, Confluence, Bitbucket, Slack, Outlook |
+| **Task lifecycle** | taskflow | Ticket ingestion, contradiction detection, PR creation, QA handover |
+| **Code execution** | dev-engine | Task decomposition, agent dispatch, framework knowledge, quality gates |
+
+## Data Flow
+
+```
+                    ┌───────────────────┐
+                    │    claude-core    │
+                    │                   │
+                    │  .ai/context/     │  Session state, snapshots
+                    │  .ai/plans/      │  Wave plans, verification
+                    │  .ai/instincts/  │  Learning pipeline
+                    │  .ai/roadmap.yml │  Project roadmap
+                    └─────┬─────┬──────┘
+                          │     │
+              ┌───────────┘     └───────────┐
+              ▼                             ▼
+    ┌─────────────────┐          ┌─────────────────┐
+    │    taskflow      │          │   dev-engine     │
+    │                  │          │                  │
+    │  .ai/tasks/     │ ──read── │  .ai/project-    │
+    │    <KEY>.yml    │          │    map.yml       │
+    │    active.yml   │◄─ read ──│  .ai/dev-engine/ │
+    │    handoff.yml  │          │    pipeline.yml  │
+    └─────────────────┘          └──────────────────┘
+```
+
+taskflow writes task files. dev-engine reads them (via `taskflow-bridge`). dev-engine writes its own state to `.ai/dev-engine/`. Neither plugin writes to the other's directories.
+
+## Hooks Architecture
+
+Only claude-core defines hooks. Other plugins operate through skill and command invocation.
+
+| Event | Hook Count | What They Do |
+|-------|-----------|-------------|
+| **PreToolUse** | 5 | Prevent direct pushes to main, validate file scope, enforce TDD and planning gates, detect compaction needs |
+| **PostToolUse** | 6 | Trace operations, protect CLAUDE.md, record observations for learning, trigger auto-compaction |
+| **PreCompact** | 1 | Snapshot session state before Claude Code compresses context |
+| **SessionStart** | 2 | Restore session state from snapshot, run memory health check |
+| **Stop** | 8 | Verify completion, check documentation freshness, clear caches, detect duplicate components |
+| **UserPromptSubmit** | 1 | Grade prompt quality before processing |
+
+Hooks are the safety net that prevents: pushing to main, skipping verification, modifying out-of-scope files, and premature completion claims.
+
+## Agent Model
+
+Agents follow strict separation of concerns:
+
+**Implementing agents** (sonnet tier) — write code, build features, fix bugs. They never mark their own work complete.
+
+**Review agents** (opus tier) — evaluate work, check quality, run verification. They never modify code. The code-reviewer is the only agent authorized to approve task completion.
+
+This separation prevents self-grading. The agent that writes the code never decides if the code is good enough.
+
+### File Ownership
+
+When multiple agents work in parallel, each gets exclusive write access to specific files:
+
+```
+agent-1  →  owns: src/components/Foo.tsx
+agent-2  →  owns: src/api/foo.ts
+agent-3  →  owns: tests/foo.test.ts
+```
+
+If two agents need the same file, the dispatcher serializes those tasks. Interface contracts are defined at boundaries before implementation starts.
+
+## MCP Integration Pattern
+
+All MCP-dependent features follow a two-layer pattern:
+
+1. **claude-core basics skill** — raw MCP interaction (e.g., `jira-basics` handles API calls, auth, pagination)
+2. **taskflow orchestration skill** — adds task awareness (e.g., `jira-ingestion` normalizes tickets, runs contradiction detection)
+
+This means you can use Jira from claude-core directly for ad-hoc queries, or through taskflow for structured ticket workflows.
+
+Every MCP integration degrades gracefully:
+- If the MCP server isn't configured → clear error message
+- If the server is unavailable → dry-run mode or empty results
+- Never fabricated data, never silent failures
+
+## State Management
+
+All state persists as YAML files in `.ai/`:
+
+| Directory | Owner | Contents |
+|-----------|-------|----------|
+| `.ai/context/` | claude-core | `snapshot.yml` — session state that survives compaction |
+| `.ai/plans/` | claude-core | Wave plans, state files, verification results |
+| `.ai/instincts/` | claude-core | `observations.jsonl`, `instincts.yml` — learning pipeline |
+| `.ai/roadmap.yml` | claude-core | Project roadmap with prioritized items |
+| `.ai/brainstorm/` | claude-core | Brainstorm transcripts and `decisions.yml` files |
+| `.ai/tasks/` | taskflow | Task YAMLs, active pointer, handoff, QA handover |
+| `.ai/project-map.yml` | dev-engine | Tech stack detection and module mapping |
+| `.ai/dev-engine/` | dev-engine | Pipeline state, execution artifacts |
+| `.ai/projects/` | agency | Per-project state for agency workflows |
+
+No databases. No external services for state. Everything is local, versionable, and inspectable.
+
+## Session Continuity
+
+Claude Code loses all context between sessions and during compaction. The plugins handle this:
+
+1. **PreCompact hook** → saves `snapshot.yml` with current state
+2. **SessionStart hook** → restores state from `snapshot.yml`
+3. **session-handoff** → manual save/resume for cross-session work
+4. **CLAUDE.md pointer** → "after /compact, read `.ai/context/snapshot.yml`"
+5. **State files** → plans, tasks, and roadmap persist on disk regardless of session state
+
+## Verification Model
+
+Three layers of verification prevent incomplete work from shipping:
+
+1. **verification-gate** (claude-core) — 5-step proof protocol: identify → run → read → verify → claim
+2. **plan-verifier** (claude-core) — two-stage wave verification: mechanical spec compliance, then quality review
+3. **completion-gate** (dev-engine) — 10-point quality criteria run by the code-reviewer agent
+
+All three are mandatory. None can be bypassed by the implementing agent.

@@ -1,0 +1,233 @@
+---
+title: Workflows
+description: Step-by-step recipes for common development workflows using hjemmesidekongen/ai.
+---
+
+# Workflows
+
+Practical recipes. Each one shows the exact commands and what happens at each step.
+
+## Build a feature from a Jira ticket
+
+The full lifecycle: ticket to merged PR.
+
+```bash
+# 1. Pull the ticket locally
+/task:ingest PROJ-456
+
+# 2. Activate it — loads context, checks for contradictions
+/task:start PROJ-456
+```
+
+taskflow reads every comment on the ticket and flags where later discussions contradict the original spec. If contradictions exist, you see them before writing any code.
+
+```bash
+# 3. Execute the work
+/dev:run "Implement the user preference panel per PROJ-456"
+```
+
+dev-engine decomposes the task into subtasks, assigns each to a specialist agent (frontend, backend, testing), dispatches them in parallel with file-ownership isolation, and runs a 10-point quality gate on each result.
+
+```bash
+# 4. Create the PR
+/task:pr
+
+# 5. Complete with QA handover
+/task:done
+```
+
+`/task:pr` auto-populates the PR description from the task context. `/task:done` generates a structured QA handover with what changed, how to test it, and what to watch for.
+
+---
+
+## Plan and execute a complex task
+
+For anything that touches 3+ files or has multiple logical steps.
+
+```bash
+# 1. Explore the problem space
+/brainstorm:start "How should we restructure the auth module?"
+```
+
+Claude acts as a sparring partner — challenges assumptions, surfaces risks, proposes alternatives. This isn't a rubber stamp session.
+
+```bash
+# 2. Formalize decisions
+/brainstorm:decide
+```
+
+Walks through the brainstorm and extracts structured decisions with rationale. Saved to `.ai/brainstorm/*/decisions.yml` for future reference.
+
+```bash
+# 3. Create the execution plan
+/plan:create "Restructure auth module per brainstorm decisions"
+```
+
+Generates a wave-based plan: tasks sorted by dependency, grouped into parallel waves, with file-ownership isolation and verification gates. You confirm before anything runs.
+
+```bash
+# 4. Execute
+/plan:execute
+```
+
+Runs wave by wave. Each wave completes and passes verification before the next starts. If a task fails, execution halts and surfaces the error — no silent failures.
+
+---
+
+## Debug a hard bug
+
+When `console.log` isn't cutting it.
+
+```bash
+# Structured investigation — no guessing
+/dev:run "Debug: users see stale data after preference update"
+```
+
+The system uses a 4-phase protocol:
+
+1. **Gather evidence** — reads logs, traces, and related code
+2. **Identify patterns** — correlates symptoms across the codebase
+3. **Form hypotheses** — generates three competing explanations and investigates each
+4. **Validate** — confirms the root cause with actual evidence before proposing a fix
+
+The fix doesn't ship until the verification gate confirms the bug is resolved, not just patched over.
+
+---
+
+## Run a code review
+
+Two modes: request a review from the system, or review your own changes before committing.
+
+```bash
+# Full 4-stream parallel review
+/full-review
+```
+
+Dispatches four specialist reviewers in parallel:
+- **Security** — injection, auth bypass, data exposure
+- **Performance** — N+1 queries, unnecessary renders, bundle size
+- **Architecture** — coupling, responsibility boundaries, naming
+- **Testing** — coverage gaps, missing edge cases, brittle assertions
+
+Each reviewer runs independently. Results are merged into a single report with severity ratings.
+
+```bash
+# Quick review of staged changes
+/dev:run "Review my staged changes before committing"
+```
+
+Lighter touch — checks for obvious issues, consistency with existing patterns, and anything that would fail CI.
+
+---
+
+## Work across sessions
+
+Claude Code forgets everything between sessions. The plugins don't.
+
+### Ending a session
+
+```bash
+# Save context for next time
+/session-handoff
+```
+
+Creates a handoff document capturing: what you were working on, what's done, what's in progress, and what's blocked. Stored in `.ai/context/`.
+
+### Starting a new session
+
+Context is restored automatically via the SessionStart hook. If you need to explicitly resume:
+
+```bash
+# Check where you left off
+/plan:status
+
+# Resume the plan from where it stopped
+/plan:resume
+```
+
+State files, plan progress, and decision history all survive across sessions. You pick up where you left off without re-explaining context.
+
+---
+
+## Process a sprint's worth of tickets
+
+Bulk operations for when you have a board full of assigned tickets.
+
+```bash
+# Pull all assigned tickets from a Jira board
+/task:ingest-bulk "https://yourcompany.atlassian.net/jira/boards/42"
+```
+
+Fetches all non-closed tickets assigned to you, normalizes them to local YAML task files, and runs contradiction detection on each.
+
+```bash
+# See what you're working with
+/task:list
+```
+
+Shows all ingested tasks with status, priority, and contradiction count. Plan your day from here.
+
+---
+
+## Brainstorm an architectural decision
+
+For decisions that deserve more thought than "just pick one."
+
+```bash
+/brainstorm:start "Monorepo vs polyrepo for the new platform"
+```
+
+The brainstorm session:
+- Challenges your initial framing
+- Surfaces constraints you haven't considered
+- Explores 2-3 genuinely different approaches
+- Identifies the actual tradeoffs (not the theoretical ones)
+
+When you've reached a conclusion:
+
+```bash
+/brainstorm:decide
+```
+
+Extracts decisions into structured YAML with the rationale captured. These decisions are automatically loaded as context when relevant tasks are executed later — so the reasoning doesn't get lost.
+
+---
+
+## Scan and onboard to a new codebase
+
+When you're joining a project or starting work in an unfamiliar repo.
+
+```bash
+# Map the project
+/dev:scan
+```
+
+dev-engine scans the repository and produces:
+- Tech stack detection (frameworks, languages, build tools)
+- Module boundary map (what talks to what)
+- File dependency graph
+- Architecture patterns in use
+
+This project map is then used as context when dispatching agents — so they work with the actual codebase structure, not generic assumptions.
+
+---
+
+## Create a plugin or skill
+
+For extending the system itself.
+
+```bash
+# Create a new skill
+/skill-creator
+
+# Create a new hook
+/hook-creator
+
+# Create a new agent
+/agent-creator
+
+# Create a new plugin
+/plugin-creator
+```
+
+Each creator guides you through the process, generates the correct file structure and frontmatter, and runs a review before finalizing. The reviewer catches issues that would cause silent failures at runtime.

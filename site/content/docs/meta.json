@@ -1,0 +1,10 @@
+{
+  "title": "Documentation",
+  "pages": [
+    "index",
+    "claude-core",
+    "dev-engine",
+    "taskflow",
+    "architecture"
+  ]
+}

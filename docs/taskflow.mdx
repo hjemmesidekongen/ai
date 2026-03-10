@@ -1,0 +1,148 @@
+---
+title: taskflow
+description: Task management and workplace integration — Jira ingestion, contradiction detection, PR workflows, QA handover, and cross-session continuity.
+---
+
+# taskflow
+
+The task lifecycle layer of the hjemmesidekongen/ai methodology. The methodology says structure before code — taskflow is where that structure comes from. It connects your project management tools to the development workflow so every task starts with clear requirements, flagged contradictions, and a defined path to completion.
+
+**Version:** 0.1.0 · **9 skills** · **8 commands**
+
+## What It Does
+
+taskflow turns Jira tickets into local YAML files, analyzes them for contradictions, and provides a structured lifecycle from ingestion through completion. When you're done coding, it creates PRs with context-rich descriptions and generates QA handover documents grounded in acceptance criteria.
+
+Every MCP integration degrades gracefully. If Jira isn't configured, you get clear messages — never fabricated data.
+
+## The Workflow
+
+### Single Task
+
+```bash
+/task:ingest PROJ-123          # Pull ticket from Jira → local YAML
+/task:start PROJ-123           # Activate, review contradictions
+/task:docs                     # Find related Confluence pages
+# ... do the work ...
+/task:pr                       # Create PR with structured description
+/task:done                     # Generate QA handover, close Jira ticket
+```
+
+### Sprint Batch
+
+```bash
+/task:ingest-bulk <board-url>  # Load entire sprint (deduplicates)
+/task:list --status pending    # See what's available
+/task:start PROJ-456           # Pick one
+/task:done                     # Complete with QA handover
+```
+
+## Key Capabilities
+
+### Contradiction Detection
+
+This is the feature that pays for itself immediately.
+
+When you ingest a Jira ticket, taskflow reads the description and every comment. It identifies where later comments contradict, modify, or extend the original requirements. Each finding is classified by severity:
+
+- **Blocker** — direct contradiction that changes what you need to build
+- **Warning** — modification that shifts scope or priority
+- **Info** — addition or clarification that doesn't conflict
+
+You see contradictions when you `/task:start` and again in `/task:status`. No more discovering mid-implementation that comment #7 reversed the requirement from comment #3.
+
+### Structured PR Descriptions
+
+`/task:pr` creates pull requests with descriptions auto-populated from:
+- Task summary and key
+- Acceptance criteria
+- Test plan derived from criteria
+- Pipeline status (checks CI/CD after creation)
+
+The PR description is immediately useful to reviewers — not an empty "ready for review" with a Jira link.
+
+Supports Bitbucket (via MCP) with draft mode. Posts the PR URL as a Jira comment automatically. Falls back to formatted output for manual submission when Bitbucket MCP isn't configured.
+
+### QA Handover
+
+`/task:done` generates a structured QA handover document:
+
+- **What changed** — file-by-file summary from git diff
+- **Test scenarios** — mapped from acceptance criteria, not generic checklists
+- **Regression risks** — identified from the code diff
+- **Screenshots** — included for UI-heavy changes
+
+Output format matches your project profile — Jira wiki markup, GitHub-flavored markdown, or plain markdown. Goes straight into the right system without reformatting.
+
+### Confluence Integration
+
+`/task:docs` searches Confluence for pages related to your active task. It extracts keywords from the task summary, description, and labels, builds CQL queries, and scores results by relevance (keyword overlap + recency).
+
+Matched documents are linked back to the task YAML so they persist across sessions.
+
+### Cross-Session Continuity
+
+`session-handoff-taskflow` extends claude-core's session-handoff with task-specific context:
+
+- Active task state and progress
+- Subtask completion (pending/in_progress/done)
+- Blockers and why you're stuck
+- Open questions for the next session
+- Staleness classification on resume
+
+Proactively suggests handoff when 5+ files have been edited in a session.
+
+### Project Profiles
+
+`project-profile-loader` reads your `rules.yml` (project root or `.ai/rules.yml`) to understand project-level conventions:
+
+- Git branch naming patterns
+- Commit message style
+- QA handover format
+- Dev commands (test, build, lint)
+- MCP server availability
+
+All downstream skills consume this profile. Your PR descriptions, QA handovers, and git commits automatically follow your project's conventions.
+
+## Commands
+
+| Command | Usage | What It Does |
+|---------|-------|-------------|
+| `/task:ingest` | `/task:ingest PROJ-123` | Pull single ticket from Jira |
+| `/task:ingest-bulk` | `/task:ingest-bulk <board-url>` | Batch ingest from board/filter (deduplicates) |
+| `/task:list` | `/task:list [--status pending]` | List local tasks with status and contradiction count |
+| `/task:start` | `/task:start PROJ-123` | Activate task, load context, show contradictions |
+| `/task:status` | `/task:status` | Full active task details |
+| `/task:docs` | `/task:docs [search query]` | Find related Confluence pages |
+| `/task:pr` | `/task:pr [--draft]` | Create PR from active task context |
+| `/task:done` | `/task:done [--skip-jira]` | Complete task with QA handover |
+
+## MCP Integrations
+
+| Service | What taskflow Does With It | Fallback |
+|---------|---------------------------|----------|
+| **Jira** (Atlassian MCP) | Ticket ingestion, status transitions, comments | Dry-run mode with sample data |
+| **Confluence** (Atlassian MCP) | Documentation search and linking | Empty results, clear message |
+| **Bitbucket** (Atlassian MCP) | PR creation, pipeline status, Jira commenting | Formatted output for manual submission |
+| **Azure DevOps** | Pipeline status, test results, run triggers | Clear "MCP not configured" message |
+
+No integration is required. taskflow works with whatever MCP servers you have configured and tells you clearly when one is missing.
+
+## Local Storage
+
+Everything lives in `.ai/tasks/`:
+
+```
+.ai/tasks/
+├── PROJ-123.yml              # Normalized task with metadata + contradictions
+├── PROJ-124.yml
+├── active.yml                # Currently active task pointer
+├── PROJ-123-handover.md      # QA handover (generated at completion)
+├── PROJ-123-pipeline-status.yml  # CI/CD status snapshot
+├── handoff.yml               # Cross-session context
+├── bulk-ingestion-summary.yml    # Batch ingest report
+└── attachments/
+    └── PROJ-123/             # Downloaded Jira attachments
+```
+
+All YAML, all local, all version-controllable. No database, no external state.
