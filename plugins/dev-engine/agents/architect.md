@@ -4,6 +4,7 @@ description: >
   Architecture advisor that reviews task decompositions, evaluates design decisions,
   identifies dependency risks, and suggests module boundaries. Read-only — recommends, never implements.
 model_tier: opus
+color: "cyan"
 tools:
   - Read
   - Glob

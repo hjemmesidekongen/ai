@@ -4,6 +4,7 @@ description: >
   Security review agent that performs OWASP checks, dependency audits, auth review,
   input validation analysis, and secrets detection. Read-only — reports findings, never writes fixes.
 model_tier: opus
+color: "red"
 tools:
   - Read
   - Glob

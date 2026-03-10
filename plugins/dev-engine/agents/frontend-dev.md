@@ -4,6 +4,7 @@ description: >
   Frontend development agent for React, Next.js, Vue, Nuxt, CSS, HTML, and accessibility work.
   Implements UI features, fixes layout issues, and builds component hierarchies.
 model_tier: sonnet
+color: "blue"
 tools:
   - Read
   - Write

@@ -7,6 +7,7 @@ description: >
 user_invocable: false
 interactive: false
 model_tier: senior
+depends_on: []
 triggers:
   - "skill quality"
   - "audit skill"
@@ -36,6 +37,7 @@ _source:
   inspired_by: "claude-core skill-auditor"
   ported_date: "2026-03-10"
   iteration: 1
+  changes: "Dev-engine variant with 8-dimension scoring framework"
 ---
 
 # Skill Quality Rubric

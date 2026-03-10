@@ -36,6 +36,7 @@ _source:
   inspired_by: "original"
   ported_date: "2026-03-10"
   iteration: 1
+  changes: "Original skill, no port"
 ---
 
 # expo-simulators
@@ -70,11 +71,10 @@ npx expo start --ios --device "iPhone 16 Pro"     # target specific simulator
 ```
 
 Expo picks the booted simulator automatically when only one is running. Multiple running simultaneously causes routing confusion unless intentional.
-
 ## Key Rules
 
 - Clear Metro cache (`expo start --clear`) when switching platforms or after major dependency changes.
 - Use `xcrun simctl erase` to reset simulator state — faster than creating a new simulator.
 - Android emulators with Google Play Store have restricted root access. Use AOSP images when elevated permissions are needed.
-- Never run two simulators of the same platform simultaneously unless explicitly testing multi-device scenarios.
+- Never run two simulators of the same platform simultaneously unless explicitly testing multi-device.
 See `references/process.md` for screenshots, screen recording, location simulation, push notification testing, network conditions, performance profiling, multi-device testing, reset procedures, and anti-patterns.

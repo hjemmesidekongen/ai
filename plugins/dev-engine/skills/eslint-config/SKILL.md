@@ -37,6 +37,7 @@ _source:
   inspired_by: "original"
   ported_date: "2026-03-10"
   iteration: 1
+  changes: "Original skill, no port"
 ---
 
 # eslint-config
@@ -76,5 +77,4 @@ Start with a preset (`@eslint/js`, `typescript-eslint`, `eslint-config-prettier`
 - `no-console` — `warn` in app code, disabled in scripts and CLI tools
 - `eqeqeq` — always `error`; `== null` checks are the only safe exception
 - `@typescript-eslint/no-explicit-any` — `warn`, not `error`; some integration seams need it
-
 See `references/process.md` for flat config structure, TypeScript setup, custom rule creation, plugin setup, shared configs, file-specific overrides, ignores, Prettier integration, performance, CI setup, and anti-patterns.

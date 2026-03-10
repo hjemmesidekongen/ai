@@ -72,9 +72,10 @@ For each command file:
 
 ### 6. Validate Agents
 For each agent file:
-- YAML frontmatter with `name`, `description`, `model`, `color`
+- YAML frontmatter with `name`, `description`, `color`
+- `model_tier` (junior/senior/principal) — required
+- `model` (inherit/haiku/sonnet/opus) — optional, defaults to inherit
 - `name` is kebab-case, 3-50 chars
-- `model` is valid (inherit/haiku/sonnet/opus)
 - `color` is valid (blue/cyan/green/yellow/magenta/red)
 - System prompt exists (body content > 20 chars)
 

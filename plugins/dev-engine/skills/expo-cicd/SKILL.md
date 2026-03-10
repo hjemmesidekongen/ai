@@ -36,6 +36,7 @@ _source:
   inspired_by: "original"
   ported_date: "2026-03-10"
   iteration: 1
+  changes: "Original skill, no port"
 ---
 
 # expo-cicd

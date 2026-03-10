@@ -4,6 +4,7 @@ description: >
   Quality gate agent that reviews all completed work against completion criteria.
   The only agent authorized to approve work as done.
 model_tier: opus
+color: "yellow"
 tools:
   - Read
   - Glob

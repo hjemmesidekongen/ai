@@ -36,6 +36,7 @@ _source:
   inspired_by: "expo-skills-main"
   ported_date: "2026-03-10"
   iteration: 1
+  changes: "Adapted from expo skill catalog for dev-engine knowledge base"
 ---
 
 # expo-upgrading
@@ -77,5 +78,4 @@ Pre-upgrade: note the current git SHA. Mid-upgrade: `git checkout main && git br
 ## Prebuild and Native Directory Management
 
 Managed workflow: never edit `ios/` or `android/` directly. All customization via config plugins — this keeps the project prebuild-safe across upgrades. If a change can't be expressed as a config plugin, write a custom one rather than dropping to bare workflow.
-
 See `references/process.md` for the full upgrade command sequence, version-specific notes, common pitfalls, and anti-patterns.

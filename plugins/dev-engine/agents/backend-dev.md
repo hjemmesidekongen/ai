@@ -4,6 +4,7 @@ description: >
   Backend development agent for NestJS, Prisma, Node.js, Express, APIs, and database work.
   Implements server-side features, API endpoints, and data layer logic.
 model_tier: sonnet
+color: "green"
 tools:
   - Read
   - Write

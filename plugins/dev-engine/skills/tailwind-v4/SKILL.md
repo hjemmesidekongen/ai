@@ -8,6 +8,12 @@ user_invocable: false
 interactive: false
 model_tier: senior
 depends_on: []
+reads:
+  - "**/*.css"
+  - "tailwind.config.*"
+  - "postcss.config.*"
+writes:
+  - "**/*.css"
 triggers:
   - "tailwind"
   - "tailwind v4"
@@ -35,6 +41,7 @@ _source:
   inspired_by: "original"
   ported_date: "2026-03-10"
   iteration: 1
+  changes: "Original skill, no port"
 ---
 
 # tailwind-v4
@@ -52,28 +59,11 @@ Tailwind v4 replaces the JS config file with CSS-first configuration. Theme, uti
 
 Define tokens in `@theme` — Tailwind generates CSS variables and utility classes from them. Override defaults by redefining the same variable; remove them with `--color-*: initial`.
 
-```css
-@import "tailwindcss";
-
-@theme {
-  --color-brand: oklch(55% 0.2 250);
-  --font-display: "Inter", sans-serif;
-  --spacing-18: 4.5rem;
-}
-```
-
-## Custom Utilities
-
-`@utility` integrates with all variants and responsive prefixes automatically:
-
-```css
-@utility text-balance { text-wrap: balance; }
-```
-
 ## Key Rules
 
 - Import as `@import "tailwindcss"` — not three `@tailwind` directives
-- Keep `@theme` in the root CSS file — not scattered across components
+- Define theme tokens in `@theme {}` block in the root CSS file
+- Use `@utility` for custom utilities — integrates with all variants automatically
 - `@apply` is acceptable for base element resets; avoid for component composition
 - Dark mode: pick media-based or class-based — not both
 - Container queries: `@container` on parent, `@cq-sm:` variants on children

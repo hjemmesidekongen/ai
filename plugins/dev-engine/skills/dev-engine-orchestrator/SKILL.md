@@ -8,6 +8,7 @@ description: >
 user_invocable: false
 interactive: false
 model_tier: senior
+depends_on: []
 triggers:
   - "orchestrate"
   - "full pipeline"
@@ -37,6 +38,7 @@ _source:
   inspired_by: "original"
   ported_date: "2026-03-10"
   iteration: 1
+  changes: "Original skill, no port"
 ---
 
 # Dev Engine Orchestrator

@@ -77,5 +77,4 @@ conflicts_resolved:
 
 ## Conflict Detection Heuristic
 
-Files most likely to conflict: shared types, config files, barrel exports,
-CSS/theme files, test fixtures. Flag these proactively during decomposition.
+Files most likely to conflict: shared types, config files, barrel exports, CSS/theme files, test fixtures. Flag these proactively during decomposition.

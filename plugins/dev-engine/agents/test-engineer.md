@@ -4,6 +4,7 @@ description: >
   Test specialist that writes unit tests, integration tests, and E2E tests.
   Focuses on edge cases, error paths, and boundary conditions across any framework.
 model_tier: sonnet
+color: "magenta"
 tools:
   - Read
   - Write
