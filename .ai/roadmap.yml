@@ -1635,6 +1635,81 @@ items:
     added: "2026-03-10"
     tags: [hooks, quality, creator-toolkit, scope-guard]
 
+  - id: RL-132
+    title: "Improved debugging skills"
+    description: >
+      Enhance debugging capabilities beyond root-cause-debugging and
+      systematic-debugging. Areas: better stack trace analysis, log
+      correlation across services, reproduction step generation,
+      bisect-driven isolation, and structured debugging sessions
+      with persistent findings across compaction.
+    category: dev
+    plugin: dev-engine
+    priority: backlog
+    added: "2026-03-10"
+    tags: [debugging, skills, dev-engine]
+
+  - id: RL-133
+    title: "Iterative build planning (research → plan → build → learn loops)"
+    description: >
+      Current plan engine creates all waves upfront. For large features (plugins,
+      multi-skill builds), this front-loads decisions before learning anything.
+      Need a planning mode that: (1) plans ONE chunk at a time, (2) requires
+      research before each planning step, (3) captures learnings after each build,
+      (4) feeds learnings into the next planning step. The loop: orient → research
+      → plan one chunk → build → verify → learn → repeat. Learnings accumulate in
+      a file that each iteration reads first. This replaces rigid wave-based planning
+      for large features where the right sequence can only be discovered by doing.
+      Works with autopilot for overnight autonomous builds. Key insight: you can't
+      plan wave 6 before wave 1 teaches you something.
+    category: core
+    plugin: claude-core
+    priority: next
+    added: "2026-03-10"
+    tags: [planning, iteration, autopilot, learning-loop, architecture]
+
+  - id: RL-134
+    title: "Brand plugin"
+    description: >
+      Standalone brand strategy plugin. Produces brand guidelines (voice, tone,
+      values, positioning, dos/donts). Three entry points: create (from scratch
+      with market research + sparring), audit (codify existing brand), evolve
+      (guided reinvention). Outputs to .ai/brand/{name}/. Depends only on
+      claude-core. See .ai/brainstorm/brand-plugin/ for decisions and findings.
+    category: brand
+    plugin: brand
+    priority: now
+    added: "2026-03-10"
+    tags: [plugin, brand, strategy, new-plugin]
+
+  - id: RL-135
+    title: "Design plugin groundwork"
+    description: >
+      Visual identity and design token generation. Reads brand guidelines,
+      produces concrete visual systems (color palettes, typography, spacing,
+      design tokens). Outputs to .ai/design/{name}/. Foundation for future
+      web design (Pencil), component specs, and design-to-code. See
+      .ai/brainstorm/design-plugin/ for decisions and findings.
+    category: design
+    plugin: design
+    priority: now
+    added: "2026-03-10"
+    tags: [plugin, design, tokens, visual-identity, new-plugin]
+
+  - id: RL-136
+    title: "Studio knowledge skills for dev-engine"
+    description: >
+      8+ knowledge skills covering content strategy, copywriting, SEO,
+      marketing psychology, brand voice implementation, sitemap planning,
+      and design-to-code patterns. Loaded by context-assembler when project
+      has brand/design context. See .ai/brainstorm/studio-skills/ for
+      decisions and findings.
+    category: dev
+    plugin: dev-engine
+    priority: now
+    added: "2026-03-10"
+    tags: [skills, studio, content, seo, marketing, copywriting]
+
 # ============================================================
 # STATS (updated 2026-03-10)
 # ============================================================
