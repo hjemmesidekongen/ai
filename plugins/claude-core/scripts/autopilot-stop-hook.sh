@@ -113,12 +113,23 @@ TEMP_FILE="${STATE_FILE}.tmp.$$"
 sed "s/^iteration: .*/iteration: $NEXT_ITERATION/" "$STATE_FILE" > "$TEMP_FILE"
 mv "$TEMP_FILE" "$STATE_FILE"
 
-# Build the reason — this is what gets fed back to Claude as the next prompt
-REASON="Autopilot iteration $NEXT_ITERATION | $PROMPT_TEXT"
+# Build system message with iteration count and completion info
+if [[ "$COMPLETION_PROMISE" != "null" ]] && [[ -n "$COMPLETION_PROMISE" ]]; then
+  SYSTEM_MSG="Autopilot iteration $NEXT_ITERATION | To stop: output <promise>$COMPLETION_PROMISE</promise> (ONLY when statement is TRUE - do not lie to exit!)"
+else
+  SYSTEM_MSG="Autopilot iteration $NEXT_ITERATION | No completion promise set - loop runs until max iterations ($MAX_ITERATIONS)"
+fi
 
 # Output JSON to block the stop and feed prompt back
-REASON_JSON=$(printf '%s' "$REASON" | jq -Rs '.')
+# reason = clean prompt (no iteration prefix), systemMessage = iteration metadata
 echo "$(date -u +%Y-%m-%dT%H:%M:%SZ) BLOCKING: iteration $NEXT_ITERATION" >> "$DEBUG_LOG"
-printf '{"decision":"block","reason":%s}\n' "$REASON_JSON"
+jq -n \
+  --arg prompt "$PROMPT_TEXT" \
+  --arg msg "$SYSTEM_MSG" \
+  '{
+    "decision": "block",
+    "reason": $prompt,
+    "systemMessage": $msg
+  }'
 
 exit 0

@@ -109,6 +109,17 @@ if [[ -z "$PROMPT" ]]; then
   exit 1
 fi
 
+# Auto-detect completion promise from prompt if not explicitly set
+if [[ "$COMPLETION_PROMISE" == "null" ]]; then
+  # Check if prompt contains <promise>TEXT</promise> pattern
+  DETECTED_PROMISE=$(echo "$PROMPT" | perl -0777 -ne 'print $1 if /<promise>(.*?)<\/promise>/s' 2>/dev/null || echo "")
+  if [[ -n "$DETECTED_PROMISE" ]]; then
+    echo "Auto-detected completion promise from prompt: \"$DETECTED_PROMISE\""
+    echo ""
+    COMPLETION_PROMISE="$DETECTED_PROMISE"
+  fi
+fi
+
 # Create state file (markdown with YAML frontmatter)
 mkdir -p .claude
 
