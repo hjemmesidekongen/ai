@@ -23,6 +23,32 @@
       "description": "Loads brand guidelines into context with progressive disclosure (L1/L2/L3)"
     }
   ],
-  "commands": [],
+  "commands": [
+    {
+      "name": "brand-create",
+      "path": "commands/brand-create.md",
+      "description": "Create a new brand from scratch through research and sparring"
+    },
+    {
+      "name": "brand-audit",
+      "path": "commands/brand-audit.md",
+      "description": "Codify an existing brand from materials and samples"
+    },
+    {
+      "name": "brand-evolve",
+      "path": "commands/brand-evolve.md",
+      "description": "Refresh or reinvent an existing brand"
+    },
+    {
+      "name": "brand-apply",
+      "path": "commands/brand-apply.md",
+      "description": "Load a brand into context or wire it into a project"
+    },
+    {
+      "name": "brand-status",
+      "path": "commands/brand-status.md",
+      "description": "Show brand status and guideline summary"
+    }
+  ],
   "agents": []
 }
