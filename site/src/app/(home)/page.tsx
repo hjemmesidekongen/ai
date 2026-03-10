@@ -23,7 +23,7 @@ const plugins = [
     tagline: 'Development Execution',
     description:
       'Multi-agent pipeline that decomposes tasks, dispatches specialist agents in parallel, and enforces a 10-point quality gate before anything ships.',
-    stats: '53 skills, 6 agents, 2 commands',
+    stats: '54 skills, 6 agents, 2 commands',
     href: '/docs/dev-engine',
   },
   {

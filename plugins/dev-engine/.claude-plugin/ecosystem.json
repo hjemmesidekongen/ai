@@ -266,6 +266,11 @@
       "name": "dev-engine-orchestrator",
       "path": "skills/dev-engine-orchestrator/SKILL.md",
       "description": "Top-level pipeline orchestration chaining all dev-engine stages"
+    },
+    {
+      "name": "fumadocs-patterns",
+      "path": "skills/fumadocs-patterns/SKILL.md",
+      "description": "Fumadocs documentation framework — MDX components, content structure, meta.json navigation, LLM integration"
     }
   ],
   "agents": [

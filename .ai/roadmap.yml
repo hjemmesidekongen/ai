@@ -1621,8 +1621,22 @@ items:
     added: "2026-03-09"
     tags: [skills, documentation, automation, external-reference]
 
+  - id: RL-131
+    title: "Creator-skill enforcement hook"
+    description: >
+      PreToolUse hook on Write that detects when a plugin component file
+      (SKILL.md, command, agent, hook) is being created manually and warns
+      to use the corresponding creator skill instead (skill-creator,
+      hook-creator, agent-creator, command-creator). Prevents bypassing
+      the creator toolkit's eval infrastructure and quality checks.
+    category: core
+    plugin: claude-core
+    priority: later
+    added: "2026-03-10"
+    tags: [hooks, quality, creator-toolkit, scope-guard]
+
 # ============================================================
-# STATS (updated 2026-03-09)
+# STATS (updated 2026-03-10)
 # ============================================================
 # Total items: 128
 #

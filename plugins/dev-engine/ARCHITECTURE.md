@@ -29,7 +29,7 @@ skill handles all cross-plugin communication.
 plugins/dev-engine/
 ├── .claude-plugin/
 │   ├── plugin.json          # Plugin manifest — no hooks
-│   └── ecosystem.json       # Component registry (53 skills, 6 agents, 2 commands)
+│   └── ecosystem.json       # Component registry (54 skills, 6 agents, 2 commands)
 ├── agents/                  # 6 agents (3 opus, 3 sonnet)
 │   ├── architect.md
 │   ├── backend-dev.md
@@ -40,7 +40,7 @@ plugins/dev-engine/
 ├── commands/                # 2 commands
 │   ├── dev-scan.md
 │   └── dev-run.md
-├── skills/                  # 53 skills, each with SKILL.md + references/process.md
+├── skills/                  # 54 skills, each with SKILL.md + references/process.md
 │   ├── task-decomposer/     # Core: break tasks into subtasks
 │   ├── context-assembler/   # Core: assemble context for agents
 │   ├── agent-dispatcher/    # Core: dispatch subtasks to agents
