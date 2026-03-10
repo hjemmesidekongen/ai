@@ -12,8 +12,7 @@ The hjemmesidekongen/ai methodology is implemented as three plugins with one fou
 ```
 claude-core          ← foundation, always installed
 ├── dev-engine       ← development execution, depends on claude-core
-├── taskflow         ← task management, depends on claude-core
-└── agency           ← digital agency (brand, design, content), depends on claude-core
+└── taskflow         ← task management, depends on claude-core
 ```
 
 **Rules:**
@@ -121,7 +120,6 @@ All state persists as YAML files in `.ai/`:
 | `.ai/tasks/` | taskflow | Task YAMLs, active pointer, handoff, QA handover |
 | `.ai/project-map.yml` | dev-engine | Tech stack detection and module mapping |
 | `.ai/dev-engine/` | dev-engine | Pipeline state, execution artifacts |
-| `.ai/projects/` | agency | Per-project state for agency workflows |
 
 No databases. No external services for state. Everything is local, versionable, and inspectable.
 
@@ -144,3 +142,9 @@ Three layers of verification prevent incomplete work from shipping:
 3. **completion-gate** (dev-engine) - 10-point quality criteria run by the code-reviewer agent
 
 All three are mandatory. None can be bypassed by the implementing agent.
+
+## See also
+
+- [claude-core](/docs/claude-core) - the foundation plugin with hooks, verification, and state management
+- [dev-engine](/docs/dev-engine) - the development execution pipeline and agent model
+- [taskflow](/docs/taskflow) - task lifecycle and MCP integrations
