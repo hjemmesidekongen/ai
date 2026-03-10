@@ -1,7 +1,28 @@
 {
   "plugin": "brand",
   "version": "0.1.0",
-  "skills": [],
+  "skills": [
+    {
+      "name": "brand-strategy",
+      "path": "skills/brand-strategy/SKILL.md",
+      "description": "Creates a brand from scratch through market research and interactive sparring"
+    },
+    {
+      "name": "brand-audit",
+      "path": "skills/brand-audit/SKILL.md",
+      "description": "Codifies an existing brand from materials, samples, and references"
+    },
+    {
+      "name": "brand-evolve",
+      "path": "skills/brand-evolve/SKILL.md",
+      "description": "Guided reinvention of an existing brand guideline"
+    },
+    {
+      "name": "brand-loader",
+      "path": "skills/brand-loader/SKILL.md",
+      "description": "Loads brand guidelines into context with progressive disclosure (L1/L2/L3)"
+    }
+  ],
   "commands": [],
   "agents": []
 }
