@@ -1,7 +1,8 @@
 ---
 name: prompt-create
-description: Turn rough intent into an expert-level prompt
+description: Turn rough intent into a structured, expert-level prompt using framework selection and audit
 user_invocable: true
+usage: "/prompt:create <intent>"
 arguments:
   - name: intent
     description: "Rough description of what you want to accomplish"

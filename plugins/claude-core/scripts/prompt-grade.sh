@@ -4,27 +4,32 @@
 # When a prompt is vague AND high-stakes, injects additionalContext to load prompt-optimizer.
 # Pure text analysis, no LLM calls. Target: < 50ms.
 
-trap 'exit 0' ERR
+# Non-blocking hook: any unexpected error outputs {} and exits 0
+safe_exit() { echo '{}'; exit 0; }
+trap safe_exit ERR
 
 PROJECT_DIR="${CLAUDE_PROJECT_DIR:-.}"
 LOG_FILE="$PROJECT_DIR/.ai/traces/hook-errors.log"
-INPUT=$(cat)
 
-# Extract prompt text from JSON input: {"prompt": "..."}
+# Cap input at 64KB to prevent DoS on shell variable operations
+INPUT=$(head -c 65536)
+
+# Extract prompt text using jq if available, fallback to string manipulation
 PROMPT=""
-case "$INPUT" in *'"prompt"'*)
-  # Strip everything up to and including "prompt":
-  PROMPT="${INPUT#*\"prompt\":}"
-  # Strip leading whitespace and opening quote
-  PROMPT="${PROMPT# }"
-  PROMPT="${PROMPT#\"}"
-  # Strip trailing quote and everything after
-  PROMPT="${PROMPT%\"*}"
-  ;;
-esac
+if command -v jq >/dev/null 2>&1; then
+  PROMPT=$(printf '%s' "$INPUT" | jq -r '.prompt // empty' 2>/dev/null) || PROMPT=""
+else
+  case "$INPUT" in *'"prompt"'*)
+    PROMPT="${INPUT#*\"prompt\":}"
+    PROMPT="${PROMPT# }"
+    PROMPT="${PROMPT#\"}"
+    PROMPT="${PROMPT%\"*}"
+    ;;
+  esac
+fi
 
 # Skip empty or very short prompts (commands, one-word queries)
-if [ ${#PROMPT} -lt 5 ]; then echo '{}'; exit 0; fi
+if [ "${#PROMPT}" -lt 5 ]; then echo '{}'; exit 0; fi
 
 # Lowercase for matching (bash 3.2 compatible)
 PROMPT_LOWER=$(printf '%s' "$PROMPT" | tr '[:upper:]' '[:lower:]')
@@ -156,8 +161,8 @@ fi
 
 # Truncate prompt for logging (first 80 chars)
 PROMPT_PREVIEW=$(printf '%.80s' "$PROMPT")
-# Strip pipes from preview for log safety
-PROMPT_PREVIEW=$(printf '%s' "$PROMPT_PREVIEW" | tr '|' '-')
+# Strip pipes, newlines, carriage returns from preview for log safety
+PROMPT_PREVIEW=$(printf '%s' "$PROMPT_PREVIEW" | tr '|\n\r' '---')
 
 # Log decision
 mkdir -p "$(dirname "$LOG_FILE")" 2>/dev/null || true

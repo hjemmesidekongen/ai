@@ -31,6 +31,12 @@ checkpoint:
   on_fail: "Re-run framework selection and apply audit checklist"
   on_pass: "Present sharpened prompt (Mode A) or formatted output (Mode B)"
 model_tier: senior
+_source:
+  origin: "claude-core"
+  inspired_by: "antigravity prompt engineering research"
+  ported_date: "2026-03-10"
+  iteration: 1
+  changes: "Initial creation — hook-triggered auto-sharpen + /prompt:create builder"
 ---
 
 # prompt-optimizer
