@@ -1,0 +1,93 @@
+# Design Token Schema
+# DTCG-aligned (W3C Design Tokens Community Group) with extensions
+# Output location: .ai/design/{name}/tokens/
+
+# --- Token tiers ---
+# 1. Primitive: raw values (color-blue-500: #3B82F6)
+# 2. Semantic: intent mapping (color-primary: {color.blue.600})
+# 3. Component: scoped usage (button-bg-primary: {color.primary})
+
+# --- File outputs ---
+outputs:
+  tokens_yaml: "tokens.yml"           # Primary truth — full token tree
+  tokens_dtcg: "tokens.dtcg.json"     # W3C interchange format
+  tailwind_config: "tailwind.json"    # Tailwind theme extension
+  css_variables: "variables.css"      # CSS custom properties
+  contrast_matrix: "contrast.md"      # WCAG contrast validation report
+
+# --- DTCG format reference ---
+# Each token:
+#   $value: the resolved value
+#   $type: color | dimension | fontFamily | fontWeight | number | duration | cubicBezier
+#   $description: human-readable purpose
+# References use {path.to.token} syntax
+
+# --- Token categories ---
+categories:
+  color:
+    primitives:
+      - "{palette}-{stop}"          # blue-50 through blue-950
+    semantic:
+      - "primary"                   # brand primary
+      - "secondary"                 # brand secondary
+      - "accent"                    # highlight / CTA
+      - "success"                   # positive feedback
+      - "warning"                   # caution
+      - "error"                     # destructive / danger
+      - "info"                      # informational
+    surface:
+      - "background"               # page background
+      - "surface"                   # card / elevated surface
+      - "surface-elevated"         # modal / popover
+    text:
+      - "foreground"               # primary text
+      - "foreground-secondary"     # secondary text
+      - "foreground-muted"         # placeholder / disabled
+    border:
+      - "border"                   # default border
+      - "border-strong"            # emphasized border
+      - "ring"                     # focus ring
+
+  typography:
+    family:
+      - "heading"                  # display / heading font
+      - "body"                     # body text font
+      - "mono"                     # code font
+    scale:                         # Named sizes, not arbitrary
+      - "display"
+      - "h1"
+      - "h2"
+      - "h3"
+      - "h4"
+      - "body"
+      - "body-sm"
+      - "caption"
+    weight:
+      - "regular"
+      - "medium"
+      - "semibold"
+      - "bold"
+
+  spacing:
+    # Base unit + scale (e.g., 4px base, scale: 1 2 3 4 6 8 12 16 24)
+    naming: "space-{step}"         # space-1 through space-9
+
+  radius:
+    naming: "radius-{size}"        # radius-sm, radius-md, radius-lg, radius-full
+
+  shadow:
+    naming: "shadow-{size}"        # shadow-sm, shadow-md, shadow-lg
+
+# --- Dark mode ---
+dark_mode:
+  strategy: "semantic-override"    # Override semantic tokens, not primitives
+  method: "class"                  # .dark or [data-theme="dark"]
+  # Dark mode replaces semantic color tokens with dark-appropriate values
+  # Primitives (blue-500) stay the same in both modes
+
+# --- WCAG requirements ---
+accessibility:
+  body_text: "4.5:1"              # WCAG AA normal text
+  large_text: "3:1"               # WCAG AA large text (18px+ or 14px+ bold)
+  ui_components: "3:1"            # WCAG AA UI components
+  enhanced_body: "7:1"            # WCAG AAA normal text (optional target)

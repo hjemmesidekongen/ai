@@ -18,6 +18,11 @@
       "name": "taskflow",
       "source": "./taskflow",
       "description": "Task management and workplace integration — Jira ingestion, local task storage, contradiction detection, project profiles, and QA handover."
+    },
+    {
+      "name": "design",
+      "source": "./design",
+      "description": "Visual design toolkit — interprets brand strategy into concrete visual systems: color palettes, typography, spacing, design tokens."
     }
   ]
 }
