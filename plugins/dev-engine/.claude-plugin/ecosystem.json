@@ -306,6 +306,11 @@
       "name": "sitemap-planning",
       "path": "skills/sitemap-planning/SKILL.md",
       "description": "Information architecture — page hierarchy, content siloing, internal linking, schema markup, URL patterns"
+    },
+    {
+      "name": "design-to-code-patterns",
+      "path": "skills/design-to-code-patterns/SKILL.md",
+      "description": "Design to code — token consumption, spacing/typography systems, component decomposition, responsive grids"
     }
   ],
   "agents": [
