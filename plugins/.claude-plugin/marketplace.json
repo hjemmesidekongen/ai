@@ -5,16 +5,6 @@
   },
   "plugins": [
     {
-      "name": "agency",
-      "source": "./agency",
-      "description": "Full-service digital agency — brand loading, design systems, content, development, and deployment in one unified plugin."
-    },
-    {
-      "name": "task-planner",
-      "source": "./task-planner",
-      "description": "Generic wave-based task planning with verification and QA."
-    },
-    {
       "name": "claude-core",
       "source": "./claude-core",
       "description": "Foundation plugin — tracing, memory governance, CLAUDE.md protection. Required by all other plugins."
