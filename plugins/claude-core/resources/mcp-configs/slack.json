@@ -1,0 +1,9 @@
+{
+  "mcpServers": {
+    "slack": {
+      "command": "npx",
+      "args": ["-y", "@anthropic-ai/mcp-remote", "TODO_VERIFY_ENDPOINT"],
+      "env": {}
+    }
+  }
+}

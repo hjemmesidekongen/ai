@@ -46,7 +46,12 @@
     "writing-clearly-and-concisely",
     "session-handoff",
     "agent-teams",
-    "auto-doc"
+    "auto-doc",
+    "jira-basics",
+    "confluence-basics",
+    "bitbucket-basics",
+    "slack-basics",
+    "outlook-basics"
   ],
   "agents": [
     "plugin-validator",

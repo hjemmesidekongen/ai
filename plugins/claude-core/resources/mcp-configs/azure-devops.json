@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "azure-devops": {
+      "command": "npx",
+      "args": ["-y", "@anthropic-ai/mcp-remote", "TODO_VERIFY_ENDPOINT"],
+      "env": {
+        "AZURE_DEVOPS_ORG": "<org-name>",
+        "AZURE_DEVOPS_PAT": "<personal-access-token>"
+      }
+    }
+  }
+}
