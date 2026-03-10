@@ -1,0 +1,435 @@
+topic: "work-modes-and-jira-workflow"
+extracted_from: "session-1"
+extracted_at: "2026-03-09T21:00:00Z"
+decisions:
+
+  # --- Plugin Architecture ---
+
+  - id: D-001
+    domain: architecture
+    title: "Two new plugins: dev-engine + taskflow"
+    decision: >
+      Create two new plugins separate from agency and claude-core.
+      dev-engine handles generic development execution (decomposition, agents,
+      tech knowledge, disciplines, orchestration). taskflow handles task sources,
+      project profiles, and workplace-specific integrations (Jira, Confluence,
+      Bitbucket, Azure DevOps).
+    confidence: high
+    rationale: >
+      Task management and task execution have different lifecycles. Jira
+      integration is employer-specific and replaceable. Dev execution workflow
+      is portable and personal. Clean separation prevents entanglement.
+
+  - id: D-002
+    domain: architecture
+    title: "No porting from agency — build fresh"
+    decision: >
+      Do not port skills or agents from the agency plugin. Study agency's
+      architecture (tier assignment, decomposition chain, completion gates)
+      and the external references, then write fresh skills informed by those
+      patterns. Agency stays as-is for its own pipeline.
+    confidence: high
+    rationale: >
+      Agency skills are coupled to brand/design context. Stripping that
+      coupling produces worse results than writing fresh with the right
+      abstractions from the start.
+
+  - id: D-003
+    domain: architecture
+    title: "Mobile stays inside dev-engine, not a separate plugin"
+    decision: >
+      Expo/React Native skills live in dev-engine with conditional loading
+      (activate when project has app.json or expo in package.json). No
+      separate mobile plugin.
+    confidence: high
+    rationale: >
+      Mobile shares 80% of the stack with web (React, TypeScript, same agents).
+      A separate plugin would duplicate agents or create cross-plugin dependencies.
+      The mobile-specific parts (12 skills) are narrow enough for conditional loading.
+
+  - id: D-004
+    domain: architecture
+    title: "claude-core stays unchanged"
+    decision: >
+      claude-core remains the foundation plugin. No dev-engine or taskflow
+      logic goes into claude-core. Planning, brainstorming, tracing, memory,
+      verification stay there.
+    confidence: high
+    rationale: >
+      claude-core is stable and battle-tested. Adding dev workflow concerns
+      would bloat it and entangle foundation with execution.
+
+  # --- Ownership & Sourcing Rules ---
+
+  - id: D-005
+    domain: governance
+    title: "Never depend on external plugins directly"
+    decision: >
+      We never install or depend on external plugins/skills. We study them,
+      port what's useful, modify to fit our architecture, and maintain a
+      source_ref pointer back to the original (repo + file path + date reviewed).
+    confidence: high
+    rationale: >
+      Full control over all code. External plugins can change or break. Source
+      refs let us track upstream changes and selectively port updates.
+
+  - id: D-006
+    domain: governance
+    title: "Source reference tracking for all ported content"
+    decision: >
+      Every ported skill includes a source_ref in frontmatter or a
+      references/sources.yml file tracking: original source (repo + path),
+      date reviewed, what was taken/modified, pointer for future update checks.
+      Same pattern as claude-core's external-reference-findings.md.
+    confidence: high
+    rationale: >
+      Enables tracking upstream changes. When an original is updated, we can
+      review and selectively port improvements.
+
+  - id: D-007
+    domain: governance
+    title: "MCP servers are external runtime dependencies"
+    decision: >
+      MCP servers are configured via .mcp.json, not code we own. We depend on
+      them at runtime. What we own are the skills that orchestrate MCP tool
+      calls (e.g., Jira ingestion skill calls Atlassian MCP tools in sequence).
+    confidence: high
+    rationale: >
+      MCP servers talk to external APIs we cannot replicate. The value we add
+      is the orchestration logic on top.
+
+  # --- Project Profiles ---
+
+  - id: D-008
+    domain: architecture
+    title: "Project-level config instead of profile switching"
+    decision: >
+      Each project carries its own rules.yml with git conventions, QA format,
+      dev guidelines, and which MCP servers to activate. No global profile
+      toggle. When you init a work project it loads work rules; personal
+      project loads personal rules. Just project context.
+    confidence: high
+    rationale: >
+      Simpler than a mode switch. No risk of wrong profile being active.
+      Each project is self-contained with its own conventions.
+
+  # --- Phased Build Strategy ---
+
+  - id: D-009
+    domain: process
+    title: "Build in phases with learning boundaries"
+    decision: >
+      Build dev-engine in 3 phases, taskflow in 2 phases. Each phase is a
+      full plan:create -> plan:execute cycle. Phase N+1 is planned only after
+      Phase N is built, because Phase N discoveries reshape later phases.
+    confidence: high
+    rationale: >
+      Planning everything upfront produces plans based on assumptions that
+      haven't been validated. Each phase informs the next with real experience.
+
+  - id: D-010
+    domain: process
+    title: "dev-engine Phase 1: Core execution loop"
+    decision: >
+      Phase 1 covers: task decomposer, tier assignment (5-factor risk matrix),
+      agent dispatcher, worker agents (frontend + backend with tier-gated
+      behavior), completion gate (full done criteria chain), visual verification
+      (Playwright screenshot loop), code review skill.
+    confidence: high
+    rationale: >
+      This is the daily-use core. Everything else builds on top of a working
+      execution loop.
+
+  - id: D-011
+    domain: process
+    title: "dev-engine Phase 2: Tech knowledge + disciplines"
+    decision: >
+      Phase 2 covers all 34 tech knowledge and discipline skills. Built after
+      the execution loop is proven and can actually consume them.
+    confidence: medium
+    rationale: >
+      Tech skills are valuable but useless without the execution infrastructure.
+      Phase 1 must validate the dispatch model before Phase 2 loads it with
+      domain knowledge. Exact skill list may change based on Phase 1 learnings.
+
+  - id: D-012
+    domain: process
+    title: "dev-engine Phase 3: Polish + integration"
+    decision: >
+      Phase 3 covers: progressive disclosure refactor (3-tier architecture),
+      context assembler, skill quality rubric, cross-plugin coordination
+      with taskflow.
+    confidence: medium
+    rationale: >
+      Optimization and integration work that requires Phase 1+2 to be stable.
+
+  - id: D-013
+    domain: process
+    title: "taskflow Phase 1: Core task management"
+    decision: >
+      Phase 1 covers: Jira ingestion skill (uses Atlassian MCP), local task
+      storage (.ai/tasks/KEY.yml), contradiction detection (description vs
+      comments), project profile loader, commands (/task:ingest, /task:list,
+      /task:start, /task:done, /task:status).
+    confidence: high
+    rationale: >
+      Core workflow: get tasks from Jira, store locally, work from them.
+
+  - id: D-014
+    domain: process
+    title: "taskflow Phase 2: Full workplace integration"
+    decision: >
+      Phase 2 covers: Confluence lookup, Bitbucket PR workflow, Azure DevOps
+      pipeline skill, QA handover generator, session handoff, bulk ingestion
+      (board/filter URL -> fetch all assigned non-closed).
+    confidence: medium
+    rationale: >
+      Extensions on top of core task management. Planned after Phase 1
+      validates the basic flow.
+
+  # --- Skills Inventory ---
+
+  - id: D-015
+    domain: skills
+    title: "22 general dev-engine skills"
+    decision: >
+      General skills grouped by category:
+      React ecosystem: react-patterns, nextjs-app-router.
+      Vue ecosystem: vue-patterns (Vue 2+3), nuxt-patterns (Nuxt 2/3/4).
+      Backend: nestjs-patterns, prisma-patterns, nodejs-patterns.
+      Language/tooling: typescript-modern, eslint-config, openapi-typescript,
+      vite-patterns, package-managers (pnpm/npm), node-version-management.
+      CSS/design: tailwind-v4, postcss-patterns, accessibility-wcag.
+      Infrastructure: turborepo-patterns, storybook-patterns.
+      Quality: security-audit, package-audit, playwright-testing.
+      Security: auth-patterns (OAuth/JWT/sessions/RBAC), api-security,
+      web-security-owasp.
+      Fundamentals: http-protocols (TCP/HTTP/HTTP2/cookies/sessions/CORS).
+    confidence: high
+    rationale: >
+      Each skill loads only when triggered. Individual skills per tech stack
+      keeps naming lean and information findable. Progressive disclosure
+      prevents context bloat.
+
+  - id: D-016
+    domain: skills
+    title: "12 expo/mobile skills (ported from Expo official + custom)"
+    decision: >
+      Ported from expo-skills-main (11 skills): expo-native-ui, expo-api-routes,
+      expo-data-fetching, expo-dev-client, expo-tailwind, expo-dom-components,
+      expo-swiftui, expo-jetpack-compose, expo-deployment, expo-cicd,
+      expo-upgrading. Custom (1): expo-simulators (iOS Simulator + Android
+      Emulator). All prefixed with expo-.
+    confidence: high
+    rationale: >
+      Expo has production-grade official skills. We port all 11, modify to
+      fit our architecture, track source refs. expo-simulators is custom
+      because no official equivalent exists.
+
+  # --- Agents ---
+
+  - id: D-017
+    domain: agents
+    title: "dev-engine agent roster"
+    decision: >
+      Core agents: frontend-dev (Sonnet default), backend-dev (Sonnet default),
+      security-auditor (Opus), test-engineer (Sonnet), code-reviewer (Opus),
+      architect (Opus). Tech leads dispatch workers with model tier based on
+      5-factor risk matrix (scope, reversibility, ambiguity, impact, dependencies).
+      Worker tier: junior->haiku, senior->sonnet, principal->opus.
+    confidence: high
+    rationale: >
+      Follows agency's proven tier model. Opus for decisions and review,
+      Sonnet for implementation, Haiku for simple/isolated tasks. Optimizes
+      token cost while maintaining quality.
+
+  - id: D-018
+    domain: agents
+    title: "Implementing agent never marks own work done"
+    decision: >
+      The implementing agent (worker) never marks its own task as done.
+      Completion gate is run by a separate reviewer agent (Opus code-reviewer
+      or security-auditor). Human is always final authority.
+    confidence: high
+    rationale: >
+      Self-grading is unreliable. Carried forward from agency's architecture
+      rule. Prevents false completion claims.
+
+  # --- Completion Gate ---
+
+  - id: D-019
+    domain: quality
+    title: "Visual verification is a core completion gate requirement"
+    decision: >
+      For any UI work, the completion gate requires Playwright screenshots at
+      3 breakpoints (375, 768, 1280), compared against design reference or
+      stated intent via LLM vision. Three tiers: automated check, LLM vision
+      comparison, human escalation if confidence is low. Task cannot be marked
+      done until visual output matches intent.
+    confidence: high
+    rationale: >
+      Prevents shipping UI that "works" but doesn't look right. The screenshot
+      loop catches visual drift before it compounds.
+
+  - id: D-020
+    domain: quality
+    title: "Full completion gate criteria"
+    decision: >
+      A task is not done until: (1) spec compliance verified against original
+      task, (2) lint + type check pass, (3) unit tests pass, (4) integration
+      tests pass if applicable, (5) E2E tests pass if applicable, (6) new
+      tests cover new behavior, (7) visual verification passes if UI change,
+      (8) security check (no new vulnerabilities), (9) QA handover artifacts
+      generated (for work profile), (10) Opus code-reviewer sign-off.
+    confidence: high
+    rationale: >
+      Comprehensive but each check is fast. The gate runs automatically;
+      only human escalation requires manual intervention.
+
+  # --- MCP Servers ---
+
+  - id: D-021
+    domain: integration
+    title: "11 MCP servers across work and personal contexts"
+    decision: >
+      Work: Atlassian (Jira+Confluence+Bitbucket), Azure DevOps.
+      Both: Figma, Playwright, Storybook, Pencil, Expo (remote + local), App
+      Store Connect, Google Play (Pabal).
+      Personal: Untitled UI (Pro — components + icons), Railway.
+      Configured per-project in .mcp.json. Expo local requires
+      EXPO_UNSTABLE_MCP_SERVER=1 flag on dev server.
+    confidence: high
+    rationale: >
+      All pre-built, no custom MCP servers needed. Per-project config means
+      work projects load work MCPs, personal projects load personal MCPs.
+
+  - id: D-022
+    domain: integration
+    title: "Expo MCP local capabilities for mobile screenshot loop"
+    decision: >
+      For Expo projects, configure local capabilities (npx expo install
+      expo-mcp --dev, start with EXPO_UNSTABLE_MCP_SERVER=1) to enable
+      screenshot capture, testID interaction, and DevTools access on iOS
+      Simulator. Feeds into the same visual verification gate as Playwright
+      does for web. Source ref: https://docs.expo.dev/eas/ai/mcp/
+    confidence: high
+    rationale: >
+      Same screenshot verification pattern as web but for mobile. Official
+      Expo support, macOS only, SDK 54+.
+
+  # --- External References ---
+
+  - id: D-023
+    domain: research
+    title: "10 external reference repos as source material"
+    decision: >
+      Source material for porting: superpowers-main, agents-main,
+      agent-toolkit-main, awesome-claude-code-subagents-main,
+      claude-code-templates-main, everything-claude-code-main,
+      anthropics:skills-main, claude-code-main, Agent-Skills-for-Context-Engineering-main,
+      expo-skills-main. Each ported pattern gets source_ref tracking.
+    confidence: high
+    rationale: >
+      Comprehensive coverage of patterns across agent orchestration, dev
+      workflow, tech stacks, and MCP integrations.
+
+  - id: D-024
+    domain: naming
+    title: "Plugin names: dev-engine and taskflow"
+    decision: >
+      Use dev-engine and taskflow as plugin names. dev-engine for development
+      execution. taskflow for task management and workplace integration.
+    confidence: medium
+    rationale: >
+      Descriptive, short, no collision with existing plugins. Can be renamed
+      later if something better emerges during Phase 1 planning.
+
+  - id: D-025
+    domain: skills
+    title: "Discipline skills in dev-engine"
+    decision: >
+      Discipline skills (behavioral rules, not tech-specific): tdd-workflow,
+      systematic-debugging, code-review (request + receive), verification-before-completion,
+      error-handling-patterns, git-advanced-workflows, e2e-testing-patterns.
+      Ported from superpowers + agents-main references, written fresh.
+    confidence: high
+    rationale: >
+      These enforce how you work regardless of tech stack. Same disciplines
+      apply to React, Vue, NestJS, or any other context.
+
+  - id: D-026
+    domain: skills
+    title: "Orchestration skills in dev-engine"
+    decision: >
+      Orchestration skills: task-decomposer (break task into subtasks),
+      agent-dispatcher (dispatch subtasks to workers with model tier),
+      file-ownership (conflict-free parallel dev), context-assembler
+      (deep context assembly before dispatch), completion-gate (auto QA
+      trigger + full done criteria), visual-verification (Playwright
+      screenshot loop + LLM vision comparison).
+    confidence: high
+    rationale: >
+      These coordinate multiple agents doing work together. The core
+      execution infrastructure that everything else plugs into.
+
+  - id: D-027
+    domain: skills
+    title: "Project mapper / codebase scanner skill"
+    decision: >
+      A project-mapper skill that scans a repo, detects tech stack (package.json,
+      tsconfig, prisma schema, app.json, etc.), maps file dependencies, and
+      outputs a mermaid diagram of the architecture. Distinct from agency's
+      project-scanner which was pipeline-oriented.
+    confidence: high
+    rationale: >
+      Needed for onboarding to any project. The detected tech stack also
+      determines which tech knowledge skills should activate.
+
+  # --- Autonomous Execution ---
+
+  - id: D-029
+    domain: architecture
+    title: "Atlassian + Azure MCP configs and basic skills belong in claude-core"
+    decision: >
+      Bitbucket, Jira, Confluence, and Azure DevOps MCP server configs and
+      basic interaction skills (read ticket, create PR, search docs) belong
+      in claude-core, not taskflow. These are general-purpose integrations
+      used across brainstorming, planning, and development — not dev-specific.
+      Taskflow owns only the orchestration layer on top: bulk ingestion,
+      contradiction detection, QA handover generation, project profiles.
+    confidence: high
+    rationale: >
+      You might check a Jira ticket during brainstorming or reference
+      Confluence during planning. Committing to Bitbucket is no different
+      from committing to GitHub. These are workspace tools, not dev tools.
+
+  - id: D-030
+    domain: integration
+    title: "Slack and Microsoft 365 MCP in claude-core"
+    decision: >
+      Add Slack MCP and Microsoft 365 MCP (Outlook, Calendar, SharePoint/OneDrive,
+      Teams) to claude-core as general-purpose integrations. These are workspace
+      communication tools used across all contexts. Slack for team communication,
+      M365 for email/calendar/documents. Both are pre-built MCP servers —
+      just need config and basic interaction skills.
+    confidence: high
+    rationale: >
+      Reading email, checking calendar, searching Slack are general workflow
+      tasks, not dev-specific. Same reasoning as D-029 for Atlassian/Azure.
+
+  - id: D-028
+    domain: tooling
+    title: "Port Ralph Wiggum as 'autopilot' into claude-core"
+    decision: >
+      Port the Ralph Wiggum plugin (external-references/claude-code-main/plugins/ralph-wiggum)
+      into claude-core as 'autopilot'. Rename command to /autopilot, default
+      max_iterations to 50 (overridable). Stop hook blocks exit and feeds same
+      prompt back. State file at .claude/autopilot.local.md. Source ref:
+      claude-code-main/plugins/ralph-wiggum. Used to run multi-phase builds
+      autonomously overnight.
+    confidence: high
+    rationale: >
+      Enables hands-off execution of large plans. The loop handles context
+      loss naturally — each iteration reads file-based state to know where
+      it left off. Combined with our plan system (state.yml, decisions.yml,
+      snapshot.yml), provides full autonomous execution.

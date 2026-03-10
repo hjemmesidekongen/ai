@@ -201,9 +201,9 @@ sed "s/^pr_number: .*/pr_number: $PR_NUM/" "$SWARM_FILE" > "$TEMP"
 mv "$TEMP" "$SWARM_FILE"
 ```
 
-### ralph-wiggum — Stop Hook for Agentic Loops
+### autopilot — Stop Hook for Agentic Loops
 
-Settings file (`.claude/ralph-loop.local.md`):
+Settings file (`.claude/autopilot.local.md`):
 ```yaml
 ---
 iteration: 1

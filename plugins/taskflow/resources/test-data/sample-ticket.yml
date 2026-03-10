@@ -1,0 +1,59 @@
+key: "PROJ-456"
+summary: "Implement user search with autocomplete"
+description: |
+  As a user, I want to search for other users by name or email so I can
+  quickly find and select the right person.
+
+  The search field should appear in the top navigation bar and provide
+  autocomplete suggestions as the user types.
+
+  Technical requirements:
+  - Debounce search input (300ms)
+  - Return max 10 results per query
+  - Search by first name, last name, and email
+  - Case-insensitive matching
+  - Show user avatar, name, and department in results
+acceptance_criteria:
+  - "Search by name returns matching users within 500ms"
+  - "Search is case-insensitive"
+  - "Empty search field shows no results (not all users)"
+  - "Autocomplete appears after 2+ characters typed"
+  - "Results show avatar, full name, and department"
+  - "Clicking a result navigates to user profile"
+comments:
+  - author: "sarah.chen"
+    date: "2026-03-07T14:30:00Z"
+    body: "We decided in standup that empty search should actually show recently viewed users (max 5), not nothing. Updated the spec in Confluence but not here yet."
+  - author: "mike.ross"
+    date: "2026-03-08T09:15:00Z"
+    body: "Can we also add search by username? Some teams use internal usernames more than email."
+  - author: "sarah.chen"
+    date: "2026-03-08T16:00:00Z"
+    body: |
+      Pagination requirement from PM: if there are more than 10 results,
+      show a "View all X results" link at the bottom of the dropdown.
+      Don't paginate the dropdown itself.
+contradictions:
+  - severity: "warning"
+    original: "Empty search field shows no results (not all users)"
+    contradicting: "We decided in standup that empty search should actually show recently viewed users (max 5)"
+    resolution: "Use comment version — show recently viewed users on empty search. Update acceptance criteria."
+  - severity: "info"
+    original: "Search by first name, last name, and email"
+    contradicting: "Can we also add search by username?"
+    resolution: "Extend search fields to include username. Low effort addition."
+attachments:
+  - name: "search-mockup.png"
+    path: ".ai/tasks/attachments/PROJ-456/search-mockup.png"
+  - name: "search-api-spec.pdf"
+    path: ".ai/tasks/attachments/PROJ-456/search-api-spec.pdf"
+status: "open"
+assigned_to: "me"
+priority: "Medium"
+labels: ["frontend", "search", "ux"]
+sprint: "Sprint 12"
+epic: "PROJ-100"
+ingested_at: "2026-03-09T20:00:00Z"
+source:
+  type: "jira"
+  url: "https://company.atlassian.net/browse/PROJ-456"

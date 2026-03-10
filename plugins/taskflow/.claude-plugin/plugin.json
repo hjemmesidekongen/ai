@@ -1,0 +1,9 @@
+{
+  "name": "taskflow",
+  "version": "0.1.0",
+  "description": "Task management and workplace integration — Jira ingestion, local task storage, contradiction detection, project profiles, and QA handover.",
+  "author": { "name": "mvn" },
+  "repository": "https://github.com/mvn/claude-local-workspace",
+  "license": "MIT",
+  "keywords": ["tasks", "jira", "project-management", "qa", "workflow"]
+}

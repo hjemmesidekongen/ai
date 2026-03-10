@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "expo-local": {
+      "command": "npx",
+      "args": ["expo", "start"],
+      "env": {
+        "EXPO_UNSTABLE_MCP_SERVER": "1"
+      }
+    }
+  }
+}

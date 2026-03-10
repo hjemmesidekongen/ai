@@ -1,0 +1,24 @@
+topic: "work-modes-and-jira-workflow"
+active: false
+started: "2026-03-09T20:07:00Z"
+decisions_extracted: true
+sessions:
+  - id: 1
+    started: "2026-03-09T20:07:00Z"
+    ended: "2026-03-09T21:00:00Z"
+    topics_explored:
+      - plugin-architecture-split
+      - dev-engine-vs-agency
+      - taskflow-workplace-integration
+      - jira-ingestion-patterns
+      - project-profiles-vs-mode-switching
+      - phased-build-strategy
+      - tech-knowledge-skills-inventory
+      - mcp-server-inventory
+      - agent-tier-assignment-model
+      - completion-gate-criteria
+      - visual-verification-loop
+      - expo-skills-porting
+      - external-reference-research
+      - mobile-in-dev-engine-vs-separate
+      - source-reference-tracking

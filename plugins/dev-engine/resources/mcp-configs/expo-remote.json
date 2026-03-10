@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "expo": {
+      "command": "npx",
+      "args": [
+        "@anthropic-ai/mcp-remote@latest",
+        "https://mcp.expo.dev/sse"
+      ]
+    }
+  }
+}

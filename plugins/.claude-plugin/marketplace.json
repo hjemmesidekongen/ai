@@ -18,6 +18,16 @@
       "name": "claude-core",
       "source": "./claude-core",
       "description": "Foundation plugin — tracing, memory governance, CLAUDE.md protection. Required by all other plugins."
+    },
+    {
+      "name": "dev-engine",
+      "source": "./dev-engine",
+      "description": "Generic development execution — task decomposition, agent dispatch, tier-based model assignment, completion gates, and visual verification."
+    },
+    {
+      "name": "taskflow",
+      "source": "./taskflow",
+      "description": "Task management and workplace integration — Jira ingestion, local task storage, contradiction detection, project profiles, and QA handover."
     }
   ]
 }
