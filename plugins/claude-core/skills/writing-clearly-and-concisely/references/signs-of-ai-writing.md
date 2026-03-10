@@ -58,6 +58,10 @@ High-confidence indicators (co-occurrence is the strongest tell — where one ap
 | Connection | interplay, aligns with, shed light on, garnered |
 | Display | showcasing, highlighting, emphasizing, reflecting |
 
+## Punctuation Tells
+
+- **Em dashes (—):** LLMs overuse em dashes where humans would use hyphens (-), commas, or separate sentences. Most developers never type an em dash. If you see "structure — not chaos" in generated text, rewrite to "structure, not chaos" or "structure. Not chaos." One em dash in a doc is suspicious. Three is a pattern.
+
 ## Structural Tells
 
 - **List-heavy structure:** Excessive use of bullet points and numbered lists where prose would be more natural

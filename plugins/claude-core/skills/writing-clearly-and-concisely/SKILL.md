@@ -60,6 +60,7 @@ LLMs produce generic, inflated prose. Specific patterns to catch:
 - **Formatting overuse:** excessive bullets, emoji decorations, bold on every other word
 - **Filler openers:** "It's important to note that", "It's worth mentioning that"
 - **Hedge phrases:** "It should be noted", "It is interesting to note"
+- **Em dashes (—):** Use hyphens (-) or rewrite the sentence. Em dashes are an AI tell — humans rarely type them.
 
 Be specific, not grandiose. Say what it actually does.
 
