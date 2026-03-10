@@ -286,6 +286,11 @@
       "name": "seo-fundamentals",
       "path": "skills/seo-fundamentals/SKILL.md",
       "description": "SEO — E-E-A-T, Core Web Vitals, technical SEO, keywords, meta tags, Health Index scoring"
+    },
+    {
+      "name": "marketing-psychology-patterns",
+      "path": "skills/marketing-psychology-patterns/SKILL.md",
+      "description": "Marketing psychology — PLFS/MFS scoring, journey-stage models, ethical guardrails, growth strategy"
     }
   ],
   "agents": [
