@@ -1,0 +1,146 @@
+---
+title: Roadmap
+description: Where hjemmesidekongen/ai is headed — upcoming features, new plugins, and the Blik desktop app.
+---
+
+# Roadmap
+
+hjemmesidekongen/ai is a plugin ecosystem that turns Claude Code into a full-service development environment — from brand identity through deployed applications. Here's what's coming next.
+
+<Callout type="info">
+Priorities shift as we build. This page reflects current direction, not commitments. Features may ship in a different order or form than described here.
+</Callout>
+
+## At a Glance
+
+| Feature | Status |
+|---------|--------|
+| [Blik — Desktop Mission Planner](#blik--desktop-mission-planner) | In development |
+| [Brand Identity](#brand-identity) | Planned |
+| [Design System](#design-system) | Planned |
+| [SEO](#seo) | Planned |
+| [Content and Copy](#content-and-copy) | Planned |
+| [Build Pipeline](#build-pipeline) | Next |
+| [DevOps](#devops) | Planned |
+| [Smarter Memory](#smarter-memory) | Next |
+
+---
+
+## Blik — Desktop Mission Planner
+
+*In development*
+
+A native desktop application for planning, orchestrating, and monitoring your projects. Blik gives you a visual interface for the workflows that currently live in the terminal — project setup, pipeline execution, agent monitoring, and build progress — all in one window.
+
+---
+
+## Brand Identity
+
+*Planned*
+
+A guided pipeline that produces a complete, machine-readable brand system from a short interview.
+
+- **Identity interview** — name, tagline, mission, values, positioning, and audience personas distilled into structured brand data
+- **Visual system** — color palettes with full tint/shade scales, typographic hierarchy, spacing system, and dark mode variants, all validated for WCAG AA accessibility
+- **Logo generation** — multiple design directions refined through feedback, exported as SVG variants (primary, reversed, monochrome, icon, horizontal, stacked) with clear space rules and misuse examples
+- **Voice and tone** — personality spectrum across formality, humor, enthusiasm, and technicality, with channel-specific variations and a vocabulary guide
+- **Social media kit** — Open Graph, Twitter, and LinkedIn templates matching your brand, plus content pillars and hashtag strategy
+- **Brand manual** — everything compiled into a polished document (Markdown and DOCX) with an interactive HTML preview
+
+Brands can also be reverse-engineered from existing websites, documents, and social profiles.
+
+---
+
+## Design System
+
+*Planned*
+
+End-to-end design pipeline that takes your brand and produces implementation-ready specs.
+
+- **Design tokens** — Tailwind config, CSS custom properties, and DTCG JSON generated from your brand, with a full accessibility contrast matrix
+- **Creative direction** — per-project personality layer defining motion philosophy, spatial rules, color strategy, typography personality, hero approach, and project-specific anti-patterns
+- **Component library** — structured specs for every interactive element (buttons, forms, cards, navigation), each tied to design tokens with accessibility annotations, responsive rules, and keyboard navigation specs
+- **Page layouts** — site structure, navigation maps, and page compositions built from your component library across breakpoints
+- **Visual mockups** — live Pencil designs with AI-generated imagery, exported as screenshots that serve as ground truth for implementation
+- **Implementation guides** — per-page motion choreography, entrance animations, hover behaviors, scroll interactions, and reduced-motion fallbacks, written for Motion.dev
+
+---
+
+## SEO
+
+*Planned*
+
+Data-driven SEO strategy generation tied to your specific business, keywords, and competitors.
+
+- **Keyword research** — 30+ keywords organized by tier and search intent (informational, navigational, commercial, transactional) with volume and difficulty estimates
+- **Competitor analysis** — 3-5 competitors mapped by ranking keywords, domain authority, backlink profiles, and content gaps scored by opportunity
+- **On-page rules** — title patterns, meta description templates, heading hierarchy, internal linking strategy, and schema markup recommendations for your industry
+- **Technical checklist** — Core Web Vitals targets, mobile requirements, crawlability, and security items prioritized by severity
+- **Content strategy** — topic clusters with pillar pages and supporting content, a 3-month content calendar, and content type definitions
+- **Link building** — outreach targets, promotion tactics, and effort/impact estimates based on competitor backlink patterns
+
+---
+
+## Content and Copy
+
+*Planned*
+
+Structured content generation that fills every slot in your design system with brand-aligned copy.
+
+- **Page copy** — headlines, body text, and CTAs for every page, written in your brand voice and organized by component slot
+- **UX microcopy** — error messages, validation feedback, tooltips, confirmation dialogs, loading states, and form labels, all following a consistent taxonomy
+- **Content governance** — writing standards, terminology guides, and review checklists that keep copy consistent as your team grows
+
+---
+
+## Build Pipeline
+
+*Next*
+
+Multi-agent development execution that turns designs into working applications.
+
+- **Feature decomposition** — architectural analysis breaks features into components with clear file ownership boundaries
+- **Wave planning** — tasks organized into parallel and sequential waves, with model tier assignment matching complexity to capability
+- **Parallel agent execution** — specialist agents (frontend, backend, design-UX, documentation, devops) working simultaneously on non-conflicting files
+- **Visual verification** — automated screenshot comparison against Pencil mockups at section milestones, checking structural alignment rather than pixel perfection
+- **Quality gates** — security audit (OWASP top 10), code quality checks, design token compliance, test coverage validation, and spec alignment scoring before anything ships
+
+---
+
+## DevOps
+
+*Planned*
+
+Deployment configuration and execution from a single command.
+
+- **Provider detection** — framework-aware recommendations (Vercel for Next.js, Railway for Node.js, Docker for anything)
+- **CI/CD generation** — GitHub Actions workflows covering lint, test, build, and deploy
+- **Observability** — error logging (Sentry), analytics instrumentation (PostHog/Mixpanel) with GDPR consent gating, and server-side health monitoring (OpenTelemetry) for projects with a backend
+- **One-command deploy** — build verification, provider deployment, and health check polling with automatic retry
+
+---
+
+## Smarter Memory
+
+*Next*
+
+Improvements to how the system remembers and learns across sessions.
+
+- **Episodic memory** — long-term recall of what was tried, what worked, and what failed across projects
+- **Project memory** — temporal decay, two-tier storage, and deduplication so memory stays relevant without manual pruning
+- **Continuous learning** — instinct extraction from session observations, with qualified instincts graduating into skills, rules, or memory entries
+
+---
+
+## Recently Shipped
+
+A selection of what landed in the latest release cycle.
+
+- **Context compaction** — smart session recovery that preserves working state, active plans, and project context across `/compact` and session restarts
+- **Planning engine** — wave-based execution plans with dependency resolution, parallel dispatch, and verification gates between waves
+- **53 development skills** — framework patterns (React, Next.js, Vue, Nuxt, Tailwind v4, NestJS, Prisma), testing disciplines (TDD, Playwright, Storybook), and Expo mobile development
+- **Task management** — Jira ingestion, local task storage, contradiction detection, QA handover, and PR workflows with Bitbucket integration
+- **Workspace integrations** — Jira, Confluence, Bitbucket, Slack, and Outlook via MCP, with pre-built configuration templates
+- **Creator toolkit** — skill, hook, command, agent, plugin, and MCP server creators with eval infrastructure and A/B testing
+- **Code review** — parallel 4-stream review (security, performance, architecture, testing) and a 5-phase comprehensive review pipeline
+- **Session continuity** — handoff documents with staleness classification for picking up exactly where you left off
