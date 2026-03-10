@@ -1,11 +1,11 @@
 # Claude Local Workspace
 
 ## What This Is
-Four plugins in a monorepo (two active, two planned):
+Four plugins in a monorepo:
 - **claude-core** (`plugins/claude-core/`) — Foundation plugin: planning, brainstorm, tracing, memory governance, roadmap, doc governance, creator/reviewer tooling, autopilot, and validation agents (33 skills, 12 commands, 12 agents).
 - **agency** (`plugins/agency/`) — Digital agency plugin: brand, design, content, dev, deploy pipelines (11 agents — security-reviewer ported to claude-core).
-- **dev-engine** (`plugins/dev-engine/`) — (planned) Generic development execution: task decomposition, agent dispatch, tech knowledge, disciplines, visual verification, completion gates.
-- **taskflow** (`plugins/taskflow/`) — (planned) Task management and workplace integration: Jira ingestion, local task storage, contradiction detection, project profiles, QA handover.
+- **dev-engine** (`plugins/dev-engine/`) — Generic development execution: task decomposition, agent dispatch, tech knowledge, disciplines, visual verification, completion gates, project mapping, orchestration (53 skills, 2 commands, 6 agents).
+- **taskflow** (`plugins/taskflow/`) — Task management and workplace integration: Jira ingestion, local task storage, contradiction detection, project profiles, QA handover, bulk ingestion, PR workflows (9 skills, 8 commands).
 
 ## Context Recovery
 After `/compact` or when context seems incomplete, read `.ai/context/snapshot.yml` for working state (workspace, project, active plan, modified files). This file is written by PreCompact, Stop, and SessionStart hooks via `assemble-context.sh` and persists on disk.
