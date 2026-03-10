@@ -1,6 +1,6 @@
 {
   "plugin": "dev-engine",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "skills": [
     {
       "name": "task-decomposer",
@@ -241,6 +241,31 @@
       "name": "expo-simulators",
       "path": "skills/expo-simulators/SKILL.md",
       "description": "iOS Simulator and Android Emulator management — screenshots, recording, debugging"
+    },
+    {
+      "name": "project-mapper",
+      "path": "skills/project-mapper/SKILL.md",
+      "description": "Scan repo to detect tech stack, map module boundaries, and output Mermaid C4 diagram"
+    },
+    {
+      "name": "context-assembler",
+      "path": "skills/context-assembler/SKILL.md",
+      "description": "Assemble bounded context packages for agent dispatch with token budget awareness"
+    },
+    {
+      "name": "skill-quality-rubric",
+      "path": "skills/skill-quality-rubric/SKILL.md",
+      "description": "8-dimension quality framework for evaluating dev-engine knowledge skills"
+    },
+    {
+      "name": "taskflow-bridge",
+      "path": "skills/taskflow-bridge/SKILL.md",
+      "description": "Bridge dev-engine and taskflow — maps acceptance criteria to completion gate checks"
+    },
+    {
+      "name": "dev-engine-orchestrator",
+      "path": "skills/dev-engine-orchestrator/SKILL.md",
+      "description": "Top-level pipeline orchestration chaining all dev-engine stages"
     }
   ],
   "agents": [
@@ -275,6 +300,17 @@
       "description": "Architecture advisor — system design, decomposition review, dependency analysis"
     }
   ],
-  "commands": [],
+  "commands": [
+    {
+      "name": "dev-scan",
+      "path": "commands/dev-scan.md",
+      "description": "Scan repository to detect tech stack, modules, and architecture"
+    },
+    {
+      "name": "dev-run",
+      "path": "commands/dev-run.md",
+      "description": "Run the full dev-engine pipeline for a task"
+    }
+  ],
   "hooks": []
 }
