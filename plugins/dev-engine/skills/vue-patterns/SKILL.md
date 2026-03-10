@@ -32,38 +32,49 @@ _source:
   origin: "dev-engine"
   inspired_by: "original"
   ported_date: "2026-03-10"
-  iteration: 1
-  changes: "New discipline skill for dev-engine"
+  iteration: 2
+  changes: "Replaced tutorial content with expert composable patterns, compiler macros, and SSR gotchas"
 ---
 
 # Vue Patterns
 
-Vue 3's Composition API is the default for all new work. Options API still works but should be reserved for existing code or gradual migrations.
+## Composable Design Patterns
 
-## Composition API vs Options API
+**When to extract**: logic uses 2+ reactive primitives together and appears in multiple components. Single `ref()` doesn't warrant a composable.
 
-**Use Composition API** (`<script setup>`) for all new components. Logic is colocated by concern rather than option type, composables are natural, TypeScript inference is better, and the compiler optimizes `<script setup>` more aggressively.
+**Return shape**: always return an object (`{ data, loading, error, refresh }`), never a single ref. Allows destructuring and future extension without breaking callers.
 
-**Options API is acceptable** when: migrating an existing component incrementally, working in a codebase with strong Options API conventions, or using mixins that haven't been extracted yet.
+**Naming**: `use` prefix, noun-oriented (`useAuth`, `useFormValidation`). Name describes the concern, not the implementation. Composables can call other composables — keep chains shallow (max 3 levels).
 
-Never mix both styles in the same component.
+**Cleanup**: if a composable sets up listeners/timers/subscriptions, use `onUnmounted` internally. Callers shouldn't need to remember cleanup.
 
-## Reactivity Rules
+## provide/inject for Dependency Injection
 
-`ref()` for primitives and anything that needs to be reassigned. `reactive()` for objects where you won't reassign the root reference. The critical rule: **never destructure a reactive object** — doing so strips reactivity. Use `toRefs()` to destructure safely.
+Use for cross-cutting concerns needing 3+ levels of prop drilling: theme, locale, feature flags, form context. **Testing benefit**: `provide` in test wrappers replaces real services with mocks. Use `InjectionKey<T>` for type safety.
 
-`computed()` for derived state. Never recompute in templates. `watch()` when you need to react to a change with side effects. `watchEffect()` when you want automatic dependency tracking.
+**Scope control**: provide at the nearest common ancestor, not app root — root-level provide is effectively a global (use Pinia instead). Always provide a fallback in `inject('key', defaultValue)` or throw explicitly.
 
-## Pinia Overview
+## Vue Compiler Macros
 
-Pinia is the official state management solution for Vue 3. Define stores with `defineStore()`. Use setup stores (Composition API style) over options stores for better TypeScript support and composable compatibility.
+**`defineModel()`**: two-way binding without manual emit boilerplate. `const model = defineModel<string>()` replaces the `modelValue` prop + `update:modelValue` emit pair. Supports named models: `defineModel('title')`.
 
-Access stores in components with `useXxxStore()`. Use `storeToRefs()` when destructuring store state to preserve reactivity. Actions are plain async functions — no mutations.
+**`defineSlots()`**: type-safe slot definitions. Enforces slot prop types at compile time. Use in library components where consumers need slot prop documentation.
 
-## Migration Guidance (Vue 2→3)
+**`defineExpose()`**: explicitly declare what `ref` on the component can access. Default in `<script setup>` is nothing exposed. Only expose imperative methods (focus, reset, validate) — never expose internal state.
 
-The largest breaking changes: Composition API replaces Options API as primary pattern, `Vue.set`/`Vue.delete` are gone (proxy-based reactivity handles this), filters are removed (use computed or methods), `$listeners` merged into `$attrs`, multiple root elements now allowed.
+## SSR/Nuxt Hydration Gotchas
 
-For Vuex→Pinia: map modules to individual stores, replace `commit` with direct action calls, replace `mapState`/`mapGetters` with `storeToRefs`.
+**Hydration mismatch**: server and client must render identical initial HTML. Common causes: `Date.now()`, `Math.random()`, browser-only APIs (`window`, `localStorage`), conditional rendering based on screen size.
 
-See `references/process.md` for full API details, composables, Pinia patterns, reactivity pitfalls, slots, Teleport, Suspense, and anti-patterns.
+**Fix pattern**: `<ClientOnly>` wrapper for browser-dependent content. For data: use `useState()` (Nuxt) which serializes server state to `__NUXT_DATA__` for client hydration.
+
+**Serialization limits**: `provide`/`inject` values aren't serialized across SSR boundary. Pinia state is (via `useNuxtApp().payload`). Plan store shape around what's JSON-serializable.
+
+**`onMounted` is client-only**: any DOM measurement, intersection observer, or animation setup must go in `onMounted`. Code at `<script setup>` top-level runs on both server and client.
+
+## Pinia Plugin Patterns and Store Composition
+
+**Plugins**: `pinia.use(({ store }) => { store.$subscribe(...) })`. Common uses: persistence (`pinia-plugin-persistedstate`), undo/redo (track mutation history), logging.
+
+**Store composition**: stores can import and use other stores. `useCartStore` calls `useProductStore().getProduct(id)`. Avoid circular dependencies — extract shared logic to a composable instead.
+See `references/process.md` for reactivity pitfalls, slots, Teleport, Suspense, and anti-patterns.

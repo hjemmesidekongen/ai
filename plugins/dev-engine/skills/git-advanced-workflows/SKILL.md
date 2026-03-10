@@ -33,42 +33,48 @@ _source:
   origin: "dev-engine"
   inspired_by: "original"
   ported_date: "2026-03-10"
-  iteration: 1
-  changes: "New discipline skill for dev-engine"
+  iteration: 2
+  changes: "Replaced standard git knowledge with advanced automation, monorepo patterns, and safety checklists"
 ---
 
 # git-advanced-workflows
 
-## Branching Strategy Decision Tree
+## Scripted Bisect Automation
 
-**Small team (1–5), continuous deployment?** → Trunk-based development. Feature flags over branches.
+`git bisect start HEAD v2.1.0 && git bisect run npm test` — fully automated regression finder. The test command must exit 0 (good) or 1 (bad). Exit 125 means "skip this commit" (useful for broken builds unrelated to the bug).
 
-**Release trains or external QA gates?** → Gitflow. `develop`, `release/*`, `hotfix/*` branches with strict merge paths.
+For frontend regressions: `git bisect run bash -c "npm run build && node check-bundle-size.js"`. Any scriptable assertion works.
 
-**Web app, small-to-mid team, PR-driven?** → GitHub Flow. `main` always deployable, short-lived feature branches.
+Write bisect test scripts as standalone files (`scripts/bisect-check.sh`) so they survive checkout across commits.
 
-When in doubt, start with GitHub Flow. Migrate to Gitflow only when release cycles force it.
+## Monorepo Git Patterns
 
-## Rebase vs Merge
+**Sparse checkout**: `git sparse-checkout set packages/my-app packages/shared` — clone the full repo but only materialize relevant paths. Cuts working tree by 90% in large monorepos.
 
-Rebase on personal branches to keep history linear. Rebase before opening a PR to pull in upstream changes. Merge into shared branches (`main`, `develop`) — never rebase shared history.
+**Path-scoped hooks**: lint-staged config per package — `lint-staged` supports package-level configs. In the root `.lintstagedrc`, use `"packages/app-a/**/*.ts": "eslint"` patterns to scope checks.
 
-**Golden rule:** never rebase commits that exist outside your local repo. Rebasing rewrites SHAs; anyone downstream ends up with diverged history they can't cleanly reconcile.
+**CODEOWNERS by path**: `packages/payments/ @payments-team` — enforces review boundaries. Combine with branch protection rules for path-based approval requirements.
 
-## Commit Hygiene
+**Selective CI**: trigger pipelines only for changed paths. GitHub Actions: `paths:` filter. GitLab: `rules: changes:`. Skip full-repo CI on every commit.
 
-Each commit is one logical unit — reviewable and revertable.
+## Pre-commit Hook Patterns
 
-- Imperative mood subject: "fix login redirect" not "fixed"
-- 50 chars subject, 72 chars body lines; ticket reference in body
-- `git commit --fixup` + `git rebase --autosquash` to fold fixups
-- `git rebase -i HEAD~N` to squash, reorder, or reword before merge
+**lint-staged + husky**: `npx husky init`, add `npx lint-staged` to `.husky/pre-commit`. Runs linters only on staged files. **Commit message validation**: commitlint in `.husky/commit-msg` with `@commitlint/config-conventional`. **Type checking**: `tsc --noEmit` is slow — use `tsc-files --noEmit` to check only staged `.ts` files.
 
-No WIP commits. No "address review comments" commits — squash them in.
+## Large File Handling
 
-## Full Patterns
+**Git LFS**: binary assets (images, fonts, models) under ~1GB total. `git lfs track "*.psd"` adds to `.gitattributes`. **Externalize**: assets >100MB or frequently changing media belong in S3/CDN — LFS bandwidth costs add up. **BFG Repo Cleaner**: already committed large files? `bfg --strip-blobs-bigger-than 10M` rewrites history. Coordinate before force-pushing.
 
-See `references/process.md`:
-- Trunk-based, Gitflow, GitHub Flow in detail
-- Interactive rebase, bisect, cherry-pick, worktrees, stash
-- Conflict resolution, pre-commit hooks, anti-patterns
+## Dangerous Commands Safety Checklist
+
+| Command | Risk | Safe alternative |
+|---------|------|-----------------|
+| `git push --force` | Overwrites remote history | `--force-with-lease` (fails if remote changed) |
+| `git reset --hard` | Destroys uncommitted work | `git stash` first, or `git reset --keep` |
+| `git clean -fd` | Deletes untracked files permanently | `git clean -fdn` (dry run) first |
+| `git checkout -- .` | Discards all unstaged changes | `git stash` to preserve, restore if needed |
+| `git branch -D` | Deletes branch without merge check | `-d` (lowercase) fails if unmerged |
+
+Before any destructive command: `git stash && git log --oneline -5` to verify state.
+
+See `references/process.md` for interactive rebase, cherry-pick, worktrees, stash, and conflict resolution.

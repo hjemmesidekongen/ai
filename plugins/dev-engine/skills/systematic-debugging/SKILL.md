@@ -32,47 +32,40 @@ _source:
   origin: "dev-engine"
   inspired_by: "claude-core root-cause-debugging"
   ported_date: "2026-03-10"
-  iteration: 1
-  changes: "Adapted from claude-core 4-phase protocol for general dev use"
+  iteration: 2
+  changes: "Replaced generic protocol with framework-specific debugging tools and symptom-based diagnosis"
 ---
 
-# systematic-debugging
+# Systematic Debugging
 
-4-phase protocol for finding and fixing root causes. Do not write a fix until phase 3 is complete.
+## Debugging by Symptom Type
 
-## Phases
+**Render loops (React)**: Component re-renders continuously. Check: unstable references in dependency arrays (`useEffect`, `useMemo`, `useCallback`). Objects/arrays created inline re-trigger every render. Fix: memoize or hoist. Detect: React DevTools Profiler → highlight renders → look for components re-rendering without prop changes.
 
-**Phase 1 — Gather Evidence**
-Collect logs, stack traces, error messages, and reproduction steps before touching code.
-Document exact inputs, environment, and the observed vs. expected behavior.
+**Memory leaks**: Heap grows over time, eventual OOM or degraded performance. Common sources: uncleared intervals/timeouts, event listeners not removed on unmount, closures holding references to detached DOM nodes, WebSocket connections not closed. Detect: Chrome DevTools → Memory → Heap snapshots → compare two snapshots → look at "Objects allocated between snapshots."
 
-**Phase 2 — Identify Patterns**
-Look for what changed, what correlates, and what scope is affected.
-Use binary search (git bisect, commenting out code) to narrow the blast radius.
-Ask: is this deterministic or intermittent? Specific input or general?
+**Race conditions**: Non-deterministic behavior depending on timing. Symptoms: works in dev, flakes in CI; data arrives in wrong order; stale closures. Fix: abort controllers for fetch, `useRef` for latest value in closures, optimistic UI with reconciliation. Detect: add artificial delays (`await new Promise(r => setTimeout(r, 500))`) to expose timing assumptions.
 
-**Phase 3 — Form and Test Hypotheses**
-State the root cause as a falsifiable claim. Generate 2–3 competing hypotheses.
-Test the cheapest hypothesis first. Eliminate before you commit.
+**Hydration mismatches (Next.js/SSR)**: Server HTML differs from client render. Causes: `Date.now()`, `Math.random()`, `window`/`localStorage` access during render, conditional rendering based on client-only state. Fix: `useEffect` for client-only values, `suppressHydrationWarning` only as last resort. Detect: Next.js dev mode logs the mismatch — read the full diff.
 
-**Phase 4 — Validate the Fix**
-The fix must address the root cause — not just suppress the symptom.
-Write a regression test that reproduces the original failure before patching.
-Verify the test passes with the fix and fails without it.
+**Stale closures**: Event handler or effect captures an old variable value. Classic in `setInterval` + state updates. Detect: log the value inside the closure vs. the current state. Fix: `useRef` for mutable latest value, or functional state updates (`setState(prev => ...)`).
+
+## Symptom → Tool Mapping
+
+| Symptom | Tool | Command / Action |
+|---------|------|-----------------|
+| Slow renders | React DevTools Profiler | Record → identify long commits |
+| Unnecessary re-renders | `React.memo` + `why-did-you-render` | Logs prop changes causing re-renders |
+| Slow DB queries | Prisma query logging | `prisma.$on('query', ...)` or `DEBUG="prisma:query"` |
+| Node.js memory leak | `node --inspect` + Chrome DevTools | Heap snapshot comparison |
+| API response issues | Network tab / `curl -v` | Check headers, status, body |
+| RSC payload issues | Next.js RSC debugger | `?__nextDataReq=1` to see raw payload |
+| Expo native crash | `npx expo start --dev-client` | Read Metro + native logs in terminal |
+| Unhandled rejections | `node --unhandled-rejections=strict` | Crashes on unhandled instead of warning |
 
 ## Escalation Decision Tree
 
-- Cannot reproduce → document conditions, add logging, revisit with more data
-- Reproduced but cause unclear → go deeper in phase 2 (binary search, isolate subsystem)
-- Root cause found but fix is high-risk → flag for review before shipping
-- Recurring bug class → promote to architectural fix, not point patch
-
-## Common Traps
-
-- **Confirmation bias**: testing only the hypothesis you already believe
-- **Shotgun debugging**: changing multiple things at once — makes causality impossible to determine
-- **Fix-and-pray**: shipping a change without a regression test
-- **Symptom fixation**: silencing the error log instead of fixing the cause
-- **Premature escalation**: asking for help before exhausting phase 1 evidence
-
-See `references/process.md` for detailed phase walkthroughs, tooling guidance, and anti-pattern examples.
+- Cannot reproduce → add structured logging at the boundary, deploy, wait for recurrence
+- Reproduced but cause unclear → binary search with `git bisect` or subsystem isolation
+- Root cause found but fix is high-risk → flag for review, ship behind feature flag
+- Recurring bug class → promote to architectural fix (error boundary, retry layer, schema validation)

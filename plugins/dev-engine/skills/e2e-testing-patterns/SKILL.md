@@ -33,36 +33,48 @@ _source:
   origin: "dev-engine"
   inspired_by: "original"
   ported_date: "2026-03-10"
-  iteration: 1
-  changes: "New discipline skill for dev-engine"
+  iteration: 2
+  changes: "Replaced tutorial content with E2E architecture patterns and flaky test diagnosis"
 ---
 
 # E2E Testing Patterns
 
-E2E tests validate real user flows against a running application. They're slow and brittle by nature — structure them to minimize both.
+## When E2E Adds Value vs Wasted Effort
 
-## Testing Pyramid Placement
+**Worth the cost**: cross-service workflows, auth flows spanning redirects/OAuth, payment/checkout (real payment gateway integration), multi-step wizards with server-side validation, features where the integration surface *is* the risk.
 
-Unit tests: fast, isolated, many. Integration tests: verify service boundaries. E2E tests: validate critical user journeys only. E2E is the top of the pyramid — thin, not comprehensive.
+**Wasted effort**: CRUD forms with client-only validation, component rendering (use component tests), business logic testable in isolation, anything where test setup exceeds 3x the test body.
+## Test Data Management
 
-Use E2E for: checkout flows, auth flows, multi-step forms, cross-service workflows, and anything a broken unit test wouldn't catch.
+**Seeded database**: snapshot a known-good DB state, restore before each suite. Fast but brittle when schema changes. **API-driven setup**: create test data via API calls in `beforeAll`. Slower but always matches current schema. **Factory pattern**: test-scoped data factories that create minimal required state — each test owns its data. Never share mutable data across tests. If two tests need the same user, create two users.
 
-Skip E2E for: input validation, error messages, component rendering, business logic — those belong in unit or integration tests.
+## Parallel Execution
 
-## Playwright vs Cypress
+Shard by file, not by test — file-level sharding avoids shared-state conflicts. Playwright: `--shard=1/4`. CI: run shards as parallel jobs, merge reports with `merge-reports`. Each worker gets its own DB schema or tenant via `WORKER_INDEX` env var.
 
-**Playwright**: multi-browser (Chromium/Firefox/WebKit), supports multiple tabs and origins, better for complex SPAs, preferred for greenfield. Built-in auto-waiting. Native TypeScript.
+## Visual Regression Testing
 
-**Cypress**: single origin per test (historically), excellent DX for debugging, strong community plugins, good for simpler apps. Real-time reload during dev.
+Snapshot comparison catches CSS regressions unit tests miss. Use `toHaveScreenshot()` with `maxDiffPixelRatio: 0.01`. Store baselines in git. Update with `--update-snapshots` only on intentional changes.
 
-Default to Playwright for new projects unless the team already has Cypress investment.
+Mask dynamic content (timestamps, avatars, ads) with `mask: [locator]` to prevent false positives. Run visual tests in a single browser (Chromium) — cross-browser rendering diffs create noise.
 
-## Core Principles
+## Network Interception Decision
 
-- One test, one user journey. Don't combine flows to save setup time.
-- Tests must pass in any order. Shared state between tests causes cascading failures.
-- Never test what unit tests already cover. E2E cost is high — spend it on integration value.
-- Stable selectors only. `data-testid` attributes over CSS classes or text content.
-- Smart waits always. The app is async; your tests must be too.
+**Mock API** (`route.fulfill`): deterministic, fast, no backend dependency. Use for: error state testing, edge cases, offline behavior, rate limiting simulation.
 
-See `references/process.md` for page object implementation, fixture patterns, selector strategies, waiting, visual testing, API mocking, CI setup, and anti-patterns.
+**Real backend**: catches integration bugs mocks hide. Use for: critical happy paths, data integrity flows, auth token lifecycle.
+
+**Hybrid**: mock third-party APIs, use real internal APIs. Best balance for most teams.
+
+## Flaky Test Diagnosis
+
+1. **Timing?** → Add explicit `waitFor` conditions, never arbitrary delays
+2. **Data dependency?** → Test creates its own data, doesn't rely on seed state
+3. **Animation/transition?** → Disable CSS animations in test config
+4. **Network race?** → Wait for specific network response before asserting
+5. **Viewport-dependent?** → Set explicit viewport size in test config
+6. **Third-party widget?** → Mock the external script entirely
+
+If a test fails >2% of runs after fixing, delete it. A flaky E2E test has negative value.
+
+See `references/process.md` for page object implementation, fixture patterns, CI setup, and anti-patterns.

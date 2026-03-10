@@ -40,34 +40,41 @@ _source:
   origin: "dev-engine"
   inspired_by: "original"
   ported_date: "2026-03-10"
-  iteration: 1
-  changes: "Original skill, no port"
+  iteration: 2
+  changes: "Replaced protocol fundamentals with CDN strategy, rate limiting, and HTTP/3 adoption guidance"
 ---
 
 # http-protocols
 
-HTTP is a request-response protocol layered on TCP (or QUIC). Every performance and security decision in a web app is downstream of how well you understand what happens between the browser and the server.
+Operational HTTP patterns beyond protocol fundamentals — CDN strategy, rate limiting, versioning, and cache optimization.
 
-## Protocol Generations
+## CDN Cache Invalidation
 
-**HTTP/1.1** — persistent connections (keep-alive), but requests are serial per connection. Browsers open 6 connections per origin to work around this. Pipelining exists on paper; nobody uses it in practice.
+**Versioned URLs** (default): Hash in filename (`app.a1b2c3.js`), `Cache-Control: public, max-age=31536000, immutable`. New deploy = new URL = instant invalidation. Index HTML uses `no-cache`.
 
-**HTTP/2** — single TCP connection, full multiplexing: many requests in flight simultaneously. HPACK header compression. Server push (largely deprecated in browsers). Eliminates the need for domain sharding and sprite sheets.
+**Tag-based purge**: Surrogate keys (`Surrogate-Key: product-123 category-shoes`), purge by tag on data change. Fastly native, Cloudflare Enterprise. Better than full purge for dynamic content.
 
-**HTTP/3** — built on QUIC (UDP-based). Removes head-of-line blocking at the transport layer (HTTP/2 still suffers from TCP HOL blocking). 0-RTT connection resumption cuts latency on repeat visits. TLS 1.3 is built in.
+**SWR tuning**: `Cache-Control: max-age=60, stale-while-revalidate=3600` — serve stale while fetching fresh. `max-age` = acceptable staleness, `swr` = maximum tolerance.
 
-## Cookies and Sessions
+## HTTP/3 Adoption Decision
 
-`Set-Cookie` is how the server establishes state. The browser stores and echoes the cookie on every matching request. Cookie security depends entirely on the flags set at creation time — the value alone is not enough.
+Enable when: CDN supports it (Cloudflare/Fastly/CloudFront), browser clients, latency > throughput. Deploy at CDN layer with `Alt-Svc: h3=":443"; ma=86400`. No app code changes.
+Hold off when: corporate proxies block UDP/443, server-to-server traffic, APM tools lack QUIC support.
 
-Sessions: server stores state, client holds an opaque session ID. JWT: client holds all state, signed by server — stateless but irrevocable without a blocklist. JWTs are not inherently more secure; they shift revocation complexity to the application.
+## Rate Limiting Patterns
 
-## CORS
+**Token bucket**: Fixed replenish rate, burst up to bucket size. Redis + Lua for distributed — `EVALSHA` atomically checks and decrements.
+**Sliding window**: Rolling time window, no burst spikes at boundaries. Redis sorted sets: `ZADD`/`ZRANGEBYSCORE`/`ZREMRANGEBYSCORE`.
+**Headers**: Always return `X-RateLimit-Limit`, `Remaining`, `Reset` (Unix). `Retry-After` on 429.
 
-CORS is enforced by the browser, not the server. A server without CORS headers does not block cross-origin requests — it blocks cross-origin JavaScript from reading responses. Preflight (`OPTIONS`) fires when the request method or headers fall outside the "simple request" definition.
+## API Versioning
 
-## Caching
+**URL path** (`/v2/users`): Simple, visible in logs, recommended for public APIs.
+**Accept header** (`application/vnd.api+json;version=2`): Clean URLs, better for internal APIs.
+**Never query param** (`?v=2`): Breaks caching, no standard.
 
-Browser and CDN caching eliminate round trips. The `Cache-Control` header is authoritative. `ETag` and `Last-Modified` enable conditional requests — the server responds 304 when content is unchanged. `stale-while-revalidate` lets browsers serve stale content immediately while fetching fresh in the background.
+## Conditional Request Optimization
 
-See `references/process.md` for TCP/TLS handshake detail, status code reference, full cookie attribute table, CORS header breakdown, Cache-Control directive matrix, content negotiation, compression setup, and anti-patterns.
+**ETag generation**: Hash body for static assets. For DB responses, composite `updated_at` + ID. Weak ETags (`W/"abc"`) match semantically equivalent responses.
+**304 savings**: Saves bandwidth, not compute. Cache server-side too for expensive queries.
+See `references/process.md` for TCP/TLS handshakes, status codes, cookie attributes, CORS headers, and compression.

@@ -32,44 +32,48 @@ _source:
   origin: "dev-engine"
   inspired_by: "claude-core verification-gate + superpowers verification"
   ported_date: "2026-03-10"
-  iteration: 1
-  changes: "Simplified from claude-core 5-step gate for general dev use"
+  iteration: 2
+  changes: "Refocused from generic advice to stack-specific verification commands and decision matrix"
 ---
 
 # Verification Before Completion
 
-Before claiming any task is done, run proof. Stating that something "should work"
-or "looks correct" is not verification. Verification means executing something and
-reading the output.
+## Verification Commands by Stack
 
-## What Counts as Proof
+| Stack | Tests | Build | Types | Lint |
+|-------|-------|-------|-------|------|
+| React (Vite) | `npx vitest run` | `npx vite build` | `npx tsc --noEmit` | `npx eslint .` |
+| Next.js | `npx jest` or `npx vitest run` | `npx next build` | `npx tsc --noEmit` | `npx next lint` |
+| Node/Express | `npx jest` or `npx vitest run` | `npx tsc` (if TS) | `npx tsc --noEmit` | `npx eslint .` |
+| Expo | `npx jest` | `npx expo export` | `npx tsc --noEmit` | `npx eslint .` |
+| Prisma | `npx jest` (with test DB) | `npx prisma generate` | `npx tsc --noEmit` | `npx prisma validate` |
+| Monorepo (Turbo) | `npx turbo test` | `npx turbo build` | `npx turbo typecheck` | `npx turbo lint` |
 
-**Tests**: Run the test suite. Read the output. All tests pass, no skipped tests
-hiding failures. New behavior has new tests.
+Always run `npx tsc --noEmit` separately from the build — some build tools (Vite, esbuild) strip types without checking them.
 
-**Builds**: Run the build command. Read the output end-to-end. A build that "seemed
-to work" and a build that produced a clean exit are different things.
+## Verification Matrix
 
-**Manual checks**: For UI or workflow tasks — open the browser, click through the
-flow, see the state change happen. Screenshots for anything visual.
+| Check type | What it catches | Automated? |
+|------------|----------------|------------|
+| Type check | Interface mismatches, null safety, wrong argument types | Yes |
+| Unit tests | Logic regressions, broken contracts | Yes |
+| Build | Import errors, missing exports, dead code tree-shaking issues | Yes |
+| Lint | Style violations, unused vars, accessibility issues (eslint-plugin-jsx-a11y) | Yes |
+| Integration test | Cross-module wiring, API contract breaks | Yes |
+| Visual review | Layout regressions, responsive breakpoints, animation glitches | Manual |
+| Runtime behavior | Memory leaks, race conditions, hydration errors | Manual |
+| Env-specific | Missing env vars, wrong API URLs, CORS in production | Manual |
 
-**Lint and type checks**: Run them. Do not assume the editor would have caught it.
+## What Verification Catches That Self-Review Misses
 
-## Common Shortcuts That Fail
+- **Runtime behavior**: Code that reads correctly but fails at runtime (circular deps, import order, async timing).
+- **Env-specific failures**: Works locally, breaks in CI/staging (missing env vars, different Node version, OS-specific path handling).
+- **Dependency conflicts**: New package introduces a peer dependency conflict. Build succeeds but runtime throws.
+- **Type narrowing gaps**: TypeScript compiles but a runtime `undefined` slips through a type assertion or `as` cast.
+- **Stale build cache**: Previous build artifacts mask a real error. `rm -rf .next` or `rm -rf dist` before building.
 
-- Writing the code and assuming the tests still pass (they may not — run them).
-- Reading a success message partway through output and missing an error lower down.
-- Testing only the happy path and skipping the error branch.
-- Trusting that a previous run's results still apply after a code change.
-- Self-grading: "I'm confident this works" without executing anything.
-- Marking done before checking the original acceptance criteria, not just the code.
+## When Manual Verification Is Required
 
-## Minimum Bar
+Automated is sufficient when: pure logic, data transformations, API endpoints with test coverage, config changes with type checking.
 
-1. At least one proof command executed (test / build / lint).
-2. Full output read — not assumed.
-3. At least two edge cases or error paths confirmed.
-4. Original acceptance criteria re-read and matched against output.
-
-See `references/process.md` for checklists by task type, commands by stack, and
-CI integration guidance.
+Manual is required when: visual UI changes (layout, animations, responsive), user flows spanning multiple pages, third-party integration behavior (OAuth, payment, email), performance characteristics (load time, bundle size), accessibility (screen reader testing, keyboard navigation).

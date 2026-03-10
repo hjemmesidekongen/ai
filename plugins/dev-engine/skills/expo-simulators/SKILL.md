@@ -5,7 +5,7 @@ description: >
   and debugging tools.
 user_invocable: false
 interactive: false
-model_tier: senior
+model_tier: junior
 depends_on: []
 triggers:
   - "expo simulators"
@@ -35,46 +35,46 @@ _source:
   origin: "dev-engine"
   inspired_by: "original"
   ported_date: "2026-03-10"
-  iteration: 1
-  changes: "Original skill, no port"
+  iteration: 2
+  changes: "Replaced basic CLI commands with CI management, profiling, and platform-specific gotchas"
 ---
 
 # expo-simulators
 
-iOS Simulator (`xcrun simctl`) and Android Emulator (`avdmanager` + `emulator`) are the primary tools for local Expo testing without physical devices.
+Beyond standard CLI commands — CI integration, platform gotchas, profiling, and device limitations.
 
-## iOS Simulator
+## CI Simulator Management
 
-```bash
-xcrun simctl list devices                          # list all simulators
-xcrun simctl boot "iPhone 16 Pro"                  # boot a simulator
-open -a Simulator                                  # open the Simulator window
-xcrun simctl install booted ./build/YourApp.app   # install a build
-xcrun simctl launch booted com.your.bundleid       # launch the app
-```
+**GitHub Actions + iOS**: `macos-14`+ runners (Apple Silicon), simulators pre-installed. Boot with `xcrun simctl boot` in setup step. Headless mode works without Simulator.app.
 
-## Android Emulator
+**GitHub Actions + Android**: Use `reactivecircus/android-emulator-runner`. Enable KVM (`/dev/kvm`), API 31+ `google_apis` target, `emulator-options: -no-window -no-audio -no-boot-anim`. Cache AVD snapshots with `actions/cache`.
 
-```bash
-avdmanager list avd                                                              # list AVDs
-avdmanager create avd -n Pixel_9_API_35 -k "system-images;android-35;google_apis_playstore;x86_64"
-emulator -avd Pixel_9_API_35                      # start emulator (warm boot)
-emulator -avd Pixel_9_API_35 -no-snapshot-load    # cold boot (fresh state)
-```
+**Parallel testing**: iOS and Android in separate matrix jobs — iOS on macOS, Android on Ubuntu (KVM). Saves 5-10 min per run.
 
-## Expo Integration
+## Apple Silicon vs Intel (Android)
 
-```bash
-npx expo start --ios                              # launch on booted iOS simulator
-npx expo start --android                          # launch on running Android emulator
-npx expo start --ios --device "iPhone 16 Pro"     # target specific simulator
-```
+M-series Macs require ARM64 images (`google_apis;arm64-v8a`). x86_64 images launch but crash or run at 10% speed. Check: `sdkmanager --list | grep arm64-v8a`. Native ARM emulation — no translation layer.
 
-Expo picks the booted simulator automatically when only one is running. Multiple running simultaneously causes routing confusion unless intentional.
-## Key Rules
+## Performance Profiling
 
-- Clear Metro cache (`expo start --clear`) when switching platforms or after major dependency changes.
-- Use `xcrun simctl erase` to reset simulator state — faster than creating a new simulator.
-- Android emulators with Google Play Store have restricted root access. Use AOSP images when elevated permissions are needed.
-- Never run two simulators of the same platform simultaneously unless explicitly testing multi-device.
-See `references/process.md` for screenshots, screen recording, location simulation, push notification testing, network conditions, performance profiling, multi-device testing, reset procedures, and anti-patterns.
+**iOS Instruments**: Time Profiler, Allocations, Core Animation (frame rate). Attach to simulator process — no signing needed.
+
+**Android Profiler**: CPU/Memory/Network/Energy tabs in Android Studio. For RN: `--profile-hermes`, open `.cpuprofile` in Chrome DevTools.
+
+**Expo**: `npx expo start --dev-client` + shake > Performance Monitor shows JS and UI thread FPS separately.
+
+## Simulator vs Device Limitations
+
+**Not available**: Real push notifications (iOS supports `.apns` drag-and-drop simulation only), camera, NFC, Bluetooth, barometric sensor, accurate GPS (use simulated locations), real perf characteristics.
+
+**Behaves differently**: Biometrics work via Simulator Features menu / `adb -e emu finger touch 1`. Deep links via `xcrun simctl openurl` / `adb shell am start -d`.
+
+## Expo-Specific Gotchas
+
+**EAS local build**: `eas build --local --platform ios --profile development` — simulator-compatible, requires Xcode CLI tools.
+
+**Config plugins**: Changes only apply after `npx expo prebuild`. Native code changes require rebuild — hot reload won't reflect them.
+
+**Port conflicts**: Two dev clients on same simulator need different ports. Use `--port` on second instance.
+
+See `references/process.md` for screen recording, network simulation, multi-device testing, and reset procedures.

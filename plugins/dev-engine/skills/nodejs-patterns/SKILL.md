@@ -36,38 +36,45 @@ _source:
   origin: "dev-engine"
   inspired_by: "original"
   ported_date: "2026-03-10"
-  iteration: 1
-  changes: "Original skill, no port"
+  iteration: 2
+  changes: "Replaced known fundamentals with Node 22+ features, AbortController patterns, and diagnostic channels"
 ---
 
 # nodejs-patterns
 
-Node.js is single-threaded I/O. Every pattern decision traces back to that constraint: protect the event loop, stream data instead of buffering it, and push CPU work off-thread.
+Beyond standard event loop and streams — Node 22+ features, structured cancellation, diagnostic channels, and ESM migration.
 
-## Event Loop Model
+## Node 22+ Features
 
-The event loop processes one phase at a time: timers → pending I/O → idle/prepare → poll → check → close callbacks. `setImmediate` runs in the check phase (after I/O). `process.nextTick` runs after the current operation, before any I/O — overuse starves the loop.
+**Built-in test runner** (`node:test`): `describe`, `it`, `mock` — no framework. `node --test **/*.test.js` + `--experimental-test-coverage`.
+**`--env-file`**: `node --env-file=.env server.js` — no dotenv. Multiple files supported (last wins).
+**Watch mode**: `node --watch server.js` replaces nodemon. Scope: `--watch-path=./src`.
+**Native fetch**: Stable in 21+, undici-backed. Supports AbortSignal natively.
+**`require(esm)`** (22.12+): `require()` of ES modules without flags. CJS consumers, ESM libraries.
 
-Blocking the event loop (synchronous crypto, large JSON.parse, tight loops) stalls every request. The threshold is roughly 100ms. Anything over that belongs in a worker thread.
+## AbortController Patterns
 
-## Streams vs Buffers
+Propagate signals through async chains — `fetch`, `setTimeout` (node:timers/promises), and `pipeline` all accept `{ signal }`. `AbortSignal.timeout(5000)` auto-aborts. `AbortSignal.any([userSignal, timeoutSignal])` for composite cancellation.
 
-Use streams when data volume is unknown or large. Use buffers when data must be complete before processing (JWT validation, JSON parsing of small payloads).
+## Diagnostic Channels
 
-Decision: if the source is a file, network socket, or database cursor — stream it. If it fits in memory and processing requires the whole payload — buffer it. Default to streams for file I/O and HTTP response bodies over ~1MB.
+`node:diagnostics_channel` — zero-overhead instrumentation, no APM coupling. `dc.channel('app:db-query').publish({ query, duration })`. Subscribers attach externally — app code never imports the observer. Undici publishes on `undici:request:create` for HTTP telemetry without middleware.
 
-Always use `pipeline()` over manual `.pipe()` — it handles backpressure and propagates errors automatically.
+## Custom Transform Streams
 
-## Worker Threads
+`pipeline()` + Transform with automatic backpressure:
+```js
+const jsonLines = new Transform({
+  objectMode: true,
+  transform(chunk, enc, cb) { cb(null, JSON.stringify(chunk) + '\n'); }
+});
+await pipelinePromise(dataSource, jsonLines, response);
+```
 
-Use worker threads for CPU-bound work: image processing, compression, encryption at scale, parsing large payloads, ML inference. Not for I/O — async I/O is already non-blocking.
+## ESM Migration Decision
 
-Pass data via `workerData` (cloned) or `SharedArrayBuffer` (zero-copy, requires coordination). Keep worker pools sized to `os.cpus().length - 1` to leave headroom for the main thread.
+Stay CJS: consumers use `require()`, tooling assumes CJS, migration cost > benefit.
+Go ESM: shipping a library, top-level await, Node 20+.
+**Dual publish**: `"type": "module"` + `"exports"` with `"import"`/`"require"` conditions. Build CJS from ESM.
 
-## Async Error Handling
-
-Errors in async code that are not caught propagate as unhandled rejections. In production, `process.on('unhandledRejection')` should log and exit — silent swallowing hides bugs.
-
-For Express/Fastify, async route handlers must either catch internally or be wrapped so the framework's error middleware receives the rejection. Uncaught errors in event emitters go to `'error'` event — attach a handler or the process crashes.
-
-See `references/process.md` for event loop phases, stream implementations, worker thread patterns, cluster module, child processes, signal handling, graceful shutdown, memory management, ESM vs CJS, and anti-patterns.
+See `references/process.md` for worker thread pools, cluster, child processes, memory management, and anti-patterns.

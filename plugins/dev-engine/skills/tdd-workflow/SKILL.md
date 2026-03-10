@@ -32,42 +32,46 @@ _source:
   origin: "dev-engine"
   inspired_by: "superpowers-main + claude-core tdd-gate patterns"
   ported_date: "2026-03-10"
-  iteration: 1
-  changes: "Built for dev-engine as discipline skill"
+  iteration: 2
+  changes: "Replaced tutorial content with expert TDD patterns and framework-specific guidance"
 ---
 
 # TDD Workflow
 
-Red-green-refactor is a discipline, not a suggestion. Tests define the contract before code exists.
+## When to Break the Cycle
 
-## The Cycle
+TDD is not universal. Know when to exit:
 
-**Red** — Write a failing test that describes the behavior you want. Run it. It must fail. If it passes without code changes, the test is wrong.
+- **Spikes**: Exploring an unfamiliar API or library. Write throwaway code, learn the shape, then restart with tests. Never TDD a spike — you'll test the wrong abstractions.
+- **Integration wiring**: Connecting existing tested modules (routes → controllers → services). The test would mirror the implementation. Write an integration test after wiring instead.
+- **Throwaway prototypes**: If the code will be discarded within days, skip TDD. If it survives past the prototype, stop and add tests before extending.
+- **UI layout**: Visual positioning, CSS, animations. Snapshot tests add friction without catching real regressions. Use visual regression tools (Chromatic, Percy) instead.
 
-**Green** — Write the minimum code to make the test pass. No extras. Ugly is fine. Speculative features are not.
+## Framework-Specific TDD Patterns
 
-**Refactor** — Clean the code without changing behavior. Tests must stay green throughout. If a refactor breaks tests, it went too far.
+**React (Testing Library)**: Test user behavior, not component internals. `getByRole` over `getByTestId`. Fire real events (`userEvent.click`) not synthetic ones. Never assert on component state — assert on what the user sees. For hooks: `renderHook` + `act()`, test the contract not the implementation.
 
-## When to Use TDD
+**Next.js**: Server components can't use Testing Library — test the data layer directly. For API routes, call the handler function with mocked `NextRequest`. For server actions, test the function, mock `redirect`/`revalidatePath`. Client components test normally.
 
-Use TDD for: pure logic, algorithms, data transformations, API contracts, business rules, and anything with clear inputs/outputs.
+**NestJS**: Use `Test.createTestingModule` to bootstrap isolated modules. Override providers with `.overrideProvider(Service).useValue(mock)`. Test guards and interceptors in isolation from controllers.
 
-Skip TDD for: UI layout, exploratory spikes, throwaway prototypes, and infrastructure wiring where the test would just mirror the implementation.
+**Prisma**: Never mock Prisma Client method-by-method — use a test database or `@prisma/client/runtime` for unit tests. For integration tests, use a seeded test DB with transaction rollback (`$transaction` + throw to rollback).
 
-## Rules
+## Test Double Decision Tree
 
-- Never write implementation before a failing test exists.
-- One test per cycle. Don't batch cycles — keep feedback tight.
-- The refactor phase is mandatory. Green + messy is not done.
-- A test that never fails has never been validated. Delete or fix it.
-- Mock external dependencies in unit tests. Test the integration separately.
+Pick the lightest double that serves the test:
 
-## Common Mistakes
+| Need | Use | Not |
+|------|-----|-----|
+| Provide canned data to the subject | **Stub** | Mock — you don't need call verification |
+| Verify the subject called a dependency | **Spy** | Mock — spy preserves real behavior |
+| Replace a slow/flaky dependency entirely | **Fake** (in-memory DB, local server) | Mock — fakes catch more integration bugs |
+| Enforce exact call sequence and arguments | **Mock** | Use sparingly — brittle to refactoring |
 
-- Writing tests after the fact and calling it TDD — it isn't.
-- Writing tests that test the implementation instead of the behavior.
-- Skipping the refactor phase because "it works."
-- Over-mocking until the test no longer reflects real behavior.
-- Making multiple changes between red and green — isolate failures.
+Rule of thumb: if your test breaks when you refactor internals but behavior is unchanged, you over-mocked.
 
-See `references/process.md` for step-by-step workflow, code examples, test doubles patterns, and anti-patterns.
+## Property-Based Testing as TDD Extension
+
+When a function has a contract expressible as invariants (sorting, encoding/decoding, serialization roundtrips), add property tests alongside example tests. Use `fast-check` for JS/TS. Write the property first (red), implement until it holds (green), refactor.
+
+Properties that always pay off: roundtrip (`decode(encode(x)) === x`), idempotency (`f(f(x)) === f(x)`), commutativity where expected, "no crash" on arbitrary input.

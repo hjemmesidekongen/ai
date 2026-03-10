@@ -37,41 +37,44 @@ _source:
   origin: "dev-engine"
   inspired_by: "original"
   ported_date: "2026-03-10"
-  iteration: 1
-  changes: "Original skill, no port"
+  iteration: 2
+  changes: "Replaced known fundamentals with TS 5.4+ features, branded types, and type-level testing"
 ---
 
 # typescript-modern
 
-TypeScript's value is making illegal states unrepresentable. Every type decision should push toward that goal.
+Patterns beyond standard generics and narrowing — TS 5.4+ features, branded types, module augmentation, and type-level testing.
 
-## Type Narrowing Strategy
+## TS 5.4–5.7 Features
 
-Prefer **discriminated unions** over optional fields for variant shapes. A `kind` or `type` literal field on each variant lets the compiler prove exhaustiveness. Use `never` in the default branch to catch future variants at compile time.
+**Inferred type predicates** (5.5): Filter functions returning `x !== null` auto-narrow without `is` guards.
+**NoInfer<T>** (5.4): Blocks a parameter from contributing to inference. Use on fallback params: `create<T>(value: T, fallback: NoInfer<T>)`.
+**Const type parameters** (5.0+): `<const T>` infers literal types without `as const` at call sites. Use for config factories.
+**Isolated declarations** (5.5): `--isolatedDeclarations` requires explicit return types on exports. Parallel `.d.ts` emit for monorepo packages.
 
-**Narrowing order**: `typeof` for primitives → `instanceof` for classes → `in` for shape checks → discriminant field for unions → user-defined type guards (`is`) only when the above are insufficient.
+## Branded Types
 
-## Generics vs Overloads
+Prevent domain confusion (`UserId` vs `OrderId` are both strings, but swapping is a bug):
+```ts
+type Brand<T, B> = T & { readonly __brand: B };
+type UserId = Brand<string, 'UserId'>;
+const toUserId = (s: string) => s as UserId;  // single controlled cast point
+```
+Brand at creation, accept branded types in signatures. One `as` cast at the entry point is acceptable.
 
-Use **generics** when the relationship between input and output type is uniform — the shape of the logic is the same, only the type varies. Use **overloads** only when the return type changes discretely based on the input type in a way generics cannot capture. Overloads are harder to maintain; exhaust generic options first.
+## Module Augmentation
 
-Add **constraints** (`extends`) to generics when you need to access specific properties. Add **defaults** when a type parameter is optional. Let TypeScript **infer** generic arguments from usage — explicit type arguments at call sites are a code smell unless disambiguation is necessary.
+Extend third-party types with `declare module` in `.d.ts` files under `types/`. Only extend, never override — if you need to change a field type, patch the library instead.
 
-## Utility Type Selection
+## Type-Level Testing
 
-Pick the narrowest utility that expresses your intent:
-- **Partial / Required** — optional/required toggle for all fields
-- **Pick / Omit** — structural subsetting; prefer Pick (explicit) over Omit (implicit)
-- **Record<K, V>** — homogeneous maps; use over index signatures for finite key sets
-- **Extract / Exclude** — filter union members by assignability
-- **ReturnType / Parameters / Awaited** — introspect function and promise types without duplication
+`// @ts-expect-error` as assertion: next line **must** error or test fails. `expectTypeOf` (vitest) / `expectType` (tsd) for positive assertions. Run both in CI.
 
 ## Key Rules
 
-- Model state as **what is true**, not as flags. A `status: 'loading' | 'error' | 'success'` union with per-variant data beats three optional fields.
-- `satisfies` validates a value against a type while preserving the narrowest inferred type. Use it for config objects and lookup tables.
-- `as const` freezes inference to literal types. Required before `satisfies` for enum-like objects.
-- `unknown` is the correct type for untrusted input. Narrow before use. `any` skips the compiler — use it only at integration seams you intend to replace.
-- Type assertions (`as`) are a promise to the compiler. If that promise is wrong, runtime crashes follow. Prefer narrowing or `satisfies`.
+- Model state as **what is true**, not flags. Discriminated union > optional fields.
+- `satisfies` preserves narrowest inference while constraining. Pair with `as const`.
+- `unknown` for untrusted input. `any` only at seams you intend to replace.
+- `as` is a compiler promise — if wrong, runtime crashes. Prefer narrowing or `satisfies`.
 
-See `references/process.md` for full utility type reference, generic patterns, conditional types, mapped types, `infer`, branded types, module augmentation, tsconfig options, and anti-patterns with fixes.
+See `references/process.md` for conditional types, mapped types, `infer`, tsconfig options, and anti-patterns.
