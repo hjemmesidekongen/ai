@@ -301,6 +301,11 @@
       "name": "social-media-patterns",
       "path": "skills/social-media-patterns/SKILL.md",
       "description": "Social media — platform strategies, post templates, hook formulas, content pillars, repurposing"
+    },
+    {
+      "name": "sitemap-planning",
+      "path": "skills/sitemap-planning/SKILL.md",
+      "description": "Information architecture — page hierarchy, content siloing, internal linking, schema markup, URL patterns"
     }
   ],
   "agents": [
