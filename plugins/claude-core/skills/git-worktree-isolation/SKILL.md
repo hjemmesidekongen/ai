@@ -19,6 +19,10 @@ triggers:
   - "experimental branch"
   - "risky refactor branch"
   - "parallel feature branch"
+  - "try something risky"
+  - "safe experiment"
+  - "disposable branch"
+  - "test without stashing"
 reads:
   - ".gitignore"
   - "package.json|Gemfile|requirements.txt|go.mod (optional)"

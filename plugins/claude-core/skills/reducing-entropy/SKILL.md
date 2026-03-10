@@ -1,10 +1,11 @@
 ---
 name: reducing-entropy
 description: >
-  Minimize total codebase size by biasing toward deletion. Measures success
-  by final code amount, not effort expended. Use when reducing lines of code,
-  cleaning up plugins, removing dead code, shrinking the codebase, or evaluating
-  whether a change reduces or increases total code. Manual activation only.
+  Delete dead code, remove unused files, and shrink the codebase. Applies a
+  deletion-first mindset: measure success by how much code remains, not effort
+  spent. Use when cleaning up after a feature, removing unused skills or plugins,
+  simplifying over-engineered code, auditing for dead imports or unreachable paths,
+  or deciding whether a refactor actually reduces complexity. Manual activation only.
 user_invocable: true
 interactive: true
 depends_on: []
@@ -12,7 +13,11 @@ triggers:
   - "reduce code"
   - "cleanup"
   - "delete unused"
-  - "minimize codebase"
+  - "remove dead code"
+  - "simplify"
+  - "prune unused"
+  - "shrink codebase"
+  - "too much code"
 reads: []
 writes: []
 checkpoint:

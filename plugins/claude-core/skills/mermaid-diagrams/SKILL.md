@@ -2,9 +2,8 @@
 name: mermaid-diagrams
 description: |
   Create software diagrams using Mermaid syntax. Use when generating class diagrams,
-  sequence diagrams, flowcharts, ERDs, C4 architecture diagrams, state diagrams,
-  git graphs, or gantt charts. Triggers: "diagram", "visualize", "model", "map out",
-  "show the flow", architecture documentation, database design, code structure.
+  sequence diagrams, flowcharts, ERDs, state diagrams, git graphs, or gantt charts.
+  For C4 architecture diagrams specifically, use c4-architecture instead.
 triggers:
   - diagram
   - visualize
@@ -13,8 +12,9 @@ triggers:
   - sequence diagram
   - class diagram
   - ERD
-  - C4
-  - architecture diagram
+  - state diagram
+  - gantt chart
+  - git graph
 ---
 
 # Mermaid Diagramming

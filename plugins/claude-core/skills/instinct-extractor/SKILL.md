@@ -17,6 +17,9 @@ triggers:
   - "process observations"
   - "update instinct confidence"
   - "pattern extraction"
+  - "learn from past sessions"
+  - "behavioral patterns"
+  - "what did I keep doing"
 reads:
   - ".ai/instincts/observations.jsonl"
   - ".ai/instincts/instincts.yml"

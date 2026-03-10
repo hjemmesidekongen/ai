@@ -1,10 +1,12 @@
 ---
 name: c4-architecture
 description: >
-  Generate architecture documentation using C4 model Mermaid diagrams. Use when
-  creating architecture diagrams, documenting system structure, visualizing
-  software architecture, or generating context/container/component/deployment
-  diagrams. Triggers include "architecture diagram", "C4 diagram", "system context".
+  Generate C4 model architecture documentation with Mermaid diagrams at four
+  levels: system context, container, component, and deployment. Use when
+  documenting how systems interact at different abstraction levels, creating
+  stakeholder-appropriate architecture views, or mapping deployment topology.
+  For general-purpose diagrams (flowcharts, sequence, ERD, class), use
+  mermaid-diagrams instead.
 user_invocable: true
 interactive: true
 depends_on: []

@@ -16,6 +16,10 @@ triggers:
   - "task dependencies"
   - "parallel execution waves"
   - "file-ownership conflicts"
+  - "break down work"
+  - "organize tasks"
+  - "dependency order"
+  - "what can run in parallel"
 reads: []
 writes:
   - ".ai/plans/{name}/plan.yml"
