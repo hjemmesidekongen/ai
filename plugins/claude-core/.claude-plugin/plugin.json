@@ -1,11 +1,20 @@
 {
   "name": "claude-core",
   "version": "0.3.0",
-  "description": "Foundation plugin — tracing, memory governance, CLAUDE.md protection, planning, and orchestration. Required by all other plugins.",
-  "author": { "name": "mvn" },
+  "description": "Foundation plugin \u2014 tracing, memory governance, CLAUDE.md protection, planning, and orchestration. Required by all other plugins.",
+  "author": {
+    "name": "mvn"
+  },
   "repository": "https://github.com/mvn/claude-local-workspace",
   "license": "MIT",
-  "keywords": ["core", "foundation", "tracing", "memory", "planning", "orchestration"],
+  "keywords": [
+    "core",
+    "foundation",
+    "tracing",
+    "memory",
+    "planning",
+    "orchestration"
+  ],
   "hooks": {
     "PreToolUse": [
       {
@@ -172,6 +181,17 @@
             "type": "command",
             "command": "bash ${CLAUDE_PLUGIN_ROOT}/scripts/cache-clear.sh 2>/dev/null || true",
             "timeout": 5
+          }
+        ]
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash ${CLAUDE_PLUGIN_ROOT}/scripts/prompt-grade.sh 2>/dev/null || true",
+            "timeout": 30
           }
         ]
       }

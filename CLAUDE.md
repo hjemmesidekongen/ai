@@ -2,7 +2,7 @@
 
 ## What This Is
 Four plugins in a monorepo:
-- **claude-core** (`plugins/claude-core/`) — Foundation plugin: planning, brainstorm, tracing, memory governance, roadmap, doc governance, creator/reviewer tooling, autopilot, and validation agents (33 skills, 12 commands, 12 agents).
+- **claude-core** (`plugins/claude-core/`) — Foundation plugin: planning, brainstorm, tracing, memory governance, roadmap, doc governance, creator/reviewer tooling, autopilot, prompt optimization, and validation agents (35 skills, 13 commands, 12 agents).
 - **agency** (`plugins/agency/`) — Digital agency plugin: brand, design, content, dev, deploy pipelines (11 agents — security-reviewer ported to claude-core).
 - **dev-engine** (`plugins/dev-engine/`) — Generic development execution: task decomposition, agent dispatch, tech knowledge, disciplines, visual verification, completion gates, project mapping, orchestration (53 skills, 2 commands, 6 agents).
 - **taskflow** (`plugins/taskflow/`) — Task management and workplace integration: Jira ingestion, local task storage, contradiction detection, project profiles, QA handover, bulk ingestion, PR workflows (9 skills, 8 commands).
@@ -38,7 +38,7 @@ After `/compact` or when context seems incomplete, read `.ai/context/snapshot.ym
   prompts/                           # Prompt templates
   roadmap.yml                        # 124-item roadmap across 5 phases
 plugins/
-  claude-core/                       # Foundation plugin (33 skills, 10 commands, 12 agents)
+  claude-core/                       # Foundation plugin (34 skills, 10 commands, 12 agents)
     .claude-plugin/
       plugin.json                    # v0.3.0, hooks: PreToolUse, PostToolUse, PreCompact, SessionStart, Stop
       ecosystem.json                 # Component registry
@@ -49,7 +49,7 @@ plugins/
     commands/                        # trace-full, roadmap-add, roadmap-view, brainstorm-start,
                                      # brainstorm-decide, plan-create, plan-execute, plan-status, plan-resume,
                                      # autopilot-run, autopilot-cancel,
-                                     # full-review
+                                     # full-review, prompt-create
     skills/
       roadmap-capture/               # Auto-capture out-of-scope ideas
       brainstorm-session/            # Open-ended brainstorm
@@ -68,6 +68,7 @@ plugins/
       hook-reviewer/                 # Review hooks (read-only)
       skill-reviewer/                # Review skills (read-only)
       plugin-reviewer/               # Review plugins (read-only)
+      agent-reviewer/                # Review agents (read-only)
       verification-gate/             # 5-step proof protocol before claiming done
       git-worktree-isolation/        # Isolated branch work via git worktrees
       root-cause-debugging/          # 4-phase investigation before any fix
@@ -84,6 +85,7 @@ plugins/
       session-handoff/               # Chained session handoffs with staleness classification
       agent-teams/                   # Preset team compositions for parallel agent dispatch
       auto-doc/                        # Automated documentation updates (complements doc-checkpoint)
+      prompt-optimizer/              # Sharpen vague prompts using proven frameworks (auto + builder)
     scripts/                         # session-recovery, trace-light, check-wave-complete, check-trace-written,
                                      # doc-stale-check, port-dedup-check, cache-clear, verification-gate-stop,
                                      # observation-recorder, scope-guard, tdd-gate, plan-gate, compact-gate-pre/post,

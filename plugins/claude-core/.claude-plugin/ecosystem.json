@@ -11,7 +11,8 @@
     "plan-resume",
     "full-review",
     "autopilot-run",
-    "autopilot-cancel"
+    "autopilot-cancel",
+    "prompt-create"
   ],
   "skills": [
     "roadmap-capture",
@@ -29,6 +30,7 @@
     "hook-reviewer",
     "skill-reviewer",
     "plugin-reviewer",
+    "agent-reviewer",
     "mcp-creator",
     "plugin-settings",
     "verification-gate",
@@ -51,7 +53,8 @@
     "confluence-basics",
     "bitbucket-basics",
     "slack-basics",
-    "outlook-basics"
+    "outlook-basics",
+    "prompt-optimizer"
   ],
   "agents": [
     "plugin-validator",
