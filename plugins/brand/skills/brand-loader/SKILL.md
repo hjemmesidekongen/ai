@@ -36,6 +36,7 @@ _source:
   inspired_by: "agency brand-loader + Digital Brain L1/L2/L3 pattern"
   ported_date: "2026-03-10"
   iteration: 1
+  changes: "New skill for brand plugin — progressive disclosure brand loading"
 ---
 
 # Brand Loader

@@ -46,6 +46,7 @@ _source:
   inspired_by: "brainstorm-session iterative refinement"
   ported_date: "2026-03-10"
   iteration: 1
+  changes: "New skill for brand plugin — guided reinvention of existing brand"
 ---
 
 # Brand Evolve

@@ -50,6 +50,7 @@ _source:
   inspired_by: "brainstorm-session + Digital Brain identity module"
   ported_date: "2026-03-10"
   iteration: 1
+  changes: "New skill for brand plugin — research-grounded interactive sparring"
 ---
 
 # Brand Strategy

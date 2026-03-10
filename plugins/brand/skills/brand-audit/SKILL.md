@@ -46,6 +46,7 @@ _source:
   inspired_by: "Digital Brain identity module"
   ported_date: "2026-03-10"
   iteration: 1
+  changes: "New skill for brand plugin — extract brand from existing materials"
 ---
 
 # Brand Audit
