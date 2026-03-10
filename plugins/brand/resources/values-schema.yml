@@ -1,0 +1,38 @@
+# Brand Values Schema
+# Output location: .ai/brand/{name}/values.yml
+
+schema:
+  core_values:
+    type: array
+    required: true
+    description: "3-5 core values with actionable behaviors"
+    item_fields:
+      value: "Value name"
+      definition: "What this value means for the brand"
+      in_practice:
+        description: "Concrete behaviors that demonstrate this value (3-5 examples)"
+      violation_examples:
+        description: "What violating this value looks like (2-3 examples)"
+
+  beliefs:
+    type: array
+    required: true
+    description: "Contrarian or distinctive beliefs that shape the brand"
+    item_fields:
+      belief: "The belief statement"
+      implication: "How this belief affects decisions and content"
+
+  non_negotiables:
+    type: array
+    required: true
+    description: "Lines the brand will never cross"
+
+  decision_framework:
+    type: object
+    required: true
+    description: "How the brand makes tradeoff decisions"
+    fields:
+      priorities:
+        description: "Ordered list — when values conflict, which wins?"
+      tradeoffs:
+        description: "Explicit tradeoffs the brand accepts (e.g., 'clarity over cleverness')"

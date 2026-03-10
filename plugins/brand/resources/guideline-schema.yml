@@ -1,0 +1,67 @@
+# Brand Guideline Schema
+# Output location: .ai/brand/{name}/guideline.yml
+
+schema:
+  name:
+    type: string
+    required: true
+    description: "Brand name"
+
+  tagline:
+    type: string
+    required: true
+    description: "One-liner that captures the brand essence"
+
+  elevator_pitch:
+    type: string
+    required: true
+    description: "2-3 sentence brand description for external use"
+
+  positioning:
+    type: object
+    required: true
+    fields:
+      category:
+        description: "Market category the brand operates in"
+      target_audience:
+        description: "Primary audience segment"
+      differentiator:
+        description: "What makes this brand different from competitors"
+      promise:
+        description: "The core value proposition"
+
+  audience:
+    type: array
+    required: true
+    description: "Audience segments with pain points and motivations"
+    item_fields:
+      segment: "Segment name"
+      description: "Who they are"
+      pain_points: "What frustrates them"
+      motivations: "What drives their decisions"
+      channels: "Where to reach them"
+
+  content_pillars:
+    type: array
+    required: true
+    description: "Content themes with percentage allocation"
+    item_fields:
+      name: "Pillar name"
+      description: "What this pillar covers"
+      percentage: "Share of content (must total 100)"
+      example_topics: "3-5 example topic ideas"
+
+  competitive_positioning:
+    type: object
+    required: false
+    description: "2-axis competitive matrix"
+    fields:
+      axis_x: "First differentiating dimension"
+      axis_y: "Second differentiating dimension"
+      competitors: "Array of {name, x_score, y_score}"
+      brand_position: "{x_score, y_score} — where this brand sits"
+
+  origin_story:
+    type: string
+    required: false
+    description: "Brief founding narrative or brand backstory"

@@ -1,0 +1,69 @@
+# Brand Voice Schema
+# Output location: .ai/brand/{name}/voice.yml
+
+schema:
+  personality_archetype:
+    type: string
+    required: true
+    description: "Primary archetype — Expert, Friend, Innovator, Guide, or Motivator"
+
+  voice_attributes:
+    type: object
+    required: true
+    description: "1-10 scales for voice dimensions"
+    fields:
+      formal_casual:
+        range: "1 (formal) — 10 (casual)"
+      serious_playful:
+        range: "1 (serious) — 10 (playful)"
+      technical_simple:
+        range: "1 (technical) — 10 (simple)"
+      reserved_expressive:
+        range: "1 (reserved) — 10 (expressive)"
+      humble_confident:
+        range: "1 (humble) — 10 (confident)"
+
+  writing_patterns:
+    type: object
+    required: true
+    fields:
+      sentence_level:
+        description: "Preferred sentence structure, length, rhythm"
+      paragraph_level:
+        description: "How ideas are organized within paragraphs"
+      hook_patterns:
+        description: "How content opens — questions, statements, stories"
+
+  vocabulary:
+    type: object
+    required: true
+    fields:
+      signature_phrases:
+        description: "Phrases that sound like this brand (3-5)"
+      power_words:
+        description: "Words to reach for (10-15)"
+      never_use:
+        description: "Words and phrases that violate the voice (10-15)"
+
+  platform_adaptations:
+    type: object
+    required: false
+    description: "Voice adjustments by channel"
+    fields:
+      social:
+        description: "Tone shifts for social media"
+      documentation:
+        description: "Tone shifts for docs and help content"
+      marketing:
+        description: "Tone shifts for marketing and sales"
+      internal:
+        description: "Tone shifts for internal communication"
+
+  anti_patterns:
+    type: array
+    required: true
+    description: "Specific examples of what this brand NEVER sounds like"
+    item_fields:
+      pattern: "The anti-pattern"
+      why: "Why it violates the brand"
+      instead: "What to do instead"

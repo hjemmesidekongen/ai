@@ -18,6 +18,11 @@
       "name": "taskflow",
       "source": "./taskflow",
       "description": "Task management and workplace integration — Jira ingestion, local task storage, contradiction detection, project profiles, and QA handover."
+    },
+    {
+      "name": "brand",
+      "source": "./brand",
+      "description": "Brand strategy toolkit — voice, values, positioning, audience, and content pillars. Strategy only, no visual design."
     }
   ]
 }
