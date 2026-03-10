@@ -2,7 +2,7 @@
 name: dev-engine-orchestrator
 description: >
   Top-level pipeline orchestration for dev-engine. Chains project-mapper,
-  taskflow-bridge, context-assembler, task-decomposer, tier-assignment,
+  taskflow-bridge, task-decomposer, context-assembler, tier-assignment,
   agent-dispatcher, and completion-gate in sequence with skip conditions,
   dry-run mode, and per-stage error handling.
 user_invocable: false
@@ -16,7 +16,7 @@ triggers:
   - "execute task"
 reads:
   - ".ai/tasks/active.yml"
-  - ".ai/projects/<name>/scan-cache.yml"
+  - ".ai/project-map.yml"
 writes:
   - ".ai/tasks/pipeline-state.yml"
 checkpoint:
@@ -51,8 +51,8 @@ Runs the full dev-engine pipeline from task intake to verified completion. Each 
 |-------|-------|---------------|
 | 1 | project-mapper | Scan cache exists and is < 24 hours old |
 | 2 | taskflow-bridge | Always runs (fast detection; standalone if no taskflow) |
-| 3 | context-assembler | Assembled context exists for the same task-id |
-| 4 | task-decomposer | Decomposition already exists for this task revision |
+| 3 | task-decomposer | Decomposition already exists for this task revision |
+| 4 | context-assembler | Assembled context exists for the same task-id |
 | 5 | tier-assignment | Tier assignments exist for current decomposition |
 | 6 | agent-dispatcher | All subtasks already dispatched and reported |
 | 7 | completion-gate | Never skipped — must always run |

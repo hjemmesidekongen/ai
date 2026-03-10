@@ -165,8 +165,9 @@ If a Detox or Maestro suite exists, run it fully. Do not skip — behavioral reg
 
 ```bash
 # Save the rollback point
-git rev-parse HEAD > /tmp/expo-upgrade-rollback-sha.txt
-# Or just note the branch: main is at commit abc1234
+ROLLBACK_FILE=$(mktemp "${TMPDIR:-/tmp}/expo-upgrade-rollback-sha.XXXXXX")
+git rev-parse HEAD > "$ROLLBACK_FILE"
+echo "Rollback SHA saved to $ROLLBACK_FILE"
 ```
 
 ### Mid-Upgrade Rollback

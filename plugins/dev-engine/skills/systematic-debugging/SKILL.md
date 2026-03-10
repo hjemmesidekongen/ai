@@ -69,3 +69,5 @@ _source:
 - Reproduced but cause unclear → binary search with `git bisect` or subsystem isolation
 - Root cause found but fix is high-risk → flag for review, ship behind feature flag
 - Recurring bug class → promote to architectural fix (error boundary, retry layer, schema validation)
+
+See references/process.md for the full 4-phase investigation protocol and evidence templates.

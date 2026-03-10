@@ -75,3 +75,5 @@ Rule of thumb: if your test breaks when you refactor internals but behavior is u
 When a function has a contract expressible as invariants (sorting, encoding/decoding, serialization roundtrips), add property tests alongside example tests. Use `fast-check` for JS/TS. Write the property first (red), implement until it holds (green), refactor.
 
 Properties that always pay off: roundtrip (`decode(encode(x)) === x`), idempotency (`f(f(x)) === f(x)`), commutativity where expected, "no crash" on arbitrary input.
+
+See references/process.md for the step-by-step TDD cycle with cycle gates and anti-patterns.

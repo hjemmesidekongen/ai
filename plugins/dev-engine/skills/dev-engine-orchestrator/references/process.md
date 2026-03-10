@@ -16,19 +16,19 @@
 - **Skip condition**: Never skipped (fast detection, always runs)
 - **On failure**: Fall back to standalone mode (no task criteria for gate)
 
-### Stage 3: context-assembler
-- **Purpose**: Build bounded context packages for each agent
-- **Input**: Project map + decomposed subtasks + knowledge skills
-- **Output**: `.ai/tasks/context/<task-id>-<subtask-id>.yml`
-- **Skip condition**: Context files exist for same task revision
-- **On failure**: Halt pipeline — agents cannot dispatch without context
-
-### Stage 4: task-decomposer
+### Stage 3: task-decomposer
 - **Purpose**: Break task into subtasks with complexity and file scope
 - **Input**: Task description (from bridge context or user input)
 - **Output**: `.ai/tasks/decomposed/<task-id>.yml`
 - **Skip condition**: Decomposition exists for current task revision
 - **On failure**: Halt pipeline — cannot proceed without decomposition
+
+### Stage 4: context-assembler
+- **Purpose**: Build bounded context packages for each agent
+- **Input**: Project map + decomposed subtasks + knowledge skills
+- **Output**: `.ai/tasks/context/<task-id>-<subtask-id>.yml`
+- **Skip condition**: Context files exist for same task revision
+- **On failure**: Halt pipeline — agents cannot dispatch without context
 
 ### Stage 5: tier-assignment
 - **Purpose**: Assign model tiers (junior/senior/principal) to subtasks
@@ -94,8 +94,8 @@ task: "Add dark mode toggle"
 stages:
   project-mapper: { action: "skip", reason: "scan cache fresh (2h old)" }
   taskflow-bridge: { action: "run", reason: "always runs" }
-  context-assembler: { action: "run", reason: "no cached context for this task" }
   task-decomposer: { action: "run", reason: "new task" }
+  context-assembler: { action: "run", reason: "no cached context for this task" }
   tier-assignment: { action: "run", reason: "depends on decomposition" }
   agent-dispatcher: { action: "skip (dry-run)", reason: "dry-run mode" }
   completion-gate: { action: "skip (dry-run)", reason: "dry-run mode" }

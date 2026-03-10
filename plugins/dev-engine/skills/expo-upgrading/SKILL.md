@@ -77,5 +77,5 @@ Pre-upgrade: note the current git SHA. Mid-upgrade: `git checkout main && git br
 
 ## Prebuild and Native Directory Management
 
-Managed workflow: never edit `ios/` or `android/` directly. All customization via config plugins — this keeps the project prebuild-safe across upgrades. If a change can't be expressed as a config plugin, write a custom one rather than dropping to bare workflow.
+Managed workflow: never edit `ios/` or `android/` directly. All customization via config plugins — this keeps the project prebuild-safe across upgrades. Write custom config plugins rather than dropping to bare workflow.
 See `references/process.md` for the full upgrade command sequence, version-specific notes, common pitfalls, and anti-patterns.

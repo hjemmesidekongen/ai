@@ -280,8 +280,8 @@
       "description": "Backend development agent — NestJS, Prisma, Node.js, APIs"
     },
     {
-      "name": "security-auditor",
-      "path": "agents/security-auditor.md",
+      "name": "app-security-auditor",
+      "path": "agents/app-security-auditor.md",
       "description": "Security review agent — OWASP checks, dependency audit, auth review"
     },
     {

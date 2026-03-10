@@ -73,9 +73,6 @@ Keep a `tokens.ts` exporting spacing, color, typography, radius. No CSS variable
 
 ## Lists
 
-FlashList (`@shopify/flash-list`) over FlatList for any unbounded or large list. Set `estimatedItemSize` accurately — wrong estimates degrade performance.
-## Modals and Bottom Sheets
-
-`@gorhom/bottom-sheet` over `Modal` for bottom sheets — integrates with gesture handler and Reanimated. `Modal` is fine for simple confirmations. Always wrap form modals in `KeyboardAvoidingView`.
+FlashList (`@shopify/flash-list`) over FlatList for any unbounded or large list. Set `estimatedItemSize` accurately — wrong estimates degrade performance. For modals, use `@gorhom/bottom-sheet` over `Modal` for bottom sheets — integrates with gesture handler and Reanimated. `Modal` is fine for simple confirmations. Always wrap form modals in `KeyboardAvoidingView`.
 
 See `references/process.md` for platform split patterns, navigation setup, gesture composition, animation recipes, list configuration, and anti-patterns.

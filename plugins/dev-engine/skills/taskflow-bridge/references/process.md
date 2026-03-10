@@ -89,16 +89,6 @@ When `mode: integrated_no_task`:
 - Log a warning: "taskflow installed but no active task — running without task context"
 - Completion gate uses agent-provided checks only (same as standalone)
 
-## Status Update Protocol
-
-After completion gate passes in integrated mode:
-1. Read `.ai/tasks/active.yml`
-2. Set `status: done` and `completed_at: <timestamp>`
-3. If taskflow has a `next_task` field, do not clear active.yml
-4. If no next task, set `status: idle` and clear task fields
-
-Never update active.yml in standalone or integrated_no_task modes.
-
 ## Error Handling
 
 - If `active.yml` exists but is malformed: log error, fall back to standalone mode

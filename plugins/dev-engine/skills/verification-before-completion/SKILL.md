@@ -77,3 +77,4 @@ Always run `npx tsc --noEmit` separately from the build — some build tools (Vi
 Automated is sufficient when: pure logic, data transformations, API endpoints with test coverage, config changes with type checking.
 
 Manual is required when: visual UI changes (layout, animations, responsive), user flows spanning multiple pages, third-party integration behavior (OAuth, payment, email), performance characteristics (load time, bundle size), accessibility (screen reader testing, keyboard navigation).
+See references/process.md for detailed checklists, command references, and anti-patterns.

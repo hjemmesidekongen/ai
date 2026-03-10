@@ -66,12 +66,4 @@ When taskflow is active, each acceptance criterion becomes a typed completion ch
 | Output file | `verify: file exists at <path>` |
 | No regressions | `verify: existing tests green` |
 
-## Task Status Updates
-
-After the completion gate passes, bridge writes a status update back:
-
-- Sets `status: done` in `.ai/tasks/active.yml`
-- Records `completed_at` timestamp
-- Clears `active.yml` if no next task is queued
-
 See `references/process.md` for detection logic, schema for bridge-context.yml, criteria mapping rules, and handling of partial task context.

@@ -3,7 +3,9 @@ name: test-engineer
 description: >
   Test specialist that writes unit tests, integration tests, and E2E tests.
   Focuses on edge cases, error paths, and boundary conditions across any framework.
+  Use when writing standalone tests, filling coverage gaps, or building test infrastructure.
 model_tier: sonnet
+model: inherit
 color: "magenta"
 tools:
   - Read

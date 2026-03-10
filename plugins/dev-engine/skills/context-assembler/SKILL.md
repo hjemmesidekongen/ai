@@ -14,7 +14,7 @@ triggers:
   - "prepare dispatch"
 reads:
   - ".ai/tasks/decomposed/<task-id>.yml"
-  - ".ai/projects/<name>/project-map.yml"
+  - ".ai/project-map.yml"
 writes:
   - ".ai/tasks/context/<task-id>-<subtask-id>.yml"
 checkpoint:

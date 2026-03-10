@@ -3,7 +3,9 @@ name: backend-dev
 description: >
   Backend development agent for NestJS, Prisma, Node.js, Express, APIs, and database work.
   Implements server-side features, API endpoints, and data layer logic.
+  Use when implementing server-side features, APIs, database schemas, or NestJS/Prisma/Node work.
 model_tier: sonnet
+model: inherit
 color: "green"
 tools:
   - Read

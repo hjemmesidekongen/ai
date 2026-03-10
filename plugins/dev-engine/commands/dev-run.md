@@ -1,6 +1,6 @@
 ---
 name: dev-run
-description: "Run the full dev-engine pipeline for a task"
+description: "Run the full dev-engine pipeline from task intake to verified completion"
 argument-hint: "TASK_DESCRIPTION [--dry-run]"
 ---
 

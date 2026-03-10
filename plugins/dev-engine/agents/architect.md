@@ -3,7 +3,9 @@ name: architect
 description: >
   Architecture advisor that reviews task decompositions, evaluates design decisions,
   identifies dependency risks, and suggests module boundaries. Read-only — recommends, never implements.
+  Use when reviewing architecture decisions, evaluating dependencies, or assessing design trade-offs.
 model_tier: opus
+model: inherit
 color: "cyan"
 tools:
   - Read

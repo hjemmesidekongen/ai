@@ -71,3 +71,5 @@ Place boundaries at **feature boundaries**, not per-component or root-only:
 ## Error Monitoring Integration
 
 Configure Sentry (or equivalent) with: environment tags, release version, user context (anonymized), breadcrumbs for last 10 actions. Filter out: `isOperational` errors that are expected (4xx from valid user actions). Alert on: unhandled rejections, error rate spikes, new error types not seen before.
+
+See references/process.md for custom error class templates and structured logging field definitions.

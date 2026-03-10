@@ -220,6 +220,7 @@ Runs before the commit is created. Use for: lint, type-check, secret scanning, t
 
 ```bash
 #!/bin/sh
+set -euo pipefail
 npx lint-staged
 ```
 
@@ -230,6 +231,7 @@ Validates the commit message format. Useful for enforcing conventional commits o
 
 ```bash
 #!/bin/sh
+set -euo pipefail
 commit_regex='^(feat|fix|chore|docs|refactor|test|style)(\(.+\))?: .{1,72}'
 if ! grep -qE "$commit_regex" "$1"; then
   echo "Commit message does not match conventional format."

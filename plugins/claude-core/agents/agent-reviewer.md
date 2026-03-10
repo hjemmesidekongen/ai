@@ -64,7 +64,8 @@ Review agent `.md` files for frontmatter compliance, description effectiveness, 
 |-------|----------|-----------|
 | `name` | Yes | Kebab-case, 3–50 chars, no generic names (helper, assistant, tool, agent) |
 | `description` | Yes | 50–5000 chars, contains `<example>` block(s) |
-| `model` | Yes | One of: `inherit`, `haiku`, `sonnet`, `opus` |
+| `model_tier` | Yes | One of: `junior`, `senior`, `principal`, `opus` — defines the agent's capability tier |
+| `model` | Yes | One of: `inherit`, `haiku`, `sonnet`, `opus` — runtime model selector |
 | `tools` | Yes | Array present (even if empty); no unknown tool names |
 | `color` | No | If present: blue, cyan, green, yellow, magenta, or red |
 
