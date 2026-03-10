@@ -8,12 +8,15 @@ description: >
 user_invocable: true
 interactive: false
 model_tier: senior
-depends_on: []
+depends_on:
+  - "claude-core:confluence-basics"
 triggers:
   - "check docs"
   - "find confluence"
   - "related documentation"
   - "confluence lookup"
+  - "wiki search"
+  - "look up docs"
 reads:
   - ".ai/tasks/<KEY>.yml"
 writes:
@@ -67,5 +70,10 @@ the task-awareness layer: keyword extraction, scoring, and context writing.
 When Confluence MCP is not connected, the skill writes `confluence_docs: []` to the
 task file and logs a warning. No stub data is fabricated — missing MCP is not an error,
 just an empty result. The task remains processable by dev-engine.
+
+## Never
+
+- Never fabricate Confluence results — empty array is the correct response when nothing matches
+- Never return stale cached results without noting staleness
 
 Output: `Found N Confluence page(s) for <KEY>. Linked to task context.`

@@ -12,6 +12,8 @@ triggers:
   - "azure devops"
   - "check build"
   - "devops pipeline"
+  - "ci status"
+  - "build status"
 depends_on: []
 reads:
   - ".ai/tasks/<KEY>.yml"
@@ -68,5 +70,10 @@ Activated when the user says "run pipeline", "trigger build", or similar. Confir
 and pipeline name before triggering. Report run ID immediately after dispatch.
 
 ## Output format
+
+## Never
+
+- Never guess or infer pipeline status — if MCP is down, stop and say so
+- Never trigger a pipeline run without confirming branch and pipeline name first
 
 See `references/process.md` for output schema, trigger parameters, and anti-patterns.

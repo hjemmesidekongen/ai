@@ -14,6 +14,8 @@ triggers:
   - "qa handover"
   - "generate handover"
   - "qa notes"
+  - "task done"
+  - "complete task"
 reads:
   - ".ai/tasks/<KEY>.yml"
   - "rules.yml"
@@ -67,10 +69,11 @@ or reviewers.
 | Regression risks | Areas that might break due to these changes |
 | Screenshots | Required if `qa.require_screenshots: true` and UI files changed |
 
-## Format modes
+Format modes: jira-comment (wiki markup), github-pr (GFM with checkboxes), markdown (default). See `references/process.md` for templates.
 
-- **jira-comment**: Jira wiki markup with `{panel}` blocks and `||heading||` tables
-- **github-pr**: GitHub-flavored markdown with checkbox task lists
-- **markdown**: Plain markdown (default)
+## Never
+
+- Never fabricate test scenarios not grounded in acceptance criteria or git diff
+- Never omit regression risks — if uncertain, state "low-confidence" rather than skipping
 
 Output: `QA handover generated: .ai/tasks/<KEY>-handover.md (<format>)`

@@ -15,6 +15,8 @@ triggers:
   - "ingest ticket"
   - "import jira"
   - "task ingest"
+  - "jira ticket"
+  - "fetch ticket"
 reads:
   - "plugins/taskflow/resources/test-data/sample-ticket.yml"
 writes:
@@ -62,5 +64,11 @@ or bulk mode. Runs contradiction-detection automatically after ingestion.
 When Atlassian MCP is not connected, the skill reads `resources/test-data/sample-ticket.yml`
 and processes it through the same normalization pipeline. Useful for testing the ingestion
 flow without a live Jira connection. Output goes to `.ai/tasks/` as normal.
+
+## Never
+
+- Never fabricate ticket data when MCP is unavailable — use dry-run with sample data only
+- Never skip contradiction-detection after ingestion
+- Never overwrite an existing task file without merging new data
 
 Output: `Ingested N ticket(s). Contradictions: M found across N tickets.`

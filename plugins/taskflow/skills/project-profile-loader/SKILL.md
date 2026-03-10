@@ -13,6 +13,7 @@ triggers:
   - "load profile"
   - "project profile"
   - "load rules"
+  - "project config"
 reads:
   - "rules.yml"
   - ".ai/rules.yml"
@@ -49,30 +50,19 @@ completion gates, jira-ingestion).
 3. **Apply defaults** — fill missing fields with sensible defaults
 4. **Expose config** — return the profile object for use by other skills
 
-## Config file schema (summary)
+## Config schema
 
-```yaml
-project_name: "my-project"
-context: "work"                    # work | personal
-git:
-  branch_prefix: "feature/"
-  commit_style: "conventional"     # conventional | imperative | freeform
-qa:
-  format: "jira-comment"           # jira-comment | github-pr | markdown
-  require_screenshots: true
-dev:
-  test_command: "npm test"
-  build_command: "npm run build"
-  lint_command: "npm run lint"
-mcp_servers:
-  - "atlassian"
-  - "github"
-```
+Keys: `project_name`, `context`, `git` (branch_prefix, commit_style), `qa` (format, require_screenshots), `dev` (test/build/lint commands), `mcp_servers`. Full schema in `references/process.md`.
 
 ## Defaults
 
 When no config file exists, the profile uses: context `personal`, commit style
 `imperative`, QA format `markdown`, no MCP servers, no dev commands. This
 allows all downstream skills to function without requiring explicit setup.
+
+## Never
+
+- Never silently use defaults when a config file exists but has parse errors — report the error
+- Never override explicit user values with defaults
 
 Output: `Profile loaded: <project_name> (context: <context>, QA: <format>)`

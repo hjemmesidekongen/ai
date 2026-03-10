@@ -8,12 +8,15 @@ description: >
 user_invocable: true
 interactive: false
 model_tier: senior
-depends_on: []
+depends_on:
+  - "claude-core:bitbucket-basics"
 triggers:
   - "create pr"
   - "pr workflow"
   - "submit for review"
   - "bitbucket pr"
+  - "open pr"
+  - "pull request"
 reads:
   - ".ai/tasks/<KEY>.yml"
 writes:
@@ -67,3 +70,9 @@ claude-core for branch naming and API interaction.
 - **Bitbucket MCP unavailable**: output the PR description as formatted text for manual submission
 - **Jira MCP unavailable**: skip comment step, warn user to link manually
 - **No task file**: abort with actionable error — do not proceed with empty description
+
+## Never
+
+- Never create a PR without a task file — empty descriptions waste reviewer time
+- Never force-push or modify existing PRs without user confirmation
+- Never skip the Jira link step silently — warn if MCP is unavailable

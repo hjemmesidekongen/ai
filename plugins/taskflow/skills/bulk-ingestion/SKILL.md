@@ -59,8 +59,7 @@ Requires Atlassian MCP. If not configured:
 
 ## Steps
 
-1. **Parse input** — extract board ID, filter ID, or project key from the supplied URL
-   (see `references/process.md` for URL patterns)
+1. **Parse input** — extract board ID, filter ID, or project key from the URL (see `references/process.md`)
 2. **Build JQL** — construct query from input type (see process.md)
 3. **Check MCP** — verify Atlassian MCP responds before starting batch
 4. **Fetch ticket list** — get all matching keys from JQL; report count before proceeding
@@ -70,8 +69,12 @@ Requires Atlassian MCP. If not configured:
 8. **Write summary** — write `.ai/tasks/bulk-ingestion-summary.yml` with counts and errors
 9. **Report** — ingested N, skipped M (already local), errors K, contradictions found
 
-## Progress & Errors
+Emit progress every 10 tickets. If MCP drops mid-batch, report last completed key.
 
-Emit progress every 10 tickets: `Progress: 10/47 ingested (2 errors)`. Individual failures don't stop the batch — log and continue. If MCP drops mid-batch, report last completed key and surface resume instruction.
+## Never
+
+- Never stop the batch on individual ticket failure — log and continue
+- Never re-ingest tickets that already have a current local task file
+- Never proceed without MCP confirmation — batch mode has no dry-run fallback
 
 See `references/process.md` for full details.

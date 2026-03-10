@@ -13,6 +13,7 @@ triggers:
   - "check contradictions"
   - "contradiction detection"
   - "requirement conflicts"
+  - "analyze requirements"
 reads:
   - ".ai/tasks/<KEY>.yml"
 writes:
@@ -66,13 +67,12 @@ contradict, modify, or extend the original requirements.
 | warning | Modification that changes acceptance criteria | "Empty search shows recent users" vs "shows nothing" |
 | info | Additive extension, no conflict with existing spec | "Also add search by username" |
 
-## Finding schema
+Finding schema: `severity`, `original`, `contradicting`, `resolution` — see `references/process.md` §5.
 
-```yaml
-- severity: "warning"
-  original: "Text from description or acceptance criteria"
-  contradicting: "Text from comment that conflicts"
-  resolution: "Suggested resolution for the team"
-```
+## Never
+
+- Never assign blocker severity to additive-only comments — those are info
+- Never fabricate findings when no contradictions exist — empty array is correct
+- Later comments can resolve earlier contradictions — see `references/process.md` §6
 
 Output: `Contradiction analysis complete. Findings: N (blockers: X, warnings: Y, info: Z)`

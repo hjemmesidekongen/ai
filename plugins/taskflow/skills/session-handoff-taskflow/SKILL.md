@@ -8,7 +8,7 @@ user_invocable: true
 interactive: false
 model_tier: senior
 depends_on:
-  - "session-handoff"
+  - "claude-core:session-handoff"
 triggers:
   - "handoff"
   - "save progress"
@@ -70,5 +70,10 @@ blockers, and open questions. Written to `.ai/tasks/handoff.yml` for quick resum
 ## Proactive suggestion
 
 Suggest a handoff when 5+ task files were edited or a subtask was completed.
+
+## Never
+
+- Never write placeholders (TODO, TBD, `<placeholder>`) in handoff.yml
+- Never leave open_questions empty if blockers exist — they imply questions
 
 Full process detail: `references/process.md`
