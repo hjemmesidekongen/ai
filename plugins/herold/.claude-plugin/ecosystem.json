@@ -1,0 +1,95 @@
+{
+  "plugin": "herold",
+  "version": "0.1.0",
+  "skills": [
+    {
+      "name": "jira-ingestion",
+      "path": "skills/jira-ingestion/SKILL.md",
+      "description": "Fetch Jira tickets via Atlassian MCP, normalize to local YAML, download attachments, auto-detect contradictions"
+    },
+    {
+      "name": "contradiction-detection",
+      "path": "skills/contradiction-detection/SKILL.md",
+      "description": "LLM analysis of ticket description vs comments to detect requirement contradictions"
+    },
+    {
+      "name": "project-profile-loader",
+      "path": "skills/project-profile-loader/SKILL.md",
+      "description": "Load project-level rules.yml for git conventions, QA format, dev commands, and MCP config"
+    },
+    {
+      "name": "qa-handover-generator",
+      "path": "skills/qa-handover-generator/SKILL.md",
+      "description": "Generate structured QA handover notes with test scenarios, regression risks, and screenshots"
+    },
+    {
+      "name": "confluence-lookup",
+      "path": "skills/confluence-lookup/SKILL.md",
+      "description": "Search Confluence for pages related to active task with relevance scoring"
+    },
+    {
+      "name": "bitbucket-pr-workflow",
+      "path": "skills/bitbucket-pr-workflow/SKILL.md",
+      "description": "Create PRs from active task with structured description, pipeline checks, and Jira linking"
+    },
+    {
+      "name": "azure-devops-pipeline",
+      "path": "skills/azure-devops-pipeline/SKILL.md",
+      "description": "Query Azure DevOps pipeline status, trigger runs, and parse test results"
+    },
+    {
+      "name": "bulk-ingestion",
+      "path": "skills/bulk-ingestion/SKILL.md",
+      "description": "Batch ingest tickets from Jira board or filter URL with contradiction detection"
+    },
+    {
+      "name": "session-handoff-herold",
+      "path": "skills/session-handoff-herold/SKILL.md",
+      "description": "Save active task context for cross-session continuity"
+    }
+  ],
+  "agents": [],
+  "commands": [
+    {
+      "name": "task-ingest",
+      "path": "commands/task-ingest.md",
+      "description": "Ingest Jira tickets into local task storage"
+    },
+    {
+      "name": "task-list",
+      "path": "commands/task-list.md",
+      "description": "List locally stored tasks with status and contradiction count"
+    },
+    {
+      "name": "task-start",
+      "path": "commands/task-start.md",
+      "description": "Set a task as active and load its context"
+    },
+    {
+      "name": "task-done",
+      "path": "commands/task-done.md",
+      "description": "Complete the active task with QA handover"
+    },
+    {
+      "name": "task-status",
+      "path": "commands/task-status.md",
+      "description": "Show current active task details and progress"
+    },
+    {
+      "name": "task-ingest-bulk",
+      "path": "commands/task-ingest-bulk.md",
+      "description": "Batch ingest tickets from a Jira board or filter URL"
+    },
+    {
+      "name": "task-pr",
+      "path": "commands/task-pr.md",
+      "description": "Create a PR from the active task context"
+    },
+    {
+      "name": "task-docs",
+      "path": "commands/task-docs.md",
+      "description": "Search related Confluence docs for the active task"
+    }
+  ],
+  "hooks": []
+}

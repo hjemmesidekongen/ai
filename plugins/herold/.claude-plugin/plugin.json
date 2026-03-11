@@ -1,0 +1,10 @@
+{
+  "name": "herold",
+  "version": "0.1.0",
+  "description": "The Herald \u2014 task management and workplace integration. Jira, Azure DevOps, Confluence, PR workflows, and QA handover.",
+  "author": { "name": "mvn" },
+  "repository": "https://github.com/hjemmesidekongen/ai",
+  "license": "MIT",
+  "keywords": ["tasks", "jira", "project-management", "qa", "workflow"],
+  "dependencies": ["kronen"]
+}

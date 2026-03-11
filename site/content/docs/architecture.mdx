@@ -10,30 +10,30 @@ The hjemmesidekongen/ai methodology is implemented as three plugins with one fou
 ## Plugin Hierarchy
 
 ```
-claude-core          ← foundation, always installed
-├── dev-engine       ← development execution, depends on claude-core
-└── taskflow         ← task management, depends on claude-core
+kronen          ← foundation, always installed
+├── smedjen       ← development execution, depends on kronen
+└── herold         ← task management, depends on kronen
 ```
 
 **Rules:**
-- Every plugin depends on claude-core. Nothing else.
+- Every plugin depends on kronen. Nothing else.
 - Plugins never depend on each other directly - they communicate through shared data files.
-- Cross-plugin coordination happens through bridge skills (e.g., `taskflow-bridge` in dev-engine reads taskflow's `active.yml` but never calls taskflow commands).
+- Cross-plugin coordination happens through bridge skills (e.g., `taskflow-bridge` in smedjen reads herold's `active.yml` but never calls herold commands).
 
 ## Responsibility Boundaries
 
 | Layer | Owner | Responsibility |
 |-------|-------|---------------|
-| **Infrastructure** | claude-core | Hooks, tracing, state management, planning, verification, session continuity |
-| **MCP interaction** | claude-core | Raw API calls to Jira, Confluence, Bitbucket, Slack, Outlook |
-| **Task lifecycle** | taskflow | Ticket ingestion, contradiction detection, PR creation, QA handover |
-| **Code execution** | dev-engine | Task decomposition, agent dispatch, framework knowledge, quality gates |
+| **Infrastructure** | kronen | Hooks, tracing, state management, planning, verification, session continuity |
+| **MCP interaction** | kronen | Raw API calls to Jira, Confluence, Bitbucket, Slack, Outlook |
+| **Task lifecycle** | herold | Ticket ingestion, contradiction detection, PR creation, QA handover |
+| **Code execution** | smedjen | Task decomposition, agent dispatch, framework knowledge, quality gates |
 
 ## Data Flow
 
 ```
                     ┌───────────────────┐
-                    │    claude-core    │
+                    │    kronen    │
                     │                   │
                     │  .ai/context/     │  Session state, snapshots
                     │  .ai/plans/      │  Wave plans, verification
@@ -44,20 +44,20 @@ claude-core          ← foundation, always installed
               ┌───────────┘     └───────────┐
               ▼                             ▼
     ┌─────────────────┐          ┌─────────────────┐
-    │    taskflow      │          │   dev-engine     │
+    │    herold      │          │   smedjen     │
     │                  │          │                  │
     │  .ai/tasks/     │ ──read── │  .ai/project-    │
     │    <KEY>.yml    │          │    map.yml       │
-    │    active.yml   │◄─ read ──│  .ai/dev-engine/ │
+    │    active.yml   │◄─ read ──│  .ai/smedjen/ │
     │    handoff.yml  │          │    pipeline.yml  │
     └─────────────────┘          └──────────────────┘
 ```
 
-taskflow writes task files. dev-engine reads them (via `taskflow-bridge`). dev-engine writes its own state to `.ai/dev-engine/`. Neither plugin writes to the other's directories.
+herold writes task files. smedjen reads them (via `taskflow-bridge`). smedjen writes its own state to `.ai/smedjen/`. Neither plugin writes to the other's directories.
 
 ## Hooks Architecture
 
-Only claude-core defines hooks. Other plugins operate through skill and command invocation.
+Only kronen defines hooks. Other plugins operate through skill and command invocation.
 
 | Event | Hook Count | What They Do |
 |-------|-----------|-------------|
@@ -96,10 +96,10 @@ If two agents need the same file, the dispatcher serializes those tasks. Interfa
 
 All MCP-dependent features follow a two-layer pattern:
 
-1. **claude-core basics skill** - raw MCP interaction (e.g., `jira-basics` handles API calls, auth, pagination)
-2. **taskflow orchestration skill** - adds task awareness (e.g., `jira-ingestion` normalizes tickets, runs contradiction detection)
+1. **kronen basics skill** - raw MCP interaction (e.g., `jira-basics` handles API calls, auth, pagination)
+2. **herold orchestration skill** - adds task awareness (e.g., `jira-ingestion` normalizes tickets, runs contradiction detection)
 
-This means you can use Jira from claude-core directly for ad-hoc queries, or through taskflow for structured ticket workflows.
+This means you can use Jira from kronen directly for ad-hoc queries, or through herold for structured ticket workflows.
 
 Every MCP integration degrades gracefully:
 - If the MCP server isn't configured → clear error message
@@ -112,14 +112,14 @@ All state persists as YAML files in `.ai/`:
 
 | Directory | Owner | Contents |
 |-----------|-------|----------|
-| `.ai/context/` | claude-core | `snapshot.yml` - session state that survives compaction |
-| `.ai/plans/` | claude-core | Wave plans, state files, verification results |
-| `.ai/instincts/` | claude-core | `observations.jsonl`, `instincts.yml` - learning pipeline |
-| `.ai/roadmap.yml` | claude-core | Project roadmap with prioritized items |
-| `.ai/brainstorm/` | claude-core | Brainstorm transcripts and `decisions.yml` files |
-| `.ai/tasks/` | taskflow | Task YAMLs, active pointer, handoff, QA handover |
-| `.ai/project-map.yml` | dev-engine | Tech stack detection and module mapping |
-| `.ai/dev-engine/` | dev-engine | Pipeline state, execution artifacts |
+| `.ai/context/` | kronen | `snapshot.yml` - session state that survives compaction |
+| `.ai/plans/` | kronen | Wave plans, state files, verification results |
+| `.ai/instincts/` | kronen | `observations.jsonl`, `instincts.yml` - learning pipeline |
+| `.ai/roadmap.yml` | kronen | Project roadmap with prioritized items |
+| `.ai/brainstorm/` | kronen | Brainstorm transcripts and `decisions.yml` files |
+| `.ai/tasks/` | herold | Task YAMLs, active pointer, handoff, QA handover |
+| `.ai/project-map.yml` | smedjen | Tech stack detection and module mapping |
+| `.ai/smedjen/` | smedjen | Pipeline state, execution artifacts |
 
 No databases. No external services for state. Everything is local, versionable, and inspectable.
 
@@ -137,14 +137,14 @@ Claude Code loses all context between sessions and during compaction. The plugin
 
 Three layers of verification prevent incomplete work from shipping:
 
-1. **verification-gate** (claude-core) - 5-step proof protocol: identify → run → read → verify → claim
-2. **plan-verifier** (claude-core) - two-stage wave verification: mechanical spec compliance, then quality review
-3. **completion-gate** (dev-engine) - 10-point quality criteria run by the code-reviewer agent
+1. **verification-gate** (kronen) - 5-step proof protocol: identify → run → read → verify → claim
+2. **plan-verifier** (kronen) - two-stage wave verification: mechanical spec compliance, then quality review
+3. **completion-gate** (smedjen) - 10-point quality criteria run by the code-reviewer agent
 
 All three are mandatory. None can be bypassed by the implementing agent.
 
 ## See also
 
-- [claude-core](/docs/claude-core) - the foundation plugin with hooks, verification, and state management
-- [dev-engine](/docs/dev-engine) - the development execution pipeline and agent model
-- [taskflow](/docs/taskflow) - task lifecycle and MCP integrations
+- [kronen](/docs/kronen) - the foundation plugin with hooks, verification, and state management
+- [smedjen](/docs/smedjen) - the development execution pipeline and agent model
+- [herold](/docs/herold) - task lifecycle and MCP integrations

@@ -7,12 +7,20 @@ Versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+### Changed
+- Renamed all plugins to Danish royal theme aligned with hjemmesidekongen brand identity:
+  - claude-core → **kronen** (The Crown)
+  - dev-engine → **smedjen** (The Forge)
+  - taskflow → **herold** (The Herald)
+  - brand → **våbenskjold** (The Coat of Arms)
+  - design → **segl** (The Royal Seal)
+
 ### Added
 - LICENSE file (MIT)
 - CHANGELOG.md
-- Explicit `dependencies` field in plugin.json for brand, design, dev-engine, taskflow
+- Explicit `dependencies` field in plugin.json for all downstream plugins
 
-## claude-core [0.3.0] — 2026-03-11
+## kronen [0.3.0] — 2026-03-11
 
 ### Added
 - Dynamic planner: goal-oriented iterative planning with learning loop
@@ -38,7 +46,7 @@ Versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Plan-dynamic: correct autopilot handoff command name
 - Stale docs and component count mismatches
 
-## dev-engine [0.2.0] — 2026-02-15
+## smedjen [0.2.0] — 2026-02-15
 
 ### Added
 - 8 studio knowledge skills (fumadocs-patterns and others)
@@ -47,21 +55,21 @@ Versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Visual verification and completion gates
 - 6 agents: architect, backend-dev, frontend-dev, test-engineer, code-reviewer, app-security-auditor
 
-## brand [0.1.0] — 2026-02-01
+## våbenskjold [0.1.0] — 2026-02-01
 
 ### Added
 - 4 skills: brand-strategy, brand-audit, brand-evolve, brand-loader
 - 5 commands: brand-create, brand-audit, brand-evolve, brand-apply, brand-status
 - Output schemas: guideline-schema, voice-schema, values-schema
 
-## design [0.1.0] — 2026-02-05
+## segl [0.1.0] — 2026-02-05
 
 ### Added
 - 3 skills: visual-identity, design-tokens, design-loader
 - 3 commands: design-identity, design-tokens, design-status
 - Token schema with Tailwind, CSS, and DTCG output formats
 
-## taskflow [0.1.0] — 2026-01-20
+## herold [0.1.0] — 2026-01-20
 
 ### Added
 - Jira ingestion (single and bulk)

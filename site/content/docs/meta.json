@@ -6,9 +6,9 @@
     "configure",
     "init-project",
     "workflows",
-    "claude-core",
-    "dev-engine",
-    "taskflow",
+    "kronen",
+    "smedjen",
+    "herold",
     "architecture",
     "troubleshooting",
     "maintaining-docs"

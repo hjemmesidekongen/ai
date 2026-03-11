@@ -2,11 +2,11 @@
 
 ## What This Is
 Five plugins in a monorepo:
-- **claude-core** (`plugins/claude-core/`) — Foundation plugin: planning, brainstorm, tracing, memory governance, roadmap, doc governance, creator/reviewer tooling, autopilot, prompt optimization, and validation agents (41 skills, 14 commands, 12 agents).
-- **dev-engine** (`plugins/dev-engine/`) — Generic development execution: task decomposition, agent dispatch, tech knowledge, disciplines, visual verification, completion gates, project mapping, orchestration, studio knowledge (62 skills, 2 commands, 6 agents).
-- **taskflow** (`plugins/taskflow/`) — Task management and workplace integration: Jira ingestion, local task storage, contradiction detection, project profiles, QA handover, bulk ingestion, PR workflows (9 skills, 8 commands).
-- **brand** (`plugins/brand/`) — Brand strategy, audit, and evolution (4 skills, 5 commands).
-- **design** (`plugins/design/`) — Visual identity and design tokens (3 skills, 3 commands).
+- **kronen** (`plugins/kronen/`) — The Crown: core foundation. Planning, brainstorm, tracing, memory governance, roadmap, doc governance, creator/reviewer tooling, autopilot, prompt optimization, and validation agents (41 skills, 14 commands, 12 agents).
+- **smedjen** (`plugins/smedjen/`) — The Forge: development execution engine. Task decomposition, agent dispatch, tech knowledge, disciplines, visual verification, completion gates, project mapping, orchestration, studio knowledge (62 skills, 2 commands, 6 agents).
+- **herold** (`plugins/herold/`) — The Herald: task management and workplace integration. Jira ingestion, local task storage, contradiction detection, project profiles, QA handover, bulk ingestion, PR workflows (9 skills, 8 commands).
+- **våbenskjold** (`plugins/våbenskjold/`) — The Coat of Arms: brand strategy, audit, and evolution (4 skills, 5 commands).
+- **segl** (`plugins/segl/`) — The Royal Seal: visual identity and design tokens (3 skills, 3 commands).
 
 ## Context Recovery
 After `/compact` or when context seems incomplete, read `.ai/context/snapshot.yml` for working state (workspace, project, active plan, modified files). This file is written by PreCompact, Stop, and SessionStart hooks via `assemble-context.sh` and persists on disk.
@@ -36,7 +36,7 @@ After `/compact` or when context seems incomplete, read `.ai/context/snapshot.ym
   prompts/                           # Prompt templates
   roadmap.yml                        # Roadmap across 5 phases
 plugins/
-  claude-core/                       # Foundation plugin (41 skills, 14 commands, 12 agents)
+  kronen/                             # The Crown — core foundation (41 skills, 14 commands, 12 agents)
     .claude-plugin/
       plugin.json                    # v0.3.0, hooks: PreToolUse, PostToolUse, PreCompact, SessionStart, Stop
       ecosystem.json                 # Component registry
@@ -93,19 +93,19 @@ plugins/
                                      # dynamic-prompt-constructor
       tests/                         # Hook unit tests (test-tdd-gate.sh, test-scope-guard.sh, test-plan-gate.sh)
     resources/                       # error-annotation-format, memory-rules, agent-orchestration, instincts-schema
-  brand/                             # Brand strategy plugin (4 skills, 5 commands)
+  våbenskjold/                       # The Coat of Arms — brand strategy (4 skills, 5 commands)
     skills/                          # brand-strategy, brand-audit, brand-evolve, brand-loader
     commands/                        # brand-create, brand-audit, brand-evolve, brand-apply, brand-status
     resources/                       # guideline-schema, voice-schema, values-schema
-  design/                            # Visual design plugin (3 skills, 3 commands)
+  segl/                              # The Royal Seal — visual identity (3 skills, 3 commands)
     skills/                          # visual-identity, design-tokens, design-loader
     commands/                        # design-identity, design-tokens, design-status
     resources/                       # token-schema
-  dev-engine/                        # Development execution plugin (62 skills, 2 commands, 6 agents)
+  smedjen/                           # The Forge — development execution (62 skills, 2 commands, 6 agents)
     skills/                          # 7 core + 6 discipline + 24 tech + 12 expo + 5 integration + 8 studio
     commands/                        # dev-scan, dev-run
     agents/                          # architect, backend-dev, frontend-dev, test-engineer, code-reviewer, app-security-auditor
-  taskflow/                          # Task management plugin (9 skills, 8 commands)
+  herold/                            # The Herald — task management (9 skills, 8 commands)
     skills/                          # jira-ingestion, contradiction-detection, bulk-ingestion, bitbucket-pr-workflow,
                                      # confluence-lookup, qa-handover-generator, azure-devops-pipeline,
                                      # project-profile-loader, session-handoff-taskflow
@@ -127,38 +127,38 @@ docs/
 ## Commands
 | Command | Purpose |
 |---------|---------|
-| `/claude-core:trace-full` | Toggle full tracing on/off |
-| `/claude-core:roadmap-add` | Add item to roadmap interactively |
-| `/claude-core:roadmap-view` | Display roadmap with filters |
-| `/claude-core:brainstorm-start` | Start open-ended brainstorm session |
-| `/claude-core:brainstorm-decide` | Extract decisions from brainstorm |
-| `/claude-core:plan-create` | Create a wave-based execution plan |
-| `/claude-core:plan-dynamic` | Start a goal-oriented iterative plan (dynamic mode) |
-| `/claude-core:plan-execute` | Execute a wave plan with verification gates |
-| `/claude-core:plan-status` | Show plan progress |
-| `/claude-core:plan-resume` | Resume interrupted plan |
-| `/claude-core:autopilot-run` | Start autopilot loop (autonomous iteration with stop hook) |
-| `/claude-core:autopilot-cancel` | Cancel active autopilot loop |
-| `/claude-core:full-review` | 5-phase comprehensive code review |
-| `/claude-core:prompt-create` | Turn rough intent into structured prompt |
-| `/brand:brand-create` | Create a new brand from scratch |
-| `/brand:brand-audit` | Codify an existing brand from materials |
-| `/brand:brand-evolve` | Refresh or reinvent an existing brand |
-| `/brand:brand-apply` | Load brand into context or wire into project |
-| `/brand:brand-status` | Show brand status and guideline summary |
-| `/design:design-identity` | Create visual identity system |
-| `/design:design-tokens` | Generate platform tokens (Tailwind, CSS, DTCG) |
-| `/design:design-status` | Show design artifact status |
-| `/dev:dev-scan` | Scan repo to detect tech stack and architecture |
-| `/dev:dev-run` | Run full dev-engine pipeline |
-| `/taskflow:task-status` | Show active task details |
-| `/taskflow:task-list` | List locally stored tasks |
-| `/taskflow:task-start` | Set a task as active |
-| `/taskflow:task-ingest` | Ingest Jira tickets |
-| `/taskflow:task-ingest-bulk` | Batch ingest from Jira board/filter |
-| `/taskflow:task-docs` | Search Confluence docs for active task |
-| `/taskflow:task-pr` | Create PR from active task |
-| `/taskflow:task-done` | Complete active task with QA handover |
+| `/kronen:trace-full` | Toggle full tracing on/off |
+| `/kronen:roadmap-add` | Add item to roadmap interactively |
+| `/kronen:roadmap-view` | Display roadmap with filters |
+| `/kronen:brainstorm-start` | Start open-ended brainstorm session |
+| `/kronen:brainstorm-decide` | Extract decisions from brainstorm |
+| `/kronen:plan-create` | Create a wave-based execution plan |
+| `/kronen:plan-dynamic` | Start a goal-oriented iterative plan (dynamic mode) |
+| `/kronen:plan-execute` | Execute a wave plan with verification gates |
+| `/kronen:plan-status` | Show plan progress |
+| `/kronen:plan-resume` | Resume interrupted plan |
+| `/kronen:autopilot-run` | Start autopilot loop (autonomous iteration with stop hook) |
+| `/kronen:autopilot-cancel` | Cancel active autopilot loop |
+| `/kronen:full-review` | 5-phase comprehensive code review |
+| `/kronen:prompt-create` | Turn rough intent into structured prompt |
+| `/våbenskjold:brand-create` | Create a new brand from scratch |
+| `/våbenskjold:brand-audit` | Codify an existing brand from materials |
+| `/våbenskjold:brand-evolve` | Refresh or reinvent an existing brand |
+| `/våbenskjold:brand-apply` | Load brand into context or wire into project |
+| `/våbenskjold:brand-status` | Show brand status and guideline summary |
+| `/segl:design-identity` | Create visual identity system |
+| `/segl:design-tokens` | Generate platform tokens (Tailwind, CSS, DTCG) |
+| `/segl:design-status` | Show design artifact status |
+| `/smedjen:dev-scan` | Scan repo to detect tech stack and architecture |
+| `/smedjen:dev-run` | Run full dev-engine pipeline |
+| `/herold:task-status` | Show active task details |
+| `/herold:task-list` | List locally stored tasks |
+| `/herold:task-start` | Set a task as active |
+| `/herold:task-ingest` | Ingest Jira tickets |
+| `/herold:task-ingest-bulk` | Batch ingest from Jira board/filter |
+| `/herold:task-docs` | Search Confluence docs for active task |
+| `/herold:task-pr` | Create PR from active task |
+| `/herold:task-done` | Complete active task with QA handover |
 
 ## Specs
 | File | What It Covers |

@@ -6,11 +6,11 @@ AI workflow plugins for Claude Code — planning, brand, design, dev execution, 
 
 | Plugin | What it does |
 |--------|-------------|
-| **claude-core** | Foundation — planning, brainstorm, tracing, memory governance, verification gates, creator tooling, 12 autonomous agents. |
-| **dev-engine** | Multi-agent dev pipeline — task decomposition, agent dispatch, 62 framework-specific skills, completion gates. |
-| **taskflow** | Task management — Jira ingestion, contradiction detection, QA handover, PR workflows. |
-| **brand** | Brand strategy — voice, values, positioning, audience, content pillars. |
-| **design** | Visual identity — color palettes, typography, spacing, design tokens. |
+| **kronen** | The Crown — core foundation. Planning, brainstorm, tracing, memory governance, verification gates, creator tooling, 12 autonomous agents. |
+| **smedjen** | The Forge — development execution engine. Task decomposition, agent dispatch, 62 framework-specific skills, completion gates. |
+| **herold** | The Herald — task management and workplace integration. Jira ingestion, contradiction detection, QA handover, PR workflows. |
+| **våbenskjold** | The Coat of Arms — brand strategy toolkit. Voice, values, positioning, audience, content pillars. |
+| **segl** | The Royal Seal — visual identity and design tokens. Color palettes, typography, spacing, platform token generation. |
 
 ## Quick Start
 

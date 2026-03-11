@@ -62,7 +62,7 @@ Each entry is pipe-delimited: `timestamp|hook_name|decision|file_path|reason`. L
 The hook ran but produced an error. Check `.ai/traces/hook-errors.log` for the specific failure. Common causes:
 
 - **Missing environment variable.** Hooks expect `CLAUDE_PROJECT_DIR` and `CLAUDE_PLUGIN_ROOT` to be set by Claude Code. If you are running a hook script manually for testing, export these first.
-- **Script not executable.** Run `chmod +x plugins/claude-core/scripts/<script>.sh`.
+- **Script not executable.** Run `chmod +x plugins/kronen/scripts/<script>.sh`.
 - **Bash version.** Some scripts use bash 4+ features. macOS ships bash 3. The scripts in this repo are written for bash 3 compatibility, but if you added custom hooks, check for associative arrays or other bash 4 syntax.
 
 ### Hooks running old versions after update
@@ -159,8 +159,8 @@ To manually trigger a snapshot for debugging:
 
 ```bash
 export CLAUDE_PROJECT_DIR="$(pwd)"
-export CLAUDE_PLUGIN_ROOT="plugins/claude-core"
-bash plugins/claude-core/scripts/assemble-context.sh manual
+export CLAUDE_PLUGIN_ROOT="plugins/kronen"
+bash plugins/kronen/scripts/assemble-context.sh manual
 cat .ai/context/snapshot.yml
 ```
 

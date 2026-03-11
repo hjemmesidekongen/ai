@@ -21,7 +21,7 @@ items:
   - id: RL-001
     title: "Architecture doc — claude-core contract"
     category: core
-    plugin: claude-core
+    plugin: kronen
     priority: done
     completed: "2026-03-08"
     tags: [architecture, foundation, phase-1]
@@ -29,7 +29,7 @@ items:
   - id: RL-002
     title: "Plugin scaffold — claude-core"
     category: core
-    plugin: claude-core
+    plugin: kronen
     priority: done
     completed: "2026-03-08"
     tags: [scaffold, foundation, phase-1]
@@ -37,7 +37,7 @@ items:
   - id: RL-003
     title: "Status bar integration"
     category: core
-    plugin: claude-core
+    plugin: kronen
     priority: done
     completed: "2026-03-08"
     tags: [ux, status-bar, phase-1]
@@ -45,7 +45,7 @@ items:
   - id: RL-004
     title: "CLAUDE.md guardian hook"
     category: core
-    plugin: claude-core
+    plugin: kronen
     priority: done
     completed: "2026-03-08"
     tags: [hooks, quality, claude-md, phase-1]
@@ -53,7 +53,7 @@ items:
   - id: RL-005
     title: "Tracing — light mode (always-on)"
     category: core
-    plugin: claude-core
+    plugin: kronen
     priority: done
     completed: "2026-03-08"
     tags: [tracing, observability, phase-1]
@@ -61,7 +61,7 @@ items:
   - id: RL-006
     title: "Tracing — full mode (opt-in)"
     category: core
-    plugin: claude-core
+    plugin: kronen
     priority: done
     completed: "2026-03-08"
     tags: [tracing, observability, phase-1]
@@ -69,7 +69,7 @@ items:
   - id: RL-007
     title: "Error annotation in tracing"
     category: core
-    plugin: claude-core
+    plugin: kronen
     priority: done
     completed: "2026-03-08"
     tags: [tracing, errors, phase-1]
@@ -77,7 +77,7 @@ items:
   - id: RL-008
     title: "Pre-completion trace review hook"
     category: core
-    plugin: claude-core
+    plugin: kronen
     priority: done
     completed: "2026-03-08"
     tags: [tracing, quality-gate, hooks, phase-1]
@@ -85,7 +85,7 @@ items:
   - id: RL-009
     title: "Memory discipline rules"
     category: core
-    plugin: claude-core
+    plugin: kronen
     priority: done
     completed: "2026-03-08"
     tags: [memory, pruning, phase-1]
@@ -97,7 +97,7 @@ items:
   - id: RL-010
     title: "Roadmap auto-capture behavior"
     category: core
-    plugin: claude-core
+    plugin: kronen
     priority: done
     completed: "2026-03-08"
     tags: [roadmap, auto-capture, phase-2]
@@ -105,7 +105,7 @@ items:
   - id: RL-011
     title: "roadmap:add command"
     category: core
-    plugin: claude-core
+    plugin: kronen
     priority: done
     completed: "2026-03-08"
     tags: [roadmap, commands, phase-2]
@@ -113,7 +113,7 @@ items:
   - id: RL-012
     title: "roadmap:view command"
     category: core
-    plugin: claude-core
+    plugin: kronen
     priority: done
     completed: "2026-03-08"
     tags: [roadmap, commands, phase-2]
@@ -121,7 +121,7 @@ items:
   - id: RL-013
     title: "Planning — re-implement (plan:create)"
     category: core
-    plugin: claude-core
+    plugin: kronen
     priority: done
     completed: "2026-03-08"
     tags: [planning, re-implement, phase-2]
@@ -129,7 +129,7 @@ items:
   - id: RL-014
     title: "Planning — re-implement (plan:execute)"
     category: core
-    plugin: claude-core
+    plugin: kronen
     priority: done
     completed: "2026-03-08"
     tags: [planning, re-implement, phase-2]
@@ -137,7 +137,7 @@ items:
   - id: RL-015
     title: "Planning — re-implement (plan:status + plan:resume)"
     category: core
-    plugin: claude-core
+    plugin: kronen
     priority: done
     completed: "2026-03-08"
     tags: [planning, re-implement, phase-2]
@@ -145,7 +145,7 @@ items:
   - id: RL-016
     title: "Brainstorm — re-implement (brainstorm:start)"
     category: core
-    plugin: claude-core
+    plugin: kronen
     priority: done
     completed: "2026-03-08"
     tags: [brainstorm, re-implement, phase-2]
@@ -153,7 +153,7 @@ items:
   - id: RL-017
     title: "Brainstorm — re-implement (brainstorm:decide)"
     category: core
-    plugin: claude-core
+    plugin: kronen
     priority: done
     completed: "2026-03-08"
     tags: [brainstorm, re-implement, phase-2]
@@ -166,7 +166,7 @@ items:
     title: "Project scan/init"
     description: "Detect tech stack, frameworks, structure, dependencies. Generate Mermaid diagram overview. Platform awareness for AI context. Re-implement from agency's project-scanner."
     category: core
-    plugin: claude-core
+    plugin: kronen
     priority: later
     source: "brainstorm/streamline-local-claude-workflow"
     added: "2026-03-08"
@@ -176,7 +176,7 @@ items:
     title: "Self-documenting system"
     description: "Auto-update READMEs and user guides during implementation. Both user-facing (Quick Start, How-To, FAQ) and developer-facing (internals, architecture). Triggered at task completion."
     category: core
-    plugin: claude-core
+    plugin: kronen
     priority: done
     completed: "2026-03-09"
     source: "brainstorm/streamline-local-claude-workflow"
@@ -191,7 +191,7 @@ items:
     title: "Agent orchestration"
     description: "Core agent definitions and dispatch patterns. Agents defined once in claude-core, reused by domain plugins. Sub-agent coordination rules. Re-implement from agency agents/."
     category: core
-    plugin: claude-core
+    plugin: kronen
     priority: done
     completed: "2026-03-09"
     source: "brainstorm/streamline-local-claude-workflow"
@@ -205,7 +205,7 @@ items:
     title: "Source attribution system"
     description: "_source block in SKILL.md frontmatter: origin URL, ported date, version hash, modifications. Enables upstream update checking. Implemented across all 17 SKILL.md files."
     category: core
-    plugin: claude-core
+    plugin: kronen
     priority: done
     completed: "2026-03-09"
     source: "brainstorm/streamline-local-claude-workflow"
@@ -220,14 +220,14 @@ items:
     title: "Skill create + A/B testing"
     description: "Build new skills with validation. A/B split testing approach. Test results stored alongside skill. Re-testable at any time."
     category: toolkit
-    plugin: claude-core
+    plugin: kronen
     priority: done
     completed: "2026-03-09"
     source: "brainstorm/streamline-local-claude-workflow"
     added: "2026-03-08"
     tags: [skills, testing, ab-test, phase-4]
     partial:
-      skill_creator: "plugins/claude-core/skills/skill-creator/ (delivered 2026-03-09)"
+      skill_creator: "plugins/kronen/skills/skill-creator/ (delivered 2026-03-09)"
       eval_infrastructure: "7 scripts, 3 agents, schemas, HTML viewers (delivered 2026-03-09)"
       ab_testing: "delivered via eval scripts (run_loop.py, aggregate_benchmark.py)"
     _source:
@@ -238,7 +238,7 @@ items:
     title: "Skill enhance + audit"
     description: "Improve existing skills. Audit quality with stored results. Check for overlap with existing functionality."
     category: toolkit
-    plugin: claude-core
+    plugin: kronen
     priority: done
     completed: "2026-03-09"
     source: "brainstorm/streamline-local-claude-workflow"
@@ -249,14 +249,14 @@ items:
     title: "Plugin create + enhance + audit"
     description: "Same create/enhance/audit pattern applied to plugins."
     category: toolkit
-    plugin: claude-core
+    plugin: kronen
     priority: done
     completed: "2026-03-09"
     source: "brainstorm/streamline-local-claude-workflow"
     added: "2026-03-08"
     tags: [plugins, phase-4]
     partial:
-      plugin_creator: "plugins/claude-core/skills/plugin-creator/ (delivered 2026-03-09)"
+      plugin_creator: "plugins/kronen/skills/plugin-creator/ (delivered 2026-03-09)"
       enhance_audit: "not started (RL-023)"
     _source:
       inspiration: "https://skills.sh/josiahsiegel/claude-plugin-marketplace/plugin-master"
@@ -266,15 +266,15 @@ items:
     title: "Command/Hook create + enhance + audit"
     description: "Same create/enhance/audit pattern applied to commands and hooks. Hook-creator and command-creator both delivered 2026-03-09."
     category: toolkit
-    plugin: claude-core
+    plugin: kronen
     priority: done
     completed: "2026-03-09"
     source: "brainstorm/streamline-local-claude-workflow"
     added: "2026-03-08"
     tags: [commands, hooks, phase-4]
     partial:
-      hook_creator: "plugins/claude-core/skills/hook-creator/ (delivered 2026-03-09)"
-      command_creator: "plugins/claude-core/skills/command-creator/ (delivered 2026-03-09)"
+      hook_creator: "plugins/kronen/skills/hook-creator/ (delivered 2026-03-09)"
+      command_creator: "plugins/kronen/skills/command-creator/ (delivered 2026-03-09)"
       enhance_audit: "not started (RL-023)"
     _source:
       hook: "https://skills.sh/anthropics/claude-code/hook-development"
@@ -285,14 +285,14 @@ items:
     title: "Agent create + enhance + audit"
     description: "Create agent definitions with proper frontmatter, triggering examples, system prompts, and tool restrictions. Agent-creator delivered 2026-03-09."
     category: toolkit
-    plugin: claude-core
+    plugin: kronen
     priority: done
     completed: "2026-03-09"
     source: "user-request/2026-03-09"
     added: "2026-03-09"
     tags: [agents, phase-4]
     partial:
-      agent_creator: "plugins/claude-core/skills/agent-creator/ (delivered 2026-03-09)"
+      agent_creator: "plugins/kronen/skills/agent-creator/ (delivered 2026-03-09)"
       enhance_audit: "not started (RL-023)"
     _source:
       inspiration: "https://skills.sh/anthropics/claude-plugins-official/agent-development"
@@ -302,7 +302,7 @@ items:
     title: "Phase 4 Gate complete — v0.3.0"
     description: "Hardening audit passed. 3 validation agents, security audit, all structural fixes, creator self-validation gates, eval infrastructure validated."
     category: core
-    plugin: claude-core
+    plugin: kronen
     priority: done
     completed: "2026-03-09"
     source: "plan/hardening-audit"
@@ -313,7 +313,7 @@ items:
     title: "Auto-clear plugin cache after create/edit operations"
     description: "All toolkit create/edit workflows (skill, command, hook, plugin) must automatically run rm -rf ~/.claude/plugins/cache/hjemmesidekongen-ai/ as a post-step. Never require manual cache clearing."
     category: toolkit
-    plugin: claude-core
+    plugin: kronen
     priority: later
     source: "user-request/2026-03-08"
     added: "2026-03-08"
@@ -371,7 +371,7 @@ items:
     title: "roadmap:promote command"
     description: "Move items from backlog → later → next when they become relevant. Batch promote by tag or category."
     category: core
-    plugin: claude-core
+    plugin: kronen
     priority: backlog
     source: "brainstorm/streamline-local-claude-workflow"
     added: "2026-03-08"
@@ -390,7 +390,7 @@ items:
       Deferred until compact trigger discipline (RL-079–081) and smart session injection
       (RL-082) are stable.
     category: core
-    plugin: claude-core
+    plugin: kronen
     priority: later
     source: "brainstorm/streamline-local-claude-workflow, brainstorm/smart-context-compaction"
     added: "2026-03-08"
@@ -401,7 +401,7 @@ items:
     title: "MCP bridge for Claude AI portability"
     description: "Build MCP server exposing key capabilities as tools for Claude AI web UI. Would allow some skills to be invoked from web interface."
     category: core
-    plugin: claude-core
+    plugin: kronen
     priority: backlog
     source: "brainstorm/streamline-local-claude-workflow"
     added: "2026-03-08"
@@ -411,7 +411,7 @@ items:
     title: "Database-backed tracing UI"
     description: "Full tracing UI with database storage, expiry, duplicate detection, status management, task conversion. MCP server for log viewing."
     category: dev
-    plugin: claude-core
+    plugin: kronen
     priority: backlog
     source: "brainstorm/streamline-local-claude-workflow"
     added: "2026-03-08"
@@ -421,7 +421,7 @@ items:
     title: "Error-to-task conversion"
     description: "Errors from trace logs convertible to tasks. AI auto-fixes based on selection criteria (blast radius contained, reversible, verification available)."
     category: core
-    plugin: claude-core
+    plugin: kronen
     priority: backlog
     source: "brainstorm/streamline-local-claude-workflow"
     added: "2026-03-08"
@@ -461,7 +461,7 @@ items:
     title: "Upstream skill diffing (/dev:skills check)"
     description: "Diff forked skills against upstream sources (skills.sh) and cherry-pick updates. Enabled by source attribution frontmatter (RL-021)."
     category: toolkit
-    plugin: claude-core
+    plugin: kronen
     priority: backlog
     source: "brainstorm/dev-hardening"
     added: "2026-03-08"
@@ -501,7 +501,7 @@ items:
     title: "Vector DB for semantic memory retrieval"
     description: "Pinecone/Weaviate/Chroma for semantic search across memories. Ruled out for MVP but viable when memory volume exceeds flat-file performance."
     category: core
-    plugin: claude-core
+    plugin: kronen
     priority: backlog
     source: "brainstorm/streamline-local-claude-workflow (research)"
     added: "2026-03-08"
@@ -511,7 +511,7 @@ items:
     title: "Prompt caching optimization"
     description: "Up to 85% latency reduction, 10x cost difference. Investigate leveraging prompt caching in plugin ecosystem."
     category: core
-    plugin: claude-core
+    plugin: kronen
     priority: backlog
     source: "brainstorm/streamline-local-claude-workflow (research)"
     added: "2026-03-08"
@@ -521,7 +521,7 @@ items:
     title: "Memory Composer for multi-agent isolation"
     description: "Isolated memory per agent + shared coordination layer for multi-agent orchestration. Important for complex workflows."
     category: core
-    plugin: claude-core
+    plugin: kronen
     priority: backlog
     source: "brainstorm/streamline-local-claude-workflow (research)"
     added: "2026-03-08"
@@ -541,7 +541,7 @@ items:
     title: "Path-scoped rules in CLAUDE.md"
     description: "Different standards for test files vs components based on file path patterns. Anthropic supports this natively but not currently used."
     category: core
-    plugin: claude-core
+    plugin: kronen
     priority: backlog
     source: "brainstorm/streamline-local-claude-workflow (research)"
     added: "2026-03-08"
@@ -551,7 +551,7 @@ items:
     title: "Environment variable handling for MCP servers"
     description: "How to handle env vars for MCP servers without giving them directly to Claude. Needs research."
     category: core
-    plugin: claude-core
+    plugin: kronen
     priority: backlog
     source: "brainstorm/streamline-local-claude-workflow (notes)"
     added: "2026-03-08"
@@ -561,7 +561,7 @@ items:
     title: "Git workflow for ~/.claude/ managed files"
     description: "Determine how to version-control Claude config. Include in ~/.claude/ with .gitignore on non-project files? Needs design."
     category: core
-    plugin: claude-core
+    plugin: kronen
     priority: backlog
     source: "brainstorm/streamline-local-claude-workflow (notes)"
     added: "2026-03-08"
@@ -761,7 +761,7 @@ items:
     title: "Guardian: also validate MEMORY.md edits"
     description: "CLAUDE.md guardian currently only fires on CLAUDE.md. Could also validate MEMORY.md edits for line count, content type, etc."
     category: core
-    plugin: claude-core
+    plugin: kronen
     priority: backlog
     source: "phase-1-implementation"
     added: "2026-03-08"
@@ -771,7 +771,7 @@ items:
     title: "Trace light: token usage estimation"
     description: "Add estimated token usage per tool call to light trace entries. Would help track cost."
     category: core
-    plugin: claude-core
+    plugin: kronen
     priority: backlog
     source: "phase-1-implementation"
     added: "2026-03-08"
@@ -781,7 +781,7 @@ items:
     title: "Pre-completion: generate fix plan for critical errors"
     description: "Instead of just listing critical errors, generate a proposed fix plan with steps."
     category: core
-    plugin: claude-core
+    plugin: kronen
     priority: backlog
     source: "phase-1-implementation"
     added: "2026-03-08"
@@ -791,7 +791,7 @@ items:
     title: "Memory health: auto-run daily"
     description: "memory-health-daily.sh runs via SessionStart with once-per-day gate. Reports line count, stale entries, and graduation candidates on first session each day."
     category: core
-    plugin: claude-core
+    plugin: kronen
     priority: done
     completed: "2026-03-09"
     source: "phase-1-implementation"
@@ -802,7 +802,7 @@ items:
     title: "Status bar: show error count from session trace"
     description: "Add current session error count to status bar for at-a-glance issue awareness."
     category: core
-    plugin: claude-core
+    plugin: kronen
     priority: backlog
     source: "phase-1-implementation"
     added: "2026-03-08"
@@ -811,7 +811,7 @@ items:
   - id: RL-071
     title: "Apply error annotation behavior rule to CLAUDE.md"
     category: core
-    plugin: claude-core
+    plugin: kronen
     priority: done
     completed: "2026-03-08"
     tags: [tracing, errors, claude-md, iteration-2]
@@ -819,7 +819,7 @@ items:
   - id: RL-072
     title: "Apply memory discipline rules to CLAUDE.md"
     category: core
-    plugin: claude-core
+    plugin: kronen
     priority: done
     completed: "2026-03-08"
     tags: [memory, claude-md, iteration-2]
@@ -832,7 +832,7 @@ items:
     title: "Formalize writing conventions as shared resource"
     description: "Third-person description rule, imperative body style, trigger phrase requirements. Create a shared resource in claude-core/resources/ referenced by all creator skills."
     category: toolkit
-    plugin: claude-core
+    plugin: kronen
     priority: later
     source: "anthropic-reference-analysis/2026-03-09"
     added: "2026-03-09"
@@ -842,7 +842,7 @@ items:
     title: "Example blocks in agent-creator"
     description: "Ensure agent-creator teaches 2-4 <example> blocks with <commentary> for agent triggering. Currently missing from our agent-creator but present in Anthropic's reference."
     category: toolkit
-    plugin: claude-core
+    plugin: kronen
     priority: later
     source: "anthropic-reference-analysis/2026-03-09"
     added: "2026-03-09"
@@ -852,7 +852,7 @@ items:
     title: "/create-plugin orchestrated command"
     description: "8-phase workflow matching Anthropic's /create-plugin: plan, scaffold, hooks, skills, commands, agents, ecosystem, verification. plan-engine could drive this as an orchestrator."
     category: toolkit
-    plugin: claude-core
+    plugin: kronen
     priority: later
     source: "anthropic-reference-analysis/2026-03-09"
     added: "2026-03-09"
@@ -862,7 +862,7 @@ items:
     title: "Parallel baseline testing in skill-creator"
     description: "Spawn with-skill and baseline subagents simultaneously for A/B comparison. Currently sequential. Would halve benchmark wall time."
     category: toolkit
-    plugin: claude-core
+    plugin: kronen
     priority: backlog
     source: "anthropic-reference-analysis/2026-03-09"
     added: "2026-03-09"
@@ -881,7 +881,7 @@ items:
       PreToolUse on next unit's primary write checks flag, exits 2 with:
       "Compact required before starting next unit. Run /compact, then retry."
     category: core
-    plugin: claude-core
+    plugin: kronen
     priority: done
     completed: "2026-03-09"
     source: "brainstorm/smart-context-compaction"
@@ -897,7 +897,7 @@ items:
       Max ~300-500 tokens. Disk state only — in-flight reasoning not captured.
       Self-deletes after being consumed by SessionStart compact handler (RL-081).
     category: core
-    plugin: claude-core
+    plugin: kronen
     priority: done
     completed: "2026-03-09"
     source: "brainstorm/smart-context-compaction"
@@ -912,7 +912,7 @@ items:
       clears .ai/compact-needed flag, deletes snapshot after consumption.
       Completes the compact loop: PreCompact saves → SessionStart restores.
     category: core
-    plugin: claude-core
+    plugin: kronen
     priority: done
     completed: "2026-03-09"
     source: "brainstorm/smart-context-compaction"
@@ -929,7 +929,7 @@ items:
       Persists at .ai/context/snapshot.yml. CLAUDE.md pointer survives compaction.
       Stale snapshots (>48h) auto-deleted. Output capped at 50 lines.
     category: core
-    plugin: claude-core
+    plugin: kronen
     priority: done
     completed: "2026-03-09"
     source: "brainstorm/smart-context-compaction"
@@ -950,7 +950,7 @@ items:
       Haiku consolidation every 10 extractions or >80 memories. Cost ~$0.001/extraction.
       Scoping: every entry tagged workspace or project-specific — never mix in injection.
     category: core
-    plugin: claude-core
+    plugin: kronen
     priority: later
     source: "brainstorm/smart-context-compaction"
     added: "2026-03-09"
@@ -969,7 +969,7 @@ items:
       task writes array, or add a plan-execution bypass that checks if the target
       file is owned by a current-wave task.
     category: core
-    plugin: claude-core
+    plugin: kronen
     priority: done
     completed: "2026-03-09"
     source: "plan-execution/smart-session-context"
@@ -985,7 +985,7 @@ items:
       consumers: error-annotation-format.yml, error-annotation-behavior.md,
       pre-completion-review.sh, ~/CLAUDE.md.
     category: core
-    plugin: claude-core
+    plugin: kronen
     priority: done
     completed: "2026-03-09"
     source: "brainstorm/smart-context-compaction"
@@ -1005,7 +1005,7 @@ items:
       instinct-evolve skill promotes qualified instincts (confidence >= 0.75,
       evidence >= 3) to MEMORY.md entries, CLAUDE.md rules, or new skills.
     category: core
-    plugin: claude-core
+    plugin: kronen
     priority: done
     completed: 2026-03-09
 
@@ -1018,7 +1018,7 @@ items:
       artifact files directly, never paraphrases. Added per-task reviewer
       pattern to agent-orchestration.md.
     category: core
-    plugin: claude-core
+    plugin: kronen
     priority: done
     completed: "2026-03-09"
     source: ".ai/research/external-reference-findings.md (A3)"
@@ -1033,7 +1033,7 @@ items:
       skill targeting those violations, run WITH skill to verify compliance
       (green). Includes loophole-closing adversarial variant step.
     category: core
-    plugin: claude-core
+    plugin: kronen
     priority: done
     completed: "2026-03-09"
     source: ".ai/research/external-reference-findings.md (D4)"
@@ -1048,7 +1048,7 @@ items:
       specific) → Implement. Includes root-cause tracing, defense-in-depth layers,
       condition-based waiting, and 3-failures architecture escalation rule.
     category: core
-    plugin: claude-core
+    plugin: kronen
     priority: done
     completed: "2026-03-09"
     source: ".ai/research/external-reference-findings.md (B1)"
@@ -1064,7 +1064,7 @@ items:
       artifacts/ dir at pre-flight, read dependency artifacts before tasks,
       and write step outputs to .ai/plans/<name>/artifacts/<wave>-<task>-output.md.
     category: core
-    plugin: claude-core
+    plugin: kronen
     priority: done
     completed: "2026-03-09"
     source: ".ai/research/external-reference-findings.md (A2)"
@@ -1079,7 +1079,7 @@ items:
       from disk directly instead of paraphrasing responses. Prevents ~50%
       signal loss from synthesis. Updated plan-execute.md to reference pattern.
     category: core
-    plugin: claude-core
+    plugin: kronen
     priority: done
     completed: "2026-03-09"
     source: ".ai/research/external-reference-findings.md (E1)"
@@ -1094,7 +1094,7 @@ items:
       finish with 4 options (merge/pr/keep/discard). Supporting scripts:
       worktree-create.sh and worktree-finish.sh.
     category: core
-    plugin: claude-core
+    plugin: kronen
     priority: done
     completed: "2026-03-09"
     source: ".ai/research/external-reference-findings.md (G1)"
@@ -1110,7 +1110,7 @@ items:
       completion phrases. Stop hook detects write-only sessions with no
       verification step and emits an advisory.
     category: core
-    plugin: claude-core
+    plugin: kronen
     priority: done
     completed: "2026-03-09"
     source: ".ai/research/external-reference-findings.md (D1)"
@@ -1126,7 +1126,7 @@ items:
       Next step from first pending task in active plan. Probes are contextual
       self-check questions Claude verifies after /compact.
     category: core
-    plugin: claude-core
+    plugin: kronen
     priority: done
     completed: "2026-03-09"
     source: ".ai/research/external-reference-findings.md (C1)"
@@ -1140,7 +1140,7 @@ items:
       at every 50-call threshold. Advisory only (exit 0), samples every 10th call.
       Prevents silent context degradation in long sessions.
     category: core
-    plugin: claude-core
+    plugin: kronen
     priority: done
     completed: "2026-03-09"
     source: ".ai/research/external-reference-findings.md (F4)"
@@ -1156,7 +1156,7 @@ items:
       with stream assignments, reads, depends_on. Integration guide for
       plan-engine wave planning. Conflict resolution rules for shared files.
     category: core
-    plugin: claude-core
+    plugin: kronen
     priority: done
     completed: "2026-03-09"
     source: ".ai/research/external-reference-findings.md (M3)"
@@ -1172,7 +1172,7 @@ items:
       Coordinator reads artifacts directly (forward-message pattern), deduplicates,
       ranks by severity, and writes consolidated review report.
     category: core
-    plugin: claude-core
+    plugin: kronen
     priority: done
     completed: "2026-03-09"
     source: ".ai/research/external-reference-findings.md (M2)"
@@ -1188,7 +1188,7 @@ items:
       score (CONFIRMED/POSSIBLE/REFUTED), synthesize, then fix. Eliminates
       confirmation bias in complex bug investigations.
     category: core
-    plugin: claude-core
+    plugin: kronen
     priority: done
     completed: "2026-03-09"
     source: ".ai/research/external-reference-findings.md (M1)"
@@ -1204,7 +1204,7 @@ items:
       Writes structured diagnosis to .ai/traces/reasoning-diagnosis.md with
       evidence, impact, and concrete fix for each pattern found.
     category: core
-    plugin: claude-core
+    plugin: kronen
     priority: done
     completed: "2026-03-09"
     source: ".ai/research/external-reference-findings.md (K4)"
@@ -1219,7 +1219,7 @@ items:
       Updated skill-auditor to validate triggers field when present.
       Added trigger-based dispatch section to agent-orchestration.md.
     category: core
-    plugin: claude-core
+    plugin: kronen
     priority: done
     completed: "2026-03-09"
     source: ".ai/research/external-reference-findings.md (K3)"
@@ -1234,7 +1234,7 @@ items:
       conventions, secret detection, supporting file existence, description
       quality, and discoverability. Returns structured YAML verdict.
     category: core
-    plugin: claude-core
+    plugin: kronen
     priority: done
     completed: "2026-03-09"
     source: ".ai/research/external-reference-findings.md (O1)"
@@ -1250,7 +1250,7 @@ items:
       Updated skill-creator references/process.md with model_tier selection
       guide embedded in the frontmatter fields table.
     category: core
-    plugin: claude-core
+    plugin: kronen
     priority: done
     completed: "2026-03-09"
     source: ".ai/research/external-reference-findings.md (K1)"
@@ -1264,7 +1264,7 @@ items:
       (skills, commands, agents, scripts, resources) without an active plan.
       Non-blocking. Encourages plan-first discipline for multi-file tasks.
     category: core
-    plugin: claude-core
+    plugin: kronen
     priority: done
     completed: "2026-03-09"
     source: ".ai/research/external-reference-findings.md (L4)"
@@ -1279,7 +1279,7 @@ items:
       tool level. Opt-out via CLAUDE_NO_TDD_GATE=1 or .claude/no-tdd-gate file.
       Skips all non-code extensions (md, yml, json, sh) automatically.
     category: core
-    plugin: claude-core
+    plugin: kronen
     priority: done
     completed: "2026-03-09"
     source: ".ai/research/external-reference-findings.md (L3)"
@@ -1294,7 +1294,7 @@ items:
       Non-blocking (exit 0). Reads active plan state.yml. Only fires when
       writes arrays are non-empty to avoid false positives.
     category: core
-    plugin: claude-core
+    plugin: kronen
     priority: done
     completed: "2026-03-09"
     source: ".ai/research/external-reference-findings.md (L2)"
@@ -1308,7 +1308,7 @@ items:
       Reviews plugin boundaries, skill decomposition, hook architecture, state
       management, YAML schema quality, and technical debt.
     category: core
-    plugin: claude-core
+    plugin: kronen
     priority: done
     completed: "2026-03-09"
     source: ".ai/research/external-reference-findings.md (P1)"
@@ -1322,7 +1322,7 @@ items:
       Plugin-specific code smell detection. Incremental transformations with
       component-reviewer verification after each change.
     category: core
-    plugin: claude-core
+    plugin: kronen
     priority: done
     completed: "2026-03-09"
     source: ".ai/research/external-reference-findings.md (P2)"
@@ -1336,7 +1336,7 @@ items:
       histories, findings, instincts, decisions, and roadmap. Produces synthesis
       reports. Sits above instinct-extractor in the learning pipeline.
     category: core
-    plugin: claude-core
+    plugin: kronen
     priority: done
     completed: "2026-03-09"
     source: ".ai/research/external-reference-findings.md (P3)"
@@ -1349,7 +1349,7 @@ items:
       Added checkpoint: true flag support to wave definitions. Pauses after wave
       verification with Continue/Revise/Abort options. Backward compatible.
     category: core
-    plugin: claude-core
+    plugin: kronen
     priority: done
     completed: "2026-03-09"
     source: ".ai/research/external-reference-findings.md (Q1)"
@@ -1363,7 +1363,7 @@ items:
       max_tokens_per_page: 512), codebase-first priority chain, and stronger
       perplexity_research prohibition.
     category: core
-    plugin: claude-core
+    plugin: kronen
     priority: done
     completed: "2026-03-09"
     source: ".ai/research/external-reference-findings.md (T1)"
@@ -1376,7 +1376,7 @@ items:
       New skill for C4 model architecture diagrams in Mermaid syntax. All 5 levels.
       SKILL.md under 80 lines with references/c4-syntax.md. Implements H1.
     category: core
-    plugin: claude-core
+    plugin: kronen
     priority: done
     completed: "2026-03-09"
     source: ".ai/research/external-reference-findings.md (T3)"
@@ -1389,7 +1389,7 @@ items:
       Extended error-annotation-format.yml with post-mortem learning fields:
       pattern_extracted, runbook_entry, hardening_recommendation, feeds_instinct.
     category: core
-    plugin: claude-core
+    plugin: kronen
     priority: done
     completed: "2026-03-09"
     source: ".ai/research/external-reference-findings.md (P4)"
@@ -1402,7 +1402,7 @@ items:
       Added Context Hub Pattern to agent-orchestration.md. Coordinator assembles
       shared context once before dispatching sub-agents. Implements E2.
     category: core
-    plugin: claude-core
+    plugin: kronen
     priority: done
     completed: "2026-03-09"
     source: ".ai/research/external-reference-findings.md (P5)"
@@ -1415,7 +1415,7 @@ items:
       Manual-only mindset skill biasing toward deletion and minimal codebase size.
       Three questions framework. Red flags for status quo bias and YAGNI.
     category: core
-    plugin: claude-core
+    plugin: kronen
     priority: done
     completed: "2026-03-09"
     source: ".ai/research/external-reference-findings.md (T5)"
@@ -1428,7 +1428,7 @@ items:
       General-purpose Mermaid diagramming skill with 7 reference files.
       Covers class, sequence, flowchart, ERD, C4, architecture, advanced features.
     category: core
-    plugin: claude-core
+    plugin: kronen
     priority: done
     completed: "2026-03-09"
     source: ".ai/research/external-reference-findings.md (T6)"
@@ -1441,7 +1441,7 @@ items:
       Strunk's 18 rules + AI writing anti-patterns skill.
       References: elements-of-style chapters, signs-of-ai-writing.
     category: core
-    plugin: claude-core
+    plugin: kronen
     priority: done
     completed: "2026-03-09"
     source: ".ai/research/external-reference-findings.md (T7)"
@@ -1454,7 +1454,7 @@ items:
       Enhanced skill-auditor with 8-dimension scoring (120 points),
       9 failure patterns, grade scale A-F. quality-dimensions.md reference.
     category: core
-    plugin: claude-core
+    plugin: kronen
     priority: done
     completed: "2026-03-09"
     source: ".ai/research/external-reference-findings.md (T2)"
@@ -1467,7 +1467,7 @@ items:
       Dynamic context assembly for multi-agent workflows.
       Reads state.yml/snapshot.yml/findings.md, produces structured context packages.
     category: core
-    plugin: claude-core
+    plugin: kronen
     priority: done
     completed: "2026-03-09"
     source: ".ai/research/external-reference-findings.md (R1)"
@@ -1480,7 +1480,7 @@ items:
       Session handoff with chaining (Continues-from links), staleness classification,
       quality scoring 0-100. Proactive trigger after 5+ file edits.
     category: core
-    plugin: claude-core
+    plugin: kronen
     priority: done
     completed: "2026-03-09"
     source: ".ai/research/external-reference-findings.md (T4)"
@@ -1493,7 +1493,7 @@ items:
       Coordinates red-green-refactor across subagents with validation gates.
       Anti-pattern detection, metrics tracking in .tdd-cycle/.
     category: core
-    plugin: claude-core
+    plugin: kronen
     priority: done
     completed: "2026-03-09"
     source: ".ai/research/external-reference-findings.md (R2)"
@@ -1506,7 +1506,7 @@ items:
       Coupled agent pair. Error-detective (read-only investigation),
       incident-responder (severity-based coordination, post-mortem).
     category: core
-    plugin: claude-core
+    plugin: kronen
     priority: done
     completed: "2026-03-09"
     source: ".ai/research/external-reference-findings.md (R3)"
@@ -1519,7 +1519,7 @@ items:
       7 preset team compositions, file ownership cardinal rule,
       integration patterns for parallel agent dispatch.
     category: core
-    plugin: claude-core
+    plugin: kronen
     priority: done
     completed: "2026-03-09"
     source: ".ai/research/external-reference-findings.md (S2)"
@@ -1532,7 +1532,7 @@ items:
       5 sequential phases with 2 parallel reviewers each.
       Severity gates between phases, consolidated report output.
     category: core
-    plugin: claude-core
+    plugin: kronen
     priority: done
     completed: "2026-03-09"
     source: ".ai/research/external-reference-findings.md (Q2)"
@@ -1545,7 +1545,7 @@ items:
       Formalized 3-tier skill loading model documentation.
       skill-architecture.md resource + progressive-disclosure.md reference.
     category: core
-    plugin: claude-core
+    plugin: kronen
     priority: done
     completed: "2026-03-09"
     source: ".ai/research/external-reference-findings.md (S1)"
@@ -1572,7 +1572,7 @@ items:
       Blocks git push to protected branches (main, master, production, release/*).
       Force push always blocked. Feature branch pushes allowed.
     category: core
-    plugin: claude-core
+    plugin: kronen
     priority: done
     completed: "2026-03-09"
     source: ".ai/research/external-reference-findings.md (G2)"
@@ -1585,7 +1585,7 @@ items:
       Captures test/build/lint failures to .ai/traces/debug-failures.log
       with structured entries (timestamp, command, exit code, stderr snippet).
     category: core
-    plugin: claude-core
+    plugin: kronen
     priority: done
     completed: "2026-03-09"
     source: ".ai/research/external-reference-findings.md (M4)"
@@ -1599,7 +1599,7 @@ items:
       component-reviewer) now include confidence levels on findings. Default
       surfaces only high/medium confidence.
     category: core
-    plugin: claude-core
+    plugin: kronen
     priority: done
     completed: "2026-03-09"
     source: ".ai/research/external-reference-findings.md (D2)"
@@ -1614,7 +1614,7 @@ items:
       with filesystem reality. Complements doc-checkpoint (detection).
       Implements RL-019.
     category: core
-    plugin: claude-core
+    plugin: kronen
     priority: done
     completed: "2026-03-09"
     source: ".ai/research/external-reference-findings.md (H3)"
@@ -1630,7 +1630,7 @@ items:
       hook-creator, agent-creator, command-creator). Prevents bypassing
       the creator toolkit's eval infrastructure and quality checks.
     category: core
-    plugin: claude-core
+    plugin: kronen
     priority: later
     added: "2026-03-10"
     tags: [hooks, quality, creator-toolkit, scope-guard]
@@ -1663,7 +1663,7 @@ items:
       Works with autopilot for overnight autonomous builds. Key insight: you can't
       plan wave 6 before wave 1 teaches you something.
     category: core
-    plugin: claude-core
+    plugin: kronen
     priority: done
     completed: "2026-03-11"
     added: "2026-03-10"
@@ -1773,7 +1773,7 @@ items:
       debug output. Essential for catching issues in automated test runs
       where you can't watch the session interactively.
     category: core
-    plugin: claude-core
+    plugin: kronen
     priority: next
     added: "2026-03-11"
     tags: [debugging, tracing, observability, pipeline]
@@ -1855,7 +1855,7 @@ items:
       run the same task through each variant, compare output quality. Informed
       by skill-auditor findings from the validation fix plan (wave 2).
     category: testing
-    plugin: claude-core
+    plugin: kronen
     priority: later
     added: "2026-03-11"
     tags: [testing, a-b-testing, skills, quality, high-leverage]

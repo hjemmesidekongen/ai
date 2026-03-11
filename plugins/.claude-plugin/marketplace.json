@@ -5,29 +5,29 @@
   },
   "plugins": [
     {
-      "name": "claude-core",
-      "source": "./claude-core",
-      "description": "Foundation plugin — tracing, memory governance, CLAUDE.md protection. Required by all other plugins."
+      "name": "kronen",
+      "source": "./kronen",
+      "description": "The Crown — core foundation that all other plugins depend on. Planning, tracing, memory, orchestration, and governance."
     },
     {
-      "name": "dev-engine",
-      "source": "./dev-engine",
-      "description": "Generic development execution — task decomposition, agent dispatch, tier-based model assignment, completion gates, and visual verification."
+      "name": "smedjen",
+      "source": "./smedjen",
+      "description": "The Forge — development execution engine. Task decomposition, agent dispatch, tech knowledge, and completion gates."
     },
     {
-      "name": "taskflow",
-      "source": "./taskflow",
-      "description": "Task management and workplace integration — Jira ingestion, local task storage, contradiction detection, project profiles, and QA handover."
+      "name": "herold",
+      "source": "./herold",
+      "description": "The Herald — task management and workplace integration. Jira, Azure DevOps, Confluence, PR workflows, and QA handover."
     },
     {
-      "name": "brand",
-      "source": "./brand",
-      "description": "Brand strategy toolkit — voice, values, positioning, audience, and content pillars. Strategy only, no visual design."
+      "name": "våbenskjold",
+      "source": "./våbenskjold",
+      "description": "The Coat of Arms — brand strategy toolkit. Voice, values, positioning, audience, and content pillars."
     },
     {
-      "name": "design",
-      "source": "./design",
-      "description": "Visual design toolkit — interprets brand strategy into concrete visual systems: color palettes, typography, spacing, design tokens."
+      "name": "segl",
+      "source": "./segl",
+      "description": "The Royal Seal — visual identity and design tokens. Color, typography, spacing, and platform token generation."
     }
   ]
 }

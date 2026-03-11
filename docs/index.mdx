@@ -23,7 +23,7 @@ Three principles drive everything here:
 
 These three plugins implement the methodology inside Claude Code. They're the evidence, not the brand.
 
-### [claude-core](/docs/claude-core) - The Foundation
+### [kronen](/docs/kronen) - The Foundation
 
 The infrastructure layer everything else builds on. Planning engine, brainstorm sessions, verification gates, cross-session memory, error investigation, learning pipelines, and workplace integrations.
 
@@ -31,7 +31,7 @@ The infrastructure layer everything else builds on. Planning engine, brainstorm 
 
 Think of it as the operating system kernel - it handles state management, hooks, tracing, and the core workflows that other plugins depend on.
 
-### [dev-engine](/docs/dev-engine) - Development Execution
+### [smedjen](/docs/smedjen) - Development Execution
 
 A multi-agent development pipeline. Give it a task, and it decomposes it into subtasks, assigns each to the right specialist agent (frontend, backend, testing, security), dispatches them in parallel with file-ownership isolation, and runs a 10-point quality gate before anything ships.
 
@@ -39,7 +39,7 @@ A multi-agent development pipeline. Give it a task, and it decomposes it into su
 
 Covers React, Next.js, Vue, Nuxt, NestJS, Prisma, Expo, TypeScript, Tailwind, and 20+ more frameworks - not as generic advice, but as verified, framework-specific knowledge baked into each agent's context.
 
-### [taskflow](/docs/taskflow) - Task Management
+### [herold](/docs/herold) - Task Management
 
 Bridges your project management tools with your development workflow. Pull Jira tickets locally, detect contradictions between descriptions and comments, create PRs with auto-populated descriptions, and generate structured QA handovers - all from the command line.
 
@@ -55,28 +55,28 @@ Works with Jira, Confluence, Bitbucket, and Azure DevOps. Every integration degr
 │                                                          │
 │  /task:ingest PROJ-123        Pull ticket from Jira      │
 │  /task:start PROJ-123         Activate + review conflicts│
-│  /dev:run "Build the feature" Decompose + dispatch agents│
+│  /smedjen:run "Build the feature" Decompose + dispatch agents│
 │  /task:pr                     Create PR from task context │
 │  /task:done                   QA handover + close ticket  │
 └─────────────────────────────────────────────────────────┘
 
-taskflow pulls the ticket → dev-engine executes the work → claude-core
+herold pulls the ticket → smedjen executes the work → kronen
 provides the infrastructure (planning, verification, tracing, memory)
 ```
 
-Each plugin works standalone. taskflow doesn't require dev-engine. dev-engine doesn't require taskflow. Both use claude-core as their foundation, but claude-core is valuable on its own for planning, brainstorming, and code review workflows.
+Each plugin works standalone. herold doesn't require smedjen. smedjen doesn't require herold. Both use kronen as their foundation, but kronen is valuable on its own for planning, brainstorming, and code review workflows.
 
 ## What Makes This Different
 
 **Verification, not vibes.** Every completed task goes through a verification gate. The system won't claim "done" without proof - it runs the tests, checks the build, reads the output, and only then marks the task complete.
 
-**Parallel agents with file ownership.** When dev-engine dispatches multiple agents, each one owns specific files exclusively. No merge conflicts. No agents stepping on each other's work. Interface contracts are defined at boundaries before implementation starts.
+**Parallel agents with file ownership.** When smedjen dispatches multiple agents, each one owns specific files exclusively. No merge conflicts. No agents stepping on each other's work. Interface contracts are defined at boundaries before implementation starts.
 
-**Contradiction detection.** taskflow doesn't just pull your Jira ticket - it reads every comment and flags where later discussions contradict the original spec. You find out before you start coding, not after.
+**Contradiction detection.** herold doesn't just pull your Jira ticket - it reads every comment and flags where later discussions contradict the original spec. You find out before you start coding, not after.
 
 **Cross-session memory.** Claude Code forgets everything between sessions. These plugins don't. State files, handoff documents, and snapshot contexts survive session boundaries. Pick up exactly where you left off.
 
-**Learning pipeline.** claude-core observes patterns in how you work, extracts recurring behaviors as "instincts," and can promote high-confidence patterns into rules, skills, or memory entries. The system gets better the more you use it.
+**Learning pipeline.** kronen observes patterns in how you work, extracts recurring behaviors as "instincts," and can promote high-confidence patterns into rules, skills, or memory entries. The system gets better the more you use it.
 
 ## Quick Start
 
@@ -89,7 +89,7 @@ git clone https://github.com/hjemmesidekongen/ai.git
 cd ai
 ```
 
-Then try `/brainstorm:start` to explore a problem, `/dev:scan` to map your project, or `/task:ingest PROJ-123` to pull a Jira ticket. See [Workflows](/docs/workflows) for step-by-step recipes.
+Then try `/brainstorm:start` to explore a problem, `/smedjen:scan` to map your project, or `/task:ingest PROJ-123` to pull a Jira ticket. See [Workflows](/docs/workflows) for step-by-step recipes.
 
 ## All Commands
 
@@ -97,29 +97,29 @@ Every command across the three plugins, in one place.
 
 | Command | Plugin | What It Does |
 |---------|--------|-------------|
-| `/brainstorm:start` | claude-core | Explore a problem with assumption challenging and pushback. |
-| `/brainstorm:decide` | claude-core | Extract structured decisions from a brainstorm session. |
-| `/plan:create` | claude-core | Convert a task into a wave-based execution plan with dependencies. |
-| `/plan:execute` | claude-core | Run the plan wave-by-wave with parallel agent dispatch. |
-| `/plan:status` | claude-core | Show wave progress, task status, and recovery options. |
-| `/plan:resume` | claude-core | Pick up an interrupted plan from where it stopped. |
-| `/full-review` | claude-core | Run a 5-phase code review with parallel reviewers per phase. |
-| `/prompt:create` | claude-core | Turn rough intent into a structured, expert-level prompt. |
-| `/trace:full` | claude-core | Toggle full tracing on or off for structured session capture. |
-| `/roadmap:add` | claude-core | Add an item to the project roadmap interactively. |
-| `/roadmap:view` | claude-core | Display the roadmap with optional filters by priority or category. |
-| `/autopilot-run` | claude-core | Start an autonomous iteration loop with stop hooks. |
-| `/autopilot-cancel` | claude-core | Stop the autopilot loop and get an iteration report. |
-| `/dev:run` | dev-engine | Full pipeline - decompose, assign, dispatch agents, verify. |
-| `/dev:scan` | dev-engine | Scan a repo for tech stack and output a project map. |
-| `/task:ingest` | taskflow | Pull a single Jira ticket into local YAML. |
-| `/task:ingest-bulk` | taskflow | Batch ingest from a Jira board or filter. |
-| `/task:list` | taskflow | List local tasks with status and contradiction count. |
-| `/task:start` | taskflow | Activate a task, load context, show contradictions. |
-| `/task:status` | taskflow | Show full details for the active task. |
-| `/task:docs` | taskflow | Find related Confluence pages for the active task. |
-| `/task:pr` | taskflow | Create a PR with a description populated from task context. |
-| `/task:done` | taskflow | Complete the task with QA handover and close the ticket. |
+| `/brainstorm:start` | kronen | Explore a problem with assumption challenging and pushback. |
+| `/brainstorm:decide` | kronen | Extract structured decisions from a brainstorm session. |
+| `/plan:create` | kronen | Convert a task into a wave-based execution plan with dependencies. |
+| `/plan:execute` | kronen | Run the plan wave-by-wave with parallel agent dispatch. |
+| `/plan:status` | kronen | Show wave progress, task status, and recovery options. |
+| `/plan:resume` | kronen | Pick up an interrupted plan from where it stopped. |
+| `/full-review` | kronen | Run a 5-phase code review with parallel reviewers per phase. |
+| `/prompt:create` | kronen | Turn rough intent into a structured, expert-level prompt. |
+| `/trace:full` | kronen | Toggle full tracing on or off for structured session capture. |
+| `/roadmap:add` | kronen | Add an item to the project roadmap interactively. |
+| `/roadmap:view` | kronen | Display the roadmap with optional filters by priority or category. |
+| `/autopilot-run` | kronen | Start an autonomous iteration loop with stop hooks. |
+| `/autopilot-cancel` | kronen | Stop the autopilot loop and get an iteration report. |
+| `/smedjen:run` | smedjen | Full pipeline - decompose, assign, dispatch agents, verify. |
+| `/smedjen:scan` | smedjen | Scan a repo for tech stack and output a project map. |
+| `/task:ingest` | herold | Pull a single Jira ticket into local YAML. |
+| `/task:ingest-bulk` | herold | Batch ingest from a Jira board or filter. |
+| `/task:list` | herold | List local tasks with status and contradiction count. |
+| `/task:start` | herold | Activate a task, load context, show contradictions. |
+| `/task:status` | herold | Show full details for the active task. |
+| `/task:docs` | herold | Find related Confluence pages for the active task. |
+| `/task:pr` | herold | Create a PR with a description populated from task context. |
+| `/task:done` | herold | Complete the task with QA handover and close the ticket. |
 
 ## Architecture
 

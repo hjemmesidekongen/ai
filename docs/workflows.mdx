@@ -19,14 +19,14 @@ The full lifecycle: ticket to merged PR.
 /task:start PROJ-456
 ```
 
-taskflow reads every comment on the ticket and flags where later discussions contradict the original spec. If contradictions exist, you see them before writing any code.
+herold reads every comment on the ticket and flags where later discussions contradict the original spec. If contradictions exist, you see them before writing any code.
 
 ```bash
 # 3. Execute the work
-/dev:run "Implement the user preference panel per PROJ-456"
+/smedjen:run "Implement the user preference panel per PROJ-456"
 ```
 
-dev-engine decomposes the task into subtasks, assigns each to a specialist agent (frontend, backend, testing), dispatches them in parallel with file-ownership isolation, and runs a 10-point quality gate on each result.
+smedjen decomposes the task into subtasks, assigns each to a specialist agent (frontend, backend, testing), dispatches them in parallel with file-ownership isolation, and runs a 10-point quality gate on each result.
 
 ```bash
 # 4. Create the PR
@@ -80,7 +80,7 @@ When `console.log` isn't cutting it.
 
 ```bash
 # Structured investigation - no guessing
-/dev:run "Debug: users see stale data after preference update"
+/smedjen:run "Debug: users see stale data after preference update"
 ```
 
 The system uses a 4-phase protocol:
@@ -113,7 +113,7 @@ Each reviewer runs independently. Results are merged into a single report with s
 
 ```bash
 # Quick review of staged changes
-/dev:run "Review my staged changes before committing"
+/smedjen:run "Review my staged changes before committing"
 ```
 
 Lighter touch - checks for obvious issues, consistency with existing patterns, and anything that would fail CI.
@@ -199,10 +199,10 @@ When you're joining a project or starting work in an unfamiliar repo.
 
 ```bash
 # Map the project
-/dev:scan
+/smedjen:scan
 ```
 
-dev-engine scans the repository and produces:
+smedjen scans the repository and produces:
 - Tech stack detection (frameworks, languages, build tools)
 - Module boundary map (what talks to what)
 - File dependency graph
@@ -235,6 +235,6 @@ Each creator guides you through the process, generates the correct file structur
 ## See also
 
 - [Initialize in a New Project](/docs/init-project) - first-time setup before running workflows
-- [claude-core](/docs/claude-core) - planning, verification, and review commands used in these workflows
-- [dev-engine](/docs/dev-engine) - the multi-agent pipeline behind `/dev:run`
-- [taskflow](/docs/taskflow) - the task lifecycle behind `/task:*` commands
+- [kronen](/docs/kronen) - planning, verification, and review commands used in these workflows
+- [smedjen](/docs/smedjen) - the multi-agent pipeline behind `/smedjen:run`
+- [herold](/docs/herold) - the task lifecycle behind `/task:*` commands

@@ -1,0 +1,10 @@
+{
+  "name": "smedjen",
+  "version": "0.2.0",
+  "description": "The Forge \u2014 development execution engine. Task decomposition, agent dispatch, tech knowledge, and completion gates.",
+  "author": { "name": "mvn" },
+  "repository": "https://github.com/hjemmesidekongen/ai",
+  "license": "MIT",
+  "keywords": ["dev", "execution", "agents", "decomposition", "orchestration"],
+  "dependencies": ["kronen"]
+}

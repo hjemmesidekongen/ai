@@ -1,0 +1,10 @@
+{
+  "name": "våbenskjold",
+  "version": "0.1.0",
+  "description": "The Coat of Arms \u2014 brand strategy toolkit. Voice, values, positioning, audience, and content pillars.",
+  "author": { "name": "mvn" },
+  "repository": "https://github.com/hjemmesidekongen/ai",
+  "license": "MIT",
+  "keywords": ["brand", "strategy", "voice", "values", "positioning", "guidelines"],
+  "dependencies": ["kronen"]
+}

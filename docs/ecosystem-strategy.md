@@ -73,7 +73,7 @@ Commands are the user-facing entry points. Keep them few (2-4 max).
 - One "audit" command (check existing work against the standard)
 - Optionally: "add/update" (incremental), "export" (format conversion)
 
-**Brand example:** `/brand:generate`, `/brand:analyze`, `/brand:audit`, `/brand:switch`
+**Brand example:** `/våbenskjold:generate`, `/våbenskjold:analyze`, `/våbenskjold:audit`, `/våbenskjold:switch`
 
 ### Q5: What are the skills?
 Skills are the internal building blocks commands call. Each skill:

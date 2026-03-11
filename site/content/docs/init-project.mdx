@@ -12,7 +12,7 @@ The one thing worth doing upfront is scanning your project.
 ## Scan Your Project
 
 ```bash
-/dev:scan
+/smedjen:scan
 ```
 
 This reads your config files - `package.json`, `tsconfig.json`, `next.config.*`, `turbo.json`, `prisma/schema.prisma`, and others - to build a picture of your tech stack, detect monorepo structure, and map module boundaries. The result goes to `.ai/project-map.yml` with a Mermaid C4 context diagram included.
@@ -56,7 +56,7 @@ Everything the tools produce lands in `.ai/`. Nothing gets created until you use
 ├── instincts/        # Behavioral learning pipeline (auto-populated)
 ├── brainstorm/       # Brainstorm sessions and decisions
 ├── roadmap.yml       # Project roadmap
-└── project-map.yml   # From /dev:scan
+└── project-map.yml   # From /smedjen:scan
 ```
 
 Commit `.ai/` to your repo. The project map, plans, brainstorm decisions, and handoffs are all useful to keep alongside the code. The `context/` directory holds transient session state - commit it or not, up to you.
@@ -103,7 +103,7 @@ The plan breaks work into waves with verification gates between them. Each wave 
 **Without Jira:**
 
 ```bash
-/dev:run "Build X"
+/smedjen:run "Build X"
 ```
 
 This runs the full dev pipeline standalone - task decomposition, agent dispatch, verification gates, completion check. No ticket needed.

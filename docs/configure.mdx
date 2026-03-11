@@ -15,7 +15,7 @@ Each template below is a drop-in entry. Merge the `mcpServers` block into your e
 
 ### Atlassian (Jira, Confluence, Bitbucket)
 
-Used by taskflow's Jira ingestion, PR workflows, and QA handover.
+Used by herold's Jira ingestion, PR workflows, and QA handover.
 
 ```json
 {
@@ -71,7 +71,7 @@ No credentials needed - authentication happens through the running Figma desktop
 
 ### Playwright (browser automation)
 
-Used by dev-engine's visual verification and testing skills.
+Used by smedjen's visual verification and testing skills.
 
 ```json
 {
@@ -152,12 +152,12 @@ Each plugin can be configured per-project using a `.claude/{plugin-name}.local.m
 
 ```
 .claude/
-  claude-core.local.md
-  taskflow.local.md
-  dev-engine.local.md
+  kronen.local.md
+  herold.local.md
+  smedjen.local.md
 ```
 
-Example `.claude/claude-core.local.md`:
+Example `.claude/kronen.local.md`:
 
 ```markdown
 ---
@@ -243,7 +243,7 @@ completion_gates:
 
 All fields are optional. If you skip the file entirely, the plugins fall back to sensible defaults: `context: personal`, `commit_style: imperative`, `qa.format: markdown`, and only the `no_blockers` completion gate.
 
-The profile is read at session start and on task switches. taskflow's `project-profile-loader` skill exposes it to downstream skills - the QA handover generator reads `qa.format`, Jira ingestion checks `mcp_servers` to confirm the Atlassian connection is expected, and completion gates check `dev.*_command` to know what to run.
+The profile is read at session start and on task switches. herold's `project-profile-loader` skill exposes it to downstream skills - the QA handover generator reads `qa.format`, Jira ingestion checks `mcp_servers` to confirm the Atlassian connection is expected, and completion gates check `dev.*_command` to know what to run.
 
 For personal side projects, you can skip `rules.yml` entirely. The default profile works without any setup.
 
