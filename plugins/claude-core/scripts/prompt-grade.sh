@@ -172,12 +172,19 @@ if [ "$INTERVENE" -eq 1 ]; then
   printf '%s|prompt-grade|intervene|%s|clarity=%d stakes=%d — vague high-stakes prompt\n' \
     "$(date -u +%Y-%m-%dT%H:%M:%SZ)" "$PROMPT_PREVIEW" "$CLARITY" "$STAKES" >> "$LOG_FILE" 2>/dev/null || true
 
-  printf '{"additionalContext":"The user'\''s prompt is vague for a high-stakes task. Before executing, load the prompt-optimizer skill (Mode A: auto-sharpen). Analyze the prompt, infer missing context from the codebase, and rewrite it into a precise instruction. Show '\''I will approach this as: [sharpened prompt]'\'' then proceed with the sharpened version."}\n'
+  # Output as plain text (visible as hook output in transcript) + JSON additionalContext
+  cat <<'PROMPT_HINT'
+Prompt quality: LOW clarity + HIGH stakes. Before executing, sharpen the prompt:
+1. Identify what's vague (missing files, scope, constraints, success criteria)
+2. Infer missing context from the codebase
+3. Present: "I'll approach this as: [sharpened version]" and ask if that's right
+Do NOT proceed with the vague version directly.
+PROMPT_HINT
 else
   printf '%s|prompt-grade|pass|%s|clarity=%d stakes=%d\n' \
     "$(date -u +%Y-%m-%dT%H:%M:%SZ)" "$PROMPT_PREVIEW" "$CLARITY" "$STAKES" >> "$LOG_FILE" 2>/dev/null || true
 
-  echo '{}'
+  echo "Success"
 fi
 
 exit 0
