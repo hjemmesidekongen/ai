@@ -8,16 +8,37 @@
 
 set -euo pipefail
 
+# Read hook input from stdin (contains session_id)
+HOOK_INPUT=$(cat)
+
 PROJECT_DIR="${CLAUDE_PROJECT_DIR:-.}"
 PLUGIN_ROOT="${CLAUDE_PLUGIN_ROOT:-$(cd "$(dirname "$0")/.." && pwd)}"
 SNAPSHOT="$PROJECT_DIR/.ai/context/snapshot.yml"
 FLAG="$PROJECT_DIR/.ai/compact-needed"
+
+# --- Expose session_id to Bash commands via CLAUDE_ENV_FILE ---
+SESSION_ID=$(echo "$HOOK_INPUT" | jq -r '.session_id // empty' 2>/dev/null | tr -cd 'a-zA-Z0-9_-' || true)
+if [ -n "$SESSION_ID" ] && [ -n "${CLAUDE_ENV_FILE:-}" ]; then
+  printf 'export CLAUDE_SESSION_ID=%s\n' "$SESSION_ID" >> "$CLAUDE_ENV_FILE"
+fi
 
 # --- Stale check: delete snapshots older than 48h ---
 find "$PROJECT_DIR/.ai/context" -name "snapshot.yml" -mmin +2880 -delete 2>/dev/null || true
 
 # --- Clean up legacy path ---
 rm -f "$PROJECT_DIR/.ai/compact-snapshot.yml" 2>/dev/null
+
+# --- Clean stale per-session autopilot files ---
+# Remove autopilot files for sessions whose transcript is older than 24h
+for ap_file in "$PROJECT_DIR"/.claude/autopilot-*.local.md 2>/dev/null; do
+  [ ! -f "$ap_file" ] && continue
+  # Extract transcript path from the file (if stored) or just check file age
+  if find "$ap_file" -mmin +1440 -print -quit 2>/dev/null | grep -q .; then
+    rm -f "$ap_file"
+  fi
+done
+# Also clean up legacy single-file autopilot
+rm -f "$PROJECT_DIR/.claude/autopilot.local.md" 2>/dev/null
 
 # --- Refresh snapshot via assembler ---
 ASSEMBLER="$PLUGIN_ROOT/scripts/assemble-context.sh"

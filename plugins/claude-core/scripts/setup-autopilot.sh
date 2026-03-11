@@ -53,10 +53,10 @@ STOPPING:
 
 MONITORING:
   # View current iteration:
-  grep '^iteration:' .claude/autopilot.local.md
+  grep '^iteration:' $STATE_FILE
 
   # View full state:
-  head -10 .claude/autopilot.local.md
+  head -10 $STATE_FILE
 HELP_EOF
       exit 0
       ;;
@@ -136,6 +136,15 @@ fi
 # Create state file (markdown with YAML frontmatter)
 mkdir -p .claude
 
+# Determine session-specific filename
+SANITIZED_ID=$(echo "${CLAUDE_SESSION_ID:-}" | tr -cd 'a-zA-Z0-9_-')
+if [ -n "$SANITIZED_ID" ]; then
+  STATE_FILE=".claude/autopilot-${SANITIZED_ID}.local.md"
+else
+  # Fallback for manual invocation outside a session
+  STATE_FILE=".claude/autopilot-unknown.local.md"
+fi
+
 # Quote completion promise for YAML if it contains special chars or is not null
 if [[ -n "$COMPLETION_PROMISE" ]] && [[ "$COMPLETION_PROMISE" != "null" ]]; then
   COMPLETION_PROMISE_YAML="\"$COMPLETION_PROMISE\""
@@ -150,7 +159,7 @@ else
   DYNAMIC_PLAN_YAML="null"
 fi
 
-cat > .claude/autopilot.local.md <<EOF
+cat > "$STATE_FILE" <<EOF
 ---
 active: true
 iteration: 1
@@ -175,7 +184,7 @@ The stop hook is now active. $(if [[ -n "$DYNAMIC_PLAN" ]]; then echo "Dynamic p
 Each iteration constructs a fresh prompt from the plan's state and learnings."; else echo "When you try to exit, the SAME PROMPT will be fed back.
 Previous work persists in files, creating a self-referential loop."; fi)
 
-To monitor: head -10 .claude/autopilot.local.md
+To monitor: head -10 $STATE_FILE
 To cancel:  /claude-core:autopilot-cancel
 EOF
 

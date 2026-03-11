@@ -12,11 +12,16 @@ DEBUG_LOG="/tmp/autopilot-debug.log"
 HOOK_INPUT=$(cat)
 echo "$(date -u +%Y-%m-%dT%H:%M:%SZ) HOOK_INPUT: $HOOK_INPUT" >> "$DEBUG_LOG"
 
-# Check if autopilot is active
-STATE_FILE=".claude/autopilot.local.md"
+# Determine session-specific state file
+SESSION_ID=$(echo "$HOOK_INPUT" | jq -r '.session_id // empty' | tr -cd 'a-zA-Z0-9_-')
+if [[ -n "$SESSION_ID" ]]; then
+  STATE_FILE=".claude/autopilot-${SESSION_ID}.local.md"
+else
+  STATE_FILE=".claude/autopilot-unknown.local.md"
+fi
 
 if [[ ! -f "$STATE_FILE" ]]; then
-  echo "$(date -u +%Y-%m-%dT%H:%M:%SZ) No state file, allowing exit" >> "$DEBUG_LOG"
+  echo "$(date -u +%Y-%m-%dT%H:%M:%SZ) No state file ($STATE_FILE), allowing exit" >> "$DEBUG_LOG"
   exit 0
 fi
 
