@@ -1,0 +1,20 @@
+topic: plugin-testing-infrastructure
+active: false
+decisions_extracted: true
+created: "2026-03-11"
+sessions:
+  - date: "2026-03-11"
+    topics_explored:
+      - "test granularity — individual skill tests vs full pipeline"
+      - "cost constraint — tests must be cheap enough to actually run"
+      - "four test brands with distinct profiles"
+      - "minimal briefs as fixtures (5-10 lines)"
+      - "selective matrix — full for generative, single for transformation"
+      - "two-tier grading — deterministic + LLM (Haiku)"
+      - "rubric versioning for valid cross-run comparison"
+      - "directory structure and naming conventions"
+      - "incremental build — SaaS brand first, prove approach, then expand"
+      - "permanence — documented, versioned, runnable in 6+ months"
+    context_loaded:
+      - ".ai/roadmap.yml (RL-139, RL-140)"
+      - ".ai/design/hjemmesidekongen/test-findings.md"

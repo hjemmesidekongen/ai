@@ -2,7 +2,7 @@
 
 ## What This Is
 Four plugins in a monorepo:
-- **claude-core** (`plugins/claude-core/`) — Foundation plugin: planning, brainstorm, tracing, memory governance, roadmap, doc governance, creator/reviewer tooling, autopilot, prompt optimization, and validation agents (40 skills, 13 commands, 12 agents).
+- **claude-core** (`plugins/claude-core/`) — Foundation plugin: planning, brainstorm, tracing, memory governance, roadmap, doc governance, creator/reviewer tooling, autopilot, prompt optimization, and validation agents (41 skills, 14 commands, 12 agents).
 - **agency** (`plugins/agency/`) — Digital agency plugin: brand, design, content, dev, deploy pipelines (11 agents — security-reviewer ported to claude-core).
 - **dev-engine** (`plugins/dev-engine/`) — Generic development execution: task decomposition, agent dispatch, tech knowledge, disciplines, visual verification, completion gates, project mapping, orchestration, studio knowledge (62 skills, 2 commands, 6 agents).
 - **taskflow** (`plugins/taskflow/`) — Task management and workplace integration: Jira ingestion, local task storage, contradiction detection, project profiles, QA handover, bulk ingestion, PR workflows (9 skills, 8 commands).
@@ -38,7 +38,7 @@ After `/compact` or when context seems incomplete, read `.ai/context/snapshot.ym
   prompts/                           # Prompt templates
   roadmap.yml                        # 124-item roadmap across 5 phases
 plugins/
-  claude-core/                       # Foundation plugin (34 skills, 10 commands, 12 agents)
+  claude-core/                       # Foundation plugin (41 skills, 14 commands, 12 agents)
     .claude-plugin/
       plugin.json                    # v0.3.0, hooks: PreToolUse, PostToolUse, PreCompact, SessionStart, Stop
       ecosystem.json                 # Component registry
@@ -47,14 +47,15 @@ plugins/
                                      # context-manager, tdd-orchestrator, error-detective, incident-responder,
                                      # agent-reviewer
     commands/                        # trace-full, roadmap-add, roadmap-view, brainstorm-start,
-                                     # brainstorm-decide, plan-create, plan-execute, plan-status, plan-resume,
-                                     # autopilot-run, autopilot-cancel,
+                                     # brainstorm-decide, plan-create, plan-dynamic, plan-execute,
+                                     # plan-status, plan-resume, autopilot-run, autopilot-cancel,
                                      # full-review, prompt-create
     skills/
       roadmap-capture/               # Auto-capture out-of-scope ideas
       brainstorm-session/            # Open-ended brainstorm
       brainstorm-decision-writer/    # Extract decisions from brainstorms
       plan-engine/                   # Task → wave plan conversion
+      dynamic-planner/               # Goal-oriented iterative planning with learning loop
       plan-verifier/                 # Two-stage wave verification
       brainstorm-decision-reader/     # Load past decisions for context
       doc-checkpoint/                # Evaluate docs state after task completion
@@ -90,7 +91,8 @@ plugins/
                                      # doc-stale-check, port-dedup-check, cache-clear, verification-gate-stop,
                                      # observation-recorder, scope-guard, tdd-gate, plan-gate, compact-gate-pre/post,
                                      # setup-autopilot, autopilot-stop-hook,
-                                     # prevent-direct-push, debug-window
+                                     # prevent-direct-push, debug-window,
+                                     # dynamic-prompt-constructor
       tests/                         # Hook unit tests (test-tdd-gate.sh, test-scope-guard.sh, test-plan-gate.sh)
     resources/                       # error-annotation-format, memory-rules, agent-orchestration, instincts-schema
   agency/                            # Digital agency plugin
@@ -133,6 +135,7 @@ docs/
 | `/agency:status` | Show project status |
 | `/agency:switch` | Switch active project |
 | `/agency:scan` | Scan existing project for agency integration |
+| `/claude-core:plan-dynamic` | Start a goal-oriented iterative plan (dynamic mode) |
 | `/claude-core:autopilot-run` | Start autopilot loop (autonomous iteration with stop hook) |
 | `/claude-core:autopilot-cancel` | Cancel active autopilot loop |
 

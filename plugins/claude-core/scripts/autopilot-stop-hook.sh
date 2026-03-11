@@ -94,17 +94,45 @@ if [[ "$COMPLETION_PROMISE" != "null" ]] && [[ -n "$COMPLETION_PROMISE" ]]; then
   fi
 fi
 
-# Not complete — continue loop with SAME PROMPT
+# Not complete — continue loop
 NEXT_ITERATION=$((ITERATION + 1))
 
-# Extract prompt (everything after the closing ---) and strip leading blank lines
-PROMPT_TEXT=$(awk '/^---$/{i++; next} i>=2' "$STATE_FILE" | sed '/./,$!d')
+# Check for dynamic plan mode
+DYNAMIC_PLAN=$(echo "$FRONTMATTER" | grep '^dynamic_plan:' | sed 's/dynamic_plan: *//' | sed 's/^"\(.*\)"$/\1/')
 
-if [[ -z "$PROMPT_TEXT" ]]; then
-  echo "$(date -u +%Y-%m-%dT%H:%M:%SZ) FAIL: no prompt text in state file" >> "$DEBUG_LOG"
-  echo "Autopilot: No prompt text found in state file. Stopping." >&2
-  rm "$STATE_FILE"
-  exit 0
+if [[ -n "$DYNAMIC_PLAN" ]] && [[ "$DYNAMIC_PLAN" != "null" ]]; then
+  echo "$(date -u +%Y-%m-%dT%H:%M:%SZ) Dynamic mode: plan=$DYNAMIC_PLAN" >> "$DEBUG_LOG"
+
+  # Resolve script path relative to this hook's location
+  SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+  CONSTRUCTOR="$SCRIPT_DIR/dynamic-prompt-constructor.sh"
+
+  if [[ ! -x "$CONSTRUCTOR" ]]; then
+    echo "$(date -u +%Y-%m-%dT%H:%M:%SZ) FAIL: prompt constructor not found at $CONSTRUCTOR" >> "$DEBUG_LOG"
+    echo "Autopilot: dynamic-prompt-constructor.sh not found. Stopping." >&2
+    rm "$STATE_FILE"
+    exit 0
+  fi
+
+  PROMPT_TEXT=$("$CONSTRUCTOR" "$DYNAMIC_PLAN" 2>>"$DEBUG_LOG")
+
+  # Empty output means plan is done
+  if [[ -z "$PROMPT_TEXT" ]]; then
+    echo "$(date -u +%Y-%m-%dT%H:%M:%SZ) Dynamic plan done, allowing exit" >> "$DEBUG_LOG"
+    echo "Autopilot: Dynamic plan completed. Done."
+    rm "$STATE_FILE"
+    exit 0
+  fi
+else
+  # Static mode — extract prompt (everything after the closing ---) and strip leading blank lines
+  PROMPT_TEXT=$(awk '/^---$/{i++; next} i>=2' "$STATE_FILE" | sed '/./,$!d')
+
+  if [[ -z "$PROMPT_TEXT" ]]; then
+    echo "$(date -u +%Y-%m-%dT%H:%M:%SZ) FAIL: no prompt text in state file" >> "$DEBUG_LOG"
+    echo "Autopilot: No prompt text found in state file. Stopping." >&2
+    rm "$STATE_FILE"
+    exit 0
+  fi
 fi
 
 # Update iteration in frontmatter (portable across macOS and Linux)

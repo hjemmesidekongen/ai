@@ -1,0 +1,163 @@
+topic: iterative-build-planning
+created: "2026-03-11"
+decisions:
+
+  - id: D-001
+    title: "Architecture — new skill wrapping existing system"
+    decision: >
+      Build a dynamic-planner skill that wraps plan-engine + autopilot. Don't modify
+      plan-engine internals. Dynamic planner is the navigator (what to do), autopilot
+      is the engine (loop control). /plan:dynamic sits alongside /plan:create — static
+      planning unchanged.
+    rationale: >
+      Keeps existing system stable. Dynamic planning is an additional capability, not
+      a replacement. Matches GoalAct's pattern of goal-fixed-path-adapts without
+      requiring rewrites of working infrastructure.
+    status: confirmed
+
+  - id: D-002
+    title: "Loop structure — 7-phase cycle"
+    decision: >
+      Each iteration follows: Orient → Reflect → Research (optional) → Plan (one wave)
+      → Build → Learn → back to Orient. Reflect skipped on first cycle. Research
+      triggered only when reflect identifies knowledge gaps.
+    rationale: >
+      Maps to PDCA (Plan-Do-Check-Act) which outperforms OODA for reliability and
+      auditability. The orient step is the critical phase — cognitive maneuverability
+      depends on accurate situational awareness before planning.
+    status: confirmed
+
+  - id: D-003
+    title: "Learnings as structured episodic memory"
+    decision: >
+      Learnings stored in .ai/plans/{name}/learnings.yml. Entries typed as
+      observation/constraint/correction/discovery. Each entry has status
+      (active/superseded/invalidated). Corrections must reference what they correct.
+      Freeform content within structured schema — minimal required fields, rich prose.
+    rationale: >
+      Reflexion paper shows verbal self-critique as text memory achieves 91% pass@1
+      vs 67% baseline. Structured schema enables cross-run comparison. Freeform content
+      preserves nuance. The 28-line CLAUDE.md insight warns against over-structuring.
+    status: confirmed
+
+  - id: D-004
+    title: "Reflect classification — CONTINUE/ADJUST/REPLAN/ESCALATE"
+    decision: >
+      Every reflect step must produce one of four classifications: CONTINUE (wave
+      succeeded, learnings are observations), ADJUST (next wave needs different
+      approach), REPLAN (wave failed or learnings invalidate approach), ESCALATE
+      (discovery requires human decision). ESCALATE must always surface.
+    rationale: >
+      AdaPlanner's in-plan vs out-of-plan distinction plus backtracking paper's
+      replan triggers. Four levels give clear decision boundaries. ESCALATE prevents
+      the agent from making scope decisions it shouldn't.
+    status: confirmed
+
+  - id: D-005
+    title: "Same-context reflection with adversarial framing"
+    decision: >
+      Reflect happens in the same context (not a fresh agent) to preserve nuance.
+      Adversarial prompt framing overcomes sunk-cost bias: "What would you do
+      differently if starting over right now?" Quality of reflection matters more
+      than freshness.
+    rationale: >
+      Reflexion paper insight: reflection quality matters more than freshness. Bad
+      reflections compound regardless of context. Same-context preserves details
+      that a fresh agent would miss. Adversarial framing is cheaper than spawning
+      a new agent.
+    status: confirmed
+
+  - id: D-006
+    title: "State file extension for dynamic mode"
+    decision: >
+      state.yml gets new fields: mode (dynamic|static), goal, cycle, planned_waves[],
+      remaining_goal (freeform). plan-execute reads mode and handles both. plan-status
+      shows "3 of ???" for dynamic vs "3 of 7" for static.
+    rationale: >
+      GoalAct pattern: plan is a living document. Growing state.yml means the full
+      history is always available. remaining_goal is freeform because the future is
+      uncertain by definition. Backward compatible — static plans unchanged.
+    status: confirmed
+
+  - id: D-007
+    title: "In-plan vs out-of-plan refinement"
+    decision: >
+      Small failures adjust within current wave (in-plan refinement). Big discoveries
+      trigger replanning of remaining work (out-of-plan refinement). Maps to ADJUST
+      vs REPLAN in the classification system.
+    rationale: >
+      From AdaPlanner. Prevents overreacting to minor issues while catching
+      fundamental problems. Without this distinction, every small failure triggers
+      expensive replanning.
+    status: confirmed
+
+  - id: D-008
+    title: "Anti-oscillation guard — max 2 replans then escalate"
+    decision: >
+      Track replan count per goal. If more than 2 replans, escalate to human.
+      REPLAN preserves completed waves — only future work is replanned. Never
+      undo verified work.
+    rationale: >
+      Backtracking paper warns about plan instability. An agent that keeps changing
+      direction is worse than one that asks for help. 2 replans is generous — if
+      the approach changed twice, the third time needs human judgment.
+    status: confirmed
+
+  - id: D-009
+    title: "Context-efficient orient step"
+    decision: >
+      Orient reads learnings.yml but only loads active entries. Summarizes rather
+      than dumping full history into context. Prevents context bloat as learnings
+      accumulate across many cycles.
+    rationale: >
+      General LLM limitation — context bloat degrades performance. Claude Agent SDK
+      pattern validates keeping each iteration lightweight. Superseded entries are
+      preserved on disk but not loaded.
+    status: confirmed
+
+  - id: D-010
+    title: "Decision confidence boundaries"
+    decision: >
+      Proceed autonomously for: technical implementation choices between equivalent
+      options, refactoring within current architecture, error handling and edge cases,
+      equivalent data formats. Escalate for: scope changes affecting cost, architecture
+      pivots invalidating previous work, goal revision, UX-impacting technical choices.
+    rationale: >
+      Clear boundaries prevent both over-escalation (blocking on trivial choices) and
+      under-escalation (making scope decisions silently). The agent should be autonomous
+      within technical bounds but defer on business/scope decisions.
+    status: confirmed
+
+  - id: D-011
+    title: "Learnings pruning — supersede, don't delete"
+    decision: >
+      When a new learning contradicts an old one, mark the old as superseded with a
+      reference. Never delete learnings outright. The supersession chain shows how
+      thinking evolved. Only active entries loaded during orient.
+    rationale: >
+      Reflexion paper warning: hallucinated reflections compound. Keeping the full
+      chain makes it possible to detect and recover from bad reflections. Deletion
+      destroys the audit trail.
+    status: confirmed
+
+  - id: D-012
+    title: "Max cycles safety valve"
+    decision: >
+      max_cycles field in state.yml (default: 15). Same pattern as autopilot's
+      max_iterations. Prevents infinite loops with no progress.
+    rationale: >
+      Ralph Loop (Alibaba) validates forced iteration but their loop is stateless.
+      Adding a cap prevents the worst case: an agent looping forever on an unsolvable
+      problem. 15 cycles is generous for most tasks.
+    status: confirmed
+
+  - id: D-013
+    title: "Build approach — dogfood after wave 1"
+    decision: >
+      Build wave 1 of the dynamic planner manually (traditional plan). Then use
+      the dynamic planner itself to build the remaining features. If it can build
+      itself iteratively, it works.
+    rationale: >
+      Ultimate validation. If the tool can't build itself, it's not ready for
+      real work. Manual wave 1 bootstraps the minimum viable loop.
+    status: confirmed

@@ -1,0 +1,28 @@
+topic: iterative-build-planning
+active: false
+decisions_extracted: true
+created: "2026-03-11"
+sessions:
+  - date: "2026-03-11"
+    topics_explored:
+      - "three architectures compared (enhance plan-engine / new build-loop skill / smarter autopilot stop hook)"
+      - "user wants /plan:dynamic command alongside existing /plan:create"
+      - "plan initial 1-2 waves, keep remainder as open goal, iterate"
+      - "self-questioning: is approach correct? need more research? better way?"
+      - "online research: 18 sources reviewed, 8 prioritized"
+      - "Reflexion pattern: verbal self-critique as episodic memory (key foundation)"
+      - "AdaPlanner: in-plan vs out-of-plan refinement distinction"
+      - "GoalAct: continuously updatable global plan"
+      - "tension: structured vs freeform learnings"
+      - "tension: same-context vs fresh-agent reflect"
+      - "tension: when to replan vs when to continue (CONTINUE/ADJUST/REPLAN/ESCALATE)"
+      - "full architectural spec written to research-findings.md"
+    decisions_count: 13
+    context_loaded:
+      - ".ai/roadmap.yml (RL-133)"
+      - "plugins/claude-core/skills/plan-engine/SKILL.md"
+      - "plugins/claude-core/skills/plan-engine/references/process.md"
+      - "plugins/claude-core/scripts/setup-autopilot.sh"
+      - "plugins/claude-core/scripts/autopilot-stop-hook.sh"
+    research_completed: true
+    research_file: "research-findings.md"

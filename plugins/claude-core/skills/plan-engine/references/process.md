@@ -172,3 +172,30 @@ tasks:
 - **Dependency cycle:** Report the cycle and list involved task ids. Do not attempt to break the cycle automatically — surface it to the user.
 - **Unresolvable conflict:** If moving a task creates a cascade of conflicts across multiple waves, surface the specific conflict and suggest the user restructure the tasks.
 - **Missing dependency:** If a task references a `depends_on` id that doesn't exist, report it immediately.
+
+## Dynamic Planning Mode
+
+### New state.yml fields (all optional, backward compatible)
+
+| Field | Type | Default | Description |
+|-------|------|---------|-------------|
+| `mode` | string | `static` | `static` (traditional all-waves-upfront) or `dynamic` (goal-oriented iterative) |
+| `goal` | string | — | The fixed goal being pursued. Set once, never changes. |
+| `cycle` | integer | 1 | Current iteration number. Incremented after each learn phase. |
+| `planned_waves` | string[] | — | Wave IDs that have been planned so far. Grows each cycle. |
+| `remaining_goal` | string | — | Freeform description of what's left to achieve. Updated each cycle. |
+| `max_cycles` | integer | 15 | Safety valve. Escalate to human if reached. |
+| `replan_count` | integer | 0 | How many times the plan was fundamentally replanned. Max 2 before escalate. |
+
+### Backward compatibility rules
+- All new fields are optional. Missing fields = static mode behavior.
+- `mode` defaults to `static` if absent — all existing plans work unchanged.
+- plan-execute checks `mode` and delegates to dynamic-planner skill if `dynamic`.
+- plan-status reads `mode` to format output ("3 of 7" vs "3 of ???").
+
+### Dynamic mode lifecycle
+1. `/plan:dynamic` creates state.yml with `mode: dynamic`, `goal`, `cycle: 1`
+2. Each cycle: dynamic-planner plans one wave, appends to `planned_waves`, executes, learns
+3. After learn phase: `cycle` increments, `remaining_goal` updates
+4. On REPLAN: `replan_count` increments, only future work replanned
+5. On completion: `status: done`, `remaining_goal` cleared

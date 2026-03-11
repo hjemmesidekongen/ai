@@ -9,6 +9,7 @@ set -euo pipefail
 PROMPT_PARTS=()
 MAX_ITERATIONS=50
 COMPLETION_PROMISE="null"
+DYNAMIC_PLAN=""
 
 # Parse options and positional arguments
 while [[ $# -gt 0 ]]; do
@@ -26,6 +27,7 @@ ARGUMENTS:
 OPTIONS:
   --max-iterations <n>           Maximum iterations before auto-stop (default: 50)
   --completion-promise '<text>'  Promise phrase (USE QUOTES for multi-word)
+  --dynamic-plan <path>          Link to a dynamic plan directory (stop hook uses dynamic prompt constructor)
   -h, --help                     Show this help message
 
 DESCRIPTION:
@@ -42,7 +44,7 @@ DESCRIPTION:
 EXAMPLES:
   /claude-core:autopilot-run "Build a todo API" --completion-promise 'DONE' --max-iterations 20
   /claude-core:autopilot-run --max-iterations 100 Fix the auth bug
-  /claude-core:autopilot-run "$(cat .ai/plans/my-plan/autopilot-prompt.md)" --completion-promise "ALL PHASES COMPLETE"
+  /claude-core:autopilot-run --dynamic-plan .ai/plans/my-plan "Start the dynamic plan"
 
 STOPPING:
   - Reaching --max-iterations (default: 50)
@@ -73,6 +75,18 @@ HELP_EOF
         exit 1
       fi
       MAX_ITERATIONS="$2"
+      shift 2
+      ;;
+    --dynamic-plan)
+      if [[ -z "${2:-}" ]]; then
+        echo "Error: --dynamic-plan requires a plan directory path" >&2
+        exit 1
+      fi
+      if [[ ! -f "${2}/state.yml" ]]; then
+        echo "Error: no state.yml found at ${2}/state.yml" >&2
+        exit 1
+      fi
+      DYNAMIC_PLAN="$2"
       shift 2
       ;;
     --completion-promise)
@@ -129,12 +143,20 @@ else
   COMPLETION_PROMISE_YAML="null"
 fi
 
+# Quote dynamic plan path for YAML
+if [[ -n "$DYNAMIC_PLAN" ]]; then
+  DYNAMIC_PLAN_YAML="\"$DYNAMIC_PLAN\""
+else
+  DYNAMIC_PLAN_YAML="null"
+fi
+
 cat > .claude/autopilot.local.md <<EOF
 ---
 active: true
 iteration: 1
 max_iterations: $MAX_ITERATIONS
 completion_promise: $COMPLETION_PROMISE_YAML
+dynamic_plan: $DYNAMIC_PLAN_YAML
 started_at: "$(date -u +%Y-%m-%dT%H:%M:%SZ)"
 ---
 
@@ -149,9 +171,9 @@ Iteration: 1
 Max iterations: $(if [[ $MAX_ITERATIONS -gt 0 ]]; then echo $MAX_ITERATIONS; else echo "unlimited"; fi)
 Completion promise: $(if [[ "$COMPLETION_PROMISE" != "null" ]]; then echo "${COMPLETION_PROMISE//\"/} (output ONLY when TRUE)"; else echo "none"; fi)
 
-The stop hook is now active. When you try to exit, the SAME PROMPT will be
-fed back. Previous work persists in files, creating a self-referential loop
-where each iteration builds on the last.
+The stop hook is now active. $(if [[ -n "$DYNAMIC_PLAN" ]]; then echo "Dynamic plan linked: $DYNAMIC_PLAN
+Each iteration constructs a fresh prompt from the plan's state and learnings."; else echo "When you try to exit, the SAME PROMPT will be fed back.
+Previous work persists in files, creating a self-referential loop."; fi)
 
 To monitor: head -10 .claude/autopilot.local.md
 To cancel:  /claude-core:autopilot-cancel

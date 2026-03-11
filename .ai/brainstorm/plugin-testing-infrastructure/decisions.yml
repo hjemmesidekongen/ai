@@ -1,0 +1,134 @@
+topic: plugin-testing-infrastructure
+created: "2026-03-11"
+decisions:
+
+  - id: D-001
+    title: "E2E eval suite architecture"
+    decision: >
+      Each test case follows: fixed input (fixture) → run skill → capture output →
+      score against rubric → store timestamped result. Individual skill tests, not
+      full pipeline runs. Keeps each test cheap (~8k tokens, 30-60 seconds).
+    rationale: >
+      Full pipeline runs are expensive, slow, and hard to debug. Individual skill
+      tests are cheap enough to run after every skill change. Compose them for
+      integration testing when needed.
+    status: confirmed
+
+  - id: D-002
+    title: "Four test brands with distinct profiles"
+    decision: >
+      SaaS B2B (global/market-specific) — "CloudMetrics".
+      Local hairdresser (hyperlocal) — "Klip & Co".
+      National real estate agent (nationwide, regional) — "DanskBolig".
+      Nationwide webshop (e-commerce) — "Nordic Essentials".
+    rationale: >
+      Four brands stress-test different dimensions: hyperlocal vs global scope,
+      personal vs corporate tone, content-heavy vs conversion-focused, simple vs
+      data-intensive. Prevents accidentally tuning the pipeline to one type of input.
+    status: confirmed
+
+  - id: D-003
+    title: "Minimal brand briefs as fixtures"
+    decision: >
+      Each brand brief is 5-10 lines. Minimal input, not detailed specs. Tests
+      the pipeline's ability to expand thin input into full output.
+    rationale: >
+      Real clients don't hand you perfect briefs. Minimal input is the harder test
+      and the realistic scenario. If the pipeline handles thin input well, it will
+      do even better with rich input.
+    status: confirmed
+
+  - id: D-004
+    title: "Selective test matrix"
+    decision: >
+      Full matrix (all 4 brands) for generative skills: brand-audit, visual-identity,
+      content-strategy, web-copywriting, sitemap-planning. Single fixture for
+      transformation skills: design-tokens, design-loader. ~22 test cases total,
+      ~175k tokens for a full run.
+    rationale: >
+      Generative skills produce brand-dependent output — each brand stresses different
+      dimensions. Transformation skills are mostly mechanical format conversion —
+      if it handles one valid input, it handles any. Keeps total cost manageable.
+    status: confirmed
+
+  - id: D-005
+    title: "Two-tier grading — deterministic + LLM"
+    decision: >
+      ~70% deterministic checks (bash/python scripts for schema compliance, required
+      fields, word counts, keyword presence). ~30% LLM-graded checks for qualitative
+      dimensions using Haiku to keep costs down. Rubric structure similar to
+      skill-auditor's 8-dimension framework.
+    rationale: >
+      LLM-as-grader tends to be generous and inconsistent. Deterministic checks are
+      stable and free. Reserve LLM grading for qualitative dimensions that can't be
+      scripted. Haiku is sufficient for structured rubric scoring.
+    status: confirmed
+
+  - id: D-006
+    title: "Rubric versioning"
+    decision: >
+      Every rubric has a version number. Every result file records which rubric
+      version was used. When a rubric changes, re-run baseline so comparisons
+      remain valid.
+    rationale: >
+      Without versioning, old and new scores aren't comparable. A stricter rubric
+      would show a regression even if the skill improved. Version tracking prevents
+      apples-to-oranges comparisons.
+    status: confirmed
+
+  - id: D-007
+    title: "Score comparison as primary output"
+    decision: >
+      Results answer "did this change make it better or worse?" in one glance.
+      Format: skill/brand: score (date) → score (date) → delta. Baseline scores
+      in baseline.yml. No dashboards or databases — diffable YAML files.
+    rationale: >
+      The entire point is comparative scoring across time. If a developer can't
+      see the delta in 5 seconds, the system has failed. YAML files are versionable,
+      diffable, and readable without tooling.
+    status: confirmed
+
+  - id: D-008
+    title: "Prompt-based test runner"
+    decision: >
+      Tests run automatically via a prompt-based runner that constructs a test prompt,
+      executes the skill, captures output, and runs the grader. Not a manual checklist.
+    rationale: >
+      Manual checklists become shelfware. Automated runners get used. The skill-creator
+      eval pipeline already proves this approach works for skill testing.
+    status: confirmed
+
+  - id: D-009
+    title: "Directory structure and naming conventions"
+    decision: >
+      tests/e2e/ with subdirs: fixtures/brands/, rubrics/, runs/{timestamp}/,
+      baseline.yml, TESTING.md. Output dirs use {skill}--{brand} naming.
+      Sorts nicely, greppable, unambiguous.
+    rationale: >
+      Clear naming is what makes this usable in 6 months. The double-dash separator
+      avoids ambiguity with hyphenated skill names. Timestamped run dirs enable
+      historical comparison without overwriting.
+    status: confirmed
+
+  - id: D-010
+    title: "Build incrementally — one brand first"
+    decision: >
+      Start with SaaS brand. Build full test for brand-audit end-to-end: fixture →
+      runner → grader → results → comparison. Validate scoring works before adding
+      more brands and skills.
+    rationale: >
+      Building all four brands before proving the approach is premature. One end-to-end
+      test validates the infrastructure. Then scaling to more brands/skills is mechanical.
+    status: confirmed
+
+  - id: D-011
+    title: "Tests are permanent and versioned"
+    decision: >
+      Test fixtures, rubrics, and the runner are committed to the repo. Results are
+      committed per run. TESTING.md documents everything. Must be followable 6+ months
+      later by anyone (or Claude) reading the docs.
+    rationale: >
+      The entire point is long-term reusability. If the test infrastructure isn't
+      documented well enough to run without the person who built it, it's not
+      permanent — it's tribal knowledge.
+    status: confirmed
