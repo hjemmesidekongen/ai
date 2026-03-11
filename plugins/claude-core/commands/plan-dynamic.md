@@ -69,8 +69,12 @@ Create an iterative plan that plans one wave at a time and learns between waves.
    Cycle 1 — first wave planned ({N} tasks)
    Remaining: {remaining_goal summary}
 
-   Run /plan:execute to build wave 1.
-   After completion, the dynamic planner will reflect, learn, and plan wave 2.
+   Execute manually:
+     /plan:execute — build wave 1, then /plan:resume for each subsequent cycle
+
+   Execute autonomously:
+     /claude-core:autopilot-run --dynamic-plan .ai/plans/{name} "Execute the dynamic plan"
+     (loops through all cycles until goal is met or max_cycles reached)
    ```
 
 ## After wave 1 completes
@@ -78,7 +82,9 @@ Create an iterative plan that plans one wave at a time and learns between waves.
 The dynamic-planner skill takes over. Each subsequent cycle:
 Orient → Reflect → (Research) → Plan → Build → Learn → Loop
 
-This happens automatically if running under autopilot. For manual execution, run `/plan:resume` after each wave — it detects dynamic mode and triggers the next cycle.
+**Manual execution:** Run `/plan:resume` after each wave — it detects dynamic mode and triggers the next cycle's orient → reflect → plan → build → learn phases.
+
+**Autonomous execution:** Start with `/claude-core:autopilot-run --dynamic-plan .ai/plans/{name}`. The stop hook calls `dynamic-prompt-constructor.sh` which reads state.yml and learnings.yml to build a cycle-aware prompt for each iteration. Stops automatically when the plan reaches `status: done` or `max_cycles`.
 
 ## Notes
 
