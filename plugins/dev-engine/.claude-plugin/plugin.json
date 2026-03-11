@@ -3,7 +3,7 @@
   "version": "0.2.0",
   "description": "Generic development execution — task decomposition, agent dispatch, tier-based model assignment, completion gates, and visual verification.",
   "author": { "name": "mvn" },
-  "repository": "https://github.com/mvn/claude-local-workspace",
+  "repository": "https://github.com/hjemmesidekongen/ai",
   "license": "MIT",
   "keywords": ["dev", "execution", "agents", "decomposition", "orchestration"]
 }

@@ -1,5 +1,6 @@
 # IDE
 .idea/
+.vscode/
 
 # macOS
 .DS_Store
@@ -8,7 +9,60 @@
 ._*
 .Spotlight-V100
 .Trashes
-external-references/
+
+# Node
+node_modules/
+.next/
+.vercel
+*.tsbuildinfo
+
+# Python
 __pycache__/
 *.pyc
-.vercel
+
+# Environment and secrets
+.env
+.env.*
+.mcp.json
+
+# Pencil design files (binary, local)
+*.pen
+
+# External references (cloned repos for research)
+external-references/
+
+# Client/project data (private — not for public repo)
+.ai/brand/
+.ai/design/
+.ai/projects/
+
+# Session state (local, transient)
+.ai/context/
+.ai/instincts/
+
+# Trace logs (accumulate indefinitely, local debugging only)
+.ai/traces/
+
+# Plans (working state, artifacts)
+.ai/plans/
+
+# Brainstorm state files (transient working state)
+.ai/brainstorm/**/brainstorm-state.yml
+
+# Profiles (personal config)
+.ai/profiles/
+
+# Research (internal notes)
+.ai/research/
+
+# Audits (internal)
+.ai/audits/
+
+# Memory health marker
+.ai/.memory-health-last-run
+
+# Autopilot state (per-session)
+.claude/*.local.md
+
+# Prompts (personal, project-specific)
+.ai/prompts/

@@ -51,7 +51,7 @@ on what the plugin provides.
   "version": "1.0.0",
   "description": "Brief description of what this plugin does.",
   "author": { "name": "mvn" },
-  "repository": "https://github.com/mvn/claude-local-workspace",
+  "repository": "https://github.com/hjemmesidekongen/ai",
   "license": "MIT",
   "keywords": ["category", "purpose"],
   "hooks": {}
@@ -158,7 +158,7 @@ Add entry to `plugins/.claude-plugin/marketplace.json` (see Marketplace section)
 ### Step 7: Clear plugin cache
 
 ```bash
-rm -rf ~/.claude/plugins/cache/local-workspace/
+rm -rf ~/.claude/plugins/cache/hjemmesidekongen-ai/
 ```
 
 Always clear cache after any plugin changes. Stale cache causes hooks and skills
@@ -247,7 +247,7 @@ STATE_FILE="$PROJECT_DIR/.ai/state.yml"
 ### Location
 
 ```
-~/.claude/plugins/cache/local-workspace/
+~/.claude/plugins/cache/hjemmesidekongen-ai/
 ```
 
 ### When to clear
@@ -271,7 +271,7 @@ Claude Code caches plugin metadata at startup. Without clearing:
 ### Clear command
 
 ```bash
-rm -rf ~/.claude/plugins/cache/local-workspace/
+rm -rf ~/.claude/plugins/cache/hjemmesidekongen-ai/
 ```
 
 Run this, then restart Claude Code.
@@ -390,7 +390,7 @@ bash -n plugins/<name>/scripts/<hook>.sh   # Syntax check
 ### 6. Cache clear and restart
 
 ```bash
-rm -rf ~/.claude/plugins/cache/local-workspace/
+rm -rf ~/.claude/plugins/cache/hjemmesidekongen-ai/
 ```
 
 Restart Claude Code, then verify:
@@ -411,7 +411,7 @@ After restart, confirm the plugin appears in `/plugin` browse.
 | `name` mismatch between plugin.json and directory | Plugin fails to load | Match exactly (kebab-case) |
 | Hardcoded paths in hook commands | Breaks on other machines | Use `${CLAUDE_PLUGIN_ROOT}` |
 | Missing YAML frontmatter on .md files | Component not discovered | Add frontmatter with `description` |
-| Not clearing plugin cache after changes | Old version loads silently | `rm -rf ~/.claude/plugins/cache/local-workspace/` |
+| Not clearing plugin cache after changes | Old version loads silently | `rm -rf ~/.claude/plugins/cache/hjemmesidekongen-ai/` |
 | Missing marketplace.json entry | Plugin invisible to `/plugin` browse | Add entry to `plugins/.claude-plugin/marketplace.json` |
 | Marketplace `source` as absolute path | Breaks portability | Use relative: `"./plugin-name"` |
 | ecosystem.json missing components | Audit tools miss components | List every command, skill, agent |
@@ -440,6 +440,6 @@ Before committing any new or modified plugin:
 - [ ] Both JSON files pass `python3 -m json.tool` validation
 - [ ] Hook scripts pass `bash -n` syntax check
 - [ ] Validation agents (plugin-validator, skill-auditor) pass on all components
-- [ ] Plugin cache cleared: `rm -rf ~/.claude/plugins/cache/local-workspace/`
+- [ ] Plugin cache cleared: `rm -rf ~/.claude/plugins/cache/hjemmesidekongen-ai/`
 - [ ] Claude Code restarted and plugin loads without errors
 - [ ] Commands visible in `/help`

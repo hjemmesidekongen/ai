@@ -7,7 +7,7 @@ persistent, self-improving development partner. It handles the things you
 shouldn't have to think about: remembering what matters, tracing what happened,
 protecting your configuration, and keeping everything organized.
 
-Every other plugin in the Claude Local Workspace builds on top of this.
+Every other plugin in hjemmesidekongen/ai builds on top of this.
 
 ---
 
@@ -154,7 +154,7 @@ For the full roadmap across all plugins: [`.ai/roadmap.yml`](../../.ai/roadmap.y
 
 ---
 
-## Part of Claude Local Workspace
+## Part of hjemmesidekongen/ai
 
 Claude Core is one piece of a larger system designed to make Claude Code
 work the way a professional development team does:

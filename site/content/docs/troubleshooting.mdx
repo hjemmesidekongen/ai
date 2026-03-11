@@ -25,9 +25,8 @@ The command exists on disk but is not listed in the plugin's component registry.
 If the file is listed but still missing, clear the cache and reinstall:
 
 ```bash
-rm -rf ~/.claude/plugins/cache/local-workspace/
-# Restart Claude Code, then:
-/install
+rm -rf ~/.claude/plugins/cache/hjemmesidekongen-ai/
+# Restart Claude Code
 ```
 
 ### Plugin version confusion
@@ -43,15 +42,14 @@ Check the active version in `plugins/<plugin-name>/.claude-plugin/plugin.json` u
 
 ### Hooks not firing
 
-Clear the plugin cache and reinstall:
+Clear the plugin cache and restart:
 
 ```bash
-rm -rf ~/.claude/plugins/cache/local-workspace/
-# Restart Claude Code, then:
-/install
+rm -rf ~/.claude/plugins/cache/hjemmesidekongen-ai/
+# Restart Claude Code
 ```
 
-If hooks still do not fire after reinstall, check the hook error log:
+If hooks still do not fire after restarting, check the hook error log:
 
 ```bash
 cat .ai/traces/hook-errors.log
@@ -72,9 +70,8 @@ The hook ran but produced an error. Check `.ai/traces/hook-errors.log` for the s
 This is almost always a stale cache problem. After any change to hook scripts:
 
 ```bash
-rm -rf ~/.claude/plugins/cache/local-workspace/
-# Restart Claude Code, then:
-/install
+rm -rf ~/.claude/plugins/cache/hjemmesidekongen-ai/
+# Restart Claude Code
 ```
 
 Claude Code caches plugin contents aggressively. Without clearing, hooks silently run the old version even after you pull new code.
@@ -133,9 +130,8 @@ The most common "it should work but doesn't" issue. Claude Code caches plugin fi
 **Fix:**
 
 ```bash
-rm -rf ~/.claude/plugins/cache/local-workspace/
-# Restart Claude Code, then:
-/install
+rm -rf ~/.claude/plugins/cache/hjemmesidekongen-ai/
+# Restart Claude Code
 ```
 
 ### When to clear cache
@@ -147,7 +143,7 @@ Clear the cache any time you:
 - Edit `plugin.json` or `ecosystem.json`
 - Switch branches that have different plugin versions
 
-There is no downside to clearing cache. It rebuilds on the next `/install`.
+There is no downside to clearing cache. It rebuilds automatically on the next Claude Code startup.
 
 ## Session State Issues
 

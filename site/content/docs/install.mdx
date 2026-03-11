@@ -1,6 +1,6 @@
 ---
 title: Installation
-description: Get the plugins cloned, installed, and verified in Claude Code.
+description: Get the plugins cloned, discovered, and verified in Claude Code.
 ---
 
 # Installation
@@ -13,26 +13,36 @@ description: Get the plugins cloned, installed, and verified in Claude Code.
 
 No other tooling required. The plugins themselves are markdown files and YAML - no build step, no npm install.
 
-## Clone and install
+## Clone the repo
 
 ```bash
-git clone <repository-url>
-cd claude-local-workspace
+git clone https://github.com/hjemmesidekongen/ai.git
+cd ai
 ```
 
-Then, inside Claude Code (not your terminal):
+## Set up the marketplace registry
 
-```bash
-/install
+Claude Code discovers plugins through a marketplace registry file at `~/.claude/plugins/known_marketplaces.json`. You need to add an entry pointing to the `plugins/` directory in your clone.
+
+Create or edit `~/.claude/plugins/known_marketplaces.json`:
+
+```json
+[
+  {
+    "path": "/absolute/path/to/ai/plugins"
+  }
+]
 ```
 
-That's it. `/install` handles everything else.
+Replace `/absolute/path/to/ai/plugins` with the actual absolute path to the `plugins/` directory in your clone (e.g., `/Users/you/ai/plugins`).
 
-## What /install actually does
+Then restart Claude Code. Plugins are discovered automatically on startup.
 
-Claude Code's plugin system works through a marketplace registry at `~/.claude/plugins/known_marketplaces.json`. That file points to the `plugins/` directory in this repo.
+## How plugin discovery works
 
-When you run `/install`, Claude Code:
+Claude Code's plugin system works through the marketplace registry at `~/.claude/plugins/known_marketplaces.json`. That file points to the `plugins/` directory in this repo.
+
+On startup, Claude Code:
 
 1. Reads the marketplace registry to find the `plugins/` directory
 2. Scans each subdirectory for a `.claude-plugin/plugin.json`
@@ -79,14 +89,14 @@ Check that hooks are active by attempting a direct push to main - it should be b
 
 ## Updating
 
-Pull the latest changes, clear the plugin cache, and reinstall:
+Pull the latest changes and clear the plugin cache:
 
 ```bash
 git pull
-rm -rf ~/.claude/plugins/cache/local-workspace/
+rm -rf ~/.claude/plugins/cache/hjemmesidekongen-ai/
 ```
 
-Then restart Claude Code and run `/install` again.
+Then restart Claude Code.
 
 The cache clear is not optional. Claude Code caches plugin contents aggressively, and stale cache causes hooks and skills to silently run old versions even after you pull. This is the most common source of "why isn't my change working" issues.
 

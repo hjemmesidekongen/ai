@@ -4,7 +4,7 @@ set -euo pipefail
 # Prevents stale cache from persisting across sessions in this dev workspace.
 
 [ -z "${HOME:-}" ] && exit 0
-CACHE_DIR="$HOME/.claude/plugins/cache/local-workspace"
+CACHE_DIR="$HOME/.claude/plugins/cache/hjemmesidekongen-ai"
 [ -d "$CACHE_DIR" ] && rm -rf "$CACHE_DIR"
 
 exit 0

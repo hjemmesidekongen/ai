@@ -21,7 +21,7 @@ function Footer() {
             hjemmesidekongen.dk
           </a>
           <a
-            href="https://github.com/mvn/claude-local-workspace"
+            href="https://github.com/hjemmesidekongen/ai"
             className="hover:text-fd-foreground transition-colors"
           >
             GitHub

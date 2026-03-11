@@ -311,7 +311,7 @@ items:
 
   - id: RL-073
     title: "Auto-clear plugin cache after create/edit operations"
-    description: "All toolkit create/edit workflows (skill, command, hook, plugin) must automatically run rm -rf ~/.claude/plugins/cache/local-workspace/ as a post-step. Never require manual cache clearing."
+    description: "All toolkit create/edit workflows (skill, command, hook, plugin) must automatically run rm -rf ~/.claude/plugins/cache/hjemmesidekongen-ai/ as a post-step. Never require manual cache clearing."
     category: toolkit
     plugin: claude-core
     priority: later

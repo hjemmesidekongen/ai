@@ -307,7 +307,7 @@ without the `.md` extension.
 
 After creating or modifying any plugin command, clear the cache:
 ```bash
-rm -rf ~/.claude/plugins/cache/local-workspace/
+rm -rf ~/.claude/plugins/cache/hjemmesidekongen-ai/
 ```
 
 Then restart Claude Code. Stale cache causes commands to use old versions or remain
@@ -392,7 +392,7 @@ If the command uses `` `! ...` `` blocks:
 | Hardcoded absolute paths | Breaks on other machines | Use relative paths, `@$1`, or `${CLAUDE_PLUGIN_ROOT}` |
 | `allowed-tools` with wrong names | Tools silently unavailable | Check exact tool names: `Bash`, `Read`, `Write`, `Edit`, `Glob`, `Grep` |
 | Forgetting ecosystem.json registration | Command works but is undocumented | Add entry to ecosystem.json after creating |
-| Not clearing plugin cache | Old command version runs | `rm -rf ~/.claude/plugins/cache/local-workspace/` |
+| Not clearing plugin cache | Old command version runs | `rm -rf ~/.claude/plugins/cache/hjemmesidekongen-ai/` |
 | Using `@` with glob patterns | Read tool does not support globs | List each file explicitly |
 | Interactive bash in `` `! ...` `` | Template expansion hangs | Only use non-interactive commands |
 
@@ -403,7 +403,7 @@ If the command uses `` `! ...` `` blocks:
 1. Check file is in correct directory (`.claude/commands/`, `~/.claude/commands/`, or `plugins/<name>/commands/`)
 2. Check file extension is `.md`
 3. Check frontmatter syntax — run `python3 -c "import yaml; yaml.safe_load(open('command.md'))"` (strip body first)
-4. Clear plugin cache: `rm -rf ~/.claude/plugins/cache/local-workspace/`
+4. Clear plugin cache: `rm -rf ~/.claude/plugins/cache/hjemmesidekongen-ai/`
 5. Restart Claude Code
 
 ### Arguments not resolving

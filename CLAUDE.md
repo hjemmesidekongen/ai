@@ -1,4 +1,4 @@
-# Claude Local Workspace
+# hjemmesidekongen/ai
 
 ## What This Is
 Five plugins in a monorepo:

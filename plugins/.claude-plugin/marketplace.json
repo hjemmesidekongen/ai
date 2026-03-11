@@ -1,7 +1,7 @@
 {
-  "name": "local-workspace",
+  "name": "hjemmesidekongen-ai",
   "owner": {
-    "name": "mvn"
+    "name": "hjemmesidekongen"
   },
   "plugins": [
     {

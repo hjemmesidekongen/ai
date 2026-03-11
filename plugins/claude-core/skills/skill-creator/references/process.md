@@ -414,7 +414,7 @@ Execute each `required_checks` item from the frontmatter checkpoint:
 - Verify description has concrete triggers
 - Verify references exist for overflow content
 - Run skill-auditor agent to validate the created skill passes all checks
-- Clear plugin cache: `rm -rf ~/.claude/plugins/cache/local-workspace/`
+- Clear plugin cache: `rm -rf ~/.claude/plugins/cache/hjemmesidekongen-ai/`
 
 ## Common mistakes
 
@@ -428,7 +428,7 @@ Execute each `required_checks` item from the frontmatter checkpoint:
 | Missing checkpoint | No verification gate, self-grading risk | Add checkpoint with 2-5 required_checks |
 | Not registering in ecosystem.json | Skill invisible to the plugin system | Add skill name to the skills array |
 | Missing `depends_on` for dependent skills | Activation order issues, missing context | List all skill dependencies by name |
-| Forgetting to clear plugin cache | Stale skill version loads | Run `rm -rf ~/.claude/plugins/cache/local-workspace/` |
+| Forgetting to clear plugin cache | Stale skill version loads | Run `rm -rf ~/.claude/plugins/cache/hjemmesidekongen-ai/` |
 | Description over 50 words | Wasted context in Tier 1 metadata | Tighten to action + 2-4 trigger phrases |
 
 ## Validation checklist

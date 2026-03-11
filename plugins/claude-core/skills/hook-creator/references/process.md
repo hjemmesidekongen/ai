@@ -436,7 +436,7 @@ Run Claude Code with `--debug` to see hook registration, execution, and timing.
 | Missing `set -euo pipefail` | Silent failures | Add to every script |
 | Grepping tool input for error keywords | False positives | Scope to `tool_response` |
 | `\|\| true` on Stop hooks that signal via exit code | Masks the signal | Remove `\|\| true` if using exit codes |
-| Not clearing plugin cache after changes | Old hook version runs | `rm -rf ~/.claude/plugins/cache/local-workspace/` |
+| Not clearing plugin cache after changes | Old hook version runs | `rm -rf ~/.claude/plugins/cache/hjemmesidekongen-ai/` |
 | Using `tool_result` instead of `tool_response` | Field not found | Use `tool_response` (official name) |
 | Missing `hookEventName` in hookSpecificOutput | Hook-specific fields ignored | Always include `hookEventName` |
 | Default timeout assumption | Behavior changes between versions | Always set `timeout` explicitly |

@@ -260,7 +260,7 @@ VALUE=$(sed -n '/^---$/,/^---$/p' "$SETTINGS_FILE" | grep 'setting_one:' | awk '
 
 Check if the plugin's README or documentation mentions:
 - When to clear the plugin cache
-- The cache clear command (`rm -rf ~/.claude/plugins/cache/local-workspace/`)
+- The cache clear command (`rm -rf ~/.claude/plugins/cache/hjemmesidekongen-ai/`)
 - That restart is required after clearing
 
 ### Auto-discovery compatibility

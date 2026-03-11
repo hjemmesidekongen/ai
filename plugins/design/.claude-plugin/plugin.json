@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "description": "Visual design toolkit — interprets brand strategy into concrete visual systems: color palettes, typography, spacing, design tokens.",
   "author": { "name": "mvn" },
-  "repository": "https://github.com/mvn/claude-local-workspace",
+  "repository": "https://github.com/hjemmesidekongen/ai",
   "license": "MIT",
   "keywords": ["design", "visual-identity", "tokens", "color", "typography", "pencil"]
 }
