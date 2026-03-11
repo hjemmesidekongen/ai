@@ -1664,7 +1664,8 @@ items:
       plan wave 6 before wave 1 teaches you something.
     category: core
     plugin: claude-core
-    priority: next
+    priority: done
+    completed: "2026-03-11"
     added: "2026-03-10"
     tags: [planning, iteration, autopilot, learning-loop, architecture]
 
