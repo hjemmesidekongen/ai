@@ -23,6 +23,11 @@
       "name": "brand",
       "source": "./brand",
       "description": "Brand strategy toolkit — voice, values, positioning, audience, and content pillars. Strategy only, no visual design."
+    },
+    {
+      "name": "design",
+      "source": "./design",
+      "description": "Visual design toolkit — interprets brand strategy into concrete visual systems: color palettes, typography, spacing, design tokens."
     }
   ]
 }
