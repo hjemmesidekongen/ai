@@ -5,5 +5,6 @@
   "author": { "name": "mvn" },
   "repository": "https://github.com/hjemmesidekongen/ai",
   "license": "MIT",
-  "keywords": ["design", "visual-identity", "tokens", "color", "typography", "pencil"]
+  "keywords": ["design", "visual-identity", "tokens", "color", "typography", "pencil"],
+  "dependencies": ["claude-core"]
 }
