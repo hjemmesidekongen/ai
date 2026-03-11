@@ -4,7 +4,7 @@ description: >
   Quality gate agent that reviews all completed work against completion criteria.
   The only agent authorized to approve work as done.
   Use when reviewing code after implementation as a final quality gate.
-model_tier: opus
+model_tier: principal
 model: inherit
 color: "yellow"
 tools:

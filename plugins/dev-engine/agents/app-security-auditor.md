@@ -4,7 +4,7 @@ description: >
   Security review agent that performs OWASP checks, dependency audits, auth review,
   input validation analysis, and secrets detection. Non-modifying — reports findings, never writes fixes.
   Use when auditing code before deployment, reviewing auth/payment features, or checking external endpoints.
-model_tier: opus
+model_tier: principal
 model: inherit
 color: "red"
 tools:

@@ -11,7 +11,7 @@ description: |
   <assistant>Reading state.yml, snapshot.yml, findings.md... context_package: { token_budget: 4200, freshness: FRESH, shared_state: { active_plan: "external-ref-batch-4", current_wave: "wave-3" }, instincts_loaded: 5 }</assistant>
   </example>
 color: blue
-model_tier: sonnet
+model_tier: senior
 model: inherit
 tools: ["Read", "Glob", "Grep"]
 ---

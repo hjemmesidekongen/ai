@@ -6,7 +6,7 @@ description: >
   root-cause-debugging with structured hypothesis management. Use when a bug's
   root cause is unclear after initial evidence gathering, when a previous fix
   failed and the cause is still unknown, when multiple subsystems could plausibly
-  be at fault, or when you want to avoid confirmation bias in investigation.
+  be at fault, or when confirmation bias in investigation needs to be avoided.
 user_invocable: false
 interactive: false
 depends_on: [root-cause-debugging]

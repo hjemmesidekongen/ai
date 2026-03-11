@@ -12,7 +12,7 @@ description: |
   <assistant>Reading hook-errors.log and trace-light.log... error_report: { signature: "compact-gate timeout on large .ai/plans/ directories", timeline: "fails when plan artifacts > 500KB", root_cause: "find command in compact-gate-pre.sh has no size limit", reproduction: "create plan with 50+ artifact files" }</assistant>
   </example>
 color: yellow
-model_tier: sonnet
+model_tier: senior
 model: sonnet
 tools: ["Read", "Glob", "Grep", "Bash"]
 ---

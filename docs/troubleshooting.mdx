@@ -181,7 +181,7 @@ The PreCompact hook writes a snapshot before compaction, and the CLAUDE.md file 
 
 1. **Check that the snapshot was written.** Look at `.ai/context/snapshot.yml` and verify the `generated` timestamp is recent.
 2. **Check CLAUDE.md has the recovery pointer.** The project CLAUDE.md should contain: "After `/compact` or when context seems incomplete, read `.ai/context/snapshot.yml`". If this line is missing, Claude has no instruction to check the snapshot.
-3. **Snapshot content is incomplete.** The assembler pulls from `trace-light.log`, active plans, and agency state. If those source files are empty or missing, the snapshot will be sparse. This is normal for sessions that did not use planning or tracing.
+3. **Snapshot content is incomplete.** The assembler pulls from `trace-light.log`, active plans, and project state. If those source files are empty or missing, the snapshot will be sparse. This is normal for sessions that did not use planning or tracing.
 
 ## See also
 

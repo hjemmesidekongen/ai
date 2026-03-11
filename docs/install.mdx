@@ -45,14 +45,14 @@ Nothing is compiled or bundled. Each skill is a markdown file loaded on demand.
 
 **claude-core** (v0.3.0) - the foundation layer
 
-- 35 skills: planning, brainstorm, verification, tracing, memory, code review, debugging, and more
+- 40 skills: planning, brainstorm, verification, tracing, memory, code review, debugging, and more
 - 13 commands: `/plan:create`, `/plan:execute`, `/brainstorm:start`, `/brainstorm:decide`, and others
 - 12 agents: plugin-validator, security-auditor, error-detective, tdd-orchestrator, and others
-- 16 hooks: PreToolUse (scope guard, state checks), PostToolUse (tracing, observations), Stop (verification gate), PreCompact (context snapshot)
+- 23 hooks: PreToolUse (scope guard, push protection), PostToolUse (tracing, observations, compaction), Stop (verification, wave check, doc check), PreCompact (context snapshot), SessionStart (recovery, memory health), UserPromptSubmit (prompt grade)
 
 **dev-engine** (v0.2.0) - multi-agent development pipeline
 
-- 54 skills across 7 categories: core execution, disciplines, tech knowledge (React, Next.js, NestJS, Prisma, Expo, and more), integration patterns
+- 62 skills across 9 categories: core execution, disciplines, tech knowledge (React, Next.js, NestJS, Prisma, Expo, and more), integration, expo, studio knowledge
 - 6 agents: dispatcher, frontend, backend, testing, security, reviewer
 - 2 commands: `/dev:scan`, `/dev:run`
 

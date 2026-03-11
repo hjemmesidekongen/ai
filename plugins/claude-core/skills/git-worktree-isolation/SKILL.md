@@ -8,8 +8,8 @@ description: >
   .worktrees/ is gitignored before creating.
   Use when starting risky or experimental work that shouldn't affect the
   main working tree, when parallel feature branches need isolation, before
-  large refactors that may need to be discarded, or when you need a clean
-  baseline to test something without stashing.
+  large refactors that may need to be discarded, or when a clean
+  baseline is needed to test something without stashing.
 user_invocable: false
 interactive: false
 depends_on: []

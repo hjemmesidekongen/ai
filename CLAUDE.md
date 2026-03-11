@@ -2,7 +2,7 @@
 
 ## What This Is
 Four plugins in a monorepo:
-- **claude-core** (`plugins/claude-core/`) — Foundation plugin: planning, brainstorm, tracing, memory governance, roadmap, doc governance, creator/reviewer tooling, autopilot, prompt optimization, and validation agents (35 skills, 13 commands, 12 agents).
+- **claude-core** (`plugins/claude-core/`) — Foundation plugin: planning, brainstorm, tracing, memory governance, roadmap, doc governance, creator/reviewer tooling, autopilot, prompt optimization, and validation agents (40 skills, 13 commands, 12 agents).
 - **agency** (`plugins/agency/`) — Digital agency plugin: brand, design, content, dev, deploy pipelines (11 agents — security-reviewer ported to claude-core).
 - **dev-engine** (`plugins/dev-engine/`) — Generic development execution: task decomposition, agent dispatch, tech knowledge, disciplines, visual verification, completion gates, project mapping, orchestration, studio knowledge (62 skills, 2 commands, 6 agents).
 - **taskflow** (`plugins/taskflow/`) — Task management and workplace integration: Jira ingestion, local task storage, contradiction detection, project profiles, QA handover, bulk ingestion, PR workflows (9 skills, 8 commands).

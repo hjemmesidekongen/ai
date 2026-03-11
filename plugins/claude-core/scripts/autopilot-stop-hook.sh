@@ -1,11 +1,10 @@
-#!/bin/bash
+#!/usr/bin/env bash
+set -euo pipefail
 
 # Autopilot Stop Hook
 # Prevents session exit when an autopilot loop is active
 # Feeds the same prompt back to continue the loop
 # Source ref: claude-code-main/plugins/ralph-wiggum/hooks/stop-hook.sh
-
-set -euo pipefail
 
 DEBUG_LOG="/tmp/autopilot-debug.log"
 

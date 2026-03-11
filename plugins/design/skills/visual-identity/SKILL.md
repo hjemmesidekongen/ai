@@ -17,6 +17,13 @@ reads:
   - ".ai/brand/{name}/guideline.yml"
   - ".ai/brand/{name}/voice.yml"
   - "plugins/design/resources/token-schema.yml"
+triggers:
+  - visual identity
+  - color palette
+  - typography
+  - brand colors
+  - design system
+  - design identity
 model_tier: senior
 model: sonnet
 checkpoint:
@@ -54,24 +61,9 @@ _source:
 Creates the foundational visual system: color, typography, spacing. Reads brand
 guidelines when available; gathers minimum direction from user when not.
 
-## Context
-
-| Aspect | Details |
-|--------|---------|
-| **Input** | Brand guideline (if exists) OR user-provided direction |
-| **Output** | tokens.yml (design truth), identity.yml (rationale) |
-| **Location** | .ai/design/{name}/ |
-| **Checkpoint** | 6 checks: palettes, semantic, typography, spacing, WCAG, rationale |
-
-## Context Resolution
-
-1. Check `.ai/brand/{name}/` — if guideline.yml exists, extract color/personality/industry
-2. If no brand: ask user for industry, mood (2-3 adjectives), color preferences
-3. Proceed with whatever context is available
-
 ## Process
 
-1. Context resolution — load brand or gather user input
+1. Context resolution — load `.ai/brand/{name}/guideline.yml` or gather user input (industry, mood, color preferences)
 2. Color palettes — OKLCH-based primary/secondary/accent, 10-stop scales (50-950)
 3. Semantic mapping — success/warning/error/info + surface/text/border + dark mode
 4. Typography — heading + body + mono families, type scale (display → caption)
@@ -79,8 +71,4 @@ guidelines when available; gathers minimum direction from user when not.
 6. WCAG validation — all foreground/background pairs against AA thresholds
 7. Write tokens.yml + identity.yml
 
-**Findings:** `.ai/design/{name}/findings.md` (2-action rule). Errors → findings.md.
-
-## Execution
-
-Read `references/process.md` for OKLCH generation, typography pairing, and output format.
+Findings: `.ai/design/{name}/findings.md` (2-action rule). Full process: `references/process.md`.

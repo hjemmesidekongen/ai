@@ -1,10 +1,9 @@
-#!/bin/bash
+#!/usr/bin/env bash
+set -euo pipefail
 
 # Autopilot Loop Setup Script
 # Creates state file for in-session autopilot loop
 # Source ref: claude-code-main/plugins/ralph-wiggum/scripts/setup-ralph-loop.sh
-
-set -euo pipefail
 
 # Parse arguments
 PROMPT_PARTS=()

@@ -13,7 +13,7 @@ outputs:
   tokens_dtcg: "tokens.dtcg.json"     # W3C interchange format
   tailwind_config: "tailwind.json"    # Tailwind theme extension
   css_variables: "variables.css"      # CSS custom properties
-  contrast_matrix: "contrast.md"      # WCAG contrast validation report
+  contrast_matrix: "contrast-matrix.md" # WCAG contrast validation report
 
 # --- DTCG format reference ---
 # Each token:

@@ -24,7 +24,7 @@ checkpoint:
       fail_action: "Verify team preset matches use case and retry dispatch"
   on_fail: "Re-evaluate team composition"
   on_pass: "Team dispatched with file ownership isolation"
-model_tier: sonnet
+model_tier: senior
 _source:
   origin: original
   ported_date: "2026-03-09"

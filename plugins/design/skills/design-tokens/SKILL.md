@@ -17,6 +17,12 @@ writes:
 reads:
   - ".ai/design/{name}/tokens.yml"
   - "plugins/design/resources/token-schema.yml"
+triggers:
+  - design tokens
+  - tailwind theme
+  - css variables
+  - platform tokens
+  - contrast matrix
 model_tier: senior
 model: sonnet
 checkpoint:
@@ -51,23 +57,9 @@ _source:
 Transforms visual identity tokens.yml into platform-consumable formats and
 validates accessibility compliance.
 
-## Context
-
-| Aspect | Details |
-|--------|---------|
-| **Input** | .ai/design/{name}/tokens.yml (from visual-identity) |
-| **Outputs** | tailwind.json, variables.css, tokens.dtcg.json, contrast-matrix.md |
-| **Location** | .ai/design/{name}/tokens/ |
-| **Checkpoint** | 5 checks: tailwind, css, dtcg, wcag, contrast matrix |
-
-## Context Resolution
-
-1. Check `.ai/design/{name}/tokens.yml` — if missing, run visual-identity first
-2. Read token-schema.yml for output format requirements
-
 ## Process
 
-1. Read tokens.yml — extract primitives, semantic, typography, spacing, shadow
+1. Read tokens.yml — if missing, run visual-identity first
 2. Generate tailwind.json — full color scales, fontFamily, fontSize, spacing, radius
 3. Generate variables.css — :root organized by category + .dark override block
 4. Generate tokens.dtcg.json — W3C format with $value, $type, $description
@@ -75,8 +67,4 @@ validates accessibility compliance.
 6. Generate contrast-matrix.md — EightShapes-style grid + colorblind notes
 7. Run checkpoint — all 5 checks must pass
 
-**Findings:** `.ai/design/{name}/findings.md` (2-action rule). Errors → findings.md.
-
-## Execution
-
-Read `references/process.md` for output templates, WCAG formula, and DTCG rules.
+Findings: `.ai/design/{name}/findings.md` (2-action rule). Full process: `references/process.md`.

@@ -72,6 +72,9 @@ Task list with: `id`, `name`, `depends_on`, `files_written`, `files_read`. Full 
 
 ## Output
 
-- `.ai/plans/{name}/plan.yml` — wave plan
-- `.ai/plans/{name}/plan.md` — implementation contract
-- `.ai/plans/{name}/state.yml` — execution state (all pending)
+Emits `.ai/plans/{name}/`: plan.yml (wave plan), plan.md (contract), state.yml (all pending).
+
+## NEVER
+- Put tasks with write-conflicts in the same wave
+- Skip file-ownership check for parallel tasks
+- Assign model_tier values outside junior/senior/principal

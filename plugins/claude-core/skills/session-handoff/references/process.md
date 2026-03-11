@@ -107,3 +107,30 @@ Format: `YYYY-MM-DD-HHMMSS-<slug>.md`
 Slug: kebab-case, descriptive (e.g., `batch-4-wave-3-complete`, `auth-debugging-root-cause`)
 
 Create the `.ai/handoffs/` directory on first use if it doesn't exist.
+
+## Handoff Template
+
+```markdown
+# Handoff: <title>
+Created: <timestamp> | Branch: <branch>
+Continues-from: <previous handoff path or "none">
+
+## Current State
+<What's happening now. Last thing completed.>
+
+## Important Context
+<Critical info next session MUST know. Decisions with rationale.>
+
+## Key Files
+<Most important files with brief notes.>
+
+## Immediate Next Steps
+1. <Specific, actionable first step>
+2. <Second step>
+
+## Pending Work
+- [ ] <Remaining tasks>
+
+## Blockers
+<Issues needing resolution, or "None">
+```

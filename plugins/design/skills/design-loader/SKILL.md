@@ -13,6 +13,11 @@ reads:
   - ".ai/design/{name}/tokens.yml"
   - ".ai/design/{name}/identity.yml"
   - ".ai/design/{name}/tokens/"
+triggers:
+  - design status
+  - load design
+  - check design
+  - design artifacts
 model_tier: junior
 model: haiku
 checkpoint:
@@ -46,36 +51,28 @@ read-only skill — loads context, never writes.
 | **Output** | Status report (stdout) — no file writes |
 | **Checkpoint** | 2 checks: directory exists, status reported |
 
-## Context Resolution
-
-1. Check `.ai/design/` for available design directories
-2. If {name} specified, load that design. Otherwise list all available.
-3. If no designs exist, report and suggest running /design:identity
-
 ## Process
 
-1. Scan `.ai/design/{name}/` for all artifacts
-2. Check each artifact category:
-   - **Identity**: tokens.yml, identity.yml
-   - **Platform tokens**: tokens/tailwind.json, tokens/variables.css, tokens/tokens.dtcg.json
-   - **Accessibility**: tokens/contrast-matrix.md
-3. Report status per artifact: found / missing
-4. If tokens.yml found: report token counts (color palettes, typography families, spacing steps)
-5. Suggest next steps based on what's missing
+1. Scan `.ai/design/` — if {name} specified, load that design; otherwise list all
+2. Check artifact categories: identity (tokens.yml, identity.yml), platform tokens
+   (tailwind.json, variables.css, tokens.dtcg.json), accessibility (contrast-matrix.md)
+3. If tokens.yml found: parse and report token counts (palettes, families, spacing steps)
+4. Suggest next steps based on what's missing
 
-## Status Report Format
+## Edge Cases
 
-```
-Design: {name}
-Location: .ai/design/{name}/
+- **Multiple designs**: list all with status summary; ask which to load if ambiguous
+- **Partial tokens.yml**: report which sections exist vs missing (colors/typography/spacing)
+- **Unexpected files**: ignore non-standard files but list them under "unrecognized artifacts"
+- **Schema version mismatch**: warn if tokens.yml version != token-schema.yml version
+- **Corrupt YAML**: catch parse errors, report file + line number, do not silently skip
 
-Artifacts:
-  [x] tokens.yml — 3 color palettes, 3 font families, 12 spacing steps
-  [x] identity.yml — design rationale documented
-  [ ] tokens/tailwind.json — run /design:tokens to generate
-  [ ] tokens/variables.css — run /design:tokens to generate
-  [ ] tokens/tokens.dtcg.json — run /design:tokens to generate
-  [ ] tokens/contrast-matrix.md — run /design:tokens to generate
+## Multi-Design Comparison
 
-Next step: /design:tokens
-```
+When 2+ designs exist, compare token sets side-by-side: palette count, color overlap
+(shared hex/OKLCH values), typography families, spacing base units. Flag divergence
+that could cause inconsistency if both are consumed downstream.
+
+## Execution
+
+See `references/process.md` for status report format and comparison output template.

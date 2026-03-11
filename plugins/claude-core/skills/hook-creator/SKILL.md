@@ -63,6 +63,13 @@ Creates and validates Claude Code hooks for any plugin in this workspace.
 Default to command hooks. Use prompt hooks only when the decision requires LLM reasoning.
 Use HTTP hooks for webhooks/external integrations. Use agent hooks for complex multi-step logic.
 
+## NEVER
+- Create a hook without registering it in plugin.json
+- Use prompt hooks for deterministic checks (use command hooks)
+- Skip exit code testing — hooks fail silently on bad exit codes
+- Hardcode file paths — use $HOOK_WORKING_DIR for portability
+- Leave hooks unquoted when variables may contain spaces
+
 ## Process
 
 See `references/process.md` for the full specification: 18 event types, 4 hook types,

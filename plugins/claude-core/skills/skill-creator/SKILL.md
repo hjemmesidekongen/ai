@@ -64,17 +64,16 @@ Keep SKILL.md short. Overflow goes to `references/process.md`.
 
 ## Evaluation
 
-After creating a skill, run evaluations to verify triggering accuracy and task completion.
+Run evals after creating a skill: trigger eval, task eval, benchmark (A/B), description
+optimization. Scripts: `scripts/run_eval.py`, `scripts/aggregate_benchmark.py`,
+`scripts/improve_description.py`. Eval agents: `agents/grader.md`, `comparator.md`,
+`analyzer.md`. Full eval pipeline and schemas: `references/process.md`.
 
-| Mode | Purpose | Script |
-|------|---------|--------|
-| Trigger eval | Does the description cause skill activation? | `scripts/run_eval.py` |
-| Task eval | Can the skill complete complex tasks? | `scripts/run_eval.py` |
-| Benchmark | A/B comparison across multiple runs | `scripts/aggregate_benchmark.py` |
-| Description optimization | Iterative improvement of trigger phrases | `scripts/improve_description.py` |
+## NEVER
+- Create a skill without frontmatter or with incomplete frontmatter
+- Exceed 80 lines in SKILL.md — overflow goes to references/process.md
+- Use second-person pronouns ("you") in skill descriptions
+- Skip checkpoint definition — every skill needs verification
+- Add model_tier values outside junior/senior/principal
 
-Eval agents (`agents/grader.md`, `comparator.md`, `analyzer.md`) handle grading, blind comparison, and post-hoc analysis. Full process, eval pipeline, and schemas: `references/process.md`.
-
-## Quality & progressive disclosure
-
-Skills scored on 8 dimensions (120 points). Most important: **knowledge delta**. Full framework: `references/quality-dimensions.md`. Progressive disclosure (3-tier loading): `references/progressive-disclosure.md`.
+Quality scored on 8 dimensions (120 points). Most important: **knowledge delta**. Full framework: `references/quality-dimensions.md`. Progressive disclosure: `references/progressive-disclosure.md`.

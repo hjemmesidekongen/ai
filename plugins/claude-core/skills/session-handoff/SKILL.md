@@ -30,7 +30,7 @@ checkpoint:
       fail_action: "Fill missing sections before saving"
   on_fail: "Complete the handoff document"
   on_pass: "Handoff saved with context for next session"
-model_tier: sonnet
+model_tier: senior
 _source:
   origin: original
   ported_date: "2026-03-09"
@@ -51,33 +51,10 @@ Structured handoff documents for cross-session continuity. Complements automatic
 ## CREATE
 
 1. **Gather**: Read snapshot.yml, active plan state.yml, `git log -10`, `git status`
-2. **Write** handoff to `.ai/handoffs/YYYY-MM-DD-HHMMSS-<slug>.md` using template:
-
-```markdown
-# Handoff: <title>
-Created: <timestamp> | Branch: <branch>
-Continues-from: <previous handoff path or "none">
-
-## Current State
-<What's happening now. Last thing completed.>
-
-## Important Context
-<Critical info next session MUST know. Decisions with rationale.>
-
-## Key Files
-<Most important files with brief notes.>
-
-## Immediate Next Steps
-1. <Specific, actionable first step>
-2. <Second step>
-
-## Pending Work
-- [ ] <Remaining tasks>
-
-## Blockers
-<Issues needing resolution, or "None">
-```
-
+2. **Write** handoff to `.ai/handoffs/YYYY-MM-DD-HHMMSS-<slug>.md`
+   - Sections: Current State, Important Context, Key Files, Immediate Next Steps, Pending Work, Blockers
+   - Include `Continues-from:` header linking to previous handoff or "none"
+   - Full template: `references/process.md`
 3. **Validate**: No TODO placeholders, no secrets, referenced files exist, next steps are actionable
 4. **Report**: File location, what was captured, first next step
 

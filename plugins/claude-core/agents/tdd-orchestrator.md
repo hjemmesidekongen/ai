@@ -12,7 +12,7 @@ description: |
   <assistant>Starting TDD cycle for session-handoff quality scoring. Dispatching test-writer (red)... 3 failing tests written. Dispatching implementer (green)... tests pass. Dispatching refactoring-specialist... cleanup complete. Cycle done.</assistant>
   </example>
 color: green
-model_tier: sonnet
+model_tier: senior
 model: inherit
 tools: ["Read", "Write", "Edit", "Bash", "Glob", "Grep"]
 ---
