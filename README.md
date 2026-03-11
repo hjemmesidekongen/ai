@@ -1,16 +1,16 @@
 # hjemmesidekongen/ai
 
-AI workflow plugins for Claude Code — planning, brand, design, dev execution, and task management.
+Five plugins that turn Claude Code into a full development studio — planning, building, branding, designing, and managing tasks. Named after the Danish king's court because the name was already ridiculous, so we leaned in.
 
-## What's Included
+## Plugins
 
-| Plugin | What it does |
+| Plugin | What you get |
 |--------|-------------|
-| **kronen** | The Crown — core foundation. Planning, brainstorm, tracing, memory governance, verification gates, creator tooling, 12 autonomous agents. |
-| **smedjen** | The Forge — development execution engine. Task decomposition, agent dispatch, 62 framework-specific skills, completion gates. |
-| **herold** | The Herald — task management and workplace integration. Jira ingestion, contradiction detection, QA handover, PR workflows. |
-| **våbenskjold** | The Coat of Arms — brand strategy toolkit. Voice, values, positioning, audience, content pillars. |
-| **segl** | The Royal Seal — visual identity and design tokens. Color palettes, typography, spacing, platform token generation. |
+| **kronen** — The Crown | Plan work in waves, brainstorm with structured pushback, trace decisions, govern memory, and let 12 autonomous agents handle verification, review, and creation. The foundation everything else runs on. |
+| **smedjen** — The Forge | Hand off development to agents that know 62 frameworks. Task decomposition, parallel dispatch, completion gates, and a content writer that drafts brand-aware copy. |
+| **herold** — The Herald | Pull tasks from Jira, detect contradictions in requirements, generate QA handovers, and ship PRs — without leaving the terminal. |
+| **våbenskjold** — The Coat of Arms | Build a brand from scratch, audit an existing one, or evolve it. Voice, values, positioning, audience, content pillars — all codified in YAML. |
+| **segl** — The Royal Seal | Generate visual identity systems and export design tokens to Tailwind, CSS custom properties, or DTCG format. |
 
 ## Quick Start
 
@@ -19,26 +19,27 @@ git clone https://github.com/hjemmesidekongen/ai.git
 cd ai
 ```
 
-See the [documentation site](https://hjemmesidekongen.dk/ai) for detailed guides, or start with:
+No build step. The plugins are markdown and YAML — Claude Code discovers them automatically when it runs from this directory. Start with any of these:
 
-- `/brainstorm:start` — explore a problem with structured pushback
-- `/dev:scan` — map your project's tech stack
-- `/plan:create` — break work into dependency-ordered waves
+```
+/kronen:brainstorm-start    — explore a problem before writing code
+/kronen:plan-create         — break work into dependency-ordered waves
+/smedjen:dev-scan           — map your project's tech stack
+/våbenskjold:brand-create   — build a brand from scratch
+```
 
 ## Requirements
 
-- [Claude Code](https://docs.anthropic.com/en/docs/claude-code) CLI installed and authenticated
+- [Claude Code](https://docs.anthropic.com/en/docs/claude-code) CLI, installed and authenticated
 - Node.js 18+
-
-No build step. The plugins are markdown files and YAML — discovered automatically when Claude Code runs from this directory.
 
 ## Documentation
 
-- [Installation](/docs/install.mdx)
-- [Configuration](/docs/configure.mdx)
-- [Workflows](/docs/workflows.mdx)
-- [Architecture](/docs/architecture.mdx)
-- [Troubleshooting](/docs/troubleshooting.mdx)
+- [Installation](docs/install.mdx)
+- [Configuration](docs/configure.mdx)
+- [Workflows](docs/workflows.mdx)
+- [Architecture](docs/architecture.mdx)
+- [Troubleshooting](docs/troubleshooting.mdx)
 
 ## License
 
