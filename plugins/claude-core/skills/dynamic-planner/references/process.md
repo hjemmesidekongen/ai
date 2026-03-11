@@ -143,9 +143,10 @@ Record what happened and prepare for the next cycle.
 4. Record cycle_metrics entry (see schema):
    - tasks_planned, tasks_completed, classification, learnings_added, corrections_made, wave_passed
    - Compare to previous cycle's metrics during next Reflect phase
-5. Write next_orientation: guidance for the next orient phase
-6. Increment `cycle` in state.yml
-7. Update `remaining_goal` in state.yml
+5. Run `doc-checkpoint` to verify documentation matches current state (CLAUDE.md counts, ecosystem.json, MEMORY.md)
+6. Write next_orientation: guidance for the next orient phase
+7. Increment `cycle` in state.yml
+8. Update `remaining_goal` in state.yml
 
 ### Entry type guide
 - **observation**: noticed a pattern or fact. "Haiku handles rubric scoring reliably."

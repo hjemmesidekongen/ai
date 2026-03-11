@@ -77,6 +77,21 @@ case "$TOOL" in
         CONTEXT="$tmp" ;; esac
     fi
     [ ${#CONTEXT} -gt 80 ] && CONTEXT="${CONTEXT:0:77}..." ;;
+  mcp__*)
+    # MCP tool calls — extract first string-valued parameter as context
+    # Try common field names in order of usefulness
+    for field in operations patterns query prompt filePathOrNew topic skill tags name; do
+      case "$INPUT" in *"\"${field}\":\""*)
+        CONTEXT="${INPUT#*\"${field}\":\"}"
+        CONTEXT="${CONTEXT%%\"*}"
+        break ;; esac
+    done
+    # If no string field found, try to get the first key from tool_input
+    if [ -z "$CONTEXT" ]; then
+      case "$INPUT" in *'"tool_input":'*)
+        CONTEXT="(structured input)" ;; esac
+    fi
+    [ ${#CONTEXT} -gt 80 ] && CONTEXT="${CONTEXT:0:77}..." ;;
   *)
     case "$INPUT" in *'"file_path":"'*)
       CONTEXT="${INPUT#*\"file_path\":\"}"

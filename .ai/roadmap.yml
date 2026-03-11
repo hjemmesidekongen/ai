@@ -1679,7 +1679,8 @@ items:
       claude-core. See .ai/brainstorm/brand-plugin/ for decisions and findings.
     category: brand
     plugin: brand
-    priority: now
+    priority: done
+    completed: "2026-03-11"
     added: "2026-03-10"
     tags: [plugin, brand, strategy, new-plugin]
 
@@ -1693,7 +1694,8 @@ items:
       .ai/brainstorm/design-plugin/ for decisions and findings.
     category: design
     plugin: design
-    priority: now
+    priority: done
+    completed: "2026-03-11"
     added: "2026-03-10"
     tags: [plugin, design, tokens, visual-identity, new-plugin]
 
@@ -1707,7 +1709,8 @@ items:
       decisions and findings.
     category: dev
     plugin: dev-engine
-    priority: now
+    priority: done
+    completed: "2026-03-11"
     added: "2026-03-10"
     tags: [skills, studio, content, seo, marketing, copywriting]
 
