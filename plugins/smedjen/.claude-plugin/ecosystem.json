@@ -311,6 +311,11 @@
       "name": "design-to-code-patterns",
       "path": "skills/design-to-code-patterns/SKILL.md",
       "description": "Design to code — token consumption, spacing/typography systems, component decomposition, responsive grids"
+    },
+    {
+      "name": "content-writer",
+      "path": "skills/content-writer/SKILL.md",
+      "description": "Generate brand-aware content drafts — READMEs, landing pages, blog posts, social media, and marketing copy"
     }
   ],
   "agents": [
@@ -343,6 +348,11 @@
       "name": "architect",
       "path": "agents/architect.md",
       "description": "Architecture advisor — system design, decomposition review, dependency analysis"
+    },
+    {
+      "name": "content-writer",
+      "path": "agents/content-writer.md",
+      "description": "Content writing agent — brand-aware drafts for READMEs, landing pages, blog posts, social media, email, and marketing copy"
     }
   ],
   "commands": [
@@ -355,6 +365,11 @@
       "name": "dev-run",
       "path": "commands/dev-run.md",
       "description": "Run the full smedjen pipeline for a task"
+    },
+    {
+      "name": "content-write",
+      "path": "commands/content-write.md",
+      "description": "Generate brand-aware content (README, landing page, blog post, social, marketing)"
     }
   ],
   "hooks": []

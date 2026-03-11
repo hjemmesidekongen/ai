@@ -3,7 +3,7 @@
 ## What This Is
 Five plugins in a monorepo:
 - **kronen** (`plugins/kronen/`) — The Crown: core foundation. Planning, brainstorm, tracing, memory governance, roadmap, doc governance, creator/reviewer tooling, autopilot, prompt optimization, and validation agents (41 skills, 14 commands, 12 agents).
-- **smedjen** (`plugins/smedjen/`) — The Forge: development execution engine. Task decomposition, agent dispatch, tech knowledge, disciplines, visual verification, completion gates, project mapping, orchestration, studio knowledge (62 skills, 2 commands, 6 agents).
+- **smedjen** (`plugins/smedjen/`) — The Forge: development execution engine. Task decomposition, agent dispatch, tech knowledge, disciplines, visual verification, completion gates, project mapping, orchestration, studio knowledge, content writing (62 skills, 3 commands, 7 agents).
 - **herold** (`plugins/herold/`) — The Herald: task management and workplace integration. Jira ingestion, local task storage, contradiction detection, project profiles, QA handover, bulk ingestion, PR workflows (9 skills, 8 commands).
 - **våbenskjold** (`plugins/våbenskjold/`) — The Coat of Arms: brand strategy, audit, and evolution (4 skills, 5 commands).
 - **segl** (`plugins/segl/`) — The Royal Seal: visual identity and design tokens (3 skills, 3 commands).
@@ -104,7 +104,7 @@ plugins/
   smedjen/                           # The Forge — development execution (62 skills, 2 commands, 6 agents)
     skills/                          # 7 core + 6 discipline + 24 tech + 12 expo + 5 integration + 8 studio
     commands/                        # dev-scan, dev-run
-    agents/                          # architect, backend-dev, frontend-dev, test-engineer, code-reviewer, app-security-auditor
+    agents/                          # architect, backend-dev, frontend-dev, test-engineer, code-reviewer, app-security-auditor, content-writer
   herold/                            # The Herald — task management (9 skills, 8 commands)
     skills/                          # jira-ingestion, contradiction-detection, bulk-ingestion, bitbucket-pr-workflow,
                                      # confluence-lookup, qa-handover-generator, azure-devops-pipeline,
