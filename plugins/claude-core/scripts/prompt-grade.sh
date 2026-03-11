@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+set -euo pipefail
 # prompt-grade.sh — Grade incoming prompts on clarity and stakes
 # claude-core UserPromptSubmit hook
 # When a prompt is vague AND high-stakes, injects additionalContext to load prompt-optimizer.

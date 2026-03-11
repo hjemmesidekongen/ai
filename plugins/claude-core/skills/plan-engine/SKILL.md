@@ -50,9 +50,7 @@ _source:
 
 # plan-engine
 
-Converts a flat task list with dependencies into an optimized wave plan. Handles dependency resolution, file-ownership conflict detection, model-tier assignment, and verification setup in a single pass.
-
-Use this skill when a set of tasks needs to be organized into parallel-safe execution waves with proper dependency ordering, file isolation, and verification gates.
+Converts a flat task list with dependencies into an optimized wave plan.
 
 ## When to trigger
 
@@ -68,17 +66,12 @@ Use this skill when a set of tasks needs to be organized into parallel-safe exec
 4. **Verification setup** — assign verification type and checks per wave
 5. **Emit plan.yml** — conforming to `resources/plan-schema.yml`
 
-## Process
-
-See `references/process.md` for the full algorithm with worked examples.
-
 ## Input
 
-A task list (provided inline or as a file) with:
-- `id`, `name`, `depends_on`, `files_written`, `files_read`
+Task list with: `id`, `name`, `depends_on`, `files_written`, `files_read`. Full algorithm: `references/process.md`.
 
 ## Output
 
-- `.ai/plans/{name}/plan.yml` — the wave plan (what to do)
-- `.ai/plans/{name}/plan.md` — implementation contract (standards, sync constraints, what NOT to do)
+- `.ai/plans/{name}/plan.yml` — wave plan
+- `.ai/plans/{name}/plan.md` — implementation contract
 - `.ai/plans/{name}/state.yml` — execution state (all pending)

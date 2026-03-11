@@ -5,12 +5,31 @@ description: |
   parallel agent dispatch, choosing team compositions (review, debug, feature,
   research, security teams), or integrating with Agent Teams experimental API.
   Covers file ownership rules, task coordination, and integration patterns.
+user_invocable: true
+interactive: true
+depends_on: []
+reads: []
+writes: []
 triggers:
   - agent teams
   - parallel agents
   - team composition
   - parallel execution
   - concurrent agents
+checkpoint:
+  type: data_validation
+  required_checks:
+    - name: "team_dispatched"
+      verify: "Team composition selected and agents dispatched with file ownership"
+      fail_action: "Verify team preset matches use case and retry dispatch"
+  on_fail: "Re-evaluate team composition"
+  on_pass: "Team dispatched with file ownership isolation"
+model_tier: sonnet
+_source:
+  origin: original
+  ported_date: "2026-03-09"
+  iteration: 1
+  changes: ["initial creation"]
 ---
 
 # Agent Teams

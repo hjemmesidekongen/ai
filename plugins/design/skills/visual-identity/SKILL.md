@@ -1,6 +1,7 @@
 ---
 name: visual-identity
-user-invocable: false
+user_invocable: true
+interactive: true
 description: >
   Creates a complete visual identity system from brand direction or user input.
   Generates color palettes (OKLCH-based, 10-stop scales), typography pairing,
@@ -41,6 +42,11 @@ checkpoint:
       fail_action: "Write design rationale for choices made"
   on_fail: "Fix and re-run checkpoint"
   on_pass: "Visual identity complete — ready for design-tokens generation"
+_source:
+  origin: original
+  ported_date: "2026-03-10"
+  iteration: 1
+  changes: ["initial creation"]
 ---
 
 # Visual Identity

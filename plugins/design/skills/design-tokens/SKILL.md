@@ -1,6 +1,7 @@
 ---
 name: design-tokens
-user-invocable: false
+user_invocable: false
+interactive: false
 description: >
   Transforms visual identity tokens.yml into platform-consumable formats:
   Tailwind theme JSON, CSS custom properties, and DTCG JSON. Generates WCAG
@@ -38,6 +39,11 @@ checkpoint:
       fail_action: "Generate missing sections"
   on_fail: "Fix and re-run checkpoint"
   on_pass: "Platform tokens ready for dev-engine consumption"
+_source:
+  origin: original
+  ported_date: "2026-03-10"
+  iteration: 1
+  changes: ["initial creation"]
 ---
 
 # Design Tokens

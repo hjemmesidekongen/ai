@@ -1710,6 +1710,152 @@ items:
     added: "2026-03-10"
     tags: [skills, studio, content, seo, marketing, copywriting]
 
+  - id: RL-137
+    title: "Pencil swarm prompt optimization — research phase"
+    description: >
+      Thorough research on AI design tool prompting best practices before
+      running experiments. Look at Pencil-specific docs, Figma AI, Galileo,
+      and community findings on prompt restrictiveness for design agents.
+      Goal: establish a baseline direction so we don't waste tokens on
+      trial and error. Output: research summary with actionable prompting
+      guidelines ranked by evidence quality.
+      See: .ai/design/hjemmesidekongen/test-findings.md (findings 48-49),
+      memory/pencil-design-workflow.md
+    category: design
+    plugin: design
+    priority: next
+    added: "2026-03-11"
+    tags: [pencil, swarm, prompt-design, research]
+
+  - id: RL-138
+    title: "Pencil A/B prompt split testing framework"
+    description: >
+      After RL-137 research, build a framework for testing prompt variants
+      against Pencil spawn_agents. Same task, same brand context, different
+      restriction levels. 3-5 variants max, informed by research. Each variant
+      spawns agents for the same page, screenshots are captured automatically,
+      results compared side-by-side. Needs: variant definition schema, automated
+      screenshot capture, comparison output, token cost tracking per variant.
+    category: design
+    plugin: design
+    priority: next
+    depends_on: RL-137
+    added: "2026-03-11"
+    tags: [pencil, swarm, testing, a-b-testing]
+
+  - id: RL-139
+    title: "Repeatable E2E plugin test harness (hjemmesidekongen scenario)"
+    description: >
+      Script the full hjemmesidekongen pipeline into a repeatable automated test:
+      brand audit → visual identity → design tokens → Pencil rendering.
+      Enables quick regression testing after plugin changes. Needs checkpoints
+      after each pipeline stage, verbose/debug mode for inspecting intermediate
+      state and MCP tool calls, logging of all operations, and human review
+      points for non-deterministic output (Pencil frames). Should be a command
+      or standalone script, not a skill. Include token cost tracking.
+    category: testing
+    plugin: design
+    priority: next
+    added: "2026-03-11"
+    tags: [testing, e2e, automation, debug, pipeline]
+
+  - id: RL-140
+    title: "Debug/verbose mode for plugin pipeline execution"
+    description: >
+      Implement a debug mode that surfaces what happens behind the scenes
+      during plugin pipeline runs. Log MCP tool calls and responses, intermediate
+      state between pipeline stages, timing per operation, token consumption,
+      and decision points. Could extend trace-light.log or be a separate
+      debug output. Essential for catching issues in automated test runs
+      where you can't watch the session interactively.
+    category: core
+    plugin: claude-core
+    priority: next
+    added: "2026-03-11"
+    tags: [debugging, tracing, observability, pipeline]
+
+  - id: RL-141
+    title: "Redesign ai.hjemmesidekongen.dk using brand guidelines"
+    description: >
+      Apply the hjemmesidekongen brand identity (colors, typography, voice,
+      design tokens) to redesign the docs site at ai.hjemmesidekongen.dk.
+      Use Pencil swarm agents to create the visual design first, then
+      implement. The site currently uses Fumadocs — theme customization
+      should map brand tokens to the Fumadocs theming system. This is both
+      a real deliverable and a test of the brand→design→code pipeline.
+    category: design
+    plugin: design
+    priority: next
+    added: "2026-03-11"
+    tags: [hjemmesidekongen, docs-site, brand, redesign, fumadocs]
+
+  - id: RL-142
+    title: "Docs content audit against brand voice"
+    description: >
+      Audit every docs page against hjemmesidekongen brand guidelines.
+      Check: does the wording match brand voice? Is the brand clear?
+      Is terminology consistent? Map what content exists vs what's needed
+      for a proper documentation site. Identify gaps, redundancies, and
+      pages that need rewriting. Output: content map + audit report with
+      page-by-page recommendations.
+    category: content
+    plugin: design
+    priority: next
+    depends_on: RL-141
+    added: "2026-03-11"
+    tags: [hjemmesidekongen, docs, brand-voice, content-audit]
+
+  - id: RL-143
+    title: "Pencil mockup for docs site design"
+    description: >
+      Create a Pencil mockup for the redesigned ai.hjemmesidekongen.dk.
+      Use swarm agents with brand tokens and style guide. Pages to mock:
+      landing/index, plugin page (e.g. claude-core), guide/how-to page,
+      blog post template. Mobile 390px + desktop 1440px. Fumadocs has
+      constraints (sidebar, TOC, breadcrumbs) — design within those but
+      push the brand identity where possible.
+    category: design
+    plugin: design
+    priority: next
+    depends_on: RL-141
+    added: "2026-03-11"
+    tags: [hjemmesidekongen, pencil, mockup, docs-site]
+
+  - id: RL-144
+    title: "Blog section for ai.hjemmesidekongen.dk"
+    description: >
+      Add a blog section with in-depth how-to guides. Medium-style long-form
+      articles. Initial topics: "How to create a brand identity from scratch",
+      "How to redesign your brand identity", "How to optimize your pages for
+      conversion", "Building a design system with AI tools". Content should
+      demonstrate the plugin capabilities while being genuinely useful SEO
+      content. Fumadocs supports blog-style pages — check if native or needs
+      custom layout. Double-duty: these articles are also real test cases for
+      studio skills (content-strategy-patterns, web-copywriting, seo-fundamentals,
+      sitemap-planning). Real deliverables that validate the tools.
+    category: content
+    plugin: design
+    priority: later
+    depends_on: RL-142
+    added: "2026-03-11"
+    tags: [hjemmesidekongen, blog, content, how-to, seo, testing]
+
+  - id: RL-145
+    title: "High-leverage skill A/B testing"
+    description: >
+      Identify skills with the highest downstream impact (force multipliers)
+      and A/B test improvements on them. Candidates: skill-creator (every new
+      skill inherits its quality), plan-engine (every plan depends on it),
+      task-decomposer (every agent dispatch starts here), prompt-optimizer
+      (affects all prompt quality). Test method: create variant SKILL.md files,
+      run the same task through each variant, compare output quality. Informed
+      by skill-auditor findings from the validation fix plan (wave 2).
+    category: testing
+    plugin: claude-core
+    priority: later
+    added: "2026-03-11"
+    tags: [testing, a-b-testing, skills, quality, high-leverage]
+
 # ============================================================
 # STATS (updated 2026-03-10)
 # ============================================================

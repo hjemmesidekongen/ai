@@ -44,11 +44,11 @@ Generate architecture documentation using the C4 model with Mermaid diagrams. Th
 
 ## Workflow
 
-1. **Understand scope** -- Identify the system, its users, and external dependencies
-2. **Analyze codebase** -- Read project structure, configs, and entry points to map boundaries
-3. **Select levels** -- Pick diagram levels appropriate for the audience (see table below)
-4. **Generate diagrams** -- Produce Mermaid C4 diagrams with valid syntax
-5. **Document** -- Write output to `docs/architecture/` with narrative context per diagram
+1. **Understand scope** -- system, users, external dependencies
+2. **Analyze codebase** -- project structure, configs, entry points
+3. **Select levels** -- appropriate for the audience (see table)
+4. **Generate diagrams** -- valid Mermaid C4 syntax
+5. **Document** -- write to `docs/architecture/` with narrative
 
 ## Level selection
 
@@ -62,36 +62,7 @@ Generate architecture documentation using the C4 model with Mermaid diagrams. Th
 
 Context + Container (levels 1-2) are sufficient for most teams. Only go deeper when the audience needs it.
 
-## Quick start -- System Context
+## References
 
-````markdown
-```mermaid
-C4Context
-    title System Context — My App
-    Person(user, "End User", "Uses the application")
-    System(app, "My App", "Core application")
-    System_Ext(email, "Email Service", "Sends notifications")
-
-    Rel(user, app, "Uses", "HTTPS")
-    Rel(app, email, "Sends emails", "SMTP")
-```
-````
-
-## Output convention
-
-Write all architecture docs to `docs/architecture/`:
-- `system-context.md` -- Level 1 diagram + narrative
-- `containers.md` -- Level 2 diagram + narrative
-- `components-<name>.md` -- Level 3 per container (only when needed)
-- `deployment.md` -- Infrastructure mapping
-- `dynamic-<flow>.md` -- Key request flows
-
-## Best practices
-
-- Start at Context level and zoom in only as needed
-- Label all relationships with protocol/technology
-- Use `_Ext` variants for anything outside your system boundary
-- Keep each diagram focused -- split large systems into multiple diagrams
-- Add narrative paragraphs explaining *why* the architecture looks this way
-
-Full Mermaid C4 syntax reference: `references/c4-syntax.md`
+- Quick start example, output conventions, best practices: `references/process.md`
+- Full Mermaid C4 syntax: `references/c4-syntax.md`

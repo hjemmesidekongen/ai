@@ -6,6 +6,15 @@ description: |
   major milestone completed, resuming previous work ("continue where we left off"),
   or after 5+ file edits in a session. Complements snapshot.yml with human-readable
   chained handoffs and staleness awareness.
+user_invocable: true
+interactive: true
+depends_on: []
+reads:
+  - ".ai/context/snapshot.yml"
+  - ".ai/plans/*/state.yml"
+  - ".ai/handoffs/*.md"
+writes:
+  - ".ai/handoffs/*.md"
 triggers:
   - handoff
   - save state
@@ -13,6 +22,20 @@ triggers:
   - continue where we left off
   - resume from
   - context save
+checkpoint:
+  type: data_validation
+  required_checks:
+    - name: "handoff_written"
+      verify: "Handoff document written to .ai/handoffs/ with all required sections"
+      fail_action: "Fill missing sections before saving"
+  on_fail: "Complete the handoff document"
+  on_pass: "Handoff saved with context for next session"
+model_tier: sonnet
+_source:
+  origin: original
+  ported_date: "2026-03-09"
+  iteration: 1
+  changes: ["initial creation"]
 ---
 
 # Session Handoff

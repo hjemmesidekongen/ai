@@ -7,6 +7,7 @@ description: >
   or finding free/busy slots.
 user_invocable: false
 interactive: false
+depends_on: []
 triggers:
   - "outlook"
   - "check email"

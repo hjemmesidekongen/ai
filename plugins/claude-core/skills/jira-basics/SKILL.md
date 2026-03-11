@@ -8,6 +8,8 @@ user_invocable: false
 interactive: false
 model_tier: senior
 depends_on: []
+reads: []
+writes: []
 triggers:
   - "jira"
   - "ticket"

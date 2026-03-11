@@ -4,6 +4,12 @@ description: |
   Create software diagrams using Mermaid syntax. Use when generating class diagrams,
   sequence diagrams, flowcharts, ERDs, state diagrams, git graphs, or gantt charts.
   For C4 architecture diagrams specifically, use c4-architecture instead.
+user_invocable: true
+interactive: true
+depends_on: []
+reads: []
+writes:
+  - "docs/**/*.md"
 triggers:
   - diagram
   - visualize
@@ -15,6 +21,20 @@ triggers:
   - state diagram
   - gantt chart
   - git graph
+checkpoint:
+  type: data_validation
+  required_checks:
+    - name: "diagram_renders"
+      verify: "Mermaid diagram uses valid syntax for the declared diagram type"
+      fail_action: "Fix syntax errors using the appropriate reference file"
+  on_fail: "Fix diagram syntax and re-verify"
+  on_pass: "Diagram generated with valid Mermaid syntax"
+model_tier: sonnet
+_source:
+  origin: original
+  ported_date: "2026-03-09"
+  iteration: 1
+  changes: ["initial creation"]
 ---
 
 # Mermaid Diagramming

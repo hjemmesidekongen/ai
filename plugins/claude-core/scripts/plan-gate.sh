@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+set -euo pipefail
 # plan-gate.sh — Advisory warning when modifying plugin files without an active plan
 # claude-core PreToolUse hook (Write|Edit)
 # Non-blocking (exit 0). Encourages plan-first workflow for plugin development.

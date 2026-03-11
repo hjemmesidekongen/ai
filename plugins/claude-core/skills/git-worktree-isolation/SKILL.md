@@ -54,8 +54,7 @@ _source:
 
 # git-worktree-isolation
 
-Isolated branch work via git worktrees. Prevents experimental changes from
-bleeding into the main working tree without stashing or branch-switching.
+Isolated branch work via git worktrees. Prevents experimental changes from bleeding into the main working tree.
 
 ## Lifecycle
 
@@ -78,7 +77,4 @@ bash plugins/claude-core/scripts/worktree-finish.sh <name> merge|pr|keep|discard
 git worktree list
 ```
 
-## Process
-
-See `references/process.md` for full steps, setup detection rules, and
-finish option details.
+Full steps, setup detection rules, and finish options: `references/process.md`.

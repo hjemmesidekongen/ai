@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+set -euo pipefail
 # prevent-direct-push.sh — Blocks git push to protected branches
 # claude-core PreToolUse hook (Bash)
 # Protected branches: main, master, production, release/*

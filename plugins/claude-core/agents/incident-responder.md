@@ -10,6 +10,8 @@ description: |
   <user>error-detective found the root cause — coordinate the fix for the compact-gate timeout</user>
   <assistant>Classifying severity: P2 (blocks workflow, not data loss). Coordinating fix: dispatching refactoring-specialist to add size limit to find command. Post-mortem drafted: root cause, fix applied, hardening recommendation added to error-annotation-format.</assistant>
   </example>
+color: yellow
+model_tier: sonnet
 model: inherit
 tools: ["Read", "Write", "Edit", "Bash", "Glob", "Grep"]
 ---

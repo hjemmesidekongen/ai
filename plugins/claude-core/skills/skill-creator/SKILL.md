@@ -60,8 +60,7 @@ Creates and validates Claude Code skills for any plugin in this workspace.
 | `scripts/` | Automation scripts for the skill | No |
 | `assets/` | Templates, schemas, static resources | No |
 
-Keep SKILL.md short: when to trigger, quick overview, pointer to references/.
-Detailed process, tables, examples, and checklists belong in `references/process.md`.
+Keep SKILL.md short. Overflow goes to `references/process.md`.
 
 ## Evaluation
 
@@ -76,10 +75,6 @@ After creating a skill, run evaluations to verify triggering accuracy and task c
 
 Eval agents (`agents/grader.md`, `comparator.md`, `analyzer.md`) handle grading, blind comparison, and post-hoc analysis. Full process, eval pipeline, and schemas: `references/process.md`.
 
-## Quality dimensions
+## Quality & progressive disclosure
 
-Skills are scored on 8 dimensions (120 points). The most important: **knowledge delta** — does this add expert-only knowledge, or does it repeat what Claude already knows? Five skill patterns exist (Mindset, Navigation, Philosophy, Process, Tool). Full framework: `references/quality-dimensions.md`.
-
-## Progressive disclosure
-
-Skills follow a 3-tier loading model: metadata (always), SKILL.md ≤80 lines (on activate), references/ (on demand). Every reference file needs a loading trigger in SKILL.md. Full architecture: `references/progressive-disclosure.md`.
+Skills scored on 8 dimensions (120 points). Most important: **knowledge delta**. Full framework: `references/quality-dimensions.md`. Progressive disclosure (3-tier loading): `references/progressive-disclosure.md`.

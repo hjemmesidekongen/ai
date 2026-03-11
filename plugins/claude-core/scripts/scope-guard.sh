@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+set -euo pipefail
 # scope-guard.sh — Advisory scope warning for active plan tasks
 # claude-core PreToolUse hook (Write|Edit)
 # Warns when writing a file not in the current wave's declared task writes.

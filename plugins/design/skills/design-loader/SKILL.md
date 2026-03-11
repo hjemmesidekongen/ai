@@ -1,6 +1,7 @@
 ---
 name: design-loader
-user-invocable: false
+user_invocable: false
+interactive: false
 description: >
   Loads existing design artifacts from .ai/design/{name}/ and reports what's
   available. Checks for tokens.yml, identity.yml, platform tokens, and contrast
@@ -25,6 +26,11 @@ checkpoint:
       fail_action: "Generate status report from directory contents"
   on_fail: "Report what's missing and suggest next steps"
   on_pass: "Design context loaded — report summary to user"
+_source:
+  origin: original
+  ported_date: "2026-03-10"
+  iteration: 1
+  changes: ["initial creation"]
 ---
 
 # Design Loader

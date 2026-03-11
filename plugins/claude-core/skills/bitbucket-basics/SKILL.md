@@ -9,6 +9,8 @@ description: >
 user_invocable: false
 interactive: false
 depends_on: []
+reads: []
+writes: []
 model_tier: senior
 triggers:
   - "bitbucket"

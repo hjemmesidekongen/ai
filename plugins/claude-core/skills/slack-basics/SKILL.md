@@ -6,6 +6,7 @@ description: >
   replying to threads, listing channels, or looking up users by name or email.
 user_invocable: false
 interactive: false
+depends_on: []
 triggers:
   - "slack"
   - "send message"

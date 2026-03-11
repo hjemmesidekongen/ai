@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+set -euo pipefail
 # debug-window.sh — Captures test/build failures for debugging visibility
 # claude-core PostToolUse hook (Bash)
 # Detects failed Bash commands that look like test/build runs.

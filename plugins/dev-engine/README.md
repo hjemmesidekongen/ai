@@ -8,8 +8,10 @@ Generic development execution plugin — task decomposition, agent dispatch, tec
 |----------|-------|---------|
 | Core execution | 7 | Task decomposition, context assembly, agent dispatch, completion gates, orchestration |
 | Disciplines | 6 | TDD, debugging, error handling, verification, code review, git workflows |
-| Tech knowledge | 23 | React, Next.js, NestJS, Prisma, Expo (12 skills), TypeScript patterns |
-| Integration | 5 | Taskflow bridge, project mapping, context assembly, dev-engine orchestrator |
+| Tech knowledge | 25 | React, Next.js, NestJS, Prisma, TypeScript, Tailwind, Vue, Nuxt, Fumadocs, testing, security |
+| Expo | 12 | DOM components, SwiftUI, Tailwind, native UI, data fetching, CI/CD, deployment, upgrading |
+| Integration | 4 | Taskflow bridge, project mapping, file ownership, skill quality rubric |
+| Studio | 8 | Web copywriting, content strategy, SEO, marketing psychology, brand voice, social media, sitemap planning, design-to-code |
 
 ## Commands
 
