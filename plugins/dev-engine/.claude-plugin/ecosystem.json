@@ -271,6 +271,46 @@
       "name": "fumadocs-patterns",
       "path": "skills/fumadocs-patterns/SKILL.md",
       "description": "Fumadocs documentation framework — MDX components, content structure, meta.json navigation, LLM integration"
+    },
+    {
+      "name": "web-copywriting",
+      "path": "skills/web-copywriting/SKILL.md",
+      "description": "Web copywriting — headlines, CTAs, microcopy, error messages, landing page structure, Seven Sweeps editing"
+    },
+    {
+      "name": "content-strategy-patterns",
+      "path": "skills/content-strategy-patterns/SKILL.md",
+      "description": "Content strategy — pillar ratios, editorial calendars, blog/social/email templates, repurposing matrix"
+    },
+    {
+      "name": "seo-fundamentals",
+      "path": "skills/seo-fundamentals/SKILL.md",
+      "description": "SEO — E-E-A-T, Core Web Vitals, technical SEO, keywords, meta tags, Health Index scoring"
+    },
+    {
+      "name": "marketing-psychology-patterns",
+      "path": "skills/marketing-psychology-patterns/SKILL.md",
+      "description": "Marketing psychology — PLFS/MFS scoring, journey-stage models, ethical guardrails, growth strategy"
+    },
+    {
+      "name": "brand-voice-implementation",
+      "path": "skills/brand-voice-implementation/SKILL.md",
+      "description": "Brand voice in code — tone selection, personality archetypes, plain speech vs brand voice, consistency"
+    },
+    {
+      "name": "social-media-patterns",
+      "path": "skills/social-media-patterns/SKILL.md",
+      "description": "Social media — platform strategies, post templates, hook formulas, content pillars, repurposing"
+    },
+    {
+      "name": "sitemap-planning",
+      "path": "skills/sitemap-planning/SKILL.md",
+      "description": "Information architecture — page hierarchy, content siloing, internal linking, schema markup, URL patterns"
+    },
+    {
+      "name": "design-to-code-patterns",
+      "path": "skills/design-to-code-patterns/SKILL.md",
+      "description": "Design to code — token consumption, spacing/typography systems, component decomposition, responsive grids"
     }
   ],
   "agents": [
