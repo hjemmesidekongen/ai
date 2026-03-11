@@ -1,0 +1,226 @@
+# Brand-Audit Rubric v1.0.0
+# Scores skill output against expected quality dimensions
+# ~70% deterministic, ~30% LLM-graded (D-005)
+
+version: "1.0.0"
+skill: brand-audit
+max_score: 100
+
+checks:
+  deterministic:
+    # File existence checks (15 pts)
+    - id: guideline_exists
+      description: "guideline.yml exists"
+      type: file_exists
+      path: "guideline.yml"
+      points: 3
+
+    - id: voice_exists
+      description: "voice.yml exists"
+      type: file_exists
+      path: "voice.yml"
+      points: 3
+
+    - id: values_exists
+      description: "values.yml exists"
+      type: file_exists
+      path: "values.yml"
+      points: 3
+
+    - id: audit_sources_exists
+      description: "audit-sources.md exists and has content"
+      type: file_not_empty
+      path: "audit-sources.md"
+      points: 3
+
+    - id: dos_donts_exists
+      description: "dos-and-donts.md exists and has content"
+      type: file_not_empty
+      path: "dos-and-donts.md"
+      points: 3
+
+    # Guideline schema compliance (20 pts)
+    - id: guideline_name
+      description: "guideline.yml has name field"
+      type: yaml_field_exists
+      path: "guideline.yml"
+      field: "name"
+      points: 2
+
+    - id: guideline_tagline
+      description: "guideline.yml has tagline field"
+      type: yaml_field_exists
+      path: "guideline.yml"
+      field: "tagline"
+      points: 2
+
+    - id: guideline_elevator_pitch
+      description: "guideline.yml has elevator_pitch field"
+      type: yaml_field_exists
+      path: "guideline.yml"
+      field: "elevator_pitch"
+      points: 2
+
+    - id: guideline_positioning
+      description: "guideline.yml has positioning with all subfields"
+      type: yaml_field_exists
+      path: "guideline.yml"
+      field: "positioning.category"
+      points: 2
+
+    - id: guideline_positioning_differentiator
+      description: "positioning has differentiator"
+      type: yaml_field_exists
+      path: "guideline.yml"
+      field: "positioning.differentiator"
+      points: 2
+
+    - id: guideline_positioning_target
+      description: "positioning has target_audience"
+      type: yaml_field_exists
+      path: "guideline.yml"
+      field: "positioning.target_audience"
+      points: 2
+
+    - id: guideline_positioning_promise
+      description: "positioning has promise"
+      type: yaml_field_exists
+      path: "guideline.yml"
+      field: "positioning.promise"
+      points: 2
+
+    - id: guideline_audience
+      description: "guideline.yml has audience array"
+      type: yaml_array_min_length
+      path: "guideline.yml"
+      field: "audience"
+      min_length: 1
+      points: 3
+
+    - id: guideline_content_pillars
+      description: "guideline.yml has content_pillars array"
+      type: yaml_array_min_length
+      path: "guideline.yml"
+      field: "content_pillars"
+      min_length: 2
+      points: 3
+
+    # Voice schema compliance (20 pts)
+    - id: voice_archetype
+      description: "voice.yml has personality_archetype"
+      type: yaml_field_exists
+      path: "voice.yml"
+      field: "personality_archetype"
+      points: 2
+
+    - id: voice_formal_casual
+      description: "voice_attributes.formal_casual is 1-10"
+      type: yaml_value_range
+      path: "voice.yml"
+      field: "voice_attributes.formal_casual"
+      min: 1
+      max: 10
+      points: 3
+
+    - id: voice_serious_playful
+      description: "voice_attributes.serious_playful is 1-10"
+      type: yaml_value_range
+      path: "voice.yml"
+      field: "voice_attributes.serious_playful"
+      min: 1
+      max: 10
+      points: 3
+
+    - id: voice_technical_simple
+      description: "voice_attributes.technical_simple is 1-10"
+      type: yaml_value_range
+      path: "voice.yml"
+      field: "voice_attributes.technical_simple"
+      min: 1
+      max: 10
+      points: 3
+
+    - id: voice_reserved_expressive
+      description: "voice_attributes.reserved_expressive is 1-10"
+      type: yaml_value_range
+      path: "voice.yml"
+      field: "voice_attributes.reserved_expressive"
+      min: 1
+      max: 10
+      points: 3
+
+    - id: voice_humble_confident
+      description: "voice_attributes.humble_confident is 1-10"
+      type: yaml_value_range
+      path: "voice.yml"
+      field: "voice_attributes.humble_confident"
+      min: 1
+      max: 10
+      points: 3
+
+    - id: voice_anti_patterns
+      description: "voice.yml has anti_patterns array"
+      type: yaml_array_min_length
+      path: "voice.yml"
+      field: "anti_patterns"
+      min_length: 2
+      points: 3
+
+    # Values schema compliance (15 pts)
+    - id: values_core
+      description: "values.yml has core_values array with 3-5 items"
+      type: yaml_array_min_length
+      path: "values.yml"
+      field: "core_values"
+      min_length: 3
+      points: 5
+
+    - id: values_beliefs
+      description: "values.yml has beliefs array"
+      type: yaml_array_min_length
+      path: "values.yml"
+      field: "beliefs"
+      min_length: 1
+      points: 3
+
+    - id: values_non_negotiables
+      description: "values.yml has non_negotiables array"
+      type: yaml_array_min_length
+      path: "values.yml"
+      field: "non_negotiables"
+      min_length: 1
+      points: 3
+
+    - id: values_decision_framework
+      description: "values.yml has decision_framework"
+      type: yaml_field_exists
+      path: "values.yml"
+      field: "decision_framework"
+      points: 4
+
+  llm_graded:
+    # Qualitative checks scored by Haiku (30 pts)
+    - id: voice_plausibility
+      description: "Voice scales are plausible for the brand type (not random)"
+      prompt: >
+        Given this brand brief and the voice.yml output, are the voice attribute
+        scales (1-10) plausible? A B2B SaaS monitoring tool should lean technical,
+        somewhat formal, confident. Score 0-10 where 10 = perfectly calibrated.
+      points: 10
+
+    - id: positioning_specificity
+      description: "Positioning differentiator is specific, not generic"
+      prompt: >
+        Read the positioning.differentiator from guideline.yml. Is it specific to
+        this brand, or could it apply to any SaaS company? Score 0-10 where
+        10 = highly specific and differentiated, 0 = completely generic.
+      points: 10
+
+    - id: content_pillars_quality
+      description: "Content pillars are actionable and non-overlapping"
+      prompt: >
+        Review the content_pillars from guideline.yml. Are they distinct from each
+        other (no overlap)? Are they actionable (could you write 10 articles per
+        pillar)? Do percentages total 100? Score 0-10 where 10 = perfectly distinct
+        and actionable.
+      points: 10

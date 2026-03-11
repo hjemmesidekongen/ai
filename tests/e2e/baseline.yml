@@ -1,0 +1,4 @@
+# E2E Test Baseline Scores
+# Updated when rubrics change or new baseline run is established
+# Format: skill--brand: {score, rubric_version, date}
+baselines: {}

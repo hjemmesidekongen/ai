@@ -1,0 +1,24 @@
+# E2E Test Matrix
+# Defines which skill x brand combinations to run
+# Full matrix for generative skills, single fixture for transformation skills (D-004)
+
+test_cases:
+  # Generative skills — full matrix (all 4 brands)
+  - skill: brand-audit
+    brands: [cloudmetrics, klip-co, danskbolig, nordic-essentials]
+
+  # Future generative skills (uncomment when rubrics are ready):
+  # - skill: visual-identity
+  #   brands: [cloudmetrics, klip-co, danskbolig, nordic-essentials]
+  # - skill: content-strategy-patterns
+  #   brands: [cloudmetrics, klip-co, danskbolig, nordic-essentials]
+  # - skill: web-copywriting
+  #   brands: [cloudmetrics, klip-co, danskbolig, nordic-essentials]
+  # - skill: sitemap-planning
+  #   brands: [cloudmetrics, klip-co, danskbolig, nordic-essentials]
+
+  # Transformation skills — single fixture (D-004):
+  # - skill: design-tokens
+  #   brands: [cloudmetrics]
+  # - skill: design-loader
+  #   brands: [cloudmetrics]
