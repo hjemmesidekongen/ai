@@ -171,9 +171,72 @@ def check_yaml_array_min_length(output_dir: Path, check: dict) -> dict:
     }
 
 
+def check_file_contains(output_dir: Path, check: dict) -> dict:
+    """Check that a file contains a regex pattern."""
+    import re
+
+    path = output_dir / check["path"]
+    if not path.exists():
+        return {
+            "id": check["id"],
+            "description": check["description"],
+            "type": check["type"],
+            "passed": False,
+            "points_earned": 0,
+            "points_possible": check["points"],
+            "detail": f"Missing: {check['path']}",
+        }
+
+    content = path.read_text()
+    pattern = check["pattern"]
+    passed = bool(re.search(pattern, content, re.IGNORECASE))
+    return {
+        "id": check["id"],
+        "description": check["description"],
+        "type": check["type"],
+        "passed": passed,
+        "points_earned": check["points"] if passed else 0,
+        "points_possible": check["points"],
+        "detail": f"{'Found' if passed else 'Not found'}: pattern '{pattern}' in {check['path']}",
+    }
+
+
+def check_file_not_contains(output_dir: Path, check: dict) -> dict:
+    """Check that a file does NOT contain a regex pattern."""
+    import re
+
+    path = output_dir / check["path"]
+    if not path.exists():
+        return {
+            "id": check["id"],
+            "description": check["description"],
+            "type": check["type"],
+            "passed": True,
+            "points_earned": check["points"],
+            "points_possible": check["points"],
+            "detail": f"File missing (passes by default): {check['path']}",
+        }
+
+    content = path.read_text()
+    pattern = check["pattern"]
+    found = bool(re.search(pattern, content, re.IGNORECASE))
+    passed = not found
+    return {
+        "id": check["id"],
+        "description": check["description"],
+        "type": check["type"],
+        "passed": passed,
+        "points_earned": check["points"] if passed else 0,
+        "points_possible": check["points"],
+        "detail": f"{'Not found (good)' if passed else 'Found (bad)'}: pattern '{pattern}' in {check['path']}",
+    }
+
+
 CHECK_HANDLERS = {
     "file_exists": check_file_exists,
     "file_not_empty": check_file_not_empty,
+    "file_contains": check_file_contains,
+    "file_not_contains": check_file_not_contains,
     "yaml_field_exists": check_yaml_field_exists,
     "yaml_value_range": check_yaml_value_range,
     "yaml_array_min_length": check_yaml_array_min_length,

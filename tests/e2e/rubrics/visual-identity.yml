@@ -1,0 +1,153 @@
+# Visual Identity Rubric v1.0.0
+# Tests the visual-identity skill output quality
+# Expects: .ai/design/{name}/tokens.yml + identity.yml
+
+version: "1.0.0"
+skill: visual-identity
+max_score: 100
+
+checks:
+  deterministic:
+    # File existence (10 pts)
+    - id: tokens_exists
+      description: "tokens.yml exists"
+      type: file_exists
+      path: "tokens.yml"
+      points: 5
+
+    - id: identity_exists
+      description: "identity.yml exists"
+      type: file_exists
+      path: "identity.yml"
+      points: 5
+
+    # Color system (20 pts)
+    - id: primary_palette
+      description: "tokens.yml has primary color palette"
+      type: yaml_field_exists
+      path: "tokens.yml"
+      field: "primary"
+      points: 4
+
+    - id: secondary_palette
+      description: "tokens.yml has secondary color palette"
+      type: yaml_field_exists
+      path: "tokens.yml"
+      field: "secondary"
+      points: 4
+
+    - id: accent_palette
+      description: "tokens.yml has accent color palette"
+      type: yaml_field_exists
+      path: "tokens.yml"
+      field: "accent"
+      points: 4
+
+    - id: semantic_colors
+      description: "tokens.yml has semantic colors (success, warning, error, info)"
+      type: yaml_field_exists
+      path: "tokens.yml"
+      field: "semantic"
+      points: 4
+
+    - id: semantic_success
+      description: "semantic has success color"
+      type: yaml_field_exists
+      path: "tokens.yml"
+      field: "semantic.success"
+      points: 2
+
+    - id: semantic_error
+      description: "semantic has error color"
+      type: yaml_field_exists
+      path: "tokens.yml"
+      field: "semantic.error"
+      points: 2
+
+    # Typography (15 pts)
+    - id: heading_font
+      description: "tokens.yml has heading font family"
+      type: yaml_field_exists
+      path: "tokens.yml"
+      field: "typography.heading"
+      points: 5
+
+    - id: body_font
+      description: "tokens.yml has body font family"
+      type: yaml_field_exists
+      path: "tokens.yml"
+      field: "typography.body"
+      points: 5
+
+    - id: mono_font
+      description: "tokens.yml has mono font family"
+      type: yaml_field_exists
+      path: "tokens.yml"
+      field: "typography.mono"
+      points: 5
+
+    # Spacing (10 pts)
+    - id: spacing_base
+      description: "tokens.yml has spacing base unit"
+      type: yaml_field_exists
+      path: "tokens.yml"
+      field: "spacing"
+      points: 5
+
+    - id: spacing_scale
+      description: "spacing has at least 8 steps"
+      type: yaml_array_min_length
+      path: "tokens.yml"
+      field: "spacing"
+      min_length: 8
+      points: 5
+
+    # Identity rationale (15 pts)
+    - id: identity_not_empty
+      description: "identity.yml has content"
+      type: file_not_empty
+      path: "identity.yml"
+      points: 5
+
+    - id: identity_rationale
+      description: "identity.yml has design rationale"
+      type: yaml_field_exists
+      path: "identity.yml"
+      field: "rationale"
+      points: 5
+
+    - id: identity_color_theory
+      description: "identity.yml has color theory section"
+      type: yaml_field_exists
+      path: "identity.yml"
+      field: "color_theory"
+      points: 5
+
+  llm_graded:
+    # Qualitative checks (30 pts)
+    - id: color_harmony
+      description: "Color palettes are harmonious and appropriate for the brand"
+      prompt: >
+        Review the primary, secondary, and accent palettes in tokens.yml against
+        the brand brief. Are the colors appropriate for this brand type and
+        industry? Do they work together harmoniously? Score 0-10 where
+        10 = perfectly suited and harmonious.
+      points: 10
+
+    - id: typography_fit
+      description: "Font choices suit the brand personality"
+      prompt: >
+        Review the typography choices in tokens.yml. Do the heading, body, and
+        mono fonts suit this brand's personality and industry? Is there good
+        contrast between heading and body fonts? Score 0-10 where 10 = ideal
+        font pairing for this brand.
+      points: 10
+
+    - id: rationale_quality
+      description: "Design rationale explains decisions clearly"
+      prompt: >
+        Read identity.yml. Does the rationale explain WHY these specific colors,
+        fonts, and spacing were chosen for this brand? Is it specific to the brand
+        (not generic design advice)? Score 0-10 where 10 = clear, specific,
+        well-reasoned justification.
+      points: 10

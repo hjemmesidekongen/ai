@@ -1,0 +1,65 @@
+# Design Loader Rubric v1.0.0
+# Tests the design-loader skill (read-only — reports artifact status)
+# Expects: stdout status report listing available and missing artifacts
+
+version: "1.0.0"
+skill: design-loader
+max_score: 100
+
+checks:
+  deterministic:
+    # Output structure (40 pts)
+    - id: output_not_empty
+      description: "Skill produces output"
+      type: file_not_empty
+      path: "output.txt"
+      points: 10
+
+    - id: lists_available
+      description: "Output lists available artifacts"
+      type: file_contains
+      path: "output.txt"
+      pattern: "available"
+      points: 10
+
+    - id: lists_missing
+      description: "Output lists missing artifacts"
+      type: file_contains
+      path: "output.txt"
+      pattern: "missing"
+      points: 10
+
+    - id: reports_tokens
+      description: "Output reports on tokens.yml status"
+      type: file_contains
+      path: "output.txt"
+      pattern: "tokens"
+      points: 10
+
+  llm_graded:
+    # Qualitative checks (60 pts — higher LLM ratio because output is prose)
+    - id: completeness
+      description: "Report covers all artifact categories"
+      prompt: >
+        Review the design-loader output. Does it cover all expected design
+        artifact categories (tokens, identity, components, layouts)? Does it
+        clearly distinguish what exists vs what's missing? Score 0-10 where
+        10 = comprehensive coverage of all categories.
+      points: 20
+
+    - id: accuracy
+      description: "Report accurately reflects what's on disk"
+      prompt: >
+        The design-loader scanned .ai/design/{name}/ for artifacts. Based on the
+        output, does the report seem accurate and specific (mentioning actual
+        file names and counts) rather than vague? Score 0-10 where 10 = precise
+        and verifiable.
+      points: 20
+
+    - id: actionability
+      description: "Report suggests next steps for missing artifacts"
+      prompt: >
+        Does the design-loader output suggest what to do about missing artifacts?
+        Does it recommend which skill to run next? Score 0-10 where
+        10 = clear, actionable next steps for each gap.
+      points: 20

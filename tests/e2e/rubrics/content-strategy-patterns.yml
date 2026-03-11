@@ -1,0 +1,88 @@
+# Content Strategy Patterns Rubric v1.0.0
+# Tests the content-strategy-patterns skill (knowledge skill — generates content plan)
+# Expects: text/markdown output with content strategy for a brand
+
+version: "1.0.0"
+skill: content-strategy-patterns
+max_score: 100
+
+checks:
+  deterministic:
+    # Output structure (30 pts)
+    - id: output_not_empty
+      description: "Skill produces output"
+      type: file_not_empty
+      path: "output.txt"
+      points: 5
+
+    - id: has_content_mix
+      description: "Output mentions content mix or ratio"
+      type: file_contains
+      path: "output.txt"
+      pattern: "content mix\\|ratio\\|40%\\|educational\\|inspirational"
+      points: 5
+
+    - id: has_pillars
+      description: "Output references content pillars"
+      type: file_contains
+      path: "output.txt"
+      pattern: "pillar"
+      points: 5
+
+    - id: has_audience
+      description: "Output defines target audience"
+      type: file_contains
+      path: "output.txt"
+      pattern: "audience\\|persona\\|target"
+      points: 5
+
+    - id: has_templates
+      description: "Output includes content templates or formats"
+      type: file_contains
+      path: "output.txt"
+      pattern: "template\\|format\\|article\\|post"
+      points: 5
+
+    - id: has_cta
+      description: "Output includes calls to action"
+      type: file_contains
+      path: "output.txt"
+      pattern: "CTA\\|call to action\\|action"
+      points: 5
+
+  llm_graded:
+    # Qualitative checks (70 pts — knowledge skills are mostly LLM-graded)
+    - id: brand_fit
+      description: "Content strategy fits the specific brand"
+      prompt: >
+        Review the content strategy output against the brand brief. Is the
+        strategy tailored to this specific brand's industry, audience, and
+        positioning? Or is it generic advice that could apply to anyone?
+        Score 0-10 where 10 = deeply customized to this brand.
+      points: 20
+
+    - id: mix_balance
+      description: "Content mix follows the 40/25/25/10 framework"
+      prompt: >
+        Does the content strategy follow or reference the recommended mix:
+        ~40% educational, ~25% inspirational, ~25% conversational, ~10%
+        promotional? Are the ratios justified for this brand type?
+        Score 0-10 where 10 = well-balanced, justified mix.
+      points: 15
+
+    - id: actionability
+      description: "Strategy is actionable, not just principles"
+      prompt: >
+        Can someone follow this content strategy and actually produce content
+        from it? Does it include specific topics, formats, and frequencies?
+        Or is it just high-level advice? Score 0-10 where 10 = immediately
+        actionable with concrete topics and schedules.
+      points: 20
+
+    - id: pillar_quality
+      description: "Content pillars are distinct and non-overlapping"
+      prompt: >
+        Are the content pillars clearly distinct from each other? Could you
+        assign any given article to exactly one pillar without ambiguity?
+        Score 0-10 where 10 = perfectly distinct, no overlap.
+      points: 15

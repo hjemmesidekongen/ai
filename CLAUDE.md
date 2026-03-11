@@ -17,7 +17,7 @@ After `/compact` or when context seems incomplete, read `.ai/context/snapshot.ym
 - QA agent reviews all final output — implementing agents never self-grade
 - Multi-agent runs use file-ownership to prevent write conflicts
 - Dual output: machine-readable YAML + human-readable documents
-- Hooks in plugin.json (PreToolUse, PostToolUse, SessionStart, Stop)
+- Hooks in plugin.json (PreToolUse, PostToolUse, PreCompact, SessionStart, Stop, UserPromptSubmit)
 - PreToolUse re-reads state.yml before Write/Edit/Bash — prevents goal drift
 - Stop hook prevents premature completion — skill must be verified first
 - Research skills write to findings.md — intermediate discoveries persist across /compact
@@ -99,14 +99,16 @@ plugins/
     .claude-plugin/
       plugin.json                    # v1.0.0, hooks: PreToolUse, PostToolUse
       ecosystem.json                 # Component registry
-    commands/                        # init, design, content, build, deploy, status, switch, scan
+    commands/                        # init, design, content, build, deploy, status, switch, scan, render, trace
     skills/
       brand/                         # brand-loader
-      design/                        # logo-assets, asset-registry, design-tokens, component-specs, web-layout
+      design/                        # logo-assets, asset-registry, design-tokens, component-specs, web-layout,
+                                     # creative-direction, frontend-design, implementation-guide, visual-render
       content/                       # app-copy, ux-writing
       dev/                           # project-scanner, config-generator, scaffold, storybook-generator,
                                      # feature-decomposer, team-planner, agent-dispatcher, completion-gate,
-                                     # code-review, qa-validation
+                                     # code-review, qa-validation, analytics, code-audit, codex, e2e-testing,
+                                     # error-logging, stack-negotiation, tdd, test-utilities, visual-verification
       devops/                        # deploy-config, deploy-execute, observability
     agents/dev/                      # 5 leadership + 6 specialist agents (security-reviewer → claude-core)
     migrations/                      # MIGRATION-REGISTRY.yml
@@ -119,6 +121,32 @@ plugins/
       inject-trace-timestamp.sh
     CHANGELOG.md
     README.md
+  brand/                             # Brand strategy plugin (4 skills, 5 commands)
+    skills/                          # brand-strategy, brand-audit, brand-evolve, brand-loader
+    commands/                        # brand-create, brand-audit, brand-evolve, brand-apply, brand-status
+    resources/                       # guideline-schema, voice-schema, values-schema
+  design/                            # Visual design plugin (3 skills, 3 commands)
+    skills/                          # visual-identity, design-tokens, design-loader
+    commands/                        # design-identity, design-tokens, design-status
+    resources/                       # token-schema
+  dev-engine/                        # Development execution plugin (62 skills, 2 commands, 6 agents)
+    skills/                          # 7 core + 6 discipline + 24 tech + 12 expo + 5 integration + 8 studio
+    commands/                        # dev-scan, dev-run
+    agents/                          # architect, backend-dev, frontend-dev, test-engineer, code-reviewer, app-security-auditor
+  taskflow/                          # Task management plugin (9 skills, 8 commands)
+    skills/                          # jira-ingestion, contradiction-detection, bulk-ingestion, bitbucket-pr-workflow,
+                                     # confluence-lookup, qa-handover-generator, azure-devops-pipeline,
+                                     # project-profile-loader, session-handoff-taskflow
+    commands/                        # task-status, task-list, task-start, task-ingest, task-ingest-bulk,
+                                     # task-docs, task-pr, task-done
+tests/
+  e2e/                               # E2E plugin testing infrastructure
+    fixtures/brands/                 # 4 brand fixtures (cloudmetrics, klip-co, danskbolig, nordic-essentials)
+    rubrics/                         # Versioned scoring rubrics per skill
+    scripts/                         # run_test, run_all, grade_deterministic, grade_llm, compare_baseline
+    test-matrix.yml                  # Skill x brand test combinations
+    baseline.yml                     # Score comparison baseline
+    TESTING.md                       # Test infrastructure documentation
 docs/
   ecosystem-strategy.md              # Architecture reference
   archive/                           # Old plugin specs (brand, seo, dev, task-planner)
@@ -135,9 +163,27 @@ docs/
 | `/agency:status` | Show project status |
 | `/agency:switch` | Switch active project |
 | `/agency:scan` | Scan existing project for agency integration |
+| `/agency:render` | Render design to code |
+| `/agency:trace` | Toggle full tracing for agency |
+| `/claude-core:trace-full` | Toggle full tracing on/off |
+| `/claude-core:roadmap-add` | Add item to roadmap interactively |
+| `/claude-core:roadmap-view` | Display roadmap with filters |
+| `/claude-core:brainstorm-start` | Start open-ended brainstorm session |
+| `/claude-core:brainstorm-decide` | Extract decisions from brainstorm |
+| `/claude-core:plan-create` | Create a wave-based execution plan |
 | `/claude-core:plan-dynamic` | Start a goal-oriented iterative plan (dynamic mode) |
+| `/claude-core:plan-execute` | Execute a wave plan with verification gates |
+| `/claude-core:plan-status` | Show plan progress |
+| `/claude-core:plan-resume` | Resume interrupted plan |
 | `/claude-core:autopilot-run` | Start autopilot loop (autonomous iteration with stop hook) |
 | `/claude-core:autopilot-cancel` | Cancel active autopilot loop |
+| `/claude-core:full-review` | 5-phase comprehensive code review |
+| `/claude-core:prompt-create` | Turn rough intent into structured prompt |
+| `/design:identity` | Create visual identity system |
+| `/design:tokens` | Generate platform tokens (Tailwind, CSS, DTCG) |
+| `/design:status` | Show design artifact status |
+| `/dev:scan` | Scan repo to detect tech stack and architecture |
+| `/dev:run` | Run full dev-engine pipeline |
 
 ## Progress
 

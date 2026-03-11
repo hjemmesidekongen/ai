@@ -1,0 +1,86 @@
+# Web Copywriting Rubric v1.0.0
+# Tests the web-copywriting skill (knowledge skill — generates web copy)
+# Expects: text/markdown output with web copy for a brand
+
+version: "1.0.0"
+skill: web-copywriting
+max_score: 100
+
+checks:
+  deterministic:
+    # Output structure (30 pts)
+    - id: output_not_empty
+      description: "Skill produces output"
+      type: file_not_empty
+      path: "output.txt"
+      points: 5
+
+    - id: has_headline
+      description: "Output includes headlines"
+      type: file_contains
+      path: "output.txt"
+      pattern: "headline\\|heading\\|H1\\|hero"
+      points: 5
+
+    - id: has_cta
+      description: "Output includes calls to action"
+      type: file_contains
+      path: "output.txt"
+      pattern: "CTA\\|call to action\\|Get started\\|Sign up\\|Learn more"
+      points: 5
+
+    - id: has_benefits
+      description: "Output mentions benefits (not just features)"
+      type: file_contains
+      path: "output.txt"
+      pattern: "benefit\\|which means\\|so you can\\|result"
+      points: 5
+
+    - id: has_sections
+      description: "Output has multiple page sections"
+      type: file_contains
+      path: "output.txt"
+      pattern: "hero\\|feature\\|testimonial\\|pricing\\|footer\\|section"
+      points: 5
+
+    - id: no_placeholder_stats
+      description: "No fabricated statistics without markers"
+      type: file_not_contains
+      path: "output.txt"
+      pattern: "\\d+% of companies\\|\\d+ million users\\|studies show"
+      points: 5
+
+  llm_graded:
+    # Qualitative checks (70 pts)
+    - id: brand_voice
+      description: "Copy matches the brand's voice and tone"
+      prompt: >
+        Review the web copy against the brand brief. Does the writing style
+        match this brand's personality? Is the tone appropriate for the industry
+        and audience? Score 0-10 where 10 = perfectly on-brand voice.
+      points: 20
+
+    - id: feature_benefit_bridge
+      description: "Features are connected to benefits"
+      prompt: >
+        Check if features are presented with clear benefits. Does each feature
+        use a bridge like "which means" or "so you can" to connect to a real
+        user benefit? Score 0-10 where 10 = every feature has a clear benefit.
+      points: 15
+
+    - id: cta_clarity
+      description: "CTAs are clear and non-competing"
+      prompt: >
+        Review the calls to action. Is there one clear primary CTA per section
+        (not multiple competing CTAs)? Are they specific (not generic "Click
+        here")? Score 0-10 where 10 = clear, focused, compelling CTAs.
+      points: 15
+
+    - id: headline_quality
+      description: "Headlines are clear and compelling"
+      prompt: >
+        Are the headlines immediately understandable (not clever-but-confusing)?
+        Do they communicate the core value proposition? Would a visitor understand
+        what this product does within 5 seconds? Score 0-10 where
+        10 = crystal clear, compelling headlines.
+      points: 20

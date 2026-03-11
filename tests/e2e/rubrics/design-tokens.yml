@@ -1,0 +1,131 @@
+# Design Tokens Rubric v1.0.0
+# Tests the design-tokens skill (transformation skill — single fixture)
+# Expects: tailwind.json, variables.css, tokens.dtcg.json, contrast-matrix.md
+
+version: "1.0.0"
+skill: design-tokens
+max_score: 100
+
+checks:
+  deterministic:
+    # File existence (20 pts)
+    - id: tailwind_exists
+      description: "tailwind.json exists"
+      type: file_exists
+      path: "tailwind.json"
+      points: 5
+
+    - id: css_exists
+      description: "variables.css exists"
+      type: file_exists
+      path: "variables.css"
+      points: 5
+
+    - id: dtcg_exists
+      description: "tokens.dtcg.json exists"
+      type: file_exists
+      path: "tokens.dtcg.json"
+      points: 5
+
+    - id: contrast_exists
+      description: "contrast-matrix.md exists and has content"
+      type: file_not_empty
+      path: "contrast-matrix.md"
+      points: 5
+
+    # Tailwind JSON structure (20 pts)
+    - id: tw_colors
+      description: "tailwind.json has colors"
+      type: yaml_field_exists
+      path: "tailwind.json"
+      field: "colors"
+      points: 5
+
+    - id: tw_font_family
+      description: "tailwind.json has fontFamily"
+      type: yaml_field_exists
+      path: "tailwind.json"
+      field: "fontFamily"
+      points: 5
+
+    - id: tw_font_size
+      description: "tailwind.json has fontSize"
+      type: yaml_field_exists
+      path: "tailwind.json"
+      field: "fontSize"
+      points: 5
+
+    - id: tw_spacing
+      description: "tailwind.json has spacing"
+      type: yaml_field_exists
+      path: "tailwind.json"
+      field: "spacing"
+      points: 5
+
+    # CSS variables structure (15 pts)
+    - id: css_not_empty
+      description: "variables.css has content"
+      type: file_not_empty
+      path: "variables.css"
+      points: 5
+
+    - id: css_has_root
+      description: "variables.css has :root selector"
+      type: file_contains
+      path: "variables.css"
+      pattern: ":root"
+      points: 5
+
+    - id: css_has_dark
+      description: "variables.css has .dark override"
+      type: file_contains
+      path: "variables.css"
+      pattern: ".dark"
+      points: 5
+
+    # DTCG format (15 pts)
+    - id: dtcg_not_empty
+      description: "tokens.dtcg.json has content"
+      type: file_not_empty
+      path: "tokens.dtcg.json"
+      points: 5
+
+    - id: dtcg_has_value
+      description: "DTCG tokens use $value format"
+      type: file_contains
+      path: "tokens.dtcg.json"
+      pattern: "$value"
+      points: 5
+
+    - id: dtcg_has_type
+      description: "DTCG tokens use $type format"
+      type: file_contains
+      path: "tokens.dtcg.json"
+      pattern: "$type"
+      points: 5
+
+  llm_graded:
+    # Qualitative checks (30 pts)
+    - id: token_consistency
+      description: "Token values are consistent across all three formats"
+      prompt: >
+        Compare the color values in tailwind.json, variables.css, and
+        tokens.dtcg.json. Are the same colors represented consistently across
+        all three formats? Score 0-10 where 10 = perfectly consistent.
+      points: 10
+
+    - id: contrast_compliance
+      description: "Contrast matrix shows WCAG compliance"
+      prompt: >
+        Read contrast-matrix.md. Does it include light mode, dark mode, and
+        colorblind accessibility tables? Are body text pairs meeting WCAG 4.5:1?
+        Score 0-10 where 10 = comprehensive and compliant.
+      points: 10
+
+    - id: dark_mode_quality
+      description: "Dark mode tokens are properly adapted (not just inverted)"
+      prompt: >
+        Compare the :root and .dark blocks in variables.css. Are the dark mode
+        colors properly adapted (adjusted lightness, maintained readability) or
+        just naively inverted? Score 0-10 where 10 = thoughtful dark mode.
+      points: 10

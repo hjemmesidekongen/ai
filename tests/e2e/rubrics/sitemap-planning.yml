@@ -1,0 +1,89 @@
+# Sitemap Planning Rubric v1.0.0
+# Tests the sitemap-planning skill (knowledge skill — generates site structure)
+# Expects: text/markdown or YAML output with sitemap for a brand
+
+version: "1.0.0"
+skill: sitemap-planning
+max_score: 100
+
+checks:
+  deterministic:
+    # Output structure (30 pts)
+    - id: output_not_empty
+      description: "Skill produces output"
+      type: file_not_empty
+      path: "output.txt"
+      points: 5
+
+    - id: has_homepage
+      description: "Output includes homepage"
+      type: file_contains
+      path: "output.txt"
+      pattern: "home\\|homepage\\|index\\|/"
+      points: 5
+
+    - id: has_hierarchy
+      description: "Output shows page hierarchy or nesting"
+      type: file_contains
+      path: "output.txt"
+      pattern: "parent\\|child\\|level\\|nested\\|sub-page\\|├\\|└"
+      points: 5
+
+    - id: has_nav
+      description: "Output defines navigation structure"
+      type: file_contains
+      path: "output.txt"
+      pattern: "nav\\|navigation\\|menu\\|header"
+      points: 5
+
+    - id: has_seo
+      description: "Output considers SEO (keywords, meta, or intent)"
+      type: file_contains
+      path: "output.txt"
+      pattern: "SEO\\|keyword\\|search\\|intent\\|meta"
+      points: 5
+
+    - id: has_linking
+      description: "Output mentions internal linking strategy"
+      type: file_contains
+      path: "output.txt"
+      pattern: "link\\|silo\\|cross-link\\|internal"
+      points: 5
+
+  llm_graded:
+    # Qualitative checks (70 pts)
+    - id: brand_fit
+      description: "Sitemap structure fits the brand type"
+      prompt: >
+        Review the sitemap against the brand brief. Does the page structure
+        make sense for this type of business? Are the right pages included
+        (e.g., a SaaS needs pricing/docs, a hairdresser needs services/booking)?
+        Score 0-10 where 10 = perfectly tailored to this business type.
+      points: 20
+
+    - id: depth_appropriate
+      description: "Page depth is appropriate (key pages within 3 clicks)"
+      prompt: >
+        Check the sitemap hierarchy. Can a visitor reach the most important
+        pages within 3 clicks from the homepage? Is the structure flat enough
+        for usability but deep enough for organization?
+        Score 0-10 where 10 = ideal depth for this site.
+      points: 15
+
+    - id: no_orphans
+      description: "No orphaned pages (all pages are reachable)"
+      prompt: >
+        Review the sitemap for orphaned pages — pages that aren't linked from
+        any navigation or parent page. Are all pages reachable from the main
+        navigation or a parent page? Score 0-10 where 10 = no orphans,
+        everything is connected.
+      points: 15
+
+    - id: content_coverage
+      description: "Sitemap covers all necessary content areas"
+      prompt: >
+        Does the sitemap include all the pages this brand needs? Consider:
+        product/service pages, about/trust pages, contact, legal, blog/content,
+        and any industry-specific pages. Score 0-10 where
+        10 = comprehensive coverage, nothing important missing.
+      points: 20
