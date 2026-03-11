@@ -5,6 +5,5 @@
   "author": { "name": "mvn" },
   "repository": "https://github.com/mvn/claude-local-workspace",
   "license": "MIT",
-  "keywords": ["brand", "strategy", "voice", "values", "positioning", "guidelines"],
-  "dependencies": ["claude-core"]
+  "keywords": ["brand", "strategy", "voice", "values", "positioning", "guidelines"]
 }

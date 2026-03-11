@@ -1,0 +1,20 @@
+topic: "consolidation-sweep"
+active: false
+started: "2026-03-11"
+completed: "2026-03-11"
+topics_explored:
+  - "plugin inventory and overlap analysis"
+  - "agency migration completeness"
+  - "task-planner supersession"
+  - "stale plan cleanup"
+  - "roadmap pruning policy"
+context_loaded:
+  - ".ai/roadmap.yml"
+  - "plugins/*/plugin.json"
+decisions:
+  - "Delete task-planner — fully superseded by claude-core plan-engine"
+  - "Delete agency — accept loss of content/devops/team-agent skills, rebuild when needed"
+  - "Keep all open roadmap items — no pruning"
+  - "Clean stale plans — mark abandoned/done appropriately"
+  - "Update CLAUDE.md to reflect 5-plugin reality"
+executed: true
