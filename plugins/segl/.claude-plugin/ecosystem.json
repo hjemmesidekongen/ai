@@ -16,6 +16,11 @@
       "name": "design-loader",
       "path": "skills/design-loader/SKILL.md",
       "description": "Reads existing design artifacts and reports availability status"
+    },
+    {
+      "name": "pencil-tokens",
+      "path": "skills/pencil-tokens/SKILL.md",
+      "description": "Bridges design tokens to Pencil — resolves references, maps to set_variables format"
     }
   ],
   "agents": [],
@@ -34,6 +39,11 @@
       "name": "design-status",
       "path": "commands/design-status.md",
       "description": "Show design artifact status and availability"
+    },
+    {
+      "name": "design-page",
+      "path": "commands/design-page.md",
+      "description": "Orchestrate full Pencil design workflow — tokens to agents in one command"
     }
   ],
   "hooks": []

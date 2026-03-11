@@ -6,7 +6,7 @@ Five plugins in a monorepo:
 - **smedjen** (`plugins/smedjen/`) — The Forge: development execution engine. Task decomposition, agent dispatch, tech knowledge, disciplines, visual verification, completion gates, project mapping, orchestration, studio knowledge, content writing (62 skills, 3 commands, 7 agents).
 - **herold** (`plugins/herold/`) — The Herald: task management and workplace integration. Jira ingestion, local task storage, contradiction detection, project profiles, QA handover, bulk ingestion, PR workflows (9 skills, 8 commands).
 - **våbenskjold** (`plugins/våbenskjold/`) — The Coat of Arms: brand strategy, audit, and evolution (4 skills, 5 commands).
-- **segl** (`plugins/segl/`) — The Royal Seal: visual identity and design tokens (3 skills, 3 commands).
+- **segl** (`plugins/segl/`) — The Royal Seal: visual identity, design tokens, and Pencil integration (4 skills, 4 commands).
 
 ## Context Recovery
 After `/compact` or when context seems incomplete, read `.ai/context/snapshot.yml` for working state (workspace, project, active plan, modified files). This file is written by PreCompact, Stop, and SessionStart hooks via `assemble-context.sh` and persists on disk.
@@ -90,18 +90,18 @@ plugins/
                                      # observation-recorder, scope-guard, tdd-gate, plan-gate, compact-gate-pre/post,
                                      # setup-autopilot, autopilot-stop-hook,
                                      # prevent-direct-push, debug-window,
-                                     # dynamic-prompt-constructor
+                                     # dynamic-prompt-constructor, pencil-swarm-check
       tests/                         # Hook unit tests (test-tdd-gate.sh, test-scope-guard.sh, test-plan-gate.sh)
     resources/                       # error-annotation-format, memory-rules, agent-orchestration, instincts-schema
   våbenskjold/                       # The Coat of Arms — brand strategy (4 skills, 5 commands)
     skills/                          # brand-strategy, brand-audit, brand-evolve, brand-loader
     commands/                        # brand-create, brand-audit, brand-evolve, brand-apply, brand-status
     resources/                       # guideline-schema, voice-schema, values-schema
-  segl/                              # The Royal Seal — visual identity (3 skills, 3 commands)
-    skills/                          # visual-identity, design-tokens, design-loader
-    commands/                        # design-identity, design-tokens, design-status
+  segl/                              # The Royal Seal — visual identity + Pencil (4 skills, 4 commands)
+    skills/                          # visual-identity, design-tokens, design-loader, pencil-tokens
+    commands/                        # design-identity, design-tokens, design-status, design-page
     resources/                       # token-schema
-  smedjen/                           # The Forge — development execution (62 skills, 2 commands, 6 agents)
+  smedjen/                           # The Forge — development execution (62 skills, 3 commands, 7 agents)
     skills/                          # 7 core + 6 discipline + 24 tech + 12 expo + 5 integration + 8 studio
     commands/                        # dev-scan, dev-run
     agents/                          # architect, backend-dev, frontend-dev, test-engineer, code-reviewer, app-security-auditor, content-writer
@@ -149,6 +149,7 @@ docs/
 | `/segl:design-identity` | Create visual identity system |
 | `/segl:design-tokens` | Generate platform tokens (Tailwind, CSS, DTCG) |
 | `/segl:design-status` | Show design artifact status |
+| `/segl:design-page` | Full Pencil design orchestrator — tokens to agents in one command |
 | `/smedjen:dev-scan` | Scan repo to detect tech stack and architecture |
 | `/smedjen:dev-run` | Run full dev-engine pipeline |
 | `/herold:task-status` | Show active task details |
