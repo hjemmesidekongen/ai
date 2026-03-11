@@ -1,11 +1,12 @@
 import type { Metadata } from 'next';
 import { RootProvider } from 'fumadocs-ui/provider/next';
 import './global.css';
-import { Inter, JetBrains_Mono } from 'next/font/google';
+import { Lato, JetBrains_Mono } from 'next/font/google';
 
-const inter = Inter({
+const lato = Lato({
   subsets: ['latin'],
-  variable: '--font-inter',
+  weight: ['300', '400', '700', '900'],
+  variable: '--font-lato',
 });
 
 const jetbrainsMono = JetBrains_Mono({
@@ -27,7 +28,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   return (
     <html
       lang="en"
-      className={`${inter.variable} ${jetbrainsMono.variable} ${inter.className}`}
+      className={`${lato.variable} ${jetbrainsMono.variable} ${lato.className}`}
       suppressHydrationWarning
     >
       <body className="flex flex-col min-h-screen">

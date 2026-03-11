@@ -1,20 +1,98 @@
 @import 'tailwindcss';
-@import 'fumadocs-ui/css/neutral.css';
 @import 'fumadocs-ui/css/preset.css';
 
-/* Brand color overrides — warm amber/gold */
-@theme {
-  --font-mono: var(--font-mono, ui-monospace, monospace);
+/*
+ * hjemmesidekongen brand theme
+ * Source: .ai/design/hjemmesidekongen/tokens.yml
+ * Replaces fumadocs-ui/css/neutral.css with warm brand palette
+ */
 
-  /* Light mode brand accent */
-  --color-fd-primary: hsl(38, 75%, 42%);
-  --color-fd-primary-foreground: hsl(0, 0%, 98%);
-  --color-fd-ring: hsl(38, 75%, 42%);
+@theme {
+  --font-mono: var(--font-mono, 'JetBrains Mono', 'Fira Code', monospace);
+
+  /* Light mode — warm neutrals + orange primary */
+  --color-fd-background: #faf9f7;
+  --color-fd-foreground: #1c1c19;
+  --color-fd-muted: #f3f2ef;
+  --color-fd-muted-foreground: #716d66;
+  --color-fd-popover: #faf9f7;
+  --color-fd-popover-foreground: #1c1c19;
+  --color-fd-card: #f3f2ef;
+  --color-fd-card-foreground: #1c1c19;
+  --color-fd-border: rgba(232, 230, 225, 0.7);
+  --color-fd-primary: #e1943d;
+  --color-fd-primary-foreground: #1c1c19;
+  --color-fd-secondary: #e8e6e1;
+  --color-fd-secondary-foreground: #1c1c19;
+  --color-fd-accent: rgba(232, 230, 225, 0.5);
+  --color-fd-accent-foreground: #1c1c19;
+  --color-fd-ring: #e1943d;
+  --color-fd-overlay: rgba(0, 0, 0, 0.2);
 }
 
 .dark {
-  /* Dark mode brand accent — brighter amber */
-  --color-fd-primary: hsl(40, 95%, 68%);
-  --color-fd-primary-foreground: hsl(30, 20%, 8%);
-  --color-fd-ring: hsl(40, 95%, 68%);
+  /* Dark mode — deep warm charcoal + brighter orange */
+  --color-fd-background: #161514;
+  --color-fd-foreground: #faf9f7;
+  --color-fd-muted: #252422;
+  --color-fd-muted-foreground: rgba(176, 172, 164, 0.8);
+  --color-fd-popover: #252422;
+  --color-fd-popover-foreground: #e8e6e1;
+  --color-fd-card: #1c1c19;
+  --color-fd-card-foreground: #faf9f7;
+  --color-fd-border: rgba(86, 83, 80, 0.2);
+  --color-fd-primary: #eda044;
+  --color-fd-primary-foreground: #161514;
+  --color-fd-secondary: #252422;
+  --color-fd-secondary-foreground: #faf9f7;
+  --color-fd-accent: rgba(86, 83, 80, 0.3);
+  --color-fd-accent-foreground: #e8e6e1;
+  --color-fd-ring: #eda044;
+  --color-fd-overlay: rgba(0, 0, 0, 0.3);
+}
+
+/* Sidebar dark mode overrides — slightly different muted tones */
+.dark #nd-sidebar {
+  --color-fd-muted: #1c1c19;
+  --color-fd-secondary: #252422;
+  --color-fd-muted-foreground: #b0aca4;
+}
+
+/* Status colors — brand-aligned */
+@theme static {
+  --color-fd-info: #26a39d;
+  --color-fd-warning: #d4940a;
+  --color-fd-error: #d44a3c;
+  --color-fd-success: #3d9a50;
+  --color-fd-idea: #e1943d;
+  --color-fd-diff-remove: rgba(212, 74, 60, 0.12);
+  --color-fd-diff-remove-symbol: #d44a3c;
+  --color-fd-diff-add: rgba(61, 154, 80, 0.1);
+  --color-fd-diff-add-symbol: #3d9a50;
+}
+
+/* Docs content refinements */
+
+/* Inline code — warm tint instead of cold gray */
+:not(pre) > code {
+  background-color: var(--color-fd-muted) !important;
+  border: 1px solid var(--color-fd-border) !important;
+  color: #c47a2a !important;
+}
+
+.dark :not(pre) > code {
+  color: #eda044 !important;
+}
+
+/* Heading anchors — orange on hover */
+.prose h2:hover .anchor-icon,
+.prose h3:hover .anchor-icon,
+.prose h4:hover .anchor-icon {
+  color: var(--color-fd-primary);
+}
+
+/* TOC active item — orange indicator */
+[data-active='true'] {
+  border-color: var(--color-fd-primary) !important;
+  color: var(--color-fd-primary) !important;
 }

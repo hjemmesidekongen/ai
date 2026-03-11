@@ -14,8 +14,9 @@ const plugins = [
     tagline: 'The Foundation',
     description:
       'Planning engine, brainstorm sessions, verification gates, cross-session memory, error investigation, learning pipelines, and workplace integrations.',
-    stats: '35 skills, 13 commands, 12 agents',
+    stats: '41 skills · 14 commands · 12 agents',
     href: '/docs/claude-core',
+    icon: '{}',
   },
   {
     name: 'dev-engine',
@@ -23,8 +24,9 @@ const plugins = [
     tagline: 'Development Execution',
     description:
       'Multi-agent pipeline that decomposes tasks, dispatches specialist agents in parallel, and enforces a 10-point quality gate before anything ships.',
-    stats: '54 skills, 6 agents, 2 commands',
+    stats: '62 skills · 6 agents · 2 commands',
     href: '/docs/dev-engine',
+    icon: '>_',
   },
   {
     name: 'taskflow',
@@ -32,8 +34,9 @@ const plugins = [
     tagline: 'Task Management',
     description:
       'Bridges Jira, Confluence, and Bitbucket with your CLI. Contradiction detection, structured PR descriptions, and QA handover generation.',
-    stats: '9 skills, 8 commands',
+    stats: '9 skills · 8 commands',
     href: '/docs/taskflow',
+    icon: '[]',
   },
 ];
 
@@ -64,7 +67,7 @@ const features = [
       'claude-core observes patterns in how you work, extracts recurring behaviors as instincts, and promotes high-confidence patterns into rules or skills.',
   },
   {
-    title: '50+ framework skills',
+    title: '100+ framework skills',
     description:
       'React, Next.js, Vue, Nuxt, NestJS, Prisma, Expo, TypeScript, Tailwind, and more — verified, version-specific knowledge baked into each agent.',
   },
@@ -74,60 +77,71 @@ export default function HomePage() {
   return (
     <main className="flex flex-col items-center">
       {/* Hero */}
-      <section className="w-full max-w-5xl px-6 pt-24 pb-16 text-center">
-        <h1 className="font-mono text-4xl font-semibold tracking-tight sm:text-5xl">
-          hjemmesidekongen
-          <span className="text-fd-muted-foreground font-normal">/ai</span>
+      <section className="w-full max-w-4xl px-6 pt-28 pb-20 text-center">
+        <div className="inline-flex items-center gap-2 rounded-full border border-fd-border bg-fd-card px-4 py-1.5 text-xs font-medium text-fd-muted-foreground mb-8">
+          <span className="inline-block h-1.5 w-1.5 rounded-full bg-fd-primary" />
+          Open-source Claude Code plugins
+        </div>
+
+        <h1 className="text-4xl font-bold tracking-tight sm:text-5xl lg:text-6xl">
+          <span className="font-mono">hjemmesidekongen</span>
+          <span className="text-fd-muted-foreground font-light">/ai</span>
         </h1>
-        <p className="mt-5 text-base text-fd-muted-foreground max-w-xl mx-auto leading-relaxed">
+
+        <p className="mt-6 text-lg text-fd-muted-foreground max-w-2xl mx-auto leading-relaxed">
           One developer&apos;s operating system for AI-assisted code. Not
-          autocomplete — structured development partners. Wave planning,
-          specialist agent dispatch, verification gates, and cross-session
-          memory.
+          autocomplete — structured development partners that plan, build,
+          verify, and learn.
         </p>
-        <p className="mt-3 text-sm text-fd-muted-foreground max-w-xl mx-auto">
-          Open-source methodology. Three plugins for Claude Code.
-        </p>
-        <div className="mt-8 flex gap-4 justify-center">
+
+        <div className="mt-10 flex gap-4 justify-center flex-wrap">
           <Link
             href="/docs"
-            className="inline-flex items-center justify-center rounded-lg bg-fd-primary px-6 py-3 text-sm font-medium text-fd-primary-foreground hover:bg-fd-primary/90 transition-colors"
+            className="inline-flex items-center justify-center rounded-lg bg-fd-primary px-7 py-3 text-sm font-semibold text-fd-primary-foreground shadow-sm hover:opacity-90 transition-opacity"
           >
             Read the docs
           </Link>
           <Link
-            href="/docs/architecture"
-            className="inline-flex items-center justify-center rounded-lg border border-fd-border px-6 py-3 text-sm font-medium hover:bg-fd-accent transition-colors"
+            href="/docs/install"
+            className="inline-flex items-center justify-center rounded-lg border border-fd-border px-7 py-3 text-sm font-medium text-fd-foreground hover:bg-fd-accent transition-colors"
           >
-            Architecture
+            Get started
           </Link>
         </div>
       </section>
 
+      {/* Divider accent */}
+      <div className="w-16 h-0.5 bg-fd-primary rounded-full" />
+
       {/* Plugin cards */}
-      <section className="w-full max-w-5xl px-6 pb-16">
-        <p className="text-xs font-mono text-fd-muted-foreground uppercase tracking-widest text-center mb-8">
-          The plugins
+      <section className="w-full max-w-5xl px-6 py-20">
+        <p className="text-xs font-mono text-fd-muted-foreground uppercase tracking-widest text-center mb-10">
+          Three plugins, one workflow
         </p>
         <div className="grid gap-6 md:grid-cols-3">
           {plugins.map((plugin) => (
             <Link
               key={plugin.name}
               href={plugin.href}
-              className="group rounded-xl border border-fd-border p-6 hover:border-fd-primary/50 hover:bg-fd-accent/50 transition-all"
+              className="group relative rounded-xl border border-fd-border bg-fd-card/50 p-6 hover:border-fd-primary/40 hover:shadow-md transition-all"
             >
-              <div className="flex items-baseline gap-2 mb-1">
-                <h2 className="font-mono text-lg font-semibold group-hover:text-fd-primary transition-colors">
-                  {plugin.name}
-                </h2>
-                <span className="text-xs text-fd-muted-foreground">
-                  v{plugin.version}
+              <div className="flex items-center gap-3 mb-3">
+                <span className="inline-flex items-center justify-center h-9 w-9 rounded-lg bg-fd-primary/10 font-mono text-sm font-bold text-fd-primary">
+                  {plugin.icon}
                 </span>
+                <div>
+                  <h2 className="font-mono text-base font-semibold group-hover:text-fd-primary transition-colors">
+                    {plugin.name}
+                  </h2>
+                  <span className="text-xs text-fd-muted-foreground">
+                    v{plugin.version}
+                  </span>
+                </div>
               </div>
-              <p className="text-sm font-medium text-fd-primary mb-3">
+              <p className="text-sm font-medium text-fd-primary mb-2">
                 {plugin.tagline}
               </p>
-              <p className="text-sm text-fd-muted-foreground mb-4">
+              <p className="text-sm text-fd-muted-foreground mb-4 leading-relaxed">
                 {plugin.description}
               </p>
               <p className="text-xs font-mono text-fd-muted-foreground">
@@ -139,19 +153,49 @@ export default function HomePage() {
       </section>
 
       {/* Features */}
-      <section className="w-full max-w-5xl px-6 pb-24">
-        <p className="text-xs font-mono text-fd-muted-foreground uppercase tracking-widest text-center mb-12">
-          How it works differently
+      <section className="w-full bg-fd-card/50 border-y border-fd-border">
+        <div className="max-w-5xl mx-auto px-6 py-20">
+          <p className="text-xs font-mono text-fd-muted-foreground uppercase tracking-widest text-center mb-4">
+            How it works differently
+          </p>
+          <h2 className="text-2xl font-bold text-center mb-14">
+            Built for verification, not hope
+          </h2>
+          <div className="grid gap-10 md:grid-cols-2 lg:grid-cols-3">
+            {features.map((feature) => (
+              <div key={feature.title}>
+                <h3 className="text-sm font-semibold mb-2">{feature.title}</h3>
+                <p className="text-sm text-fd-muted-foreground leading-relaxed">
+                  {feature.description}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Bottom CTA */}
+      <section className="w-full max-w-3xl px-6 py-24 text-center">
+        <h2 className="text-2xl font-bold mb-4">
+          Ready to structure your AI workflow?
+        </h2>
+        <p className="text-fd-muted-foreground mb-8 max-w-lg mx-auto">
+          Install the plugins, read the architecture docs, or browse
+          the full skill reference. Everything is open source.
         </p>
-        <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-          {features.map((feature) => (
-            <div key={feature.title}>
-              <h3 className="text-sm font-semibold mb-2">{feature.title}</h3>
-              <p className="text-sm text-fd-muted-foreground">
-                {feature.description}
-              </p>
-            </div>
-          ))}
+        <div className="flex gap-4 justify-center flex-wrap">
+          <Link
+            href="/docs/install"
+            className="inline-flex items-center justify-center rounded-lg bg-fd-primary px-7 py-3 text-sm font-semibold text-fd-primary-foreground shadow-sm hover:opacity-90 transition-opacity"
+          >
+            Install guide
+          </Link>
+          <Link
+            href="/docs/architecture"
+            className="inline-flex items-center justify-center rounded-lg border border-fd-border px-7 py-3 text-sm font-medium hover:bg-fd-accent transition-colors"
+          >
+            Architecture overview
+          </Link>
         </div>
       </section>
     </main>
