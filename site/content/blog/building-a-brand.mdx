@@ -1,0 +1,98 @@
+---
+title: "Building a Brand from Scratch with Claude Code"
+description: "Use the vaabenskjold plugin to create structured brand guidelines — positioning, voice, values, and dos/don'ts — as code that every tool can consume."
+date: "2026-02-10"
+author: "Morten Nissen"
+tags:
+  - branding
+  - brand-strategy
+  - vaabenskjold
+  - brand-guidelines
+  - voice-attributes
+read_time: "8 min"
+target_audience: "brand-marketing"
+---
+
+Brand guidelines are usually a 47-page PDF that lives in a shared drive and gets referenced approximately never. Somebody spent weeks on it. It has beautiful typography. And the first time a developer needs to pick a button color, they open the design system instead.
+
+The problem isn't the guidelines. It's the format. A PDF can't be consumed by a Tailwind config. A Google Doc can't feed into a content-writing agent. The brand strategy exists in a format that only humans can read, which means it only gets applied when a human remembers to look it up.
+
+vaabenskjold treats brand strategy as structured data. YAML files with specific fields that downstream tools can consume directly. Voice attributes with numeric scores. Values with violation examples. Dos and don'ts with "instead, use this" alternatives.
+
+## What you get
+
+Running `/brand:create` walks through a structured questionnaire and produces four files:
+
+**guideline.yml** — Positioning, target audience, content pillars, competitive positioning, brand name rationale, and origin story. The strategic foundation.
+
+**voice.yml** — Personality archetype, voice attributes on 1-10 scales (formal/casual, serious/playful, technical/simple, reserved/expressive, humble/confident), writing patterns, vocabulary rules, platform adaptations, and anti-patterns.
+
+**values.yml** — Core values with definitions, in-practice examples, and violation examples. Beliefs with implications. Non-negotiables. Decision framework with priorities and explicit tradeoffs.
+
+**dos-and-donts.md** — Concrete, actionable rules. What to do, what not to do, and why. Each "don't" has an "instead" alternative.
+
+## Voice attributes as numbers
+
+The most useful innovation is numeric voice attributes. Instead of vague descriptions like "our brand is friendly and approachable," you get specific positions on defined spectrums.
+
+```yaml
+voice_attributes:
+  formal_casual: 6      # Leans casual but not sloppy
+  serious_playful: 6    # The name is a joke — lean into it
+  technical_simple: 6   # Knows the details, doesn't flaunt them
+  reserved_expressive: 4 # Measured, not loud
+  humble_confident: 6   # The arrogance is performative
+```
+
+These numbers are useful because they're consumable. A content-writing agent reads `formal_casual: 6` and calibrates its output. A reviewer checks if the copy matches the expected register. You can even create sub-brands with overrides — the hjemmesidekongen/ai sub-brand changes `technical_simple` from 6 to 8 because the developer audience can handle more technical language.
+
+## Values with teeth
+
+Most value statements are aspirational mush. "We value integrity and innovation." Great — so does every other company on earth.
+
+vaabenskjold values have three parts: the definition, how it shows up in practice, and what violating it looks like.
+
+```yaml
+- value: "Direkte kontakt"
+  definition: >
+    The person you talk to is the person building your site.
+    No layers, no handoffs.
+  in_practice:
+    - "Client communicates directly with Morten"
+    - "Respond to inquiries within 24 hours, personally"
+    - "Explain technical decisions in plain Danish"
+  violation_examples:
+    - "Redirecting a client to a 'support team'"
+    - "Using templates instead of personal responses"
+    - "Letting a project stall without communication"
+```
+
+The violation examples are the key. They make the value concrete. Anyone reading this can check: "Am I doing any of these things?" That's more useful than a paragraph about how much you care about personal service.
+
+## The downstream pipeline
+
+Brand guidelines alone are just documentation. The value comes from what consumes them.
+
+**segl** (visual identity) reads the guideline and generates design tokens — color palettes, typography scales, spacing. The brand color from the guideline becomes a full 11-stop color scale with WCAG-validated contrast ratios.
+
+**smedjen:content-writer** reads the voice attributes and produces on-brand copy. The numeric scores calibrate the output — a `formal_casual: 6` produces different copy than a `formal_casual: 3`.
+
+**vaabenskjold:brand-audit** takes existing brand materials and codifies them into the same structure. Got an existing brand? Run the audit command instead of create.
+
+**vaabenskjold:brand-evolve** updates an existing brand over time. Markets change. Audiences shift. The evolve command walks through what to update and preserves the decision history.
+
+## When this doesn't work
+
+**Brand creation still requires human judgment.** The questionnaire structures the process, but the answers need to come from someone who understands the business, the market, and the audience. Garbage in, structured garbage out.
+
+**Not a replacement for brand strategists.** If you're building a brand for a Fortune 500 company, you need a strategist. This tool is for solo developers, small teams, and projects that need brand consistency without a brand department.
+
+**The YAML format isn't visual.** Brand guidelines traditionally include visual examples, mood boards, and typography specimens. The YAML files are the machine-readable source of truth. Visual presentations come from segl and Pencil, not from vaabenskjold directly.
+
+## Try it
+
+If you have an existing brand, start with `/brand:audit`. Point it at whatever materials you have — a website, business cards, social media profiles. It extracts what's there and structures it.
+
+If you're starting fresh, run `/brand:create`. Answer the questions honestly. The harder questions ("what's your competitive positioning?" "what do you believe that others don't?") are where the interesting brand work happens.
+
+Either way, you'll have structured, consumable brand data in about 20 minutes. Everything downstream — visual identity, content, design — can reference it directly.

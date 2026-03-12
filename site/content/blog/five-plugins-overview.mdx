@@ -1,0 +1,538 @@
+---
+title: "The 5 Plugins: What Each One Does and When to Use It"
+description: "Five Claude Code plugins, each owning a domain. Here's what kronen, smedjen, herold, vaabenskjold, and segl actually do — and when to reach for each one."
+date: "2026-01-27"
+author: "Morten Nissen"
+tags:
+  - claude-code
+  - plugins
+  - developer-tools
+  - workflow
+  - hjemmesidekongen-ai
+  - architecture
+read_time: "10 min"
+target_audience: "developers"
+---
+
+Ever opened a new Claude Code session and spent the first ten minutes
+rebuilding context from scratch? Setting up the plan. Reminding it about
+your brand voice. Re-explaining your project structure. Again.
+
+I got tired of that loop, so I built a system: five plugins, each owning
+one domain of the development workflow. Planning. Execution. Task management.
+Brand. Visual identity. They share a foundation but stay out of each
+other's way.
+
+This post walks through all five — what they do, when to use them, when
+to skip them, and how they compose into end-to-end workflows. If you're
+evaluating whether this system fits your work, start here.
+
+## Why five plugins instead of one
+
+The short answer: boundaries.
+
+A single mega-plugin that handles planning, development, branding, task
+management, and design would be a maintenance nightmare. Every change
+risks breaking something unrelated. Every skill would compete for
+attention in the same namespace. And you'd be forced to load capabilities
+you never use.
+
+Five plugins means five clear domains. Each plugin owns its skills,
+commands, hooks, and agents. Dependencies are explicit — smedjen depends
+on kronen, not the other way around. You install what you need and ignore
+the rest.
+
+The boundaries break down like this:
+
+> - **kronen** — Foundation: planning, memory, tracing, governance
+> - **smedjen** — Execution: dev agents, tech knowledge, completion gates
+> - **herold** — Task management: Jira, PRs, QA handover
+> - **vaabenskjold** — Brand: strategy, voice, audit, evolution
+> - **segl** — Visual identity: design tokens, Pencil integration
+
+This isn't arbitrary. Each boundary maps to a question you'd ask a
+different person on a team. "What should we build?" is planning (kronen).
+"Build it" is execution (smedjen). "What's the ticket say?" is task
+management (herold). The plugins mirror how work actually divides.
+
+## kronen — The Crown
+
+kronen is the foundation everything else depends on. It handles planning,
+brainstorming, tracing, memory governance, and the creator/reviewer
+tooling that builds and audits the other plugins. If you only install one
+plugin, this is the one.
+
+**Version**: 0.3.0
+**Stats**: 41 skills, 14 commands, 12 agents
+
+### What it does
+
+kronen turns unstructured thinking into executable plans. You start with
+a brainstorm session, extract decisions from the transcript, then generate
+a wave-based plan where tasks are ordered by dependency. Each wave gets
+verified before the next one starts.
+
+It also runs the hook system — PreToolUse, PostToolUse, PreCompact,
+SessionStart, Stop. These hooks prevent goal drift, enforce scope, gate
+TDD compliance, and snapshot context before compaction so the next session
+can recover state.
+
+### Key capabilities
+
+**Planning pipeline**: brainstorm-session → brainstorm-decision-writer →
+plan-engine → plan-verifier. Or use dynamic-planner for goal-oriented
+iteration with a learning loop.
+
+**Creator tooling**: skill-creator, command-creator, hook-creator,
+agent-creator, plugin-creator, mcp-creator. These enforce structure,
+naming, and registration — you never write a skill manually.
+
+**Reviewer tooling**: skill-reviewer, hook-reviewer, plugin-reviewer,
+agent-reviewer. Every component gets audited before it ships.
+
+**Session management**: context snapshots survive compaction, session
+handoffs chain across conversations, and the autopilot loop runs
+autonomous iteration with a stop hook that prevents premature completion.
+
+**Debugging**: root-cause-debugging (4-phase investigation before any
+fix), hypothesis-generator (3 parallel hypotheses to avoid confirmation
+bias), reasoning-trace-optimizer (diagnoses agent reasoning quality).
+
+### When to use it
+
+- You're starting a new project and need a structured plan
+- You want to brainstorm before committing to an approach
+- You need to create or modify skills, commands, hooks, or agents
+- You're debugging a complex issue and want structured investigation
+- You need session continuity across compaction boundaries
+
+### When NOT to use it
+
+kronen is not a development execution tool. It plans the work but doesn't
+write the code. If you need framework-specific knowledge, agent dispatch
+for implementation, or completion gates for shipped features — that's
+smedjen. kronen tells you what to build and in what order. smedjen builds
+it.
+
+```bash
+# A typical kronen workflow in the terminal
+
+# Start a brainstorm about the new auth system
+/kronen:brainstorm-start
+
+# After exploring ideas, extract decisions
+/kronen:brainstorm-decide
+
+# Turn decisions into a wave plan
+/kronen:plan-create
+
+# Execute wave by wave with verification gates
+/kronen:plan-execute
+```
+
+## smedjen — The Forge
+
+smedjen is the execution engine. Where kronen plans the work, smedjen
+does the work. It decomposes tasks, dispatches specialized agents, applies
+framework-specific knowledge, and gates completion with verification
+checks.
+
+**Version**: 0.2.0
+**Stats**: 62 skills, 3 commands, 7 agents
+
+### What it does
+
+smedjen holds the technical knowledge. 24 tech skills covering frameworks
+like Next.js, React Native, Expo, Tailwind, Supabase, and more. Six
+discipline skills for frontend, backend, testing, security, architecture,
+and code review. Seven agents that can run in parallel — architect,
+backend-dev, frontend-dev, test-engineer, code-reviewer,
+app-security-auditor, and content-writer.
+
+The dev-scan command analyzes your repo to detect the tech stack and
+architecture. Then dev-run dispatches the right agents with the right
+knowledge for your specific project.
+
+### Key capabilities
+
+**Tech knowledge**: 24 skills organized by framework. Each skill contains
+patterns, anti-patterns, and conventions specific to that technology.
+Not generic advice — real implementation guidance.
+
+**Agent dispatch**: Seven specialized agents. The architect designs, the
+frontend-dev builds UI, the test-engineer writes tests. File-ownership
+prevents write conflicts when agents run in parallel.
+
+**Studio skills**: Eight skills for content creation, including the
+content-writer agent that produced this blog post's structure.
+
+**Completion gates**: Work isn't done when the code compiles. smedjen's
+verification checks confirm the implementation matches the plan, tests
+pass, and code review findings are resolved.
+
+### When to use it
+
+- You have a plan (from kronen) and need to execute it
+- You're building with a specific framework and want correct patterns
+- You need parallel agents working on different parts of a feature
+- You want code review, security audit, or test generation
+- You're writing content (blog posts, READMEs, marketing copy)
+
+### When NOT to use it
+
+smedjen doesn't plan. If you skip planning and go straight to dev-run,
+you'll get code that solves the immediate problem but might not fit the
+bigger picture. Plan first with kronen, execute with smedjen.
+
+smedjen also doesn't manage external tickets or PRs. It builds what you
+tell it to build, but it doesn't know about your Jira board or your PR
+workflow. That's herold.
+
+```bash
+# Scanning a project and running the dev engine
+
+# Detect tech stack and architecture
+/smedjen:dev-scan
+
+# Output: Next.js 14, Tailwind, Supabase, TypeScript
+# Loads: nextjs-patterns, tailwind-patterns, supabase-patterns
+
+# Run the dev engine against the current plan
+/smedjen:dev-run
+```
+
+## herold — The Herald
+
+herold bridges Claude Code to your project management tools. It ingests
+Jira tickets, detects contradictions between them, manages local task
+state, generates PR descriptions, and produces QA handover documents.
+
+**Version**: 0.1.0
+**Stats**: 9 skills, 8 commands
+
+### What it does
+
+herold reads your tickets and turns them into local task state that
+persists across sessions. It catches contradictions before you start
+building — "ticket A says the button should be blue, ticket B says green"
+gets flagged before any code is written.
+
+When you're done building, herold generates a QA handover with test
+scenarios, creates a PR with a structured description, and can look up
+Confluence docs for context on the active task.
+
+### Key capabilities
+
+**Ticket ingestion**: Single ticket via task-ingest, or batch from a Jira
+board/filter via task-ingest-bulk. Tickets become local YAML state that
+survives compaction.
+
+**Contradiction detection**: Scans ingested tickets for conflicting
+requirements. Catches the kind of bugs that live in specs, not code.
+
+**PR workflow**: task-pr generates a structured pull request from the
+active task. Includes what changed, why, test coverage, and migration
+notes.
+
+**QA handover**: task-done produces a QA document with test scenarios,
+edge cases, and acceptance criteria derived from the original ticket.
+
+**Azure DevOps pipeline** and **Confluence lookup**: Integration skills
+for teams using those platforms alongside Jira.
+
+### When to use it
+
+- You work from Jira tickets and want them as local context
+- You want to catch contradictions between tickets before building
+- You need structured PR descriptions generated from task context
+- You want QA handover documents that map back to requirements
+- Your team uses Confluence for documentation
+
+### When NOT to use it
+
+herold doesn't replace Jira or any project management tool. It reads from
+them, not writes to them. If you need to update ticket status, move cards
+on a board, or manage sprints — do that in Jira.
+
+herold also has no opinion about what to build or how to build it. It
+manages the ticket lifecycle on the Claude Code side. Planning is kronen,
+execution is smedjen.
+
+```bash
+# The ticket-to-PR workflow
+
+# Ingest a Jira ticket
+/herold:task-ingest PROJ-1234
+
+# Start working on it
+/herold:task-start PROJ-1234
+
+# (build the feature with smedjen)
+
+# Create the PR
+/herold:task-pr
+
+# Complete with QA handover
+/herold:task-done
+```
+
+## vaabenskjold — The Coat of Arms
+
+vaabenskjold handles brand strategy. It creates brand guidelines from
+scratch, audits existing brands from reference materials, and evolves
+brands over time. The output is structured YAML — voice, values,
+guidelines, dos and don'ts — that other plugins consume.
+
+**Version**: 0.1.0
+**Stats**: 4 skills, 5 commands
+
+### What it does
+
+Four skills, four jobs. brand-strategy creates a new brand from a
+positioning conversation. brand-audit codifies an existing brand from
+whatever materials you have — PDFs, websites, style guides. brand-evolve
+refreshes or reinvents an existing brand. brand-loader injects brand
+context into other workflows at three depth levels.
+
+The output lives at `.ai/brand/{name}/` as structured YAML files:
+voice.yml, guideline.yml, values.yml, and dos-and-donts.md. These files
+are what smedjen's content-writer reads when generating on-brand copy.
+They're what segl's visual-identity skill reads when creating a design
+system.
+
+### When to use it
+
+- You're starting a new project and need brand guidelines
+- You have an existing brand but no codified voice or values
+- Your brand needs a refresh and you want structured before/after
+- You want on-brand content generation across other plugins
+
+### When NOT to use it
+
+vaabenskjold produces strategy, not visuals. It defines your brand voice,
+personality, and positioning. It does not produce logos, color palettes,
+or design tokens. That's segl.
+
+If you already have well-documented brand guidelines and just need to
+load them into context, you might only need brand-loader (one skill)
+rather than the full plugin workflow.
+
+```bash
+# Creating and applying a brand
+
+# Create a new brand from scratch
+/vaabenskjold:brand-create
+
+# Or audit an existing brand from materials
+/vaabenskjold:brand-audit
+
+# Check what's loaded
+/vaabenskjold:brand-status
+
+# Apply brand context to current session
+/vaabenskjold:brand-apply
+```
+
+## segl — The Royal Seal
+
+segl turns brand strategy into visual systems. It creates visual
+identities — color palettes, typography scales, spacing systems — and
+generates platform-specific design tokens for Tailwind, CSS custom
+properties, or DTCG format. It also integrates with Pencil for
+full design workflows.
+
+**Version**: 0.1.0
+**Stats**: 4 skills, 4 commands
+
+### What it does
+
+visual-identity creates the design system foundations: colors with
+semantic mappings, typography with font families and scale, spacing,
+border radius, shadows, and grid. design-tokens converts those
+foundations into platform tokens you can drop into your codebase.
+design-loader injects the visual identity into context, and
+pencil-tokens bridges the gap between your token system and Pencil's
+design canvas.
+
+### When to use it
+
+- You've defined a brand (via vaabenskjold) and need a visual system
+- You need Tailwind config, CSS variables, or DTCG tokens generated from a design system
+- You're designing pages in Pencil and need consistent tokens
+- You want a single source of truth for colors, type, and spacing
+
+### When NOT to use it
+
+segl doesn't design pages or components. It creates the system those
+pages are built from. If you need a landing page designed, you'd use
+segl for tokens and Pencil (with its spawn agents) for the actual page
+design.
+
+segl also doesn't do brand strategy. It needs vaabenskjold's output as
+input. Running segl without a brand is like picking colors without
+knowing who you're designing for.
+
+```bash
+# From brand to design tokens
+
+# Create visual identity from brand guidelines
+/segl:design-identity
+
+# Generate platform tokens
+/segl:design-tokens
+
+# Check current design artifact status
+/segl:design-status
+
+# Full Pencil design workflow (tokens → agents)
+/segl:design-page
+```
+
+## How they compose
+
+The plugins are independent but composable. Here's a real workflow that
+uses four of them — the kind of thing that happens on a typical feature
+build.
+
+### Scenario: building a feature from a Jira ticket
+
+**Step 1: Ingest the ticket (herold)**
+
+You have PROJ-456 in Jira. Ingest it with task-ingest. herold pulls the
+description, acceptance criteria, and linked tickets. Contradiction
+detection runs automatically — it flags that PROJ-456 says "use modal
+dialog" but the linked PROJ-400 says "use inline expansion." You catch
+this before writing a line of code.
+
+**Step 2: Brainstorm the approach (kronen)**
+
+The ticket is ambiguous about the data model. Start a brainstorm session
+to explore options. Extract decisions: "Use a normalized schema with a
+join table, not embedded documents." These decisions persist as YAML.
+
+**Step 3: Plan the work (kronen)**
+
+Turn the decisions into a wave plan. Wave 1: database migration. Wave 2:
+API endpoints. Wave 3: UI components. Wave 4: integration tests. Each
+wave has verification criteria.
+
+**Step 4: Execute (smedjen)**
+
+dev-scan detects your stack (Next.js, Supabase, Tailwind). dev-run
+dispatches agents: backend-dev for the migration and API, frontend-dev
+for the UI, test-engineer for the integration tests. File-ownership
+prevents conflicts.
+
+**Step 5: Ship it (herold)**
+
+task-pr generates the pull request with structured sections: what changed,
+why, migration notes, test coverage. task-done produces the QA handover
+document with test scenarios mapped to the original acceptance criteria.
+
+Five steps, three plugins, one coherent workflow. kronen planned it,
+herold managed the ticket lifecycle, smedjen built it. vaabenskjold and
+segl weren't needed here because this was a backend feature — no brand
+or design work involved. That's the point of separate plugins: you use
+what the work requires.
+
+## The naming
+
+The plugins are named after roles in a Danish royal court. It's a naming
+convention, not a marketing exercise.
+
+- **kronen** (The Crown) — the foundation, the authority, the thing
+  everything else reports to
+- **smedjen** (The Forge) — where things get built
+- **herold** (The Herald) — the messenger, carries information between
+  systems
+- **vaabenskjold** (The Coat of Arms) — identity, what you stand for
+- **segl** (The Royal Seal) — the visual mark, the stamp of approval
+
+The metaphor works because each court role maps to a real responsibility.
+The Crown doesn't forge swords. The Herald doesn't design coats of arms.
+The boundaries are built into the names.
+
+Is it a bit ridiculous? Yes. The parent brand is called "hjemmesidekongen"
+— the website king. The ridiculousness is the point. It's a wink between
+developers, and it makes the plugins memorable. I can say "check the
+herald" and you know I mean task management. That's more than most
+naming conventions achieve.
+
+## Getting started
+
+Start with kronen. It's the foundation — every other plugin depends on
+it. Install it, run a brainstorm, create a plan, execute it. That alone
+will change how you work with Claude Code.
+
+Once kronen feels natural, add smedjen if you want agent-driven
+development execution. Add herold if you work from Jira tickets. Add
+vaabenskjold and segl if you need brand and design workflows.
+
+You don't need all five on day one. The system is designed so each plugin
+adds value independently. kronen + smedjen covers most development work.
+Add the others when you hit a problem they solve.
+
+> The recommended progression:
+> 1. **kronen** — planning and governance (start here)
+> 2. **smedjen** — development execution (add when you want agents)
+> 3. **herold** — task management (add when you work from tickets)
+> 4. **vaabenskjold** + **segl** — brand and design (add together when needed)
+
+## The full inventory
+
+For reference, here's what each plugin ships with today:
+
+```yaml
+# Plugin stats as of March 2026
+
+kronen:
+  version: 0.3.0
+  skills: 41
+  commands: 14
+  agents: 12
+  hooks: PreToolUse, PostToolUse, PreCompact, SessionStart, Stop, UserPromptSubmit
+
+smedjen:
+  version: 0.2.0
+  skills: 62
+  commands: 3
+  agents: 7
+  depends_on: kronen
+
+herold:
+  version: 0.1.0
+  skills: 9
+  commands: 8
+  depends_on: kronen
+
+vaabenskjold:
+  version: 0.1.0
+  skills: 4
+  commands: 5
+  depends_on: kronen
+
+segl:
+  version: 0.1.0
+  skills: 4
+  commands: 4
+  depends_on: kronen
+```
+
+120 skills, 34 commands, 19 agents across five plugins. But the numbers
+don't matter as much as the boundaries. Each skill lives in exactly one
+plugin. Each command has one job. The system grows by adding skills to
+the right plugin, not by making any single plugin do more than its domain.
+
+## What's next
+
+This post gave you the map. The next posts in this series go deep on
+each plugin — how the planning pipeline actually works (kronen), how
+agent dispatch handles parallel execution without merge conflicts
+(smedjen), how contradiction detection catches spec bugs before they
+become code bugs (herold).
+
+If you want to try it now, the repo is open source. Clone it, install
+kronen, and run your first brainstorm. The system explains itself as
+you use it — every skill has a checkpoint, every command has help text.
+
+kongen har talt.

@@ -1,0 +1,285 @@
+---
+title: "From Jira Ticket to PR in One Session"
+description: "Stop copy-pasting between Jira, Confluence, and your IDE. herold turns a ticket key into a working PR with contradiction detection and QA handover built in."
+date: "2026-02-06"
+author: "Morten Nissen"
+tags:
+  - jira
+  - developer-workflow
+  - claude-code
+  - herold
+  - task-management
+  - pull-requests
+  - atlassian
+read_time: "7 min"
+target_audience: "developers"
+---
+
+You know the routine. Open Jira, read the ticket. Open Confluence, find the design doc
+that may or may not still be relevant. Open your IDE. Create a branch. Start coding.
+Halfway through, notice a comment from the tech lead that contradicts the ticket description.
+Rewrite half of what you just built. Finish the feature. Switch to Bitbucket. Write a PR
+description by copy-pasting the acceptance criteria. Post the PR link back in Jira. Write a
+comment saying it's ready for review.
+
+That's five tools, eight context switches, and at least one nasty surprise buried in the
+comments. Every single ticket.
+
+I built herold (The Herald) to kill that workflow. One plugin, six commands, and the entire
+loop from ticket to PR happens inside Claude Code without switching tabs.
+
+## What herold actually does
+
+herold is the task management plugin in the hjemmesidekongen/ai monorepo. It connects to
+Jira and Confluence through Atlassian MCP, pulls tickets into local YAML files, detects
+contradictions in the requirements, finds related documentation, creates PRs with structured
+descriptions, and generates QA handover notes when you're done.
+
+None of that requires leaving your terminal. The entire ticket lifecycle lives in six commands:
+
+```bash
+/herold:task-ingest PROJ-123     # Pull the ticket into local storage
+/herold:task-start PROJ-123      # Set it as active, load context
+/herold:task-docs                # Find related Confluence pages
+# ... implement the feature ...
+/herold:task-pr                  # Create the PR from task context
+/herold:task-done                # Generate QA handover, transition Jira
+```
+
+Each command does one thing. They compose into a workflow. Let me walk through a real
+session.
+
+## Step 1: Ingest the ticket
+
+Start by pulling the Jira ticket into local storage. herold calls Atlassian MCP, fetches the
+ticket data, normalizes it into a YAML file, and immediately runs contradiction detection on
+the result.
+
+```bash
+> /herold:task-ingest PROJ-123
+
+Ingested 1 ticket(s). Contradictions: 1 found across 1 tickets.
+```
+
+That one line already saved you a tab switch. But the interesting part is what it wrote to
+disk. The ticket now lives at `.ai/tasks/PROJ-123.yml` as structured YAML:
+
+```yaml
+# .ai/tasks/PROJ-123.yml
+key: PROJ-123
+summary: "Implement user search endpoint"
+status: pending
+description: |
+  Add a /api/users/search endpoint that accepts a query parameter
+  and returns matching users. Use OAuth for authentication.
+  Return paginated results with 20 items per page.
+acceptance_criteria:
+  - "GET /api/users/search?q=term returns matching users"
+  - "Results are paginated (20 per page)"
+  - "Authentication via OAuth"
+  - "Empty search returns 400 Bad Request"
+comments:
+  - author: "sarah.chen"
+    date: "2026-03-10"
+    body: "Actually, let's use API keys for this endpoint. OAuth is overkill for internal search."
+  - author: "james.ko"
+    date: "2026-03-11"
+    body: "Agreed with Sarah. Also, empty search should return recent users, not 400."
+contradictions:
+  - severity: blocker
+    original: "Use OAuth for authentication"
+    contradicting: "sarah.chen: Actually, let's use API keys for this endpoint"
+    resolution: "Confirm with tech lead — comment suggests API keys override description"
+  - severity: warning
+    original: "Empty search returns 400 Bad Request"
+    contradicting: "james.ko: empty search should return recent users, not 400"
+    resolution: "Comment modifies acceptance criteria — update AC before implementing"
+```
+
+Everything in one file. Description, acceptance criteria, comments, and the contradictions
+that herold found automatically. No manual reading through comment threads.
+
+## Step 2: Catch contradictions before you waste time
+
+This is the part that pays for itself. Contradiction detection runs automatically after
+ingestion, but you can also trigger it manually if new comments come in.
+
+herold reads the ticket description and acceptance criteria, then analyzes every comment
+against the original spec. Each finding gets a severity:
+
+```text
+blocker  — Direct contradiction that changes core behavior
+           "Use API keys" vs description saying "Use OAuth"
+
+warning  — Modification that changes acceptance criteria
+           "Return recent users" vs "return 400 Bad Request"
+
+info     — Additive extension, no conflict with existing spec
+           "Also add search by username" (extends, doesn't contradict)
+```
+
+In the example above, herold caught two issues: a blocker where the auth method changed in
+the comments but nobody updated the ticket, and a warning where the empty-state behavior
+was modified by a later comment.
+
+Without this, you would have built OAuth authentication, gotten it working, then discovered
+the comment thread during code review. Or worse, after deployment. I've been on both sides
+of that conversation. Neither is fun.
+
+The detection is heuristic, not perfect. It catches direct contradictions well. It's less
+reliable with subtle scope changes or implications that require domain knowledge. When it's
+unsure, it classifies as `info` rather than generating false blockers. That's the right
+tradeoff — noisy false positives would make you ignore the output entirely.
+
+## Step 3: Start the task and find the docs
+
+With contradictions resolved (you messaged Sarah, confirmed API keys), set the task as
+active:
+
+```bash
+> /herold:task-start PROJ-123
+
+PROJ-123: Implement user search endpoint
+Status: in_progress
+
+Acceptance criteria:
+  - GET /api/users/search?q=term returns matching users
+  - Results are paginated (20 per page)
+  - Authentication via API keys (updated per team discussion)
+  - Empty search returns recent users
+
+WARNING: 2 contradictions detected — review before starting work
+
+Ready to work on PROJ-123
+```
+
+Now find the related Confluence docs. herold extracts keywords from the task summary and
+description, builds a CQL query, and searches Confluence through MCP:
+
+```bash
+> /herold:task-docs
+
+Related docs for PROJ-123 "Implement user search endpoint":
+1. [HIGH] User Search API Design — Engineering Space
+   https://example.atlassian.net/wiki/spaces/ENG/pages/12345
+2. [MED] API Authentication Standards — Platform Space
+   https://example.atlassian.net/wiki/spaces/PLAT/pages/67890
+3. [LOW] Pagination Patterns — Engineering Space
+   https://example.atlassian.net/wiki/spaces/ENG/pages/11111
+```
+
+The results get linked to the task YAML under `confluence_docs:`, so they're available when
+you're implementing and when herold generates the PR description later. No more "I know there
+was a doc about this somewhere in Confluence."
+
+## Step 4: Implement (the part that's actually your job)
+
+This is where you write code. herold doesn't do that for you. What it does provide is
+context: the normalized task file, the resolved contradictions, and the linked Confluence
+docs are all sitting in `.ai/tasks/` for you and Claude Code to reference while you work.
+
+Build the feature, write the tests, commit your changes.
+
+## Step 5: Create the PR
+
+When you're ready for review:
+
+```bash
+> /herold:task-pr
+
+PR created: https://bitbucket.org/team/repo/pull-requests/42
+Pipeline: running
+Jira PROJ-123: transitioned to "In Review"
+```
+
+herold reads the active task, builds a structured PR description from the summary,
+acceptance criteria, and test plan, creates the PR through Bitbucket MCP, polls the CI
+pipeline, and posts the PR link back to Jira as a comment. One command.
+
+The PR description isn't a copy-paste of the ticket. It's structured for reviewers:
+what changed, what to look at, what the acceptance criteria are, and which Confluence docs
+informed the implementation. Reviewers get context without asking for it.
+
+If Bitbucket MCP isn't connected, herold outputs the formatted PR description as text so you
+can paste it manually. Same for Jira — if MCP is unavailable, it warns you to link manually
+instead of failing silently.
+
+## Step 6: Close the loop
+
+After the PR is merged:
+
+```bash
+> /herold:task-done
+
+QA handover generated: .ai/tasks/PROJ-123-handover.md (markdown)
+Task PROJ-123 marked done.
+Jira PROJ-123: transitioned to "Done"
+```
+
+`/task:done` generates a QA handover document that includes what was changed, test scenarios
+mapped from the acceptance criteria, and regression risks identified from the git diff. The
+format adapts to your project profile — Jira wiki markup, GitHub PR markdown, or plain
+markdown.
+
+The handover is written to `.ai/tasks/PROJ-123-handover.md`. Here's what one looks like:
+
+```markdown
+## Summary
+Added /api/users/search endpoint with API key authentication and pagination.
+
+## Changes
+- `src/routes/users/search.ts` — new search endpoint with query parsing
+- `src/middleware/auth.ts` — added API key validation
+- `tests/search.test.ts` — 12 test cases covering search, pagination, auth, empty state
+
+## Test Scenarios
+1. Search with valid query returns matching users (paginated)
+2. Search with API key in header succeeds
+3. Search without API key returns 401
+4. Empty search returns recent users (per team discussion, not 400)
+5. Page parameter beyond results returns empty array
+
+## Regression Risks
+- Auth middleware change affects all routes using the shared middleware
+- Empty search behavior differs from other endpoints (returns data, not error)
+```
+
+## When it breaks
+
+Honesty time. herold isn't magic, and there are real limitations:
+
+**Requires Atlassian MCP.** The Jira and Confluence integration needs the Atlassian MCP
+server configured in your Claude Code setup. Without it, herold falls back to dry-run mode
+with sample data for testing, but you lose the live connection. Bitbucket MCP is needed for
+PR creation.
+
+**Individual tickets, not epics.** The workflow is built around single ticket ingestion and
+completion. Bulk ingestion works (pass a JQL filter to `/task:ingest`), but the
+start-to-done loop assumes one active task at a time. Epic-level orchestration isn't there
+yet.
+
+**Contradiction detection is heuristic.** It catches direct contradictions between the
+description and comments reliably. Subtle implications, domain-specific conflicts, or
+contradictions between comments (not against the description) are less reliable. It errs on
+the side of `info` over false `blocker` findings, which is the right default but means some
+real issues get classified low.
+
+**PR descriptions are structured, not smart.** herold populates the PR template from the
+task file. It doesn't summarize your code changes or explain your implementation decisions.
+That's still on you.
+
+## Try it
+
+herold is part of the hjemmesidekongen/ai plugin monorepo. Clone the repo, configure
+Atlassian MCP for your Jira instance, and run:
+
+```bash
+/herold:task-ingest YOUR-TICKET-KEY
+```
+
+If you don't have Atlassian MCP set up yet, herold includes dry-run mode with sample ticket
+data. You can test the full ingestion, contradiction detection, and task-start flow without
+a live Jira connection. The sample ticket even has contradictions baked in so you can see
+the detection in action.
+
+Six commands. One session. No tab switching.

@@ -1,0 +1,94 @@
+---
+title: "Generating an SEO Plan with Keyword Strategy and Meta Tags"
+description: "Use smedjen's SEO knowledge skills to build keyword strategies, audit technical SEO, and generate meta tags — all within Claude Code sessions."
+date: "2026-02-27"
+author: "Morten Nissen"
+tags:
+  - seo
+  - keyword-strategy
+  - meta-tags
+  - content-optimization
+  - smedjen
+read_time: "8 min"
+target_audience: "seo"
+---
+
+SEO planning is one of those tasks that's simultaneously critical and tedious. You know the drill: keyword research in one tab, competitor analysis in another, a spreadsheet that pretends to be a content calendar, and meta descriptions written at 11pm the night before launch.
+
+I built an SEO knowledge skill into smedjen because I kept doing the same research loop every time I started a new site. The same E-E-A-T checklist. The same Core Web Vitals audit. The same "wait, did I add structured data?" moment three days after launch.
+
+Here's how it works, and where it actually saves time versus where you still need a human brain.
+
+## What the SEO skill actually knows
+
+smedjen's `seo-fundamentals` skill is a knowledge skill — it doesn't crawl sites or pull Search Console data. What it does is provide structured, current knowledge about SEO best practices that Claude can reference during any task.
+
+Think of it as having an SEO consultant's playbook loaded into context. When you ask Claude to audit a page, review meta tags, or plan content — the skill ensures the advice follows current standards, not whatever the model last trained on.
+
+The skill covers four domains:
+
+**E-E-A-T Quality Signals** — Experience, Expertise, Authoritativeness, Trustworthiness. Not just the acronym — specific signals Google looks for. Author bios with credentials. First-hand experience markers. External citations. Trust signals like HTTPS, clear contact info, and privacy policies.
+
+**Core Web Vitals** — LCP under 2.5s, INP under 200ms, CLS under 0.1. The common causes of each failure and the fixes that actually move the needle. Lazy loading images for LCP. Font-display swap for CLS. Third-party script deferral for INP.
+
+**Technical SEO** — Structured data (JSON-LD patterns for articles, products, FAQs), canonical tags, XML sitemaps, robots.txt, hreflang for multilingual sites, and the meta tags that actually matter versus the ones Google ignores.
+
+**On-Page Optimization** — Title tag formulas, meta description patterns that get clicks, heading hierarchy, internal linking strategy, image alt text that's useful rather than keyword-stuffed.
+
+## Running an SEO audit
+
+The most practical use is auditing a page or site before launch. You don't need a separate tool — Claude reads the actual HTML, CSS, and config files in your repo and applies the SEO knowledge to what it finds.
+
+```text
+> Audit the SEO of site/src/app/(home)/page.tsx — check meta tags,
+> heading structure, structured data, and Core Web Vitals risks.
+```
+
+With the seo-fundamentals skill loaded, Claude checks against the full playbook: are the title and description tags present and well-formed? Is the heading hierarchy correct (one H1, logical H2-H3 nesting)? Is there JSON-LD structured data? Are images using next/image for automatic lazy loading?
+
+The output is a prioritized list: critical issues first (missing title tag, no canonical), then warnings (description too long, missing alt text), then suggestions (add FAQ structured data, consider breadcrumb markup).
+
+## Building a keyword strategy
+
+Keyword research is where the skill combines with Claude's general knowledge. You provide the topic space, and Claude maps it using SEO principles from the skill.
+
+The skill guides Claude to think in clusters, not individual keywords. A pillar page ("Claude Code plugins") with supporting content ("wave planning tutorial," "parallel agent development," "Jira integration workflow"). Each piece targets a specific search intent and links back to the pillar.
+
+What you get isn't a keyword volume spreadsheet — for that you still need Ahrefs or Semrush. What you get is a structured topic architecture that maps content to search intent. That's the part that usually takes the longest.
+
+## Generating meta tags at scale
+
+Meta descriptions are the most tedious part of SEO. Every page needs one. They should be 150-160 characters. They should include the target keyword naturally. They should compel a click. And you have 47 pages to write them for.
+
+With the SEO skill loaded, Claude follows proven meta description patterns: lead with the benefit, include the topic naturally, end with a soft CTA or differentiator. It checks character counts and flags any that run long.
+
+For the hjemmesidekongen/ai site, this generated 15 meta descriptions in about 30 seconds. Each one was usable as-is or needed minor tweaking. Compare that to writing them manually.
+
+## Combining with content strategy
+
+The real power shows when you combine `seo-fundamentals` with `content-strategy-patterns`. The content strategy skill provides the 40/25/25/10 pillar distribution framework:
+
+- 40% expertise content (tutorials, how-tos, technical deep dives)
+- 25% behind-the-scenes (process, decisions, lessons learned)
+- 25% case studies (real workflows, before/after, results)
+- 10% industry commentary (trends, opinions, analysis)
+
+Map your keyword clusters to these pillars, and you have a content calendar that's both SEO-optimized and editorially balanced.
+
+## Where this breaks down
+
+**No real search data.** The skill provides principles, not volume numbers. You still need a keyword tool for actual search volume, difficulty scores, and SERP analysis.
+
+**No crawl data.** It can audit files in your repo, but it can't check your live site for broken links, crawl errors, or indexing issues. You still need Search Console and a crawler.
+
+**Principles age.** SEO best practices change. The skill reflects current knowledge, but Google's algorithm updates happen faster than skill updates.
+
+**No competitive intelligence.** It can't tell you what your competitors rank for. That's tool territory, not knowledge territory.
+
+> **Tip:** The sweet spot: use the SEO skill for planning, auditing, and content generation. Use dedicated SEO tools for data. They complement each other — one provides principles, the other provides numbers.
+
+## Try it
+
+Install smedjen, open a Claude Code session in your project, and ask for an SEO audit of your homepage. The skill loads automatically when SEO-related questions come up. No configuration needed.
+
+If you already have content, start with an audit. If you're planning new content, start with a keyword strategy. Either way, you'll have a structured starting point in minutes instead of hours.

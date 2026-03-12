@@ -1,0 +1,107 @@
+---
+title: "What Happens When You Let AI Agents Review Each Other's Work"
+description: "Implementing agents never grade their own work. Separate reviewer agents catch issues 30-40% of the time. Here's how the verification system works and what it finds."
+date: "2026-03-12"
+author: "Morten Nissen"
+tags:
+  - verification
+  - code-review
+  - quality-gates
+  - agents
+  - meta
+read_time: "8 min"
+target_audience: "everyone"
+---
+
+The most important design decision in this entire system isn't wave planning or file-ownership or brand-as-code. It's this: implementing agents never grade their own work.
+
+A separate reviewer agent checks every output against the original spec. The implementer says "I'm done." The reviewer says "let me check." And about 30-40% of the time, the reviewer finds something the implementer missed.
+
+That number surprised me. Not because it's high — but because without the reviewer, I would have accepted that 30-40% as "done." The implementing agent is confident. Its output looks right. The diff is clean. But "looks done" and "actually done" are different things.
+
+## Why self-grading fails
+
+An implementing agent has a completion bias. It was given a task. It worked on the task. It wants to report success. This isn't a flaw — it's the same bias human developers have. You finish a feature, you want to move on.
+
+The specific failure mode: the agent checks that the code it wrote works, but not that the code satisfies the original requirement. These sound the same. They're not.
+
+Example: the spec says "add error handling for network timeouts." The agent adds a try/catch around the fetch call. It checks: does the code compile? Does the try/catch work? Yes and yes. Done.
+
+The reviewer checks: does the timeout get retried? Does the error message help the user? Is there a loading state during the retry? Does it match the error handling patterns in the rest of the codebase? The agent wrote working code. The reviewer checks if it's the right code.
+
+## The verification hierarchy
+
+Different types of work get different reviewers:
+
+**skill-reviewer** — checks SKILL.md files for format, content quality, checkpoint presence, reference accuracy. Read-only.
+
+**code-reviewer** (smedjen) — the only agent authorized to approve work as done. Reviews against completion criteria. Checks spec compliance, test coverage, error handling, style consistency.
+
+**plan-verifier** (kronen) — two-stage verification for completed waves. Stage 1: fast mechanical checks (do the files exist? do tests pass?). Stage 2: deeper spec review.
+
+**component-reviewer** (kronen) — validates new hooks, skills, commands, and agents. Checks YAML frontmatter, naming conventions, no hardcoded secrets, supporting files present.
+
+Each reviewer is read-only. They report findings. They don't fix them. This is intentional — a reviewer that fixes issues would hide the real error rate. You want to see what's wrong, not have it silently corrected.
+
+## The 10-point completion gate
+
+smedjen's `completion-gate` is the most structured reviewer. It runs 10 checks before any task gets marked done:
+
+1. Spec compliance — does the output match what was requested?
+2. File completeness — are all expected files present?
+3. Test coverage — are there tests for the new code?
+4. Error handling — are failure paths covered?
+5. Style consistency — does it match the codebase patterns?
+6. Documentation — are docs updated if needed?
+7. Security — obvious vulnerabilities?
+8. Performance — any red flags?
+9. Accessibility — if UI, does it meet WCAG AA?
+10. Integration — does it work with the rest of the system?
+
+Not every check applies to every task. The gate adapts based on what changed. A CSS-only change skips the test coverage check. A backend API change skips the accessibility check. But the gate runs, and it reports.
+
+## The stop hook
+
+kronen has a hook that enforces verification at the system level. If you try to claim a task is done without passing verification, the hook blocks the completion.
+
+This sounds heavy-handed. It is. And that's the point.
+
+Without the stop hook, verification is optional. "I'll check it later" means "I won't check it." The hook makes verification a required step in the workflow, not a best practice that gets skipped when you're tired.
+
+The hook checks for an active plan with unverified tasks. If verification hasn't run, the hook surfaces a reminder. You can't just type "done" and move on.
+
+## What the reviewers actually find
+
+After running this system across hundreds of tasks, patterns emerge in what reviewers catch:
+
+**Missing edge cases (most common).** The implementing agent handles the happy path. The reviewer asks about the error path. What happens when the input is empty? When the file doesn't exist? When the network is down?
+
+**Spec drift.** The task said "add a dropdown with three options." The agent added a dropdown with four options because the fourth seemed useful. The reviewer flags this — the spec is the spec. If you want to change it, change the spec first.
+
+**Style inconsistencies.** The agent uses camelCase for a variable in a codebase that uses snake_case. It works. It's technically correct. The reviewer catches the style violation.
+
+**Stale references.** The agent updates a component but not the documentation that references it. The reviewer checks downstream dependencies.
+
+**Over-engineering.** The agent adds error handling for scenarios that can't happen. The reviewer says "this null check is dead code — the input is validated upstream."
+
+## The cost
+
+Verification isn't free. Every review cycle takes time and tokens. A thorough code review by the code-reviewer agent might take 30-60 seconds and use a meaningful chunk of context.
+
+For trivial changes — fixing a typo, updating a version number — the verification overhead isn't worth it. The system handles this by not requiring verification for changes below a complexity threshold.
+
+For anything substantial — a new feature, a refactor, a multi-file change — the verification cost is worth it. Finding issues during review is cheaper than finding them in production. Finding them automatically is cheaper than finding them manually.
+
+## What surprised me
+
+**The error rate is consistent.** Whether the implementing agent is working on a simple task or a complex one, the reviewer finds issues about 30-40% of the time. The issues scale in severity with complexity, but the rate stays remarkably stable.
+
+**Reviewers find different things than humans.** Human code review catches design issues and naming problems. Agent reviewers catch spec violations and missing edge cases. They're complementary, not redundant.
+
+**The stop hook changed behavior.** Once I added the hook that blocks premature completion, the implementing agents started being more thorough in their initial work. Knowing that a reviewer would check made the implementation better. The threat of review improved quality even before the review happened.
+
+## The principle
+
+If you take one thing from this: separate the maker from the checker. It doesn't matter if both are AI agents, both are humans, or one of each. The act of building something creates a bias toward "it's done." A separate check, by someone (or something) that wasn't invested in the building, catches what the builder can't see.
+
+This isn't about distrust. It's about the structural reality that creators are biased toward completion. Build the check into the system, not into the discipline.

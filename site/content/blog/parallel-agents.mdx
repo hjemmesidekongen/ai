@@ -1,0 +1,324 @@
+---
+title: "How Parallel Agents Build a Feature Without Merge Conflicts"
+description: "Dispatch multiple Claude Code agents to build a feature in parallel without file conflicts. File-ownership boundaries, interface contracts, and git worktrees make it work."
+date: "2026-02-03"
+author: "Morten Nissen"
+tags:
+  - parallel-agents
+  - claude-code
+  - file-ownership
+  - task-decomposition
+  - developer-tooling
+  - agent-orchestration
+read_time: "7 min"
+target_audience: "developers"
+---
+
+You dispatch three Claude Code agents to build a feature. One writes components,
+one writes API routes, one writes tests. They all finish. You check the result.
+
+Half the work is gone.
+
+The last agent to write `src/types/shared.ts` won. The other two agents' changes
+to that file? Overwritten. No merge. No conflict marker. Just silently erased.
+
+This is the default behavior when you run parallel agents in Claude Code. They
+share the same working directory. There's no file locking. The Agent tool doesn't
+coordinate writes between concurrent instances. If two agents write the same file,
+the last one wins.
+
+I hit this wall enough times that I built a system to prevent it structurally.
+Not with locks or queues or retry logic. With ownership boundaries decided before
+any agent starts working.
+
+## The actual problem: shared mutable state
+
+The core issue is familiar to anyone who's debugged a race condition. Multiple
+agents writing to the same filesystem is shared mutable state. The fixes are the
+same too: either serialize access, or eliminate the sharing.
+
+Serializing kills the whole point of parallel dispatch. If Agent B waits for Agent
+A to finish with a file before writing it, you've built a sequential pipeline with
+extra overhead.
+
+Eliminating the sharing is the move. If no two agents ever write the same file,
+conflicts become impossible. Not unlikely. Impossible. The constraint is structural,
+not behavioral.
+
+That's what file-ownership does.
+
+## File-ownership: one file, one agent
+
+The rule is simple. Before dispatching parallel agents, every file that will be
+created or modified gets assigned to exactly one agent. That agent owns it. Other
+agents can read it, but only the owner writes.
+
+If two agents both need to write the same file, you have three options:
+
+1. Assign it to one agent, and expose the result as a read-only interface for the other.
+2. Split the file into two files, each owned by a separate agent.
+3. Make it a sequential pre-step that runs before parallel dispatch. A coordinator
+   writes the shared file first, then both agents read it.
+
+There is no option four. You do not assign one file to two agents and hope they
+don't conflict. They will.
+
+## How the pipeline works
+
+Three skills in smedjen handle this. They run in sequence before any agent
+touches a file.
+
+### Step 1: Task decomposer breaks work into subtasks
+
+The task-decomposer takes a feature description and splits it into independently
+testable subtasks. Each subtask gets a complexity estimate (S/M/L/XL), a file
+scope, a dependency graph, and a 5-factor risk score covering scope, reversibility,
+ambiguity, impact, and dependencies.
+
+The dependency graph is key. Subtasks with no dependencies on each other are
+parallel-eligible. Subtasks that depend on another's output are serialized into
+later waves.
+
+If the task description is too vague (ambiguity factor above 3.5), the decomposer
+halts and asks for clarification instead of guessing. Bad decomposition produces
+bad ownership assignments, which produces conflicts downstream. Garbage in,
+garbage out.
+
+### Step 2: File-ownership assigns boundaries
+
+Once subtasks exist, file-ownership maps every file to exactly one stream. It
+detects natural boundaries using patterns from the codebase:
+
+```text
+Layer architecture (controller/service/repo) → one stream per layer
+Feature slices (user/order/product)          → one stream per feature
+Test vs implementation                       → test stream reads from impl streams
+Client vs server                             → one stream per platform
+```
+
+For each cross-stream dependency, the system writes an interface contract before
+dispatch. Contracts are lightweight: function signatures and types, not
+implementations. They define what the consuming agent can expect from the
+producing agent's output.
+
+### Step 3: Agent dispatcher launches parallel agents
+
+The agent-dispatcher groups parallel-eligible subtasks into waves. Wave 0 runs
+first (all independent subtasks). When Wave 0 completes, newly unblocked subtasks
+form Wave 1. Maximum 4 agents per wave.
+
+Each agent gets a structured prompt with its file ownership list:
+
+```text
+You are implementing stream-frontend: Dashboard UI components
+
+Files you OWN (you must create/modify these):
+  - src/components/Dashboard.tsx
+  - src/components/MetricsCard.tsx
+  - src/components/ActivityFeed.tsx
+
+Files you may READ (do not modify):
+  - src/types/shared.ts (written by coordinator)
+  - src/api/routes.ts (written by stream-api)
+
+Interface contracts you must follow:
+  .ai/plans/dashboard/contracts/api-frontend.md
+
+Do not write any file outside your ownership list.
+```
+
+If an agent fails, the dispatcher retries once at the same model tier with the
+error context appended. If it fails again, it escalates to a higher tier
+(haiku to sonnet, sonnet to opus). After three attempts, it marks the subtask
+as failed and skips downstream dependents. But it keeps running everything else.
+One failed branch doesn't abort the whole dispatch.
+
+## Real example: building a dashboard
+
+Here's what this looks like for a typical feature. Three parallel streams building
+a metrics dashboard: frontend components, API endpoints, and tests.
+
+The coordinator first writes the shared types file. Then three agents run in
+parallel.
+
+### The ownership file
+
+```yaml
+# .ai/plans/dashboard/ownership.yml
+plan: "dashboard-feature"
+decomposed: "2026-03-12"
+streams:
+  - id: "stream-frontend"
+    description: "Dashboard UI components"
+    owns:
+      - "src/components/Dashboard.tsx"
+      - "src/components/MetricsCard.tsx"
+      - "src/components/ActivityFeed.tsx"
+    reads:
+      - "src/types/shared.ts"
+      - "src/api/routes.ts"
+    depends_on: []
+
+  - id: "stream-api"
+    description: "API endpoints for dashboard data"
+    owns:
+      - "src/api/routes/dashboard.ts"
+      - "src/api/middleware/metrics-auth.ts"
+    reads:
+      - "src/types/shared.ts"
+      - "src/db/connection.ts"
+    depends_on: []
+
+  - id: "stream-tests"
+    description: "Test suite for dashboard"
+    owns:
+      - "tests/components/Dashboard.test.tsx"
+      - "tests/api/dashboard.test.ts"
+      - "tests/integration/dashboard-flow.test.ts"
+    reads:
+      - "src/components/Dashboard.tsx"
+      - "src/api/routes/dashboard.ts"
+    depends_on: ["stream-frontend", "stream-api"]
+
+shared_files:
+  - path: "src/types/shared.ts"
+    written_by: "coordinator"
+    written_before_dispatch: true
+```
+
+Notice: the test stream depends on both frontend and API streams. It can't run
+until they finish. So Wave 0 dispatches the frontend and API agents in parallel,
+and Wave 1 dispatches the test agent after both complete.
+
+No file appears in two streams' `owns` lists. The shared types file is written by
+the coordinator before any agent starts. Interface contracts define exactly what
+the API returns and what the components expect.
+
+### The dispatch result
+
+```yaml
+# .ai/tasks/dispatched/dashboard.yml (abbreviated)
+task_id: "dashboard-feature"
+status: "complete"
+waves:
+  - wave: 0
+    subtasks:
+      - subtask_id: "stream-frontend"
+        tier: "senior"
+        status: "success"
+        attempts: 1
+        files_written:
+          - "src/components/Dashboard.tsx"
+          - "src/components/MetricsCard.tsx"
+          - "src/components/ActivityFeed.tsx"
+
+      - subtask_id: "stream-api"
+        tier: "senior"
+        status: "success"
+        attempts: 1
+        files_written:
+          - "src/api/routes/dashboard.ts"
+          - "src/api/middleware/metrics-auth.ts"
+
+  - wave: 1
+    subtasks:
+      - subtask_id: "stream-tests"
+        tier: "senior"
+        status: "success"
+        attempts: 1
+        files_written:
+          - "tests/components/Dashboard.test.tsx"
+          - "tests/api/dashboard.test.ts"
+          - "tests/integration/dashboard-flow.test.ts"
+
+summary:
+  total_subtasks: 3
+  succeeded: 3
+  failed: 0
+  ownership_violations: 0
+```
+
+Zero ownership violations. Three agents, eight files, no conflicts. The frontend
+and API agents ran simultaneously. The test agent waited for both, then ran with
+full read access to everything they produced.
+
+## Git worktrees for full isolation
+
+File-ownership prevents write conflicts at the logical level. Git worktrees add
+filesystem isolation. Each agent works in its own worktree at
+`.worktrees/<name>/`, on its own branch. No shared working directory at all.
+
+The worktree lifecycle is managed by kronen's git-worktree-isolation skill:
+
+```text
+CREATE  -> gitignore check -> git worktree add -> setup -> baseline verify
+WORK    -> normal development in .worktrees/<name>/
+FINISH  -> choose: merge | pr | keep | discard
+```
+
+When the feature is done, you merge each worktree's branch back. Because the
+branches touched different files, the merge is clean. File-ownership guarantees
+it.
+
+This is belt and suspenders. File-ownership alone prevents conflicts. Worktrees
+add an extra layer that makes it physically impossible for two agents to
+interfere, even if ownership assignments had a bug.
+
+## When this breaks
+
+Honesty section. This system has real limitations.
+
+**Tightly coupled features don't parallelize well.** If every change touches the
+same three files, file-ownership can't split the work without creating artificial
+boundaries that make the code worse. The decomposer might produce technically
+valid subtasks that produce architecturally bad output. Sometimes sequential is
+the right call.
+
+**File-level granularity is the floor.** File-ownership works at the file level,
+not the function level. Two agents can't work on different functions in the same
+file. If your codebase has god files with 2000 lines, you'll hit this limit fast.
+The fix is to split the file first, but that's a separate task.
+
+**Decomposition quality determines everything.** The whole system is only as good
+as the initial task breakdown. If the decomposer misses a file, assigns it to the
+wrong stream, or draws the wrong dependency edges, you'll get either conflicts or
+broken output. The ambiguity gate helps (it refuses to decompose vague tasks), but
+it can't catch every bad decomposition.
+
+**Max 4 agents per wave.** This is a practical resource constraint. If your
+feature needs 8 parallel streams, you're running two sub-waves. Still faster than
+sequential, but not as parallel as you might want.
+
+**Interface contracts add overhead.** For small features, writing interface
+contracts between streams costs more time than the parallelism saves. If the
+feature takes one agent 10 minutes to build sequentially, don't decompose it into
+three parallel streams with contracts. The breakeven is roughly features that
+take 30+ minutes to build solo.
+
+## Try it
+
+The file-ownership skill lives in `plugins/kronen/skills/file-ownership/`. The
+agent-dispatcher and task-decomposer are in `plugins/smedjen/skills/`. They
+work together through the smedjen orchestration pipeline.
+
+Start with a feature that has clear module boundaries. Something where the
+frontend, backend, and tests naturally live in different directories. Run the
+task decomposer, check the ownership file it produces, and dispatch.
+
+The ownership.yml it generates is human-readable. Check it before dispatch.
+If the boundaries look wrong, adjust them. The system is opinionated but not
+stubborn.
+
+```text
+# The ownership file is always at:
+.ai/plans/<plan-name>/ownership.yml
+
+# Interface contracts at:
+.ai/plans/<plan-name>/contracts/<boundary>.md
+
+# Dispatch records at:
+.ai/tasks/dispatched/<task-id>.yml
+```
+
+Five plugins, one workflow. This is what happens when you treat agent
+coordination as a structural problem instead of a behavioral one.

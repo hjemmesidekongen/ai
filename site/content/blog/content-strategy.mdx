@@ -1,0 +1,223 @@
+---
+title: "Content Strategy That Writes Itself"
+description: "Most content strategies die in a spreadsheet. Here's a system that turns pillar planning into actual drafts — with structured ratios, topic mapping, and brand-aware copy generation."
+date: "2026-03-03"
+author: "Morten Nissen"
+tags:
+  - content-strategy
+  - seo
+  - content-pillars
+  - editorial-calendar
+  - ai-content
+  - claude-code
+  - hjemmesidekongen
+read_time: "7 min"
+target_audience: "seo"
+---
+
+You've built a content strategy before. You know the drill. A spreadsheet with tabs for pillar topics, a color-coded editorial calendar, a Notion board with 47 cards in "To Write." It looks great on Tuesday. By Friday, nobody's opened it.
+
+The problem isn't the strategy. The problem is that strategy documents don't write content. People do. And people get busy, lose context, forget what the pillar ratios were supposed to be, and default to whatever feels right that week.
+
+I ran into this exact problem while building ai.hjemmesidekongen.dk — a documentation and showcase site for a five-plugin Claude Code ecosystem. I needed 14 blog posts across 6 audience segments, each mapped to a specific plugin showcase. And I needed the strategy to survive past the first week.
+
+So I built a system where the strategy produces the copy. Not "AI writes your blog posts" — that's a different (worse) pitch. What I mean is: the planning framework feeds directly into a content writer that understands your brand voice, your audience, and your editorial ratios. The strategy stays alive because it's connected to execution.
+
+Here's how it works.
+
+## The Spreadsheet Graveyard
+
+Every SEO team I've worked with has a content strategy artifact. Sometimes it's a spreadsheet. Sometimes it's a Miro board. Sometimes it's a 40-page deck from a consultant.
+
+They all share the same failure mode: the strategy exists separately from the writing process. The person creating the brief isn't the person writing the post. The editorial calendar doesn't know what was published last month. The pillar ratios drift because nobody tracks them.
+
+The result is predictable. You end up with 80% promotional content and 20% "thought leadership" posts that are really just product announcements with a different title. Your audience notices. Your rankings plateau. And someone schedules another strategy meeting.
+
+The fix isn't a better spreadsheet. It's closing the gap between "what should we write" and "write it."
+
+## The 40/25/25/10 Framework
+
+The content-strategy-patterns skill in smedjen uses a four-pillar ratio that prevents the promotional drift problem:
+
+```text
+Educational:    40%  — How-tos, tutorials, best practices, tips
+Inspirational:  25%  — Success stories, case studies, transformations
+Conversational: 25%  — Behind-the-scenes, Q&As, community content
+Promotional:    10%  — Product updates, offers, direct CTAs
+```
+
+The numbers aren't arbitrary. Educational content at 40% establishes expertise. That's the foundation your rankings sit on. Inspirational content (case studies, success stories) at 25% provides the social proof that educational content alone can't deliver. Conversational content at 25% builds the audience relationship that makes people come back. And promotional content stays at 10% because that's the threshold before trust erodes.
+
+The hard rule: if promotional exceeds 15%, you're losing audience trust. If educational drops below 30%, your perceived expertise weakens. Track these monthly. The system flags drift automatically.
+
+These aren't categories you sort existing posts into. They're constraints you plan against. When you sit down to plan next month's content, the ratio tells you exactly how many posts of each type you need.
+
+## Mapping Pillars to Topics
+
+Ratios are useless without topics. The next step is defining content pillars — the 3-5 broad themes your brand owns — and mapping specific topics to each one.
+
+Here's how I structured the content pillars for hjemmesidekongen/ai:
+
+```yaml
+content_pillars:
+  - name: "Workflow showcases"
+    percentage: 40
+    example_topics:
+      - "Planning and executing a feature with wave plans"
+      - "From Jira ticket to PR in one session"
+      - "How parallel agents build without merge conflicts"
+
+  - name: "Plugin deep dives"
+    percentage: 25
+    example_topics:
+      - "The 5 plugins: what each one does"
+      - "How hooks prevent goal drift during sessions"
+
+  - name: "Role-specific guides"
+    percentage: 25
+    example_topics:
+      - "Building a visual identity from brand guidelines"
+      - "Content strategy that writes itself"
+
+  - name: "Meta and lessons learned"
+    percentage: 10
+    example_topics:
+      - "How I documented 120+ skills without losing my mind"
+      - "What happens when AI agents review each other"
+```
+
+Notice how these map cleanly to the 40/25/25/10 ratio. Workflow showcases are educational (40%). Plugin deep dives are inspirational in the sense that they show what's possible (25%). Role-specific guides are conversational — they speak directly to a reader's identity and problems (25%). Meta posts are the closest thing to promotional because they're about the system itself (10%).
+
+The pillar names are yours to define. The ratio is the constraint. When you map topics to pillars, you immediately see gaps. If your "educational" column has 12 topics and your "conversational" column has 2, you know where to brainstorm next.
+
+## Building the Calendar
+
+With pillars and topics defined, the editorial calendar fills itself. The content-strategy-patterns skill includes a monthly calendar structure:
+
+```text
+Week 1:
+  Monday:    Educational (blog post)
+  Wednesday: Inspirational (social media)
+  Friday:    Conversational (email/community)
+
+Week 2:
+  Monday:    Educational (video/guide)
+  Wednesday: Case study
+  Friday:    Curated content
+
+Week 3:
+  Monday:    Educational (infographic)
+  Wednesday: Behind-the-scenes
+  Friday:    Community spotlight
+
+Week 4:
+  Monday:    Monthly roundup
+  Wednesday: Thought leadership
+  Friday:    Promotional
+```
+
+One promotional slot per month. That's it. If that feels restrictive, that's the point.
+
+The calendar isn't a rigid publishing schedule — it's a slot allocation template. You pull topics from your pillar map into the appropriate slots. The ratio stays intact because the template enforces it structurally, not through willpower.
+
+## From Strategy to Draft Copy
+
+This is where most content strategy systems stop. You have a plan. Go write.
+
+The content-writer agent in smedjen picks up where the strategy leaves off. It takes three inputs: brand guidelines (loaded from your brand files), a topic brief (pulled from your pillar plan), and the content type template (blog post, social, email — each has a specific structure).
+
+The workflow looks like this:
+
+```text
+1. INTAKE
+   Content type: blog post
+   Audience: SEO specialists
+   Purpose: show how pillar planning works in practice
+   Brand: hjemmesidekongen/ai (technical-casual, first person)
+   Subject: content strategy framework with 40/25/25/10 ratios
+
+2. LOAD CONTEXT
+   Brand: voice.yml (Builder archetype, formality 7/10, dev humor)
+   Skills: content-strategy-patterns + seo-fundamentals + brand-voice-implementation
+
+3. DRAFT
+   Follow blog post template:
+   Hook -> Body sections (3-5 with H2s) -> Conclusion with CTA
+   Keyword in title, first paragraph, one H2, meta description
+
+4. QUALITY GATE (5 checks)
+   - Voice compliance: matches brand voice attributes
+   - AI pattern sweep: no puffery, no hedge phrases
+   - Structural compliance: follows blog post template
+   - Claims audit: no fabricated stats
+   - Scannability: 2-4 sentence paragraphs, headers every 3-4 paragraphs
+
+5. DELIVER
+   Draft + voice decisions + unresolved placeholders + revision notes
+```
+
+The quality gate is the part that matters most for SEO teams. Five checks run sequentially on every draft before delivery. Voice compliance validates against your brand's voice.yml — not generic "professional tone" but your specific formality level, personality archetype, preferred vocabulary, and never-use words. The AI pattern sweep catches the words that signal machine-generated content to readers (and increasingly to search engines): "leverage," "delve," "cutting-edge," "in today's world."
+
+The claims audit prevents the fabrication problem. If the draft includes a statistic, it either has a source or it gets a [NEEDS DATA] placeholder. No exceptions. You'd be surprised how many AI-generated blog posts include numbers that don't exist.
+
+## The Real Example: 14 Posts, 6 Audiences, One System
+
+I built the content plan for ai.hjemmesidekongen.dk using this exact system. The site needed blog posts that would pull in different roles from a digital agency: developers, designers, SEO specialists, project managers, brand managers, and general technical readers.
+
+The brainstorm-to-plan pipeline (kronen's brainstorm-start and brainstorm-decide commands) produced 14 blog posts. Each post maps to a specific audience segment and showcases a specific plugin:
+
+```text
+DEVELOPERS (4 posts, mapped to workflow showcases pillar):
+  - Wave plan execution           -> kronen
+  - Parallel agents without merges -> smedjen
+  - Jira ticket to PR             -> herold
+  - 5-plugin ecosystem overview   -> all plugins
+
+DESIGNERS (2 posts, mapped to role-specific guides pillar):
+  - Visual identity from brand    -> segl
+  - Design tokens to Tailwind     -> segl
+
+SEO SPECIALISTS (2 posts, mapped to role-specific guides pillar):
+  - SEO plan with keyword strategy -> smedjen
+  - Content strategy framework     -> smedjen  <-- you're reading this one
+
+PROJECT MANAGERS (2 posts, mapped to role-specific guides pillar):
+  - Brainstorm to execution plan   -> kronen
+  - Contradiction detection         -> herold
+
+BRAND / MARKETING (2 posts, mapped to plugin deep dives pillar):
+  - Brand from scratch             -> vaabenskjold
+  - Brand-consistent copy          -> smedjen
+
+META (2 posts, mapped to meta pillar):
+  - Documenting 120+ skills        -> system-wide
+  - AI agents reviewing each other -> verification gates
+```
+
+14 posts. The ratio works out to roughly 29% educational (the developer workflow posts), 14% inspirational (brand and plugin deep dives), 43% conversational (role-specific guides that speak directly to a role's pain points), and 14% meta/promotional. That's not a perfect 40/25/25/10, but it's a launch batch. The ongoing calendar will rebalance as new posts fill the educational category.
+
+The point isn't that the numbers are exact. The point is that I can see the distribution, identify the gap (need more educational content post-launch), and plan for it. Without the framework, I'd have 14 posts that "felt right" with no way to evaluate balance.
+
+## What This Gets You
+
+If you're an SEO specialist, the practical output of this system is:
+
+A content plan that survives past Tuesday. The 40/25/25/10 ratio is a structural constraint, not a suggestion. It's baked into the calendar template, so drift requires deliberate override.
+
+Draft copy that matches your brand voice. Not "generic professional" — your specific voice attributes, vocabulary preferences, and anti-patterns. The content-writer agent's quality gate catches voice violations before you do.
+
+No fabricated claims in your drafts. The claims audit runs on every piece of content. Stats either have sources or get placeholder markers. This matters more than most teams realize — one fabricated stat that gets published erodes trust with both readers and search engines.
+
+A repurposing path for every piece. One blog post (like this one) becomes 5 social posts, 1 newsletter feature, 3 carousel slides, and a video script. The content-strategy-patterns skill includes a repurposing matrix that maps these transformations explicitly.
+
+## Try It
+
+The content-strategy-patterns skill and content-writer agent are part of smedjen, the development execution plugin in hjemmesidekongen/ai. The system is open source.
+
+Start with the strategy: define your 3-5 content pillars, assign them to the 40/25/25/10 ratio, and map 5-10 topics per pillar. That exercise alone is worth the time, even if you never use the tooling.
+
+If you want to go further, the content-writer agent turns those topics into brand-aware drafts with quality gates. The gap between "content plan" and "published content" gets a lot smaller when the strategy is connected to execution.
+
+The repo is at github.com/hjemmesidekongen/ai. The content-strategy-patterns skill lives in plugins/smedjen/skills/content-strategy-patterns/. The content-writer agent is at plugins/smedjen/agents/content-writer.md.
+
+Clone it. Read the SKILL.md. Try building a content plan for your own site.

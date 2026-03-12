@@ -1,0 +1,305 @@
+---
+title: "Design Tokens to Tailwind Config in 5 Minutes"
+description: "Turn your design tokens into a working Tailwind config, CSS variables, and DTCG JSON in one command. No manual translation. No update drift."
+date: "2026-02-17"
+author: "Morten Nissen"
+tags:
+  - design-tokens
+  - tailwind
+  - css-variables
+  - design-systems
+  - developer-tools
+  - dtcg
+read_time: "5 min"
+target_audience: "designers"
+---
+
+You have a set of design tokens. Maybe they live in Figma variables, maybe in a spreadsheet,
+maybe in a brand document your designer handed you. Either way, you need them in your
+Tailwind config. So you open tailwind.config.js, start typing hex values, cross-reference
+the font scale, and thirty minutes later you have a config that works but will be wrong
+the moment someone updates the brand colors.
+
+I got tired of doing that translation by hand. So I built a tool that reads a single
+tokens.yml file and spits out three formats at once: Tailwind JSON, CSS custom properties,
+and DTCG JSON. One source of truth, three outputs, zero manual copying.
+
+## The Problem: Manual Token Translation
+
+The gap between design tokens and code is deceptively annoying. It's not hard work
+-- it's tedious work. You're not solving problems, you're copying values from one
+format to another. And every time the design system changes, you do it again.
+
+Worse, the formats diverge. Your Tailwind config uses a nested object with string arrays
+for fontSize. Your CSS variables use flat --kebab-case names. If you also need DTCG format
+for cross-tool compatibility, that's a third structure with $value and $type on every leaf.
+
+Three formats. One set of values. Manual sync between them is where drift happens.
+
+## The Fix: One Command, Three Outputs
+
+The segl:design-tokens command reads your tokens.yml and generates all three formats
+in one pass. It also runs WCAG contrast validation and produces a contrast matrix,
+but the core value for Tailwind users is simple: you get a ready-to-import JSON file
+that matches your design tokens exactly.
+
+Here's what the command does:
+
+```text
+/segl:design-tokens hjemmesidekongen
+```
+
+That's it. It reads .ai/design/hjemmesidekongen/tokens.yml and writes four files:
+
+```text
+.ai/design/hjemmesidekongen/tokens/
+  tailwind.json         # Tailwind theme config
+  variables.css         # CSS custom properties
+  tokens.dtcg.json      # W3C Design Tokens Community Group format
+  contrast-matrix.md    # WCAG contrast validation
+```
+
+## The Input: tokens.yml
+
+The source file is a structured YAML that defines your entire design system. Colors
+with full scales, typography with size/weight/line-height/tracking, spacing, border
+radius, shadows. Here's a trimmed version of the hjemmesidekongen token file showing
+the key sections:
+
+```yaml
+brand: "hjemmesidekongen"
+version: "1.0.0"
+
+color:
+  primary:
+    "50":  { hex: "#fdf4e8" }
+    "100": { hex: "#fae3c4" }
+    "200": { hex: "#f4c98a" }
+    "300": { hex: "#ecaa57" }
+    "400": { hex: "#e69c44" }
+    "500": { hex: "#e1943d" }   # brand color
+    "600": { hex: "#c9782b" }
+    "700": { hex: "#a86020" }
+    "800": { hex: "#7c4518" }
+    "900": { hex: "#573110" }
+    "950": { hex: "#321c08" }
+
+  neutral:
+    "50":  { hex: "#fafaf9" }
+    "100": { hex: "#f4f3f1" }
+    # ... warm greys through 950
+
+typography:
+  families:
+    heading: "'Lato', sans-serif"
+    body:    "'Lato', sans-serif"
+    mono:    "'JetBrains Mono', monospace"
+  scale:
+    h1:   { size: "3rem", line: "1.15", weight: 900 }
+    body: { size: "1rem", line: "1.7",  weight: 400 }
+    # ... full type scale
+
+radius:
+  sm:   "0.125rem"
+  md:   "0.375rem"
+  lg:   "0.5rem"
+  xl:   "0.75rem"
+  full: "9999px"
+```
+
+The full file includes OKLCH values alongside hex (useful for wide-gamut displays),
+semantic token mappings for light and dark mode, spacing definitions, and shadow
+elevations. But the generator works from the hex values, so that's the minimum
+you need to populate.
+
+## The Output: tailwind.json
+
+This is the file you actually care about. Here's the real output from the
+hjemmesidekongen token system -- not a simplified example, the actual generated file:
+
+```json
+{
+  "colors": {
+    "primary": {
+      "50":  "#fdf4e8",
+      "100": "#fae3c4",
+      "200": "#f4c98a",
+      "300": "#ecaa57",
+      "400": "#e69c44",
+      "500": "#e1943d",
+      "600": "#c9782b",
+      "700": "#a86020",
+      "800": "#7c4518",
+      "900": "#573110",
+      "950": "#321c08"
+    },
+    "neutral": {
+      "50":  "#fafaf9",
+      "100": "#f4f3f1",
+      "200": "#e8e6e3",
+      "300": "#d0cdc9",
+      "400": "#aeaaa4",
+      "500": "#8b8780",
+      "600": "#6b685f",
+      "700": "#504d46",
+      "800": "#363330",
+      "900": "#201d1a",
+      "950": "#110f0d"
+    },
+    "success": { "100": "#d4f0e1", "500": "#2e8a58", "700": "#1d5e3c", "900": "#0e3321" },
+    "warning": { "100": "#fef3cd", "500": "#d4820e", "700": "#8f5508", "900": "#4d2e04" },
+    "error":   { "100": "#fde8e8", "500": "#c93b3b", "700": "#8c2020", "900": "#4d0f0f" },
+    "info":    { "100": "#ddeeff", "500": "#2e6fd4", "700": "#1a4a99", "900": "#0d2654" }
+  },
+  "fontFamily": {
+    "heading": ["Lato", "sans-serif"],
+    "body":    ["Lato", "sans-serif"],
+    "mono":    ["JetBrains Mono", "monospace"]
+  },
+  "fontSize": {
+    "display": ["3.75rem",  { "lineHeight": "1.1",  "letterSpacing": "-0.02em" }],
+    "h1":      ["3rem",     { "lineHeight": "1.15", "letterSpacing": "-0.02em" }],
+    "h2":      ["2.25rem",  { "lineHeight": "1.2",  "letterSpacing": "-0.01em" }],
+    "h3":      ["1.875rem", { "lineHeight": "1.25", "letterSpacing": "-0.01em" }],
+    "body":    ["1rem",     { "lineHeight": "1.7"  }],
+    "body-sm": ["0.875rem", { "lineHeight": "1.6"  }],
+    "caption": ["0.75rem",  { "lineHeight": "1.5"  }]
+  },
+  "borderRadius": {
+    "none": "0",
+    "sm":   "0.125rem",
+    "DEFAULT": "0.375rem",
+    "md":   "0.5rem",
+    "lg":   "0.75rem",
+    "xl":   "1rem",
+    "full": "9999px"
+  },
+  "boxShadow": {
+    "sm":         "0 1px 2px 0 rgba(0,0,0,0.05)",
+    "DEFAULT":    "0 1px 3px 0 rgba(0,0,0,0.10), 0 1px 2px -1px rgba(0,0,0,0.10)",
+    "md":         "0 4px 6px -1px rgba(0,0,0,0.10), 0 2px 4px -2px rgba(0,0,0,0.10)",
+    "brand-glow": "0 0 0 3px rgba(225,148,61,0.30)"
+  }
+}
+```
+
+Notice a few things. The fontSize entries include lineHeight and letterSpacing as
+Tailwind expects -- you get text-h1, text-body, text-caption as utility classes with
+the correct line-height baked in. The color scales follow Tailwind's numeric convention
+(50 through 950), so bg-primary-500 and text-neutral-900 work immediately. And the
+semantic colors (success, warning, error, info) get their own scales with the stops
+that actually matter: a light background tint, the default, a dark variant, and the
+darkest for high-contrast contexts.
+
+## Importing Into Your Tailwind Config
+
+The generated JSON drops straight into your tailwind.config. No reshaping needed:
+
+```javascript
+const tokens = require('./.ai/design/hjemmesidekongen/tokens/tailwind.json')
+
+/** @type {import('tailwindcss').Config} */
+module.exports = {
+  content: ['./src/**/*.{js,ts,jsx,tsx}'],
+  theme: {
+    extend: {
+      colors: tokens.colors,
+      fontFamily: tokens.fontFamily,
+      fontSize: tokens.fontSize,
+      borderRadius: tokens.borderRadius,
+      boxShadow: tokens.boxShadow,
+    },
+  },
+}
+```
+
+Now your components use the token values directly:
+
+```html
+<!-- Primary CTA button -->
+<button class="bg-primary-500 text-neutral-900 font-heading font-bold
+               rounded px-6 py-3 shadow hover:bg-primary-600
+               focus:ring-2 focus:ring-primary-500/30">
+  Get started
+</button>
+
+<!-- Card with warm neutral palette -->
+<div class="bg-white border border-neutral-200 rounded-lg shadow-md p-6">
+  <h3 class="text-h4 font-heading font-bold text-neutral-900">
+    Card title
+  </h3>
+  <p class="text-body text-neutral-600 mt-2">
+    Body text using the secondary text color -- warm grey, not cool grey.
+  </p>
+</div>
+```
+
+> **Tip:** The CTA button uses text-neutral-900 on bg-primary-500, not white text. White on that
+> orange only hits 2.4:1 contrast -- an accessibility failure. Dark text on orange scores
+> 6.9:1 (AAA). The contrast matrix catches this automatically, but it's worth knowing
+> why your buttons look different from the usual white-on-brand pattern.
+
+## The CSS Variables Bonus
+
+The same command also generates variables.css with every token as a CSS custom property.
+This is useful when you need tokens outside of Tailwind -- in animations, third-party
+components, or vanilla CSS overrides:
+
+```css
+:root {
+  --color-primary-500: #e1943d;
+  --color-neutral-900: #201d1a;
+  --font-heading: 'Lato', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+  --radius-md: 0.375rem;
+  --shadow-brand-glow: 0 0 0 3px rgba(225,148,61,0.30);
+
+  /* Semantic surface tokens */
+  --surface-base: var(--color-neutral-50);
+  --text-primary: var(--color-neutral-900);
+  --border-default: var(--color-neutral-200);
+  --brand-default: var(--color-primary-500);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --surface-base: var(--color-neutral-950);
+    --text-primary: var(--color-neutral-50);
+    --border-default: var(--color-neutral-700);
+    --brand-default: var(--color-primary-500);
+  }
+}
+```
+
+The dark mode block only overrides the semantic tokens that change. The primitive
+color scales stay the same -- primary-500 is still #e1943d in both modes. What changes
+is which primitives the semantic tokens point to.
+
+## When Tokens Change
+
+This is where the single-source approach pays off. When the brand color shifts from
+#e1943d to something else, you update one line in tokens.yml and re-run the command.
+The Tailwind JSON, CSS variables, and DTCG file all regenerate. No hunting through
+config files. No forgetting to update the dark mode override.
+
+The contrast matrix regenerates too, which means you'll catch accessibility regressions
+immediately. Changed a color that now fails WCAG AA? The tool flags it before the code
+ships.
+
+## What This Doesn't Do
+
+A few honest caveats. This tool generates static JSON files -- it doesn't watch for
+changes or auto-rebuild. You run the command when tokens change and commit the output.
+It also doesn't handle component-level tokens (button padding, card gaps) -- those
+are composition decisions that belong in your component code, not in the token layer.
+
+And it requires your tokens in a specific YAML structure. If your tokens live in Figma,
+you'll need to export them to the tokens.yml format first. That's a one-time setup
+cost, not an ongoing one, but it's worth knowing upfront.
+
+## Try It
+
+If you're working with design tokens and Tailwind, the segl plugin is part of the
+hjemmesidekongen-ai monorepo. The design-tokens command is at /segl:design-tokens.
+Point it at a tokens.yml and you'll have a working Tailwind config before your coffee
+gets cold.

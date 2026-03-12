@@ -1,0 +1,264 @@
+---
+title: "Planning and Executing a Feature with Wave Plans"
+description: "Wave plans decompose features into dependency-ordered steps with verification gates. Here's how to plan, execute, and resume builds in Claude Code."
+date: "2026-01-30"
+author: "Morten Nissen"
+tags: ["claude-code", "wave-plans", "kronen", "planning", "developer-workflow", "parallel-execution"]
+read_time: "8 min"
+target_audience: "developers"
+---
+
+You start a Claude Code session. You describe what you want built. Claude starts writing files. Halfway through, you realize it built the auth middleware before the database schema existed, so now the middleware imports a module that doesn't exist yet. You course-correct. It backtracks. You lose 15 minutes.
+
+This happens because there's no plan. No dependency ordering. No structure that says "build the schema first, then the middleware, then the routes." You're relying on the model to hold the entire dependency graph in its head, and it frequently gets it wrong.
+
+Wave plans fix this. They decompose a feature into tasks, sort those tasks by dependency order into waves, and execute one wave at a time with verification between each step. Nothing advances until the previous wave checks out.
+
+I built this into kronen (The Crown) because I kept hitting the same problem: Claude Code is good at writing code, but bad at sequencing work. Wave plans give it a structure to follow.
+
+## What wave plans actually are
+
+A wave plan is a YAML file that describes your work as tasks grouped into waves. Each wave contains tasks that can run in parallel because they have no file-ownership conflicts. Waves execute in order because later waves depend on earlier ones.
+
+The plan-engine handles three things automatically:
+
+**Dependency resolution.** It runs a topological sort on your task list. Tasks with no dependencies land in Wave 1. Tasks that depend on Wave 1 outputs land in Wave 2. And so on. If there's a circular dependency, it tells you instead of guessing.
+
+**File-ownership isolation.** Two tasks that write to the same file can't run in the same wave. The engine checks every pair of tasks within a wave for write conflicts. If it finds one, it bumps the less-critical task to the next wave. This is what makes parallel execution safe. No merge conflicts, no overwrites.
+
+**Model-tier assignment.** Simple tasks (scaffolding, config generation) get assigned to Haiku. Implementation tasks get Sonnet. Reviews and architecture decisions get Opus. You're not paying Opus prices for boilerplate.
+
+## Creating a plan
+
+You start with `/plan:create` and describe what you want to build. The command decomposes your description into tasks, identifies dependencies between them, figures out which files each task will touch, and runs the plan-engine to produce a wave plan.
+
+Let's say you're adding OAuth authentication to an existing app. You run:
+
+```bash
+/plan:create Add OAuth 2.0 authentication with Google and GitHub providers.
+Include token storage, session management, and protected route middleware.
+```
+
+The engine breaks this down, resolves dependencies, checks for file conflicts, and produces a plan. Here's what the output looks like:
+
+```yaml
+plan: add-oauth
+created_at: "2026-03-12"
+status: pending
+total_tasks: 6
+total_waves: 4
+
+tasks:
+  - id: t1
+    name: "Create OAuth config schema"
+    depends_on: []
+    files_written: ["src/config/oauth.ts"]
+    model_tier: junior
+
+  - id: t2
+    name: "Build token storage module"
+    depends_on: ["t1"]
+    files_written: ["src/auth/token-store.ts", "src/auth/types.ts"]
+    model_tier: senior
+
+  - id: t3
+    name: "Build session management"
+    depends_on: ["t1"]
+    files_written: ["src/auth/session.ts", "src/middleware/session.ts"]
+    model_tier: senior
+
+  - id: t4
+    name: "Implement Google provider"
+    depends_on: ["t2"]
+    files_written: ["src/auth/providers/google.ts"]
+    model_tier: senior
+
+  - id: t5
+    name: "Implement GitHub provider"
+    depends_on: ["t2"]
+    files_written: ["src/auth/providers/github.ts"]
+    model_tier: senior
+
+  - id: t6
+    name: "Build protected route middleware"
+    depends_on: ["t2", "t3"]
+    files_written: ["src/middleware/auth-guard.ts", "src/routes/auth.ts"]
+    model_tier: senior
+
+waves:
+  - wave: 1
+    tasks: ["t1"]
+    parallel: false
+    rationale: "Config schema has no dependencies — build first"
+    verification:
+      type: data_validation
+      checks:
+        - "oauth.ts exports valid config interface"
+        - "Environment variables documented"
+
+  - wave: 2
+    tasks: ["t2", "t3"]
+    parallel: true
+    rationale: "Token storage and sessions both depend on config, write different files"
+    verification:
+      type: code_validation
+      checks:
+        - "token-store.ts handles refresh token rotation"
+        - "session.ts integrates with existing middleware stack"
+
+  - wave: 3
+    tasks: ["t4", "t5"]
+    parallel: true
+    rationale: "Both providers depend on token storage, write separate provider files"
+    verification:
+      type: code_validation
+      checks:
+        - "Google provider handles OAuth 2.0 code exchange"
+        - "GitHub provider handles OAuth 2.0 code exchange"
+        - "Both providers conform to shared provider interface"
+
+  - wave: 4
+    tasks: ["t6"]
+    parallel: false
+    rationale: "Auth guard depends on both token storage and sessions"
+    verification:
+      type: integration_test
+      checks:
+        - "Protected routes return 401 without valid session"
+        - "Auth routes handle callback from both providers"
+    qa_review: true
+```
+
+Notice Wave 2: token storage and session management run in parallel because they write to completely different files. The engine verified this. Same with Wave 3 — Google and GitHub providers are isolated from each other.
+
+The engine also generates a `plan.md` file alongside the plan. This is an implementation contract — it records the standards for this specific plan (testing requirements, documentation rules, things to avoid). Every task agent reads `plan.md` before starting work. This prevents mid-plan amnesia where later tasks forget the constraints you established at the beginning.
+
+## Executing the plan
+
+Once you're happy with the plan, you run it:
+
+```bash
+/plan:execute
+```
+
+The executor works through waves in order. For each wave, it:
+
+1. Updates `state.yml` to mark the wave as `in_progress`
+2. Dispatches tasks (parallel agents for parallel waves, sequential otherwise)
+3. Collects outputs into `artifacts/` files
+4. Runs the plan-verifier
+
+The plan-verifier is a two-stage gate. Stage 1 runs mechanical checks: do the expected files exist? Do they match the schema? Are there any file-ownership violations? This is fast and catches structural problems.
+
+Stage 2 only runs if Stage 1 passes. It's a quality review — does the code actually do what the task description says? Is the implementation complete? Are there obvious issues?
+
+If either stage fails, the executor halts, logs the errors to `state.yml`, and tells you what went wrong. Nothing sneaks through to the next wave.
+
+```text
+Plan: add-oauth
+6 tasks across 4 waves
+
+Wave 1 (sequential): t1
+  Executing: Create OAuth config schema... done
+  Verification: data_validation — PASSED
+  -> Wave 1 completed
+
+Wave 2 (parallel): t2, t3
+  Dispatching 2 agents...
+  [agent-1] Build token storage module... done
+  [agent-2] Build session management... done
+  Verification: code_validation — PASSED
+  -> Wave 2 completed
+
+Wave 3 (parallel): t4, t5
+  Dispatching 2 agents...
+  [agent-1] Implement Google provider... done
+  [agent-2] Implement GitHub provider... done
+  Verification: code_validation — PASSED
+  -> Wave 3 completed
+
+Wave 4 (sequential): t6
+  Executing: Build protected route middleware... done
+  Verification: integration_test — PASSED
+  QA review: PASSED
+  -> Wave 4 completed
+
+Plan complete. All waves verified.
+```
+
+## Resuming after a break
+
+Sessions end. You close your laptop. Claude Code compacts context. The plan state survives all of this because it lives in files, not in memory.
+
+When you come back, run:
+
+```bash
+/plan:resume
+```
+
+The resume command finds the most recent active plan, reads `state.yml` to figure out where you stopped, and picks up from there. If you were mid-wave, it re-runs the interrupted task. If you finished a wave, it starts the next one.
+
+It also does a quick spot-check to make sure the files from completed waves still exist on disk. If something got deleted between sessions, it tells you instead of building on top of missing foundations.
+
+The state file tracks everything: which waves are done, which tasks completed, what errors occurred, and recovery notes summarizing progress. After a `/compact`, you don't lose any of this.
+
+```yaml
+command: "plan:execute"
+project: "add-oauth"
+status: "in_progress"
+current_phase: "wave-3"
+
+phases:
+  - name: "wave-1"
+    status: "completed"
+  - name: "wave-2"
+    status: "completed"
+  - name: "wave-3"
+    status: "in_progress"
+  - name: "wave-4"
+    status: "pending"
+
+errors: []
+
+recovery_notes: >
+  Waves 1-2 complete. Token storage, session management, and config
+  all verified. Currently executing OAuth providers in wave 3.
+```
+
+## When it breaks
+
+I've been using wave plans for a few weeks now, and they're not perfect. Here's where they fall short.
+
+**Large tasks need manual decomposition.** If you describe something vague like "add a dashboard," the planner will produce tasks, but the decomposition quality depends entirely on how much detail you provide. Garbage in, garbage out. For complex features, I've found it's better to brainstorm first (kronen has a `/brainstorm:start` command for this) and feed the decisions into the planner.
+
+**Over-decomposition of simple tasks.** If you ask it to "add a utility function," you don't need four waves. But the engine doesn't know that — it will sometimes produce a plan with separate waves for "create file," "write function," "add tests," and "update exports." For small changes, skip the plan entirely and just do the work.
+
+**Verification gates add overhead.** Each wave boundary runs the verifier, which takes time. For a 4-wave plan, that's three verification checkpoints. If every task is trivial, the verification time can exceed the implementation time. The tradeoff is worth it for multi-file features where a mistake in Wave 1 would cascade through everything else. For a config change? Just edit the file.
+
+**Parallel agents aren't free.** When a wave runs tasks in parallel, each task spawns a subagent. Those agents need their own context, which means copying the plan rules and dependency artifacts into each one. For plans with many small parallel tasks, the overhead of agent setup can eat into the time savings.
+
+> **Tip:** Rule of thumb: use wave plans for features that touch 3+ files with dependencies between them. For anything smaller, the overhead isn't worth it.
+
+## The commands
+
+Quick reference for the three commands:
+
+**`/plan:create <description>`** — Takes a task description (or path to a task list file) and produces a wave plan at `.ai/plans/{name}/`. Generates `plan.yml` (the wave structure), `plan.md` (implementation contract), and `state.yml` (execution state).
+
+**`/plan:execute [plan-name]`** — Runs the plan wave by wave. Uses the most recent plan if you don't specify one. Supports `--start-wave N` to skip ahead. Dispatches parallel agents for parallel waves. Runs verification between every wave.
+
+**`/plan:resume [plan-name]`** — Finds the most recent active plan and picks up where it left off. Handles session breaks, compaction, and crash recovery. Validates that completed work still exists before continuing.
+
+There's also `/plan:status` if you want to check progress without executing anything, and `/plan:dynamic` for goal-oriented plans where you don't know all the waves upfront — but that's a separate post.
+
+## Try it
+
+Wave plans live in the kronen plugin. Clone the repo, install the plugin, and run `/plan:create` with a feature description. Start with something concrete — "add dark mode toggle with CSS custom properties and localStorage persistence" is better than "improve the UI."
+
+The plan files are plain YAML. You can read them, edit them, and version-control them. If the engine makes a bad decomposition, fix the YAML and run `/plan:execute`. The system doesn't care how the plan was created — it just executes what's in the file.
+
+```
+git clone https://github.com/hjemmesidekongen/ai
+```
+
+Then point your Claude Code plugin config at `plugins/kronen/` and start planning.

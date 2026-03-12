@@ -1,0 +1,99 @@
+---
+title: "How I Documented 120+ Skills Without Losing My Mind"
+description: "Building 120+ Claude Code skills meant documenting 120+ skills. Here's the system that made it survivable: creator tools, reviewer agents, and an 80-line rule."
+date: "2026-03-10"
+author: "Morten Nissen"
+tags:
+  - documentation
+  - skills
+  - meta
+  - process
+  - automation
+read_time: "7 min"
+target_audience: "everyone"
+---
+
+120 skills. Five plugins. Each skill needs a SKILL.md with a description, usage instructions, a checkpoint, and references. Plus 30 commands, 12 agents, and hooks. The documentation surface area is roughly 200 individual components, each with its own file.
+
+I'm not going to pretend this was fun. Documentation is the part of building a system that nobody celebrates and everybody needs. But I did find a process that made it survivable. Not enjoyable — survivable.
+
+Here's what worked, what didn't, and what I'd do differently.
+
+## The 80-line rule
+
+Every SKILL.md file is capped at 80 lines. If you can't explain a skill in 80 lines, either the skill is too complex or your explanation is too verbose. Usually both.
+
+Overflow content goes to `references/process.md` — the detailed step-by-step that power users need but new users don't. The SKILL.md is the quick reference. The process file is the manual.
+
+This constraint was the single most useful decision. Without it, skills would bloat to 200 lines of "just in case" documentation. With it, every word has to earn its place. You'd be surprised how much you can cut when you have to.
+
+## Creator tools, not manual writing
+
+The second most useful decision: never write a SKILL.md manually. Always use the creator skill.
+
+kronen includes four creator tools: `skill-creator`, `command-creator`, `agent-creator`, and `hook-creator`. Each one enforces the correct structure, handles naming conventions, manages registration in ecosystem.json, and stamps the creation date.
+
+Why does this matter? Because format drift is real. After writing 30 skills manually, you'd notice that the frontmatter order varies, some have a `version` field and others don't, date formats inconsistent, and checkpoint sections missing from half of them.
+
+The creators eliminate this. Every skill has the same structure. Every command follows the same template. When you need to update the format, you update the creator — not 120 individual files.
+
+## Reviewer agents as quality gates
+
+Every skill passes a reviewer before it's done. The `skill-reviewer` checks:
+
+- Frontmatter format and required fields
+- Description quality and discoverability
+- Checkpoint presence and testability
+- Reference accuracy (do linked files exist?)
+- Content quality against the 80-line budget
+
+The reviewer is a separate agent from the creator. It's read-only — it reports findings but doesn't fix them. This separation matters because the creator is biased toward "done." The reviewer is biased toward "correct."
+
+About 30-40% of skills had issues on first review. Missing checkpoints. References to files that had been renamed. Descriptions that used the skill name but didn't explain what it actually does. Not bugs — just the kind of drift that happens when you're writing fast.
+
+## The doc-checkpoint skill
+
+After any multi-file task completes, the `doc-checkpoint` skill runs. It checks:
+
+- Did the task add/remove any skills, commands, hooks, or agents?
+- Are the CLAUDE.md structure trees up to date?
+- Do component counts match the actual file count?
+- Are there new components missing from ecosystem.json?
+
+This catches stale documentation before it compounds. Without it, you'd finish a feature, commit, and three sessions later discover that the CLAUDE.md says "41 skills" when you actually have 43.
+
+It's not glamorous work. But stale docs are worse than no docs, because they actively mislead.
+
+## What didn't work
+
+**Documenting retroactively.** About half the skills were built first and documented later. This meant reverse-engineering decisions that had seemed obvious at the time but weren't recorded. "Why does this skill write to findings.md instead of state.yml?" Because... reasons that were clear six weeks ago.
+
+Lesson: document as you build. The creator tools make this easy — use them at creation time, not as a cleanup pass.
+
+**Over-documenting edge cases.** Early skills had extensive "what if" sections covering scenarios that never happen. "If the state file is corrupted AND the user is in a git worktree AND the network is down..." Nobody reads these. Cut them.
+
+**Trying to be comprehensive in SKILL.md.** The 80-line rule emerged from pain. Before the rule, some skills had 200-line SKILL.md files that nobody read past line 40. The constraint forced prioritization.
+
+## The numbers
+
+Final count across five plugins:
+
+- **kronen:** 41 skills, 14 commands, 12 agents
+- **smedjen:** 62 skills, 3 commands, 7 agents
+- **herold:** 9 skills, 8 commands
+- **vaabenskjold:** 4 skills, 5 commands
+- **segl:** 4 skills, 4 commands
+
+That's 120 skills, 34 commands, 19 agents, plus hooks and resources. Each with a SKILL.md, some with process files, all registered in ecosystem.json, all reviewed.
+
+Could I have built fewer skills? Probably. But the bar for creating a skill is intentionally low ("if a workflow takes more than 3 steps to remember, it should be a skill"). The bar for quality is high (reviewer must pass). This combination means many small, focused skills rather than few large, complex ones.
+
+## What I'd tell you
+
+If you're building a plugin ecosystem or any large component library:
+
+1. **Use creator tools from day one.** The investment in building a creator pays for itself after 10 components.
+2. **Cap file length.** Pick a number (80 lines worked for me) and enforce it. Long docs don't get read.
+3. **Separate creation from review.** The thing that builds should not be the thing that grades.
+4. **Run doc-checkpoint after every task.** Stale docs compound. Catching them early costs minutes. Catching them later costs hours of archaeology.
+5. **Document as you build.** Retroactive documentation is reverse engineering. Real-time documentation is just typing a few extra lines while the decisions are fresh.

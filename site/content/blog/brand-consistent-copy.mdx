@@ -1,0 +1,107 @@
+---
+title: "Writing Brand-Consistent Copy Across Every Channel"
+description: "The content-writer agent loads brand guidelines before writing — every draft matches your voice attributes, vocabulary rules, and platform adaptations automatically."
+date: "2026-03-06"
+author: "Morten Nissen"
+tags:
+  - brand-voice
+  - content-writing
+  - smedjen
+  - copy
+  - brand-consistency
+read_time: "7 min"
+target_audience: "brand-marketing"
+---
+
+Brand voice consistency is one of those problems that's easy to describe and hard to solve. You write a style guide. Everyone reads it once. Then every writer, every channel, every sprint produces copy that drifts a little further from the original intent.
+
+The style guide isn't the problem. The problem is that compliance is manual. Every piece of content requires someone to remember the rules, check the vocabulary list, and resist the temptation to write "leverage" instead of "use."
+
+The content-writer agent in smedjen takes a different approach. It loads your brand guidelines before writing anything. The voice attributes, vocabulary rules, anti-patterns, and platform adaptations are all in context. Every draft starts on-brand.
+
+## How it loads brand context
+
+The content-writer agent reads four files from your brand directory:
+
+- `guideline.yml` — positioning, audience, content pillars
+- `voice.yml` — personality, voice attributes, writing patterns, vocabulary
+- `values.yml` — core values, beliefs, decision framework
+- `dos-and-donts.md` — concrete rules with alternatives
+
+These files come from vaabenskjold (the brand plugin). If you've already run `/brand:create` or `/brand:audit`, they exist. The content-writer just reads them.
+
+The `/brand:apply` command loads brand context into the current session. After that, any content generation — by the content-writer agent or by Claude directly — inherits the brand voice.
+
+## Platform-aware output
+
+The voice.yml file includes platform adaptations — how the brand voice should shift for different channels. The content-writer uses these when generating output.
+
+```yaml
+platform_adaptations:
+  social: >
+    More casual. Lean into the "kongen" personality.
+    Short posts. Personal perspective ("Jeg" not "vi").
+  documentation: >
+    Clearest, most instructional voice. Step-by-step.
+    Zero jargon. Screenshots when possible.
+  marketing: >
+    Lead with the client benefit, not the feature.
+    Use "du" extensively. Specific over vague.
+```
+
+Ask for a blog post, and the output matches `blog` adaptation. Ask for a social post, and it shifts to `social`. The underlying brand personality stays constant — what changes is the register and structure.
+
+## Same message, three channels
+
+Here's a real example. The hjemmesidekongen/ai sub-brand announces a new feature: contradiction detection in herold. The content-writer produces three versions from the same brief.
+
+**Blog intro:** "Jira tickets evolve through comments. The original description says one thing, but a comment from the tech lead says something different. Nobody reads ALL the comments before starting work. You code the wrong thing. herold's contradiction detection fixes this by comparing the description against every comment and flagging inconsistencies before you start."
+
+**Social post:** "New in herold: contradiction detection. It reads your Jira ticket comments and flags when they contradict the description. Found 3 conflicts in our last sprint that would have wasted 2 days each."
+
+**Doc entry:** "The contradiction-detection skill compares Jira ticket descriptions against their comments. It flags semantic contradictions with severity levels: blocking (stops work), warning (needs clarification), info (noted difference). Runs automatically during /task:ingest."
+
+Same information. Same brand voice. Different structure, length, and register for each channel.
+
+## The vocabulary guardrails
+
+The voice.yml includes two lists that do more for consistency than any style guide paragraph:
+
+**power_words** — the vocabulary you want to use. For hjemmesidekongen: "professionel," "pålidelig," "personlig," "direkte," "kvalitet." For the AI sub-brand: "structured," "repeatable," "persistent," "composable," "verified."
+
+**never_use** — the words that kill your brand voice. For hjemmesidekongen: "synergier," "skalérbar løsning," "digital transformation." For the AI sub-brand: "revolutionary," "seamless," "leverage," "AI-powered."
+
+The content-writer checks against both lists. It uses the power words naturally and avoids the banned vocabulary. This catches the biggest brand drift vector: individual word choices that slowly erode the voice.
+
+## Anti-pattern enforcement
+
+Beyond vocabulary, the voice.yml defines anti-patterns with explanations and alternatives.
+
+```yaml
+anti_patterns:
+  - pattern: "AI hype language"
+    why: >
+      The whole point is that this is a practical system,
+      not a demo. Hype undermines credibility with developers.
+    instead: >
+      Show what it does. Let the reader decide if
+      it's impressive.
+```
+
+The content-writer avoids these patterns because it reads the anti-pattern list with the "why" explanation. It's not just a blocklist — the rationale helps Claude understand the intent and make judgment calls on edge cases.
+
+## Limitations
+
+**Drafts, not final copy.** The content-writer produces first drafts. Good first drafts — but drafts. Human review catches nuance, timing, and cultural context that brand files can't encode.
+
+**Requires structured brand input.** This only works if you've created brand files through vaabenskjold. If your brand exists as a PDF or a Figma file, you need to run `/brand:audit` first to codify it.
+
+**Voice attributes are guidelines, not rules.** A `formal_casual: 6` is a target, not a hard constraint. Sometimes a piece of content should be more formal or more casual than the default. The content-writer aims for the target but can be directed to override.
+
+**Doesn't replace editorial judgment.** The content-writer doesn't know that your CEO just used the phrase "AI-powered" in a keynote and now the marketing team wants to lean into it. Situational context still requires a human.
+
+## Try it
+
+If you have brand files from vaabenskjold, run `/brand:apply` to load them into your session. Then ask Claude to write anything — a blog post, a social update, a product description. Compare the output with and without brand context loaded. The difference is immediately obvious.
+
+If you don't have brand files yet, start with `/brand:create` or `/brand:audit`. Twenty minutes of brand work pays off across every piece of content you generate afterward.

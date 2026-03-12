@@ -1,0 +1,129 @@
+---
+title: "Brainstorm to Execution Plan"
+description: "Turn open-ended brainstorms into structured decisions and executable wave plans using kronen's brainstorm and planning pipeline."
+date: "2026-02-20"
+author: "Morten Nissen"
+tags:
+  - brainstorming
+  - decision-making
+  - planning
+  - wave-plans
+  - kronen
+  - project-management
+read_time: "8 min"
+target_audience: "project-managers"
+---
+
+Brainstorms are where good ideas go to die. Not because the ideas are bad, but because the gap between "that's a great point" and "here's what we're actually doing" is where everything falls apart.
+
+You leave the meeting with sticky notes and enthusiasm. A week later, nobody remembers which option you picked or why. The execution plan — if one gets written — bears little resemblance to the conversation that was supposed to inform it.
+
+I built a brainstorm-to-plan pipeline in kronen because I kept losing decisions between the thinking and the doing. Here's how it works.
+
+## The pipeline: think, decide, plan
+
+Three commands, three stages:
+
+1. `/brainstorm:start` — open-ended exploration with Claude as sparring partner
+2. `/brainstorm:decide` — extract structured decisions from the conversation
+3. `/plan:create` — turn those decisions into an executable wave plan
+
+Each stage produces a persistent artifact. The brainstorm transcript survives. The decisions get IDs and rationale. The plan references decisions by ID. You can trace any task back to "why did we decide this?"
+
+## Stage 1: The brainstorm
+
+`/brainstorm:start` opens an exploratory conversation. Claude isn't a yes-machine here — it's configured to challenge assumptions, propose alternatives, and play devil's advocate when your reasoning has gaps.
+
+You describe the problem space. Claude asks questions you hadn't considered. You explore options. Claude pushes back on weak tradeoffs. The conversation meanders — and that's the point. Brainstorms aren't supposed to be linear.
+
+```text
+> /brainstorm:start content plan for ai.hjemmesidekongen.dk
+
+Claude: What's the primary goal of the site?
+You: Documentation + showcase for the plugin ecosystem.
+Claude: Who's the audience? That determines everything —
+        docs for existing users vs. marketing for potential users
+        are very different sites.
+You: Both. Developers who might adopt it AND my own reference.
+Claude: That's two audiences with different needs. The developer
+        evaluating adoption needs "why should I care?" The developer
+        already using it needs "how do I do X?" How do you want
+        to handle that tension?
+```
+
+The brainstorm transcript is saved to `.ai/brainstorm/{topic}/`. It persists across sessions. If you `/compact` or restart, the transcript is still there. This is the raw material for decision extraction.
+
+## Stage 2: Extracting decisions
+
+`/brainstorm:decide` reads the transcript and extracts every decision point. For each one, it captures:
+
+- **ID** — a stable reference (D1, D2, D3...)
+- **Title** — what was decided
+- **Decision** — the specific choice made
+- **Rationale** — why this over the alternatives
+- **Alternatives considered** — what was rejected and why
+
+```yaml
+- id: D5
+  title: "Product framing"
+  decision: >
+    'I kept solving the same problems differently every session.
+    So I built a system.' Not positioned around any personal
+    condition. Framed as developer instinct to systematize
+    repetitive work.
+  rationale: >
+    Universal developer experience. Stronger pitch than
+    asking for empathy.
+```
+
+The content plan brainstorm for this very site produced 13 decisions (D1-D13). Product scope, target audience, sub-brand architecture, voice register, sitemap structure, design system approach, blog format, logo direction, content plan for 14 blog posts, and landing page structure.
+
+Each decision is locked — meaning downstream work references it by ID. If the plan says "use the voice register from D4," you can look up exactly what that means and why it was chosen.
+
+## Stage 3: From decisions to wave plan
+
+`/plan:create` takes the decisions and produces a wave-based execution plan. Waves are dependency-ordered phases — wave 1 must complete before wave 2 starts.
+
+```yaml
+planned_waves:
+  - wave_id: "wave-1"
+    title: "Sub-brand + visual identity"
+    # References D2, D3, D4, D5, D7, D9
+  - wave_id: "wave-2"
+    title: "Content writing"
+    # References D6, D8, D12, D13
+  - wave_id: "wave-3"
+    title: "Pencil design"
+    # References D7, D8
+  - wave_id: "wave-4"
+    title: "Site implementation"
+    # References D6, D11
+  - wave_id: "wave-5"
+    title: "Verification"
+```
+
+Each wave breaks down into specific tasks with file assignments, status tracking, and notes that reference the originating decisions. The plan is a YAML file (`state.yml`) that persists across sessions and tracks progress.
+
+When you run `/plan:execute`, it processes wave by wave. After each wave completes, a verification gate checks the work before the next wave starts. If verification fails, you fix the issues before moving forward.
+
+## Why the chain matters
+
+The value isn't in any single stage — it's in the traceability across all three.
+
+A task in wave 4 says "update landing page copy." Why? Because decision D13 defined the landing page structure. Why that structure? Because the brainstorm explored three alternatives and this one balanced the two audience needs identified in D2.
+
+When someone asks "why did we build it this way?" — you don't search Slack or try to remember. You read the decisions.yml. The rationale is right there, with the alternatives that were rejected.
+
+## When this doesn't work
+
+**Solo brainstorms feel weird.** Talking to Claude isn't the same as talking to a colleague. The pushback is good, but it lacks the serendipity of a real conversation between people with different experiences. Best for structured decision-making, not for blue-sky ideation.
+
+**Over-documentation risk.** Not every conversation needs 13 decisions extracted. For a small feature, the brainstorm stage adds overhead. Use it for non-trivial architectural choices, not for "should this button be blue or green."
+
+**Decisions can become rigid.** Once a decision has an ID and downstream references, changing it means updating everything that references it. This is a feature when you want stability, but a friction point when you need to pivot.
+
+## Try it
+
+Pick a real decision you're facing — a feature architecture, a content plan, a technical approach. Run `/brainstorm:start` and explore it honestly. Let Claude challenge your assumptions. Then run `/brainstorm:decide` and see what falls out.
+
+The decisions.yml file is the artifact that makes this worth doing. Everything else is process. That file is the product.

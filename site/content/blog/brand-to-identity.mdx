@@ -1,0 +1,304 @@
+---
+title: "Building a Visual Identity System from Brand Guidelines"
+description: "How segl turns structured brand guidelines into production-ready design tokens — color scales, WCAG validation, CSS variables, and Tailwind config — from a single YAML file."
+date: "2026-02-13"
+author: "Morten Nissen"
+tags:
+  - design-systems
+  - design-tokens
+  - brand-guidelines
+  - wcag
+  - accessibility
+  - visual-identity
+  - css-custom-properties
+  - tailwind
+read_time: "7 min"
+target_audience: "designers"
+---
+
+You have brand guidelines. Maybe a PDF, maybe a Figma file, maybe a designer's
+memory. Somewhere in there are the right colors, the right fonts, and the right
+spacing values. Now get them into production code without losing anything.
+
+That translation — guidelines to code — is where design systems fall apart. Colors
+get approximated. "Use the brand orange" becomes five different hex values across
+three repos. Typography drifts because nobody remembers if body text is 16px or 18px.
+Spacing is "whatever looks right" until it doesn't.
+
+I built a plugin called segl (Danish for "seal," as in royal seal) that takes
+structured brand guidelines and generates a complete visual identity system.
+Color palettes with WCAG validation. Typography scales. Spacing systems. Border
+radius. Shadows. Then it exports everything to CSS custom properties, Tailwind
+config, and W3C DTCG JSON — ready for production.
+
+Here's how it works, with real output from the hjemmesidekongen brand.
+
+## The Problem: Guidelines That Never Reach Code
+
+Most design-to-code workflows break at the same point. A designer creates a brand
+identity. It lives in Figma, or a PDF, or a Notion page. A developer reads it,
+interprets it, and writes CSS. That interpretation step is where drift starts.
+
+The brand color is #e1943d. But is that the button color, the hover color, or the
+link color? The guidelines say "use the brand orange." The developer picks the hex
+for text links. Nobody checks the contrast ratio. It fails WCAG AA at 2.44:1
+against white. The accessibility audit catches it six months later.
+
+Or typography. The guidelines say "Lato for headings and body." Great. What size
+is an H2? What's the line height for body text at 18px? What weight do captions
+use? The guidelines don't say, so every developer invents their own scale.
+
+This isn't a people problem. It's a tooling problem. Guidelines describe intent.
+Code needs exact values. Something has to bridge that gap with precision, not
+interpretation.
+
+## The Approach: Structured Input, Deterministic Output
+
+segl is one of five plugins in the hjemmesidekongen/ai ecosystem. It handles
+visual identity, design tokens, and the bridge to design tools. It pairs with
+a sibling plugin called vabenskjold (coat of arms) that handles brand strategy
+— voice, values, guidelines.
+
+The key insight: if brand guidelines are structured data instead of prose,
+everything downstream becomes deterministic. vabenskjold produces a guideline.yml
+file with the brand's positioning, audience, colors, and typography preferences.
+segl reads that file and generates everything else.
+
+The workflow has three steps:
+
+1. `/segl:design-identity` reads guideline.yml and generates tokens.yml — the
+   single source of truth for every visual decision
+2. `/segl:design-tokens` transforms tokens.yml into platform files — CSS variables,
+   Tailwind JSON, DTCG JSON — plus a WCAG contrast matrix
+3. `/segl:design-page` (optional) bridges tokens into Pencil for design work,
+   injecting every color, font, and spacing value as design variables
+
+Each step validates its own output. Color palettes must have 10-stop scales.
+Typography must include heading, body, and mono families with a full type scale.
+Every foreground/background pair gets checked against WCAG AA thresholds. If
+something fails, the system fixes it before moving on.
+
+## Real Output: From guideline.yml to Production Tokens
+
+Here's what this looks like with real data. The hjemmesidekongen brand has a single
+anchor color: #e1943d (a warm orange). From that one hex value, segl generates the
+full color system.
+
+### Color Scales
+
+Every color gets a 10-stop scale generated using OKLCH interpolation — perceptually
+uniform, so the steps between shades look even to the human eye. Here's the primary
+orange scale:
+
+```yaml
+color:
+  primary:
+    "50":  { hex: "#fdf4e8", oklch: "oklch(97% 0.015 69)" }
+    "100": { hex: "#fae3c4", oklch: "oklch(92% 0.035 69)" }
+    "200": { hex: "#f4c98a", oklch: "oklch(85% 0.075 69)" }
+    "300": { hex: "#ecaa57", oklch: "oklch(78% 0.105 69)" }
+    "400": { hex: "#e69c44", oklch: "oklch(73% 0.128 69)" }
+    "500": { hex: "#e1943d", oklch: "oklch(68% 0.140 69)" }  # brand anchor
+    "600": { hex: "#c9782b", oklch: "oklch(60% 0.135 65)" }
+    "700": { hex: "#a86020", oklch: "oklch(50% 0.118 62)" }
+    "800": { hex: "#7c4518", oklch: "oklch(38% 0.090 60)" }
+    "900": { hex: "#573110", oklch: "oklch(28% 0.065 58)" }
+    "950": { hex: "#321c08", oklch: "oklch(17% 0.040 56)" }
+```
+
+Alongside the primary scale, segl generates a neutral scale (warm greys that
+complement the orange) and semantic colors for success, warning, error, and info
+states. Each semantic color gets four stops: 100 (backgrounds), 500 (default),
+700 (dark text), and 900 (high contrast).
+
+### Semantic Token Mapping
+
+Raw color scales aren't useful alone. You need semantic tokens that say "this
+is the surface color" and "this is the text color on that surface." segl maps
+every scale value to a purpose — and generates both light and dark mode variants.
+
+```yaml
+semantic:
+  light:
+    surface:
+      base:    { ref: "neutral.50",  hex: "#fafaf9" }
+      subtle:  { ref: "neutral.100", hex: "#f4f3f1" }
+      card:    { hex: "#ffffff" }
+      inverse: { ref: "neutral.900", hex: "#201d1a" }
+    text:
+      primary:   { ref: "neutral.900", hex: "#201d1a" }
+      secondary: { ref: "neutral.600", hex: "#6b685f" }
+      brand:     { ref: "primary.700", hex: "#a86020" }
+    brand:
+      default: { ref: "primary.500", hex: "#e1943d" }
+      hover:   { ref: "primary.600", hex: "#c9782b" }
+      active:  { ref: "primary.700", hex: "#a86020" }
+      text_on: { ref: "neutral.900", hex: "#201d1a" }
+```
+
+> **Warning:** Notice text.brand uses primary-700, not primary-500. The brand anchor color
+> (#e1943d) only hits 2.44:1 contrast against white — a hard WCAG AA failure.
+> segl catches this automatically and maps brand text to the darkest shade that
+> passes: primary-700 at 4.6:1. The anchor color still gets used for backgrounds
+> (CTA buttons pair it with neutral-900 text for 6.9:1, which clears AAA).
+
+### WCAG Contrast Matrix
+
+segl generates a full contrast matrix showing every foreground/background pair with
+its ratio and WCAG level. This is the part that catches the problems you'd normally
+find during an accessibility audit — months too late.
+
+```markdown
+| Token          | Hex       | Ratio  | Level | Use case                   |
+|----------------|-----------|--------|-------|----------------------------|
+| neutral-900    | #201d1a   | 17.0:1 | AAA   | Primary body text, headers |
+| neutral-600    | #6b685f   | 5.1:1  | AA    | Secondary/supporting text  |
+| neutral-500    | #8b8780   | 3.3:1  | Large | Large headings only        |
+| neutral-400    | #aeaaa4   | 2.0:1  | FAIL  | Decorative/disabled only   |
+| primary-700    | #a86020   | 4.6:1  | AA    | Orange text links          |
+| primary-800    | #7c4518   | 7.4:1  | AAA   | Small orange text          |
+```
+
+The matrix makes the rules concrete. You can see exactly which shade of grey
+works for body text (neutral-900, neutral-600) and which ones don't (neutral-400
+fails at 2.0:1). You can see that your brand orange needs to darken two stops
+before it's safe as text. No guessing, no "I think this passes."
+
+### CSS Custom Properties Output
+
+The design-tokens skill transforms tokens.yml into three platform formats. Here's
+a section of the CSS output — the file your dev team actually imports:
+
+```css
+:root {
+  /* Color Scale: Primary (Orange) */
+  --color-primary-50:  #fdf4e8;
+  --color-primary-100: #fae3c4;
+  --color-primary-500: #e1943d; /* BRAND — logo, wordmark */
+  --color-primary-700: #a86020; /* min for text on white (AA) */
+  --color-primary-800: #7c4518; /* small text on white (AAA) */
+
+  /* Text Tokens (Light) */
+  --text-primary:   var(--color-neutral-900);  /* 17.0:1 AAA */
+  --text-secondary: var(--color-neutral-600);  /* 5.1:1  AA  */
+  --text-brand:     var(--color-primary-700);  /* 4.6:1  AA  */
+
+  /* Brand Action Tokens */
+  --brand-default:  var(--color-primary-500);  /* #e1943d */
+  --brand-hover:    var(--color-primary-600);  /* #c9782b */
+  --brand-text-on:  var(--color-neutral-900);  /* 6.9:1 AAA on brand bg */
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --text-primary:   var(--color-neutral-50);   /* 18.5:1 AAA */
+    --text-brand:     var(--color-primary-400);  /* 5.9:1  AA  */
+    --brand-hover:    var(--color-primary-400);  /* #e69c44 */
+  }
+}
+```
+
+The inline comments aren't decoration — they carry the WCAG ratios right next to
+the values. When a developer picks --text-brand, they can see it's AA-compliant
+without looking anything up. The dark mode block flips the semantic tokens to
+lighter palette stops, and every pair is re-validated.
+
+The same data exports to Tailwind (as theme JSON) and W3C DTCG format (for tools
+like Style Dictionary or Tokens Studio).
+
+## Typography and Spacing
+
+Color gets the most attention, but typography and spacing are equally structured.
+segl generates a full type scale from display size down to captions, with explicit
+line heights, weights, and tracking values:
+
+```yaml
+typography:
+  families:
+    heading: "'Lato', sans-serif"
+    body:    "'Lato', sans-serif"
+    mono:    "'JetBrains Mono', monospace"
+  scale:
+    h2:       { size: "2.25rem", line: "1.2", weight: 700, tracking: "-0.01em" }
+    body_lg:  { size: "1.125rem", line: "1.7", weight: 400, tracking: "0" }
+    caption:  { size: "0.75rem", line: "1.5", weight: 400, tracking: "0.01em" }
+    label:    { size: "0.875rem", line: "1.4", weight: 700, tracking: "0.04em",
+                transform: "uppercase" }
+```
+
+No more "what size is an H2?" debates. The token file is the answer. Every
+developer on the team reads the same values, and those values trace back to the
+brand guidelines through a documented chain.
+
+Spacing follows Tailwind conventions — a 4px base unit with consistent increments.
+Radius and shadow scales are defined once and referenced everywhere. The system
+includes layout constraints too: 1200px max content width, 720px prose column for
+blog-style readability.
+
+## Bridging to Design Tools
+
+Tokens in code are half the story. Designers need the same values in their design
+tools. The pencil-tokens skill reads tokens.yml and injects every color, font, and
+spacing value into Pencil as design variables. About 50 variables total — colors,
+typography families, spacing stops, radius values, and shadow definitions.
+
+The bridge is one-directional and deliberate. tokens.yml is the source of truth.
+The design tool receives values; it doesn't define them. If a designer wants to
+change the primary color, that change happens in guideline.yml, flows through
+tokens.yml, and arrives in both code and design tools through the same pipeline.
+
+One source. Two outputs. No drift.
+
+## When This Breaks
+
+Honesty time. This system has real constraints.
+
+**It requires structured input.** segl reads YAML, not PDFs. If your brand
+guidelines are a 40-page PDF with mood boards and lifestyle photography, you
+need to extract the structured decisions first. vabenskjold (the brand strategy
+plugin) can help with that, but it's an extra step. You can't point segl at a
+Figma file and get tokens out.
+
+**Color generation is deterministic, not exploratory.** You provide an anchor
+color. segl generates a scale from it using OKLCH interpolation. It doesn't
+suggest alternative palettes or complementary colors. If you want creative color
+exploration, do that in your design tool first, then feed the winner to segl.
+
+**It's opinionated about scale shapes.** 10-stop scales (50 through 950),
+Tailwind-style naming, 4px spacing base. If your design system uses a different
+convention, you'll need to adapt the output. The DTCG JSON export is the most
+flexible format for piping into other tools.
+
+**Dark mode is algorithmic.** segl flips semantic tokens to lighter palette stops
+for dark mode rather than designing a separate dark palette. This works well for
+most cases. It doesn't account for hue shifts or saturation adjustments that a
+designer might prefer in dark contexts.
+
+## Try It
+
+segl is part of the hjemmesidekongen/ai plugin ecosystem, open source at
+github.com/hjemmesidekongen/ai.
+
+If you have brand guidelines (or want to create them):
+
+```bash
+# 1. Create brand guidelines (if you don't have them)
+/vabenskjold:brand-create
+
+# 2. Generate visual identity and tokens
+/segl:design-identity
+
+# 3. Export to CSS, Tailwind, and DTCG
+/segl:design-tokens
+
+# 4. (Optional) Load into Pencil for design work
+/segl:design-page
+```
+
+The output lands in `/.ai/design/{name}/` — tokens.yml as the source of truth, plus
+platform exports in the tokens/ subdirectory. The contrast matrix alone is worth
+the run. Knowing exactly which color pairs pass WCAG before you design a single
+component saves hours of rework.
+
+Brand guidelines should define the system. The system should define the code.
+segl makes sure nothing gets lost in translation.

@@ -1,0 +1,215 @@
+---
+title: "How Contradiction Detection Saves Your Sprint"
+description: "Jira tickets evolve through comments, and nobody reads all of them. Here's how automated contradiction detection catches conflicts before your sprint starts."
+date: "2026-02-24"
+author: "Morten Nissen"
+tags:
+  - project-management
+  - jira
+  - sprint-planning
+  - contradiction-detection
+  - claude-code
+  - herold
+  - workflow-automation
+read_time: "6 min"
+target_audience: "project-managers"
+---
+
+You've been there. Sprint starts Monday. You grab your ticket, read the description, and start building. Two days in, someone asks why you're implementing OAuth when the team agreed on magic links three weeks ago.
+
+You scroll through the Jira comments. There it is — buried under a status update and a question about the database schema. The tech lead changed the entire authentication approach in a comment nobody flagged.
+
+Two days of work. Gone. Not because the decision was wrong, but because the decision was invisible.
+
+This is the problem I built contradiction detection to solve.
+
+## The Real Problem Isn't Bad Communication
+
+Let's be honest about what actually happens to Jira tickets in the real world.
+
+A ticket gets created during sprint planning. The description is clear. Acceptance criteria are written. Everyone nods. The ticket moves to the backlog.
+
+Then life happens. A designer leaves a comment about a UX change. The tech lead responds with a different technical approach. A PM adds scope in a follow-up comment. Another developer asks a clarifying question that subtly reframes the original requirement.
+
+By the time someone picks up the ticket, the description says one thing and the comment thread says something else. Sometimes multiple something elses.
+
+The description becomes a historical artifact — accurate at the time of writing, outdated by the time of implementation.
+
+The standard fix? "Read all the comments before starting work." Sure. In theory, everyone does this. In practice, a ticket with 15 comments and a thread about lunch plans mixed in with requirement changes gets skimmed at best.
+
+The human brain is bad at detecting semantic contradictions across long text. It's good at reading for the gist and moving on. That's exactly the wrong skill for catching a comment from three weeks ago that quietly reverses a core requirement.
+
+## What Contradiction Detection Actually Does
+
+The herold plugin includes a skill called contradiction-detection. It reads a Jira ticket's description and acceptance criteria as the source of truth, then compares every comment against them. When it finds a mismatch, it flags it.
+
+It categorizes each finding by severity:
+
+> **Blocker** — Direct contradiction that changes core behavior. "Use GraphQL" when the spec says REST. Work should not start until this is resolved.
+>
+> **Warning** — Modification that changes acceptance criteria. "Empty search shows recent users" when the AC says "shows nothing." Needs a PM decision.
+>
+> **Info** — Additive extension with no conflict. "Also add search by username." Noted, but doesn't block anything.
+
+Each finding includes three pieces of information: the original text from the description or acceptance criteria, the contradicting text from the comment, and a suggested resolution.
+
+The skill doesn't make decisions for you. It surfaces the conflicts so you can resolve them before writing a single line of code.
+
+## A Real Example: OAuth vs. Magic Links
+
+Here's a realistic ticket that shows the problem clearly.
+
+```yaml title="The Jira ticket after ingestion — .ai/tasks/AUTH-247.yml"
+key: AUTH-247
+summary: "Implement user authentication flow"
+status: pending
+assignee: erik.larsen
+description: |
+  Implement OAuth 2.0 login flow for the web application.
+  Users authenticate via Google or GitHub OAuth providers.
+  On successful auth, create a session token (JWT, 24h expiry).
+  Redirect to /dashboard after login.
+acceptance_criteria:
+  - "User can log in with Google OAuth 2.0"
+  - "User can log in with GitHub OAuth 2.0"
+  - "Session token is JWT with 24-hour expiry"
+  - "Failed auth redirects to /login with error message"
+comments:
+  - author: anna.kovacs
+    date: "2026-02-18"
+    body: "Design for the login page is in Figma — link in the epic."
+  - author: peter.schmidt
+    date: "2026-02-20"
+    body: |
+      Talked about this in the retro. We're dropping OAuth for the MVP
+      and going with magic links instead. Simpler to implement, no
+      third-party dependency. Users enter email, get a link, click it,
+      they're in. We can add OAuth providers in v2.
+  - author: anna.kovacs
+    date: "2026-02-21"
+    body: "Updated the Figma to show an email input instead of OAuth buttons."
+  - author: erik.larsen
+    date: "2026-02-25"
+    body: "Starting this next sprint. Any blockers?"
+```
+
+Four comments. One of them completely reverses the authentication approach. One confirms the reversal. Two are neutral. If you read only the description and acceptance criteria, you'd build OAuth. If you happened to read the comments carefully, you'd build magic links.
+
+Here's what contradiction detection produces:
+
+```yaml title="Contradiction findings written to the same task file"
+contradictions:
+  - severity: blocker
+    original: |
+      Implement OAuth 2.0 login flow. Users authenticate
+      via Google or GitHub OAuth providers.
+    contradicting: |
+      We're dropping OAuth for the MVP and going with magic
+      links instead. Simpler to implement, no third-party
+      dependency.
+    resolution: |
+      Retro decision overrides original spec. Update description
+      and AC to reflect magic link approach. Remove OAuth
+      references. Add OAuth to v2 backlog.
+  - severity: warning
+    original: "Session token is JWT with 24-hour expiry"
+    contradicting: |
+      Magic link flow implies a different session model.
+      Original JWT spec was designed for OAuth callback —
+      magic links may need a different token strategy.
+    resolution: |
+      Clarify session handling for magic link flow. Does the
+      magic link itself act as the token? Or does clicking
+      it create a JWT session? PM decision needed.
+```
+
+Two findings. One blocker, one warning. The blocker catches the obvious reversal: OAuth is out, magic links are in. The warning catches something subtler — the session token spec was written for an OAuth flow that no longer exists. The JWT assumption might not hold for magic links.
+
+That second finding is the one a human would miss. The description says "JWT with 24-hour expiry" and nothing in the comments explicitly contradicts that. But the context changed underneath it. The skill catches the semantic dependency, not just the textual contradiction.
+
+## How It Fits Into Your Workflow
+
+Contradiction detection doesn't run in isolation. It's wired into herold's task ingestion pipeline, which means it runs automatically every time you pull tickets from Jira.
+
+The workflow looks like this:
+
+```bash title="Ingesting a sprint's worth of tickets"
+# Pull all tickets from the current sprint
+/herold:task-ingest "project = AUTH AND sprint in openSprints()" --bulk
+
+# Output:
+# Ingested 12 tickets. 3 have contradictions: AUTH-247, AUTH-251, AUTH-264
+```
+
+Twelve tickets ingested. Three flagged. You now know which tickets need attention before sprint starts — not after someone has been coding for two days.
+
+When you start working on a specific ticket, the contradictions show up again:
+
+```bash title="Starting work on a flagged ticket"
+/herold:task-start AUTH-247
+
+# Output:
+# Key: AUTH-247
+# Summary: Implement user authentication flow
+# Status: in_progress
+#
+# Acceptance Criteria:
+#   - User can log in with Google OAuth 2.0
+#   - User can log in with GitHub OAuth 2.0
+#   - Session token is JWT with 24-hour expiry
+#   - Failed auth redirects to /login with error message
+#
+# WARNING: 2 contradictions detected — review before starting work
+#   [blocker] OAuth 2.0 reversed to magic links (peter.schmidt, 2026-02-20)
+#   [warning] JWT session spec may not apply to magic link flow
+#
+# Ready to work on AUTH-247
+```
+
+The warning is right there, in context, at the moment you're about to start writing code. Not buried in a Jira thread. Not depending on your memory of a retro from three weeks ago.
+
+This is the key design decision: surface contradictions at the point of action, not at the point of ingestion. The ingestion summary tells the PM which tickets are problematic. The task-start warning tells the developer what to resolve before coding.
+
+## What It Catches (And What It Doesn't)
+
+The skill analyzes comments chronologically and understands that later comments can resolve earlier contradictions. If someone says "switch to GraphQL" on Monday and "never mind, keep REST" on Wednesday, the skill downgrades the Monday finding to info and notes the resolution.
+
+It handles the common patterns well:
+
+> **Good at:** Reversed technical decisions. Changed acceptance criteria thresholds. Scope additions that conflict with existing constraints. PM overrides that contradict the original spec. Design changes that invalidate implementation assumptions.
+
+But it has clear limitations, and pretending otherwise would be dishonest.
+
+> **Limited at:** Contradictions between different tickets (it analyzes one ticket at a time). Very long comment threads with 20+ comments (signal-to-noise drops). Implicit contradictions where the conflict requires deep domain knowledge. Comments written in ambiguous language that could be read multiple ways.
+
+It also produces false positives. A comment that says "we should consider using Redis" might get flagged as a modification when it was just thinking out loud. The heuristic defaults to flagging rather than missing — a false positive costs you 30 seconds of reading, a missed contradiction costs you days of rework.
+
+The skill works best with well-structured tickets where the description and acceptance criteria are clear and comments are substantive. If your tickets are a mess of stream-of-consciousness comments and missing AC, contradiction detection will still find things, but the noise floor goes up.
+
+## What This Means for Sprint Planning
+
+The practical change is small but significant. Add one step to your sprint planning process: after ingesting the sprint's tickets, review the contradiction report. Resolve blockers before the sprint starts. Assign warnings to the relevant PM or lead for a decision.
+
+That's it. No new meetings. No new process. Just an automated scan that catches what human scanning misses.
+
+The tickets with zero contradictions? Your developers can start those with confidence. The ones with blockers? Those need a five-minute conversation before they're sprint-ready.
+
+You stop finding out about requirement conflicts on day three of a sprint. You start finding out about them on day zero.
+
+## Try It
+
+Contradiction detection is part of the herold plugin in hjemmesidekongen/ai. If you already have the ecosystem installed, it runs automatically during ticket ingestion. No setup needed.
+
+If you want to run it manually on a specific ticket:
+
+```bash
+# Ingest a single ticket
+/herold:task-ingest AUTH-247
+
+# Or check contradictions on an already-ingested ticket
+# Just ask: "check contradictions on AUTH-247"
+```
+
+The findings write directly to the task YAML file at `.ai/tasks/AUTH-247.yml`, where they stay visible for the entire lifecycle of the ticket.
+
+Your sprint doesn't have to start with hidden contradictions. The information was always there in the comments — it just needed someone (or something) to actually read all of them.
