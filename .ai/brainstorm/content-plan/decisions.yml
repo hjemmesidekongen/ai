@@ -1,0 +1,160 @@
+topic: "hjemmesidekongen.dk content plan"
+decided: "2026-03-12"
+status: "locked"
+
+decisions:
+
+  - id: D1
+    title: "Product scope"
+    decision: >
+      ai.hjemmesidekongen.dk is a documentation + showcase site for the
+      hjemmesidekongen-ai repo (5-plugin Claude Code ecosystem). Free,
+      open-source, not commercial. Treat like a SaaS product page in
+      quality and structure, but with no commercial intent.
+    rationale: "The repo is the product. The site documents it, showcases it, and serves as the creator's own reference."
+
+  - id: D2
+    title: "Target audience"
+    decision: >
+      Primary: Danish developers (colleagues, fellow devs). Secondary:
+      international open-source community. Content in English. Danish
+      plugin names preserved as product names.
+    rationale: "English maximizes reach. Danish names are the brand identity — they stay."
+
+  - id: D3
+    title: "Sub-brand architecture"
+    decision: >
+      Create hjemmesidekongen-ai as a child brand of parent hjemmesidekongen.
+      Child files use inherits_from to reference parent. Overrides only where
+      needed (audience, register, language). parent-audit.yml tracks checksums
+      for drift detection. Parent is single source of truth.
+    rationale: "Brand consistency across products. Parent changes cascade with controlled re-validation."
+
+  - id: D4
+    title: "Voice register"
+    decision: >
+      Inherits hjemmesidekongen personality (playful self-awareness, direct,
+      first-person, anti-corporate). Adapted for developers: technical-casual
+      register, honest about tradeoffs, shows code, doesn't simplify.
+      The kongen humor is a wink, not a claim. English, dev humor.
+    rationale: "Same vibe, different audience. Devs appreciate personality in docs."
+
+  - id: D5
+    title: "Product framing"
+    decision: >
+      'I kept solving the same problems differently every session. So I built
+      a system.' Not positioned around any personal condition. Framed as
+      developer instinct to systematize repetitive work. Neurodivergence
+      implicit for those who recognize it, never explicit. Also serves as
+      creator's own reference docs.
+    rationale: "Universal developer experience. Stronger pitch than asking for empathy."
+
+  - id: D6
+    title: "Sitemap"
+    decision: >
+      Landing page (/) + Documentation hub (/docs/) + Blog (/blog/) +
+      Changelog (/changelog). Docs: getting-started, concepts/architecture,
+      per-plugin reference (5), searchable skill catalog, command reference,
+      workflow guides. Blog: Medium-style end-to-end showcases. Skills
+      catalog (120+) needs search/filter, not sidebar.
+    rationale: "Three surfaces: sell it (landing), explain it (docs), show it (blog)."
+
+  - id: D7
+    title: "Design system"
+    decision: >
+      Untitled UI Pro components as structural foundation (via MCP).
+      hjemmesidekongen visual tokens applied on top (orange #e1943d, Lato,
+      warm greys). Production-grade components without designing from scratch.
+    rationale: "Speed + quality. Untitled UI handles structure, brand tokens handle identity."
+
+  - id: D8
+    title: "Blog format"
+    decision: >
+      Medium.com aesthetic: generous whitespace, large body text, narrow
+      prose column (~700px), minimal chrome, images/code break column.
+      Each article: problem > what was built > how it works > try it.
+      Personal experience alongside technical explanation.
+    rationale: "62% of devs prefer tutorials with personal context. Medium style is the gold standard for readability."
+
+  - id: D9
+    title: "Logo direction"
+    decision: >
+      Keep crown + curly braces icon. Add /AI as route-style suffix.
+      Color treatment differentiates AI part from parent wordmark.
+      Crown remains the anchor.
+    rationale: "Developer-native path syntax. Crown is the brand. /AI signals the sub-product."
+
+  - id: D10
+    title: "Scope boundary"
+    decision: >
+      ai.hjemmesidekongen.dk is the current focus. hjemmesidekongen.dk
+      (freelance practice, brand showcases) is deferred. Parent brand
+      foundation supports both but root site is not part of this plan.
+    rationale: "Ship one thing. The AI site has content ready to go. The freelance site needs clients first."
+
+  - id: D11
+    title: "Content plan — documentation"
+    decision: >
+      Documentation structure follows plugin-first organization.
+      Getting started: install, prerequisites, first run.
+      Concepts: plugin architecture, how skills/commands/hooks/agents work,
+      state management, the wave planning model.
+      Per-plugin: kronen (41 skills), smedjen (62 skills), herold (9 skills),
+      vaabenskjold (4 skills), segl (4 skills) — each with overview, key
+      skills, commands, and use cases.
+      Skill catalog: searchable, filterable by plugin and category.
+      Command reference: all commands with usage.
+      Workflows: step-by-step recipes for common tasks.
+    rationale: "Developers need reference docs AND guided workflows. Both must exist."
+
+  - id: D12
+    title: "Content plan — blog posts (role-targeted use cases)"
+    decision: >
+      Launch with 12-15 blog posts. Each targets a specific agency role and shows
+      how this system solves THEIR problems. Not just developer workflows — this
+      is for a full digital agency with sales, finance, PMs, designers, SEO
+      specialists, developers, and AI engineers.
+
+      DEVELOPERS (4 posts):
+      1. 'Planning and executing a feature with wave plans' — kronen workflow
+      2. 'How parallel agents build a feature without merge conflicts' — smedjen file-ownership
+      3. 'From Jira ticket to PR in one session' — herold end-to-end
+      4. 'The 5 plugins: what each one does and when to use it' — ecosystem overview
+
+      DESIGNERS (2 posts):
+      5. 'Building a visual identity system from brand guidelines' — segl workflow
+      6. 'Design tokens to Tailwind config in 5 minutes' — segl:design-tokens
+
+      SEO SPECIALISTS (2 posts):
+      7. 'Generating an SEO plan with keyword strategy and meta tags' — smedjen:seo-fundamentals
+      8. 'Content strategy that writes itself — pillar planning with AI' — smedjen:content-strategy
+
+      PROJECT MANAGERS (2 posts):
+      9. 'Brainstorm to execution plan — structured decision-making' — kronen brainstorm + plan
+      10. 'How contradiction detection saves your sprint' — herold:contradiction-detection
+
+      BRAND / MARKETING (2 posts):
+      11. 'Building a brand from scratch with Claude Code' — vaabenskjold workflow
+      12. 'Writing brand-consistent copy across every channel' — smedjen:content-writer
+
+      META / EVERYONE (2 posts):
+      13. 'How I documented 120+ skills without losing my mind' — system post
+      14. 'What happens when you let AI agents review each other's work' — verification gates
+
+      Each follows: problem (for YOUR role) > what was built > how it works > try it.
+      Medium style. Practical, not theoretical. Code/config examples where relevant.
+    rationale: >
+      Agency audience has diverse roles. Each person needs to see themselves in
+      the product. Role-targeted posts are more shareable within teams — the SEO
+      person sends the SEO post to their lead, the designer sends the design post.
+      This is how adoption spreads in large organizations.
+
+  - id: D13
+    title: "Content plan — landing page"
+    decision: >
+      Single landing page with sections: Hero (tagline + what this is),
+      The Problem (why this exists), The 5 Plugins (visual overview),
+      How It Works (3-step), Key Features (skill highlights),
+      Blog preview (latest posts), Get Started CTA (GitHub link).
+      No pricing, no signup — it's open source. CTA is 'clone and try'.
+    rationale: "SaaS landing page structure works for open source. Just replace 'buy' with 'clone'."

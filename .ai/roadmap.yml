@@ -581,7 +581,7 @@ items:
     added: "2026-03-08"
     tags: [brand, generation, pipeline]
     _source:
-      backup_path: "claude-local-workspace-backup/plugins/brand-guideline/skills/"
+      backup_path: "hjemmesidekongen-ai-backup/plugins/brand-guideline/skills/"
       notes: "9 skills fully specified in backup. Only brand-loader was ported to agency."
 
   - id: RL-050
@@ -624,8 +624,8 @@ items:
     added: "2026-03-08"
     tags: [seo, pipeline]
     _source:
-      backup_path: "claude-local-workspace-backup/plugins/seo-plugin/"
-      execution_guide: "claude-local-workspace-backup/docs/seo-plugin-execution-guide.md"
+      backup_path: "hjemmesidekongen-ai-backup/plugins/seo-plugin/"
+      execution_guide: "hjemmesidekongen-ai-backup/docs/seo-plugin-execution-guide.md"
       notes: "Fully specified in backup with 48KB execution guide. Zero ported to agency."
 
   - id: RL-054

@@ -81,7 +81,7 @@
 - https://lethain.com/agents-context-compaction/ — context compaction strategies for agentic workflows
 
 ### External Plugin Pattern (additionalContext injection)
-- Source: `/Users/mvn/Personal/claude-local-workspace/external-references/claude-code-main/plugins/`
+- Source: `/Users/mvn/Personal/hjemmesidekongen-ai/external-references/claude-code-main/plugins/`
 - Both `learning-output-style` and `explanatory-output-style` use SessionStart → `hookSpecificOutput.additionalContext`
 - Shell script outputs JSON: `{"hookSpecificOutput": {"hookEventName": "SessionStart", "additionalContext": "..."}}`
 - This is the delivery mechanism for smart injection — proven to work

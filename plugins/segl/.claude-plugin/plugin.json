@@ -6,5 +6,5 @@
   "repository": "https://github.com/hjemmesidekongen/ai",
   "license": "MIT",
   "keywords": ["design", "visual-identity", "tokens", "color", "typography", "pencil"],
-  "dependencies": ["kronen"]
+  "dependencies": ["kronen@hjemmesidekongen-ai"]
 }

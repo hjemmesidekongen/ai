@@ -6,5 +6,5 @@
   "repository": "https://github.com/hjemmesidekongen/ai",
   "license": "MIT",
   "keywords": ["tasks", "jira", "project-management", "qa", "workflow"],
-  "dependencies": ["kronen"]
+  "dependencies": ["kronen@hjemmesidekongen-ai"]
 }

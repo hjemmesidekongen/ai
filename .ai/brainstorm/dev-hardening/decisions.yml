@@ -21,7 +21,7 @@ decisions:
 
   - id: "d3"
     domain: ["technical"]
-    decision: "Self-tiering agent model — tech lead picks model tier, not agent identity. The dev plugin uses self-tiering: one frontend-worker agent, one backend-worker agent. The tech lead assesses task risk and assigns a model tier (Haiku/Sonnet/Opus) rather than dispatching separate junior/senior/principal agents. Global agents from ~/.claude/agents/ move into this repo (claude-local-workspace). Useful content (risk tables, checklists, quality constraints) is distilled into worker prompts and tech lead dispatch logic. Global agents are removed from ~/.claude/agents/ after migration to prevent duplicate agent definitions."
+    decision: "Self-tiering agent model — tech lead picks model tier, not agent identity. The dev plugin uses self-tiering: one frontend-worker agent, one backend-worker agent. The tech lead assesses task risk and assigns a model tier (Haiku/Sonnet/Opus) rather than dispatching separate junior/senior/principal agents. Global agents from ~/.claude/agents/ move into this repo (hjemmesidekongen-ai). Useful content (risk tables, checklists, quality constraints) is distilled into worker prompts and tech lead dispatch logic. Global agents are removed from ~/.claude/agents/ after migration to prevent duplicate agent definitions."
     confidence: "high"
     context: "Original dev brainstorm (D9) already chose self-tiering. Global agents exist with useful content but create duplication. Migration consolidates into one system. Removing global agents after migration prevents confusion about which agent definitions are active."
     session_date: "2026-03-02"

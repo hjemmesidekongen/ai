@@ -12,7 +12,7 @@
 
 **Claude:** Identified the external skills relationship problem — skills in ~/.claude/skills/custom aren't versioned with the plugin. Proposed three options: vendor, reference by path, or shared dependency.
 
-**User:** Custom skills should live in claude-local-workspace, not global config. Wants external skills (Figma, Vercel, Next.js maintained) as npm-style dependencies. Goal is marketplace distribution — colleagues download the plugin and get everything.
+**User:** Custom skills should live in hjemmesidekongen-ai, not global config. Wants external skills (Figma, Vercel, Next.js maintained) as npm-style dependencies. Goal is marketplace distribution — colleagues download the plugin and get everything.
 
 **Claude:** Researched — found that Claude Code plugins can't declare skill dependencies. Plugins are self-contained, can't reference outside their directory once cached. Proposed /dev:init checking for missing skills and prompting install.
 

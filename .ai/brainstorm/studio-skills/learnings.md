@@ -8,7 +8,7 @@
 - Seven Sweeps framework is the highest-value pattern — sequential editing passes. Worth referencing from other studio skills.
 - UI text patterns (errors, empty states, buttons, tooltips) are directly useful for frontend-dev agent context.
 - Pattern: external sources are 200-800 lines each. SKILL.md captures the decision framework and anti-patterns. process.md holds templates, checklists, and examples.
-- External references are at `/Users/mvn/Personal/claude-local-workspace/external-references/antigravity-awesome-skills-main/skills/`
+- External references are at `/Users/mvn/Personal/hjemmesidekongen-ai/external-references/antigravity-awesome-skills-main/skills/`
 
 ## Iteration 2: content-strategy-patterns
 - Extracted from content-creator SKILL.md (248L) + content_frameworks.md (535L)

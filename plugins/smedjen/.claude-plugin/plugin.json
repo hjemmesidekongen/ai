@@ -6,5 +6,5 @@
   "repository": "https://github.com/hjemmesidekongen/ai",
   "license": "MIT",
   "keywords": ["dev", "execution", "agents", "decomposition", "orchestration"],
-  "dependencies": ["kronen"]
+  "dependencies": ["kronen@hjemmesidekongen-ai"]
 }

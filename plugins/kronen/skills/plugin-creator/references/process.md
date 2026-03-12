@@ -197,7 +197,7 @@ not repo root.
 
 ```json
 {
-  "name": "local-workspace",
+  "name": "hjemmesidekongen-ai",
   "owner": { "name": "mvn" },
   "plugins": [
     {
