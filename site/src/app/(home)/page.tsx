@@ -2,41 +2,61 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 
 export const metadata: Metadata = {
-  title: 'hjemmesidekongen/ai',
+  title: 'hjemmesidekongen/ai — Structured workflows for Claude Code',
   description:
-    'One developer\'s operating system for AI-assisted code. Wave planning, specialist agent dispatch, verification gates, and cross-session memory.',
+    'Five plugins that turn ad-hoc Claude Code sessions into structured, repeatable workflows. Planning, branding, design, development, and task management. Open source.',
 };
 
 const plugins = [
   {
-    name: 'claude-core',
+    name: 'kronen',
     version: '0.3.0',
-    tagline: 'The Foundation',
+    tagline: 'The Crown',
     description:
-      'Planning engine, brainstorm sessions, verification gates, cross-session memory, error investigation, learning pipelines, and workplace integrations.',
+      'The foundation. Wave-based planning, brainstorm sessions that produce structured decisions, verification gates, tracing, memory governance, and session recovery.',
     stats: '41 skills · 14 commands · 12 agents',
-    href: '/docs/claude-core',
-    icon: '{}',
+    href: '/docs/kronen',
+    icon: '♔',
   },
   {
-    name: 'dev-engine',
+    name: 'smedjen',
     version: '0.2.0',
-    tagline: 'Development Execution',
+    tagline: 'The Forge',
     description:
-      'Multi-agent pipeline that decomposes tasks, dispatches specialist agents in parallel, and enforces a 10-point quality gate before anything ships.',
-    stats: '62 skills · 6 agents · 2 commands',
-    href: '/docs/dev-engine',
-    icon: '>_',
+      'The execution engine. Task decomposition, parallel agent dispatch with file boundaries, a 10-point quality gate, and 60+ framework knowledge skills.',
+    stats: '62 skills · 3 commands · 7 agents',
+    href: '/docs/smedjen',
+    icon: '⚒',
   },
   {
-    name: 'taskflow',
+    name: 'herold',
     version: '0.1.0',
-    tagline: 'Task Management',
+    tagline: 'The Herald',
     description:
-      'Bridges Jira, Confluence, and Bitbucket with your CLI. Contradiction detection, structured PR descriptions, and QA handover generation.',
+      'Bridges Jira, Confluence, and Bitbucket. Ingests tickets, detects contradictions between descriptions and comments, and generates PRs with QA handover notes.',
     stats: '9 skills · 8 commands',
-    href: '/docs/taskflow',
-    icon: '[]',
+    href: '/docs/herold',
+    icon: '📯',
+  },
+  {
+    name: 'våbenskjold',
+    version: '0.1.0',
+    tagline: 'The Coat of Arms',
+    description:
+      'Brand strategy as code. Creates brands from scratch, audits existing brands, evolves them over time. Structured YAML guidelines that every other tool can consume.',
+    stats: '4 skills · 5 commands',
+    href: '/docs/vaabenskjold',
+    icon: '🛡',
+  },
+  {
+    name: 'segl',
+    version: '0.1.0',
+    tagline: 'The Royal Seal',
+    description:
+      'Visual identity from brand guidelines to production tokens. Color palettes, typography, spacing — exported to CSS, Tailwind, and DTCG JSON.',
+    stats: '4 skills · 4 commands',
+    href: '/docs/segl',
+    icon: '🔏',
   },
 ];
 
@@ -44,32 +64,32 @@ const features = [
   {
     title: 'Verification, not vibes',
     description:
-      'Every task goes through a verification gate with proof. The system runs tests, checks the build, reads the output — and only then marks it done.',
+      'Every task passes a verification gate before it\'s marked done. Implementing agents never grade their own work. A separate reviewer checks against the original spec.',
   },
   {
     title: 'Parallel agents, zero conflicts',
     description:
-      'File ownership isolation ensures no two agents write to the same file. Interface contracts are defined at boundaries before implementation starts.',
+      'File-ownership boundaries mean multiple agents work simultaneously without overwriting each other. The system assigns exclusive file access per agent.',
   },
   {
     title: 'Contradiction detection',
     description:
-      'taskflow reads every Jira comment and flags where later discussions contradict the original spec. You find out before coding, not after.',
+      'herold compares Jira ticket descriptions against their comments and flags inconsistencies before you start coding the wrong thing.',
   },
   {
     title: 'Cross-session memory',
     description:
-      'State files, handoff documents, and snapshots survive session boundaries. Pick up exactly where you left off — context intact.',
+      'State files, session handoffs, and context snapshots mean you don\'t start from zero every time. The compact gate protects context during long sessions.',
   },
   {
-    title: 'Learning pipeline',
+    title: '120+ framework skills',
     description:
-      'claude-core observes patterns in how you work, extracts recurring behaviors as instincts, and promotes high-confidence patterns into rules or skills.',
+      'React, Next.js, Vue, Nuxt, Expo, NestJS, Prisma, Tailwind, Playwright — patterns, anti-patterns, and real-world examples. Reference material that agents use during implementation.',
   },
   {
-    title: '100+ framework skills',
+    title: 'Brand-to-code pipeline',
     description:
-      'React, Next.js, Vue, Nuxt, NestJS, Prisma, Expo, TypeScript, Tailwind, and more — verified, version-specific knowledge baked into each agent.',
+      'From brand strategy through visual identity to design tokens to Tailwind config. Every step produces structured output the next step consumes.',
   },
 ];
 
@@ -80,45 +100,74 @@ export default function HomePage() {
       <section className="w-full max-w-4xl px-6 pt-28 pb-20 text-center">
         <div className="inline-flex items-center gap-2 rounded-full border border-fd-border bg-fd-card px-4 py-1.5 text-xs font-medium text-fd-muted-foreground mb-8">
           <span className="inline-block h-1.5 w-1.5 rounded-full bg-fd-primary" />
-          Open-source Claude Code plugins
+          Open source — clone and try
         </div>
 
-        <h1 className="text-4xl font-bold tracking-tight sm:text-5xl lg:text-6xl">
-          <span className="font-mono">hjemmesidekongen</span>
-          <span className="text-fd-muted-foreground font-light">/ai</span>
+        <h1 className="text-3xl font-bold tracking-tight sm:text-4xl lg:text-5xl max-w-3xl mx-auto leading-tight">
+          I kept solving the same problems differently every session.
+          <span className="text-fd-muted-foreground"> So I built a system.</span>
         </h1>
 
         <p className="mt-6 text-lg text-fd-muted-foreground max-w-2xl mx-auto leading-relaxed">
-          One developer&apos;s operating system for AI-assisted code. Not
-          autocomplete — structured development partners that plan, build,
-          verify, and learn.
+          Five Claude Code plugins that turn ad-hoc prompting into structured,
+          repeatable workflows. Planning, branding, design, development, and
+          task management — each handled by a plugin that knows its job.
         </p>
 
         <div className="mt-10 flex gap-4 justify-center flex-wrap">
           <Link
-            href="/docs"
+            href="/docs/install"
             className="inline-flex items-center justify-center rounded-lg bg-fd-primary px-7 py-3 text-sm font-semibold text-fd-primary-foreground shadow-sm hover:opacity-90 transition-opacity"
           >
-            Read the docs
+            Get started
           </Link>
           <Link
-            href="/docs/install"
+            href="/docs"
             className="inline-flex items-center justify-center rounded-lg border border-fd-border px-7 py-3 text-sm font-medium text-fd-foreground hover:bg-fd-accent transition-colors"
           >
-            Get started
+            Read the docs
           </Link>
         </div>
       </section>
 
+      {/* Problem */}
+      <section className="w-full bg-fd-card/50 border-y border-fd-border">
+        <div className="max-w-3xl mx-auto px-6 py-20">
+          <h2 className="text-2xl font-bold mb-6">
+            The problem with Claude Code sessions
+          </h2>
+          <div className="space-y-4 text-fd-muted-foreground leading-relaxed">
+            <p>
+              Every session starts from scratch. You explain the same context,
+              set up the same patterns, and hope you remember what worked last
+              time. Plans live in your head. Quality depends on how much you
+              feel like typing today.
+            </p>
+            <p>
+              Multi-file changes? Hope your agents don&apos;t overwrite each
+              other. Verification? You read the diff and squint. Session
+              handoffs? Copy-paste some notes and pray.
+            </p>
+            <p className="text-fd-foreground font-medium">
+              This isn&apos;t a tooling problem. It&apos;s a workflow problem.
+              And workflows need structure.
+            </p>
+          </div>
+        </div>
+      </section>
+
       {/* Divider accent */}
-      <div className="w-16 h-0.5 bg-fd-primary rounded-full" />
+      <div className="w-16 h-0.5 bg-fd-primary rounded-full my-0" />
 
       {/* Plugin cards */}
-      <section className="w-full max-w-5xl px-6 py-20">
-        <p className="text-xs font-mono text-fd-muted-foreground uppercase tracking-widest text-center mb-10">
-          Three plugins, one workflow
+      <section className="w-full max-w-6xl px-6 py-20">
+        <p className="text-xs font-mono text-fd-muted-foreground uppercase tracking-widest text-center mb-3">
+          Five plugins, each owns a domain
         </p>
-        <div className="grid gap-6 md:grid-cols-3">
+        <h2 className="text-2xl font-bold text-center mb-12">
+          Use one, use all five, or build your own
+        </h2>
+        <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {plugins.map((plugin) => (
             <Link
               key={plugin.name}
@@ -126,13 +175,13 @@ export default function HomePage() {
               className="group relative rounded-xl border border-fd-border bg-fd-card/50 p-6 hover:border-fd-primary/40 hover:shadow-md transition-all"
             >
               <div className="flex items-center gap-3 mb-3">
-                <span className="inline-flex items-center justify-center h-9 w-9 rounded-lg bg-fd-primary/10 font-mono text-sm font-bold text-fd-primary">
+                <span className="inline-flex items-center justify-center h-9 w-9 rounded-lg bg-fd-primary/10 text-lg">
                   {plugin.icon}
                 </span>
                 <div>
-                  <h2 className="font-mono text-base font-semibold group-hover:text-fd-primary transition-colors">
+                  <h3 className="font-mono text-base font-semibold group-hover:text-fd-primary transition-colors">
                     {plugin.name}
-                  </h2>
+                  </h3>
                   <span className="text-xs text-fd-muted-foreground">
                     v{plugin.version}
                   </span>
@@ -152,50 +201,91 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Features */}
+      {/* How it works */}
       <section className="w-full bg-fd-card/50 border-y border-fd-border">
-        <div className="max-w-5xl mx-auto px-6 py-20">
-          <p className="text-xs font-mono text-fd-muted-foreground uppercase tracking-widest text-center mb-4">
-            How it works differently
-          </p>
+        <div className="max-w-4xl mx-auto px-6 py-20">
           <h2 className="text-2xl font-bold text-center mb-14">
-            Built for verification, not hope
+            How it works
           </h2>
-          <div className="grid gap-10 md:grid-cols-2 lg:grid-cols-3">
-            {features.map((feature) => (
-              <div key={feature.title}>
-                <h3 className="text-sm font-semibold mb-2">{feature.title}</h3>
-                <p className="text-sm text-fd-muted-foreground leading-relaxed">
-                  {feature.description}
-                </p>
+          <div className="grid gap-10 md:grid-cols-3">
+            <div>
+              <div className="inline-flex items-center justify-center h-8 w-8 rounded-full bg-fd-primary/10 text-fd-primary font-mono font-bold text-sm mb-4">
+                1
               </div>
-            ))}
+              <h3 className="text-sm font-semibold mb-2">Install the plugins</h3>
+              <p className="text-sm text-fd-muted-foreground leading-relaxed">
+                Clone the repo, point Claude Code at the plugins directory.
+                Each plugin auto-registers its skills, commands, hooks, and agents.
+              </p>
+            </div>
+            <div>
+              <div className="inline-flex items-center justify-center h-8 w-8 rounded-full bg-fd-primary/10 text-fd-primary font-mono font-bold text-sm mb-4">
+                2
+              </div>
+              <h3 className="text-sm font-semibold mb-2">Run a workflow</h3>
+              <p className="text-sm text-fd-muted-foreground leading-relaxed">
+                Slash commands invoke structured workflows.{' '}
+                <code className="text-xs">/plan:create</code> breaks a task into waves.{' '}
+                <code className="text-xs">/dev:run</code> decomposes and dispatches.{' '}
+                <code className="text-xs">/brand:create</code> builds a brand from scratch.
+              </p>
+            </div>
+            <div>
+              <div className="inline-flex items-center justify-center h-8 w-8 rounded-full bg-fd-primary/10 text-fd-primary font-mono font-bold text-sm mb-4">
+                3
+              </div>
+              <h3 className="text-sm font-semibold mb-2">Everything persists</h3>
+              <p className="text-sm text-fd-muted-foreground leading-relaxed">
+                Plans, decisions, brand guidelines, design tokens — all stored as
+                YAML files that survive session boundaries. Next session picks up
+                where you left off.
+              </p>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* Bottom CTA */}
-      <section className="w-full max-w-3xl px-6 py-24 text-center">
-        <h2 className="text-2xl font-bold mb-4">
-          Ready to structure your AI workflow?
+      {/* Features */}
+      <section className="w-full max-w-5xl px-6 py-20">
+        <h2 className="text-2xl font-bold text-center mb-14">
+          What you actually get
         </h2>
-        <p className="text-fd-muted-foreground mb-8 max-w-lg mx-auto">
-          Install the plugins, read the architecture docs, or browse
-          the full skill reference. Everything is open source.
-        </p>
-        <div className="flex gap-4 justify-center flex-wrap">
-          <Link
-            href="/docs/install"
-            className="inline-flex items-center justify-center rounded-lg bg-fd-primary px-7 py-3 text-sm font-semibold text-fd-primary-foreground shadow-sm hover:opacity-90 transition-opacity"
-          >
-            Install guide
-          </Link>
-          <Link
-            href="/docs/architecture"
-            className="inline-flex items-center justify-center rounded-lg border border-fd-border px-7 py-3 text-sm font-medium hover:bg-fd-accent transition-colors"
-          >
-            Architecture overview
-          </Link>
+        <div className="grid gap-10 md:grid-cols-2 lg:grid-cols-3">
+          {features.map((feature) => (
+            <div key={feature.title}>
+              <h3 className="text-sm font-semibold mb-2">{feature.title}</h3>
+              <p className="text-sm text-fd-muted-foreground leading-relaxed">
+                {feature.description}
+              </p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* Bottom CTA */}
+      <section className="w-full bg-fd-card/50 border-t border-fd-border">
+        <div className="max-w-3xl mx-auto px-6 py-24 text-center">
+          <h2 className="text-2xl font-bold mb-4">Try it</h2>
+          <p className="text-fd-muted-foreground mb-8 max-w-lg mx-auto">
+            It&apos;s open source. Clone it, install it, run{' '}
+            <code className="text-xs">/plan:create</code> on something you&apos;re
+            building. If it doesn&apos;t save you time in the first session,
+            it&apos;s not for you.
+          </p>
+          <div className="flex gap-4 justify-center flex-wrap">
+            <Link
+              href="/docs/install"
+              className="inline-flex items-center justify-center rounded-lg bg-fd-primary px-7 py-3 text-sm font-semibold text-fd-primary-foreground shadow-sm hover:opacity-90 transition-opacity"
+            >
+              Get started
+            </Link>
+            <Link
+              href="https://github.com/hjemmesidekongen/ai"
+              className="inline-flex items-center justify-center rounded-lg border border-fd-border px-7 py-3 text-sm font-medium hover:bg-fd-accent transition-colors"
+            >
+              Browse the source
+            </Link>
+          </div>
         </div>
       </section>
     </main>
