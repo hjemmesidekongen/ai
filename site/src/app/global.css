@@ -71,6 +71,15 @@
   --color-fd-diff-add-symbol: #3d9a50;
 }
 
+/* Hide scrollbar for horizontal sliders */
+.scrollbar-none {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+}
+
 /* Docs content refinements */
 
 /* Inline code — warm tint instead of cold gray */

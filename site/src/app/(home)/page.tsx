@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import { blogSource } from '@/lib/source';
 
 export const metadata: Metadata = {
   title: 'hjemmesidekongen/ai — Structured workflows for Claude Code',
@@ -93,7 +94,22 @@ const features = [
   },
 ];
 
+// Gradient backgrounds for blog cards (since we don't have actual images)
+const blogGradients = [
+  'from-fd-primary/20 to-fd-primary/5',
+  'from-amber-900/30 to-amber-800/10',
+  'from-orange-900/20 to-yellow-900/10',
+];
+
 export default function HomePage() {
+  const recentPosts = blogSource
+    .getPages()
+    .sort(
+      (a, b) =>
+        new Date(b.data.date).getTime() - new Date(a.data.date).getTime(),
+    )
+    .slice(0, 3);
+
   return (
     <main className="flex flex-col items-center">
       {/* Hero */}
@@ -167,33 +183,33 @@ export default function HomePage() {
         <h2 className="text-2xl font-bold text-center mb-12">
           Use one, use all five, or build your own
         </h2>
-        <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="grid gap-5 grid-cols-2 lg:grid-cols-3">
           {plugins.map((plugin) => (
             <Link
               key={plugin.name}
               href={plugin.href}
-              className="group relative rounded-xl border border-fd-border bg-fd-card/50 p-6 hover:border-fd-primary/40 hover:shadow-md transition-all"
+              className="group relative rounded-xl border border-fd-border bg-fd-card/50 p-4 sm:p-6 hover:border-fd-primary/40 hover:shadow-md transition-all"
             >
-              <div className="flex items-center gap-3 mb-3">
-                <span className="inline-flex items-center justify-center h-9 w-9 rounded-lg bg-fd-primary/10 text-lg">
+              <div className="flex items-center gap-2 sm:gap-3 mb-2 sm:mb-3">
+                <span className="inline-flex items-center justify-center h-7 w-7 sm:h-9 sm:w-9 rounded-lg bg-fd-primary/10 text-sm sm:text-lg">
                   {plugin.icon}
                 </span>
                 <div>
-                  <h3 className="font-mono text-base font-semibold group-hover:text-fd-primary transition-colors">
+                  <h3 className="font-mono text-sm sm:text-base font-semibold group-hover:text-fd-primary transition-colors">
                     {plugin.name}
                   </h3>
-                  <span className="text-xs text-fd-muted-foreground">
+                  <span className="text-xs text-fd-muted-foreground hidden sm:inline">
                     v{plugin.version}
                   </span>
                 </div>
               </div>
-              <p className="text-sm font-medium text-fd-primary mb-2">
+              <p className="text-xs sm:text-sm font-medium text-fd-primary mb-1 sm:mb-2">
                 {plugin.tagline}
               </p>
-              <p className="text-sm text-fd-muted-foreground mb-4 leading-relaxed">
+              <p className="text-xs sm:text-sm text-fd-muted-foreground mb-3 sm:mb-4 leading-relaxed hidden sm:block">
                 {plugin.description}
               </p>
-              <p className="text-xs font-mono text-fd-muted-foreground">
+              <p className="text-[11px] sm:text-xs font-mono text-fd-muted-foreground">
                 {plugin.stats}
               </p>
             </Link>
@@ -245,22 +261,108 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Features */}
+      {/* Features — 2-col on mobile, 3-col on desktop */}
       <section className="w-full max-w-5xl px-6 py-20">
         <h2 className="text-2xl font-bold text-center mb-14">
           What you actually get
         </h2>
-        <div className="grid gap-10 md:grid-cols-2 lg:grid-cols-3">
+        <div className="grid gap-6 sm:gap-10 grid-cols-2 lg:grid-cols-3">
           {features.map((feature) => (
             <div key={feature.title}>
               <h3 className="text-sm font-semibold mb-2">{feature.title}</h3>
-              <p className="text-sm text-fd-muted-foreground leading-relaxed">
+              <p className="text-xs sm:text-sm text-fd-muted-foreground leading-relaxed">
                 {feature.description}
               </p>
             </div>
           ))}
         </div>
       </section>
+
+      {/* Blog preview */}
+      {recentPosts.length > 0 && (
+        <section className="w-full border-t border-fd-border bg-fd-card/50">
+          <div className="max-w-5xl mx-auto px-6 py-20">
+            <div className="flex items-center justify-between mb-10">
+              <h2 className="text-2xl font-bold">From the blog</h2>
+              <Link
+                href="/blog"
+                className="text-sm text-fd-primary hover:underline"
+              >
+                View all posts &rarr;
+              </Link>
+            </div>
+
+            {/* Desktop: 3-col grid */}
+            <div className="hidden sm:grid sm:grid-cols-3 gap-5">
+              {recentPosts.map((post, i) => (
+                <Link
+                  key={post.url}
+                  href={post.url}
+                  className="group rounded-xl border border-fd-border bg-fd-background overflow-hidden hover:border-fd-primary/40 hover:shadow-md transition-all"
+                >
+                  <div className={`h-32 bg-gradient-to-br ${blogGradients[i % blogGradients.length]}`} />
+                  <div className="p-5">
+                    <time className="text-xs text-fd-muted-foreground">
+                      {new Date(post.data.date).toLocaleDateString('en-US', {
+                        month: 'short',
+                        day: 'numeric',
+                      })}
+                    </time>
+                    <h3 className="text-sm font-semibold mt-2 group-hover:text-fd-primary transition-colors line-clamp-2">
+                      {post.data.title}
+                    </h3>
+                    {post.data.read_time && (
+                      <span className="text-xs text-fd-muted-foreground mt-2 block">
+                        {post.data.read_time}
+                      </span>
+                    )}
+                  </div>
+                </Link>
+              ))}
+            </div>
+
+            {/* Mobile: horizontal scroll with snap */}
+            <div className="sm:hidden">
+              <div
+                className="flex gap-4 overflow-x-auto snap-x snap-mandatory pb-4 -mx-6 px-6 scrollbar-none"
+                role="region"
+                aria-label="Recent blog posts"
+                tabIndex={0}
+              >
+                {recentPosts.map((post, i) => (
+                  <Link
+                    key={post.url}
+                    href={post.url}
+                    className="group snap-start shrink-0 w-[280px] rounded-xl border border-fd-border bg-fd-background overflow-hidden hover:border-fd-primary/40 transition-all"
+                  >
+                    <div className={`h-28 bg-gradient-to-br ${blogGradients[i % blogGradients.length]}`} />
+                    <div className="p-4">
+                      <time className="text-xs text-fd-muted-foreground">
+                        {new Date(post.data.date).toLocaleDateString('en-US', {
+                          month: 'short',
+                          day: 'numeric',
+                        })}
+                      </time>
+                      <h3 className="text-sm font-semibold mt-1.5 group-hover:text-fd-primary transition-colors line-clamp-2">
+                        {post.data.title}
+                      </h3>
+                    </div>
+                  </Link>
+                ))}
+              </div>
+              {/* Scroll indicator dots */}
+              <div className="flex justify-center gap-2 mt-3">
+                {recentPosts.map((post, i) => (
+                  <span
+                    key={post.url}
+                    className={`h-2.5 w-2.5 rounded-full ${i === 0 ? 'bg-fd-primary' : 'bg-fd-border'}`}
+                  />
+                ))}
+              </div>
+            </div>
+          </div>
+        </section>
+      )}
 
       {/* Bottom CTA */}
       <section className="w-full bg-fd-card/50 border-t border-fd-border">

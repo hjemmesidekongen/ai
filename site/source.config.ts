@@ -21,6 +21,7 @@ export const blog = defineDocs({
     schema: pageSchema.extend({
       date: z.string(),
       author: z.string(),
+      image: z.string().optional(),
       tags: z.array(z.string()).optional(),
       read_time: z.string().optional(),
       target_audience: z.string().optional(),
