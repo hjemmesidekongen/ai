@@ -60,6 +60,30 @@ kronen observes how you work and extracts patterns:
 
 The pipeline is self-correcting: contradictions decay confidence, and instincts that don't recur expire naturally.
 
+### Autopilot
+
+`/autopilot-run` creates a self-referential execution loop. You give it a task (or link it to a dynamic plan), and it works through iterations autonomously — each iteration builds on the previous one's output. The stop hook feeds the response back as input for the next cycle.
+
+Three ways to stop:
+- **Completion promise** — you define a phrase (e.g., `DOCS_SHIPPED`) that the loop outputs only when the statement is true
+- **Max iterations** — hard cap (default: 50) prevents infinite loops
+- **Manual cancel** — `/autopilot-cancel` stops immediately with an iteration report
+
+When linked to a dynamic plan (`--dynamic-plan`), each iteration gets a fresh prompt constructed from the plan's `state.yml` and `learnings.yml`. The plan evolves as the loop works through it — orient, plan, build, learn, repeat.
+
+```bash
+# Simple task
+/autopilot-run "Build the API and test suite" --completion-promise 'ALL_TESTS_PASS'
+
+# Linked to a dynamic plan
+/autopilot-run --dynamic-plan .ai/plans/my-plan "Execute the plan"
+
+# With iteration limit
+/autopilot-run --max-iterations 10 "Fix all lint warnings"
+```
+
+This is the closest thing to "leave it running overnight" that Claude Code offers. Verification gates still apply — autopilot doesn't skip quality checks.
+
 ### Debugging & Investigation
 
 Three skills that enforce evidence-first debugging:
@@ -184,4 +208,6 @@ All review/audit agents are read-only. They produce verdicts. They never modify 
 
 - [smedjen](/docs/smedjen) - the multi-agent development pipeline that builds on kronen
 - [herold](/docs/herold) - task management that uses kronen's MCP and session infrastructure
-- [Architecture](/docs/architecture) - how the three plugins relate and share data
+- [våbenskjold](/docs/vaabenskjold) - brand strategy toolkit
+- [segl](/docs/segl) - visual identity and design tokens
+- [Architecture](/docs/architecture) - how the five plugins relate and share data

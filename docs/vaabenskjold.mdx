@@ -1,0 +1,153 @@
+---
+title: våbenskjold
+description: Brand strategy toolkit - create brands from scratch, audit existing brands, evolve them over time. Structured YAML guidelines that every other plugin can consume.
+---
+
+# våbenskjold
+
+The brand strategy layer of the hjemmesidekongen/ai methodology. Brand-before-code is the principle — våbenskjold makes sure every project starts with a codified brand that downstream tools can consume. Not colors and fonts (that's segl), but the strategic foundation: positioning, voice, values, and audience.
+
+**Version:** 0.1.0 · **4 skills** · **5 commands**
+
+## What It Does
+
+våbenskjold turns brand strategy into structured YAML files through interactive, multi-phase processes. Create a brand from scratch with market research, audit an existing brand from content samples, or evolve one that's drifted. Every output follows a strict schema — guideline.yml, voice.yml, values.yml — so other plugins can load and consume them without interpretation.
+
+## Commands
+
+| Command | Usage | What It Does |
+|---------|-------|-------------|
+| `/brand:create` | `/brand:create acme` | Create a new brand from scratch through 7 interactive phases |
+| `/brand:audit` | `/brand:audit acme` | Codify an existing brand by analyzing content samples and materials |
+| `/brand:evolve` | `/brand:evolve acme` | Guided reinvention — preserve what works, change what doesn't |
+| `/brand:apply` | `/brand:apply acme [--to PATH]` | Load brand into context or wire into a project |
+| `/brand:status` | `/brand:status [acme]` | Show brand status and guideline summary |
+
+### Create Workflow
+
+```bash
+/brand:create my-saas           # 7-phase interactive process
+# Phase 1: intake — name, domain, vision
+# Phase 2: market research — Perplexity-powered competitive analysis
+# Phase 3: positioning & audience — differentiation, segments, content pillars
+# Phase 4: voice discovery — archetype, scales, vocabulary, writing patterns
+# Phase 5: values & beliefs — core values with in-practice behaviors
+# Phase 6: dos and donts — generated from voice + values
+# Phase 7: final review — complete summary, user approval required
+```
+
+### Audit → Evolve Workflow
+
+```bash
+/brand:audit existing-brand     # Analyze content samples, extract patterns
+# ... time passes, brand drifts ...
+/brand:evolve existing-brand    # Diagnose what's off, scope changes, evolve
+```
+
+## Key Concepts
+
+### Brand as Structured Data
+
+Every brand produces the same four files at `.ai/brand/{name}/`:
+
+**guideline.yml** — positioning and strategy:
+- Name, tagline, elevator pitch
+- Positioning: category, target audience, differentiator, promise
+- Audience segments with pain points, motivations, channels
+- Content pillars with percentage allocation (must sum to 100)
+- Optional: competitive positioning matrix, origin story
+
+**voice.yml** — personality and writing style:
+- Personality archetype (Expert, Friend, Innovator, Guide, Motivator)
+- Five voice scales (1-10): formal↔casual, serious↔playful, technical↔simple, reserved↔expressive, humble↔confident
+- Writing patterns: sentence structure, paragraph organization, hooks
+- Vocabulary: signature phrases, power words, never-use words
+- Platform adaptations: tone shifts per channel (social, docs, marketing)
+- Anti-patterns: what the brand never sounds like
+
+**values.yml** — decision framework:
+- 3-5 core values with definitions, in-practice behaviors (3-5 examples each), and violation examples
+- Distinctive beliefs with implications
+- Non-negotiables — lines the brand never crosses
+- Decision framework — priority order and explicit tradeoffs (e.g., "clarity over cleverness")
+
+**dos-and-donts.md** — human-readable rules derived from voice + values. At least 5 dos and 5 donts with rationale.
+
+### Market Research (brand-strategy)
+
+When creating a brand from scratch, Phase 2 runs 2-3 Perplexity searches to map the competitive landscape. The output goes to `market-research.md`:
+- Key competitors with positioning, strengths, weaknesses
+- Positioning gaps — underserved audience segments
+- Audience signals — who buys and why
+
+This isn't generic market analysis — it's focused on finding the open positioning space for your brand.
+
+### Voice Quantitative Analysis (brand-audit)
+
+When auditing an existing brand, våbenskjold analyzes 5+ content samples across the five voice scales. Each sample gets scored individually, then averaged. High variance across samples indicates inconsistent voice — the audit flags this explicitly.
+
+### Progressive Disclosure Loading
+
+`brand-loader` serves brand data to downstream skills at three levels:
+
+| Level | What's Loaded | When Used |
+|-------|--------------|-----------|
+| **L1 (discovery)** | Check if brand exists, list available brands | Quick existence checks |
+| **L2 (summary)** | Name, tagline, positioning summary from guideline.yml | Context-setting |
+| **L3 (full)** | Specific files based on consumer need | Active consumption |
+
+L3 adapts to the consumer: content skills get voice.yml + dos-and-donts.md, strategy skills get guideline.yml + values.yml, design skills get guideline.yml for aesthetic alignment.
+
+### Evolution Tracking
+
+`brand-evolve` produces an `evolution-log.md` documenting every change:
+- Before → after for each element
+- What was preserved and why
+- Rationale for each evolution decision
+
+This creates a paper trail for brand decisions — useful when someone asks "why did we change the voice?"
+
+## Component Reference
+
+### Skills
+
+| Skill | Model | Interactive | Purpose |
+|-------|-------|-------------|---------|
+| brand-strategy | Principal | Yes | Create brand from scratch via market research and sparring |
+| brand-audit | Principal | Yes | Codify existing brand from content analysis |
+| brand-evolve | Principal | Yes | Guided reinvention preserving brand equity |
+| brand-loader | Junior | No | Load brand with progressive disclosure (L1/L2/L3) |
+
+All interactive skills use Principal tier — brand strategy requires judgment, not just pattern matching.
+
+### Resource Schemas
+
+Three YAML schemas in `resources/` define the structure of brand outputs:
+
+| Schema | Governs |
+|--------|---------|
+| guideline-schema.yml | Positioning, audience, content pillars |
+| voice-schema.yml | Archetype, scales, vocabulary, writing patterns |
+| values-schema.yml | Core values, beliefs, non-negotiables, decision framework |
+
+### Output Files
+
+```
+.ai/brand/{name}/
+├── guideline.yml          # Positioning and strategy
+├── voice.yml              # Personality and writing style
+├── values.yml             # Decision framework and beliefs
+├── dos-and-donts.md       # Human-readable brand rules
+├── market-research.md     # Competitive landscape (brand-strategy only)
+├── audit-sources.md       # Source-to-finding citations (brand-audit only)
+└── evolution-log.md       # Change tracking (brand-evolve only)
+```
+
+All YAML, all local, all version-controllable.
+
+## See also
+
+- [segl](/docs/segl) — takes brand guidelines and creates visual identity + design tokens
+- [kronen](/docs/kronen) — foundation plugin that våbenskjold depends on
+- [smedjen](/docs/smedjen) — content-writer agent consumes brand voice for copy generation
+- [Architecture](/docs/architecture) — how the five plugins relate
