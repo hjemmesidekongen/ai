@@ -14,6 +14,42 @@ I built a planning engine for Claude Code that works differently. The goal is fi
 
 This post is about how that works, why certain design decisions exist, and where the sharp edges are.
 
+Here's the full loop as a diagram before we dig into the details:
+
+```mermaid
+flowchart TD
+    START(["/plan GOAL"]) --> INIT[Initialize plan<br/>state.yml + learnings.yml]
+    INIT --> GATE{Goal clarity gate<br/>5-point checklist}
+    GATE -->|"< 3/5 pass"| BLOCK[Block: refine goal]
+    BLOCK --> GATE
+    GATE -->|"≥ 3/5 pass"| ORIENT
+
+    subgraph CYCLE ["OODA Cycle"]
+        ORIENT[Orient<br/>Read state, scan codebase,<br/>summarize active learnings]
+        REFLECT{Reflect<br/>plan-classifier agent}
+        PLAN[Plan<br/>Decompose next wave:<br/>dependency sort,<br/>file-ownership,<br/>verification contract]
+        BUILD[Build<br/>Dispatch task agents]
+        VERIFY{Verify<br/>plan-verifier agent<br/>isolated, zero tools}
+        LEARN[Learn<br/>Record to learnings.yml<br/>Update remaining_goal]
+
+        ORIENT --> REFLECT
+        REFLECT -->|CONTINUE / ADJUST| PLAN
+        REFLECT -->|REPLAN| PLAN
+        REFLECT -->|ESCALATE| HUMAN([Human decision])
+        HUMAN --> PLAN
+        PLAN --> BUILD
+        BUILD --> VERIFY
+        VERIFY -->|Pass| LEARN
+        VERIFY -->|Fail| FIX[Fix + re-verify]
+        FIX --> VERIFY
+        LEARN --> CHECK{Goal met?}
+        CHECK -->|No| ORIENT
+        CHECK -->|Yes| DONE([Plan complete])
+    end
+
+    ORIENT -.->|"Cycle 1: skip Reflect"| PLAN
+```
+
 ## The goal is the only constant
 
 Every plan starts with a goal statement and acceptance criteria. The goal never changes after creation — it's the fixed north star. Everything else (wave structure, task decomposition, approach) can change based on what the system learns during execution.

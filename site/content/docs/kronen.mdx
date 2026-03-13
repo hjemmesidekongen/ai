@@ -7,7 +7,7 @@ description: Foundation plugin - planning, brainstorming, verification, tracing,
 
 The foundation of the hjemmesidekongen/ai methodology - the infrastructure that makes structured AI-assisted development possible. Without it, the other plugins have nothing to stand on: no state management, no verification protocol, no learning pipeline.
 
-**Version:** 0.3.0 · **40 skills** · **13 commands** · **12 agents** · **23 hooks**
+**Version:** 0.3.0 · **39 skills** · **11 commands** · **14 agents** · **23 hooks**
 
 ## What It Does
 
@@ -19,10 +19,8 @@ kronen turns Claude Code from a stateless Q&A tool into a stateful development e
 |---------|-------------|
 | `/brainstorm:start` | Open-ended exploration. Claude acts as a sparring partner, challenges assumptions, pushes back on weak reasoning. |
 | `/brainstorm:decide` | Extract structured decisions from a brainstorm session. Each decision gets user confirmation before it's saved. |
-| `/plan:create` | Convert a task into a wave-based plan. Resolves dependencies via topological sort, assigns model tiers, sets up verification gates. |
-| `/plan:execute` | Run the plan wave-by-wave with parallel agent dispatch and verification between waves. |
-| `/plan:status` | See where you are - wave progress, task status, errors, recovery options. |
-| `/plan:resume` | Pick up an interrupted plan from exactly where it stopped. |
+| `/plan` | Create and run an iterative plan from a goal. Validates the goal with a 5-point mechanical checklist, plans one wave at a time, executes via multi-agent dispatch, verifies with an isolated agent, and loops until the goal is met. |
+| `/plan status` | See where you are — cycle number, wave progress, remaining goal, learnings count. |
 | `/full-review` | 5-phase code review with 2 parallel reviewers per phase. Severity gates between phases. |
 | `/autopilot-run` | Autonomous iteration loop. Give it a task, it works through iterations until completion, respecting stop hooks and verification gates. |
 | `/autopilot-cancel` | Stop the loop and get an iteration report. |
@@ -35,11 +33,11 @@ No task gets marked "done" without proof.
 
 **verification-gate** enforces a 5-step protocol: identify the proof command, run it, read the full output, verify it matches expectations, and only then claim completion. Inference-based completion ("it should work") is explicitly banned.
 
-**plan-verifier** runs two stages after each wave: Stage 1 checks mechanical spec compliance (files exist, schemas valid, ownership correct). Stage 2 runs quality review with judgment calls. Both must pass.
+**plan-verifier** is an isolated agent with zero tools — it can't read files or search the codebase. The coordinator reads output files and passes content into the agent, guaranteeing context isolation from the build phase. Two stages: Stage 1 checks mechanical spec compliance (files exist, schemas valid, ownership correct). Stage 2 runs quality review. Both must pass.
 
 Hooks enforce this at the system level:
 - **verification-gate-stop** prevents premature completion claims
-- **check-wave-complete** blocks plan advancement without verification
+- **plan-verification-gate** blocks writes to future wave files before current wave verification passes
 - **scope-guard** prevents modifications to out-of-scope files
 
 ### Cross-Session Continuity
@@ -105,8 +103,7 @@ The planning engine handles dependency ordering, file-ownership isolation (so pa
 | brainstorm-session | Open-ended brainstorm |
 | brainstorm-decision-writer | Extract decisions from brainstorms |
 | brainstorm-decision-reader | Load past decisions for context |
-| plan-engine | Task to wave plan conversion |
-| plan-verifier | Two-stage wave verification |
+| plan-engine | Goal-driven iterative planning (OODA loop, wave decomposition, learnings accumulation) |
 
 ### Code Review Skills
 
@@ -185,7 +182,7 @@ Hooks are the safety net. They prevent you from pushing to main, skipping verifi
 
 ### Agents
 
-12 specialized agents, each with a specific role and model tier:
+14 specialized agents, each with a specific role and model tier:
 
 | Agent | Tier | Role |
 |-------|------|------|
@@ -201,6 +198,8 @@ Hooks are the safety net. They prevent you from pushing to main, skipping verifi
 | error-detective | sonnet | Read-only error investigation and root cause analysis |
 | incident-responder | sonnet | Post-investigation fix coordination and post-mortems |
 | agent-reviewer | sonnet | 5-dimension agent quality review |
+| plan-verifier | sonnet | Isolated wave verification (zero tools, no build context) |
+| plan-classifier | sonnet | Reflect phase path classification (CONTINUE/ADJUST/REPLAN/ESCALATE) |
 
 All review/audit agents are read-only. They produce verdicts. They never modify code.
 
