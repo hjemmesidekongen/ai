@@ -2,7 +2,7 @@
 
 ## What This Is
 Five plugins in a monorepo:
-- **kronen** (`plugins/kronen/`) — The Crown: core foundation. Planning, brainstorm, tracing, memory governance, roadmap, doc governance, creator/reviewer tooling, autopilot, prompt optimization, and validation agents (41 skills, 14 commands, 12 agents).
+- **kronen** (`plugins/kronen/`) — The Crown: core foundation. Planning, brainstorm, tracing, memory governance, roadmap, doc governance, creator/reviewer tooling, autopilot, prompt optimization, and validation agents (39 skills, 11 commands, 14 agents).
 - **smedjen** (`plugins/smedjen/`) — The Forge: development execution engine. Task decomposition, agent dispatch, tech knowledge, disciplines, visual verification, completion gates, project mapping, orchestration, studio knowledge, content writing (62 skills, 3 commands, 7 agents).
 - **herold** (`plugins/herold/`) — The Herald: task management and workplace integration. Jira ingestion, local task storage, contradiction detection, project profiles, QA handover, bulk ingestion, PR workflows (9 skills, 8 commands).
 - **våbenskjold** (`plugins/våbenskjold/`) — The Coat of Arms: brand strategy, audit, and evolution (4 skills, 5 commands).
@@ -36,25 +36,22 @@ After `/compact` or when context seems incomplete, read `.ai/context/snapshot.ym
   prompts/                           # Prompt templates
   roadmap.yml                        # Roadmap across 5 phases
 plugins/
-  kronen/                             # The Crown — core foundation (41 skills, 14 commands, 12 agents)
+  kronen/                             # The Crown — core foundation (39 skills, 11 commands, 14 agents)
     .claude-plugin/
       plugin.json                    # v0.3.0, hooks: PreToolUse, PostToolUse, PreCompact, SessionStart, Stop
       ecosystem.json                 # Component registry
     agents/                          # plugin-validator, skill-auditor, security-auditor, component-reviewer,
                                      # architect-reviewer, refactoring-specialist, knowledge-synthesizer,
                                      # context-manager, tdd-orchestrator, error-detective, incident-responder,
-                                     # agent-reviewer
+                                     # agent-reviewer, plan-verifier, plan-classifier
     commands/                        # trace-full, roadmap-add, roadmap-view, brainstorm-start,
-                                     # brainstorm-decide, plan-create, plan-dynamic, plan-execute,
-                                     # plan-status, plan-resume, autopilot-run, autopilot-cancel,
-                                     # full-review, prompt-create
+                                     # brainstorm-decide, plan, plan-status, autopilot-run,
+                                     # autopilot-cancel, full-review, prompt-create
     skills/
       roadmap-capture/               # Auto-capture out-of-scope ideas
       brainstorm-session/            # Open-ended brainstorm
       brainstorm-decision-writer/    # Extract decisions from brainstorms
-      plan-engine/                   # Task → wave plan conversion
-      dynamic-planner/               # Goal-oriented iterative planning with learning loop
-      plan-verifier/                 # Two-stage wave verification
+      plan-engine/                   # Iterative OODA planning engine (goal-driven, wave decomposition)
       brainstorm-decision-reader/    # Load past decisions for context
       doc-checkpoint/                # Evaluate docs state after task completion
       hook-creator/                  # Create/modify hooks
@@ -85,13 +82,14 @@ plugins/
       agent-teams/                   # Preset team compositions for parallel agent dispatch
       auto-doc/                      # Automated documentation updates (complements doc-checkpoint)
       prompt-optimizer/              # Sharpen vague prompts using proven frameworks (auto + builder)
-    scripts/                         # session-recovery, trace-light, check-wave-complete, check-trace-written,
+    scripts/                         # session-recovery, trace-light, check-trace-written,
                                      # doc-stale-check, cache-clear, verification-gate-stop,
-                                     # observation-recorder, scope-guard, tdd-gate, plan-gate, compact-gate-pre/post,
+                                     # observation-recorder, scope-guard, tdd-gate, compact-gate-pre/post,
                                      # setup-autopilot, autopilot-stop-hook,
                                      # prevent-direct-push, debug-window,
-                                     # dynamic-prompt-constructor, pencil-swarm-check
-      tests/                         # Hook unit tests (test-tdd-gate.sh, test-scope-guard.sh, test-plan-gate.sh)
+                                     # plan-prompt-constructor, plan-verification-gate, plan-recovery,
+                                     # pencil-swarm-check
+      tests/                         # Hook unit tests (test-tdd-gate.sh, test-scope-guard.sh)
     resources/                       # error-annotation-format, memory-rules, agent-orchestration, instincts-schema
   våbenskjold/                       # The Coat of Arms — brand strategy (4 skills, 5 commands)
     skills/                          # brand-strategy, brand-audit, brand-evolve, brand-loader
@@ -132,11 +130,8 @@ docs/
 | `/kronen:roadmap-view` | Display roadmap with filters |
 | `/kronen:brainstorm-start` | Start open-ended brainstorm session |
 | `/kronen:brainstorm-decide` | Extract decisions from brainstorm |
-| `/kronen:plan-create` | Create a wave-based execution plan |
-| `/kronen:plan-dynamic` | Start a goal-oriented iterative plan (dynamic mode) |
-| `/kronen:plan-execute` | Execute a wave plan with verification gates |
-| `/kronen:plan-status` | Show plan progress |
-| `/kronen:plan-resume` | Resume interrupted plan |
+| `/kronen:plan` | Create and run an iterative plan from a goal |
+| `/kronen:plan-status` | Show plan progress (read-only) |
 | `/kronen:autopilot-run` | Start autopilot loop (autonomous iteration with stop hook) |
 | `/kronen:autopilot-cancel` | Cancel active autopilot loop |
 | `/kronen:full-review` | 5-phase comprehensive code review |

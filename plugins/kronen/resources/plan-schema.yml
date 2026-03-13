@@ -1,6 +1,6 @@
 # Plan Schema — kronen
 # Defines the structure of plan.yml files.
-# Produced by plan-engine, consumed by plan-execute/plan-status/plan-resume.
+# Produced by plan-engine, consumed by plan-engine (OODA loop), plan-verifier agent, /plan status.
 
 plan:
   # --- Metadata ---
@@ -37,10 +37,14 @@ plan:
       rationale: string      # why these tasks are grouped
       status: pending | in_progress | completed | failed
       verification:
-        type: string         # data_validation, file_validation, ab_benchmark, integration_test
-        checks: [string]     # specific checks to run
+        type: string         # data_validation, file_validation, code_validation, integration_test
+        contract: [string]   # concrete, verifiable requirements written at plan time
+                             # NOT generated during verification — written upfront (PC-D05)
+                             # each entry is a specific assertion, not a generic check
+                             # final wave must include acceptance criteria from goal
         passed: boolean|null # null = not yet run
       qa_review: boolean     # QA agent reviews before advancing (always true for final wave)
+      checkpoint: boolean    # pause after verification for user approval (Continue/Revise/Abort)
 
   # --- Recovery ---
   recovery_notes: string     # context for resumption after session break

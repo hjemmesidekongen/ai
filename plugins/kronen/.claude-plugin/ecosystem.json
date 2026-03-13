@@ -5,11 +5,8 @@
     "roadmap-view",
     "brainstorm-start",
     "brainstorm-decide",
-    "plan-create",
-    "plan-execute",
+    "plan",
     "plan-status",
-    "plan-dynamic",
-    "plan-resume",
     "full-review",
     "autopilot-run",
     "autopilot-cancel",
@@ -20,8 +17,6 @@
     "brainstorm-session",
     "brainstorm-decision-writer",
     "plan-engine",
-    "plan-verifier",
-    "dynamic-planner",
     "brainstorm-decision-reader",
     "doc-checkpoint",
     "hook-creator",
@@ -70,7 +65,9 @@
     "tdd-orchestrator",
     "error-detective",
     "incident-responder",
-    "agent-reviewer"
+    "agent-reviewer",
+    "plan-verifier",
+    "plan-classifier"
   ],
   "dependencies": []
 }

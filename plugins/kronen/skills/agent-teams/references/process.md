@@ -64,16 +64,16 @@ Before dispatching parallel agents:
 3. Resolve any interface mismatches
 4. Commit as a single logical unit (or per-stream commits)
 
-## Integration with Plan-Execute
+## Integration with Plan-Engine
 
-When `plan-execute` uses parallel dispatch:
+When plan-engine uses parallel dispatch:
 
 ```yaml
 # In state.yml, tasks within a wave can run in parallel
 wave-2:
   tasks: [t3, t4, t5]
   # t3, t4, t5 have non-overlapping file ownership
-  # plan-execute dispatches them as parallel Agent calls
+  # plan-engine dispatches them as parallel Agent calls
 ```
 
 Future: `--teams` flag to switch from sequential Agent dispatch to native Agent Teams API when stable.

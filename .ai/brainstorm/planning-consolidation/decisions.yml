@@ -1,0 +1,348 @@
+# ============================================================
+# DECISIONS — Planning System Consolidation
+# ============================================================
+# Extracted: 2026-03-13
+# Session: .ai/brainstorm/planning-consolidation/
+# Parent: .ai/brainstorm/workflow-optimisation/ (WO-D04, WO-D08, WO-D09)
+# Status: confirmed
+# Reviewed by: smedjen:architect, kronen:architect-reviewer
+# ============================================================
+
+decisions:
+
+  - id: PC-D01
+    title: "Dynamic/iterative is the ONLY planning mode"
+    domain: architecture
+    status: confirmed
+    date: "2026-03-13"
+    summary: >
+      Eliminate static planning (plan-create). The OODA iterative loop is the
+      only way to plan. Goal is fixed, path adapts. Single-wave plans
+      effectively behave like the old static mode without a separate code path.
+    rationale: >
+      Two planning modes created routing confusion for both the user and the LLM.
+      Every plan start required a mode decision. Dynamic subsumes static — a
+      plan that happens to know full scope up front simply completes in fewer
+      cycles.
+    reviewed_by:
+      - agent: smedjen:architect
+        verdict: "ARCH-008: accepted risk. Wave decomposition still available as Plan phase."
+      - agent: kronen:architect-reviewer
+        verdict: "Eliminating static mode removes a code path nobody should use."
+    affects:
+      - "Delete plan-create command"
+      - "plan-engine becomes the sole planning skill"
+      - "CLAUDE.md routing references iterative only"
+
+  - id: PC-D02
+    title: "One skill: plan-engine (OODA loop + wave decomposition)"
+    domain: architecture
+    status: confirmed
+    date: "2026-03-13"
+    summary: >
+      Merge dynamic-planner into plan-engine. One skill owns the full OODA
+      cycle (orient → reflect → research → plan → build → verify → learn → loop)
+      AND the wave decomposition algorithm (topological sort, file-ownership,
+      tier assignment). The decomposition algorithm remains a distinct callable
+      phase within the skill, not absorbed into the loop.
+    rationale: >
+      Both agents flagged overloading risk. Resolution: the wave decomposition
+      stays as a clean internal module (the Plan phase), callable by
+      file-ownership skill. The OODA loop wraps it. SKILL.md ~80 lines,
+      references/process.md ~250 lines, references/reflect-prompts.md kept.
+    reviewed_by:
+      - agent: smedjen:architect
+        verdict: "ARCH-001: keep decomposition as distinct callable interface within Plan phase."
+      - agent: kronen:architect-reviewer
+        verdict: "Two concerns in one skill is acceptable if process.md partitions clearly."
+    affects:
+      - "Merge dynamic-planner content into plan-engine"
+      - "Delete dynamic-planner skill directory"
+      - "file-ownership depends_on plan-engine unchanged"
+      - "plan-engine SKILL.md ≤80 lines, overflow to references/"
+
+  - id: PC-D03
+    title: "Two dedicated agents: plan-verifier and plan-classifier"
+    domain: architecture
+    status: confirmed
+    date: "2026-03-13"
+    summary: >
+      Verification and classification each get a dedicated agent for context
+      isolation. plan-verifier gets only the verification contract + output
+      files (no build context). plan-classifier gets only the goal, active
+      learnings, wave results, and adversarial prompts. Neither shares
+      context with the builder.
+    rationale: >
+      Builder-verifier separation prevents confirmation bias. The classifier
+      deciding CONTINUE/ADJUST/REPLAN/ESCALATE must not be influenced by
+      sunk-cost from the build phase.
+    reviewed_by:
+      - agent: smedjen:architect
+        verdict: "ARCH-002: plan-classifier must be a lightweight inline call, NOT dispatched through the planning system. Define fallback to inline reflection if agent fails."
+      - agent: kronen:architect-reviewer
+        verdict: "Agent-based verification is architecturally cleaner than skill-based."
+    constraints:
+      - "plan-classifier is a lightweight call (goal + learnings + results in, classification out)"
+      - "plan-classifier must NOT be dispatched through context-manager or the planning system"
+      - "plan-classifier must have a fallback to inline reflection on failure"
+      - "plan-verifier runs 5 mechanical checks + quality review"
+    affects:
+      - "Create plan-verifier agent definition"
+      - "Create plan-classifier agent definition"
+      - "Delete plan-verifier skill (becomes agent)"
+      - "plan-engine dispatches both at appropriate loop phases"
+
+  - id: PC-D04
+    title: "Goal clarity gate: advisory cycle 1, hard gate cycle 2"
+    domain: quality
+    status: confirmed
+    date: "2026-03-13"
+    summary: >
+      Before the loop starts, validate the goal is measurable, scoped, concrete,
+      and has acceptance criteria. On cycle 1 this is advisory (allows
+      exploratory starts). By cycle 2, if acceptance criteria are still missing,
+      escalate — don't spend resources on a vague target.
+    rationale: >
+      Hard gate on cycle 1 blocks brainstorm-then-plan workflows where the goal
+      refines during initial exploration. But by cycle 2, real resources are
+      being spent — vague goals cause drift. Acceptance criteria from the gate
+      feed directly into the final wave's verification contract.
+    reviewed_by:
+      - agent: smedjen:architect
+        verdict: "ARCH-004: advisory on cycle 1 preserves exploratory start."
+    affects:
+      - "plan-engine orient phase includes goal clarity check"
+      - "Cycle 2 orient phase enforces acceptance criteria"
+      - "Acceptance criteria feed into verification contract"
+
+  - id: PC-D05
+    title: "Verification contract written upfront in plan.yml"
+    domain: quality
+    status: confirmed
+    date: "2026-03-13"
+    summary: >
+      Each wave gets explicit, concrete verification requirements written at
+      plan time (not generated ad-hoc during verification). The contract lives
+      in plan.yml alongside the wave definition — the existing verification
+      block is promoted to a richer format. Visible to: user (for approval),
+      task agents (they know what they'll be measured against), and the
+      plan-verifier agent (checks against these specific requirements).
+    rationale: >
+      Currently plan-verifier generates assertions after the fact. Upfront
+      contracts make verification predictable and auditable. No new state file
+      needed — plan.yml already has a verification block per wave.
+    reviewed_by:
+      - agent: smedjen:architect
+        verdict: "ARCH-009: put it in plan.yml, do not create a new file."
+      - agent: kronen:architect-reviewer
+        verdict: "Promotes existing verification.checks to richer contract format."
+    affects:
+      - "plan-schema.yml verification block gets richer format"
+      - "plan-engine Plan phase generates verification contract per wave"
+      - "plan-verifier agent checks against contract, not ad-hoc assertions"
+      - "User sees and approves requirements before execution starts"
+
+  - id: PC-D06
+    title: "Two hooks: plan-verification-gate and plan-recovery"
+    domain: enforcement
+    status: confirmed
+    date: "2026-03-13"
+    summary: >
+      Two bash hooks only. plan-verification-gate (blocking PreToolUse) prevents
+      advancing to next wave's files without verification passing.
+      plan-recovery (SessionStart) detects interrupted plans and surfaces them.
+      No plan-alignment Hookify hook — both agents recommended against it.
+    rationale: >
+      plan-alignment (PostToolUse prompt hook) would fire on every tool call,
+      creating noise and burning tokens. Wave-end verification already catches
+      drift. Scope-guard (if kept) handles file-level drift. Start with 2
+      hooks; add alignment checking later only if verification proves
+      insufficient.
+    reviewed_by:
+      - agent: smedjen:architect
+        verdict: "ARCH-006: gate behind active-plan check. Consider dropping entirely."
+      - agent: kronen:architect-reviewer
+        verdict: "Drop plan-alignment entirely. Scope-guard + plan-verifier already cover this."
+    affects:
+      - "Create plan-verification-gate hook (bash, blocking)"
+      - "Create plan-recovery hook (bash, SessionStart)"
+      - "Delete plan-gate.sh, check-wave-complete.sh"
+      - "Update plugin.json hook registry atomically with script deletions"
+
+  - id: PC-D07
+    title: "Keep plan-prompt-constructor script for autopilot"
+    domain: infrastructure
+    status: confirmed
+    date: "2026-03-13"
+    summary: >
+      Rename dynamic-prompt-constructor.sh to plan-prompt-constructor.sh. Keep
+      it as a bash script. The autopilot stop hook is bash and cannot invoke
+      skills — it needs a script to build cycle-aware prompts.
+    rationale: >
+      Both agents flagged this as a blocking migration risk. autopilot-stop-hook.sh
+      shells out to the constructor script. Deleting it breaks all autopilot
+      loops for plans. Bash hooks can only call bash scripts.
+    reviewed_by:
+      - agent: smedjen:architect
+        verdict: "ARCH-005: runtime failure, not build-time. Will only surface when someone runs a plan."
+      - agent: kronen:architect-reviewer
+        verdict: "Cannot replace a bash dependency with a skill reference."
+    affects:
+      - "Rename dynamic-prompt-constructor.sh → plan-prompt-constructor.sh"
+      - "Update autopilot-stop-hook.sh path reference"
+      - "Update plan-engine process.md reference"
+
+  - id: PC-D08
+    title: "Keep /plan status as read-only command"
+    domain: architecture
+    status: confirmed
+    date: "2026-03-13"
+    summary: >
+      Plan status inspection stays as a standalone command (/plan status).
+      Read-only, no planning skill loaded. Inspection and orchestration are
+      different concerns — checking progress shouldn't require loading the
+      full OODA loop into context.
+    rationale: >
+      Both agents recommended this. During autopilot or mid-session, users need
+      a lightweight way to check "where am I?" without triggering planning
+      logic. The command is ~50 lines and pure read.
+    reviewed_by:
+      - agent: smedjen:architect
+        verdict: "plan-status as inspection is a different concern from orchestration."
+      - agent: kronen:architect-reviewer
+        verdict: "Keep as standalone. Saves almost nothing to consolidate, loses clean separation."
+    affects:
+      - "Keep /plan status as separate command"
+      - "/plan (create/run) is the main command"
+      - "Total commands: 2 (down from 5)"
+
+  - id: PC-D09
+    title: "Autopilot is default execution mode"
+    domain: behavior
+    status: confirmed
+    date: "2026-03-13"
+    summary: >
+      Plans always execute via autopilot by default. Manual wave-by-wave
+      execution only if explicitly requested. CLAUDE.md routing sets this
+      as the default behavior.
+    rationale: >
+      The iterative loop is designed for autonomous cycling. Manual execution
+      breaks the learning rhythm — the user has to remember to run /plan resume
+      after each wave. Autopilot keeps the loop running until the goal is met
+      or escalation is needed.
+    affects:
+      - "CLAUDE.md routing: always autopilot unless user says otherwise"
+      - "plan-engine skill: default to autopilot execution"
+      - "plan-prompt-constructor.sh: cycle-aware prompts for each iteration"
+
+  - id: PC-D10
+    title: "Error patterns feed into learnings as instinct entries"
+    domain: quality
+    status: confirmed
+    date: "2026-03-13"
+    summary: >
+      Errors don't just get logged to state.yml — patterns that recur or
+      reveal systemic issues become learning entries typed as 'correction'
+      or 'constraint' in learnings.yml. This is the instinct integration:
+      the planning loop learns from its own failures, not just its successes.
+    rationale: >
+      Currently error logging and behavioral learning are separate systems
+      (state.yml errors vs instinct-extractor). Folding error pattern
+      recognition into the Learn phase creates a single feedback loop.
+    affects:
+      - "plan-engine Learn phase: check errors for patterns → learning entries"
+      - "learnings.yml: entries with type 'correction' reference specific errors"
+      - "Orient phase: active learnings include error-derived patterns"
+
+  - id: PC-D11
+    title: "Context-manager owns context assembly for plan-dispatched agents"
+    domain: architecture
+    status: confirmed
+    date: "2026-03-13"
+    summary: >
+      kronen's context-manager agent is the canonical context assembler for
+      all agents dispatched during plan execution. smedjen's context-assembler
+      is only for smedjen's own dev-run pipeline. Both must conform to a shared
+      context package interface.
+    rationale: >
+      Two context assembly paths risk format divergence. Clear ownership
+      prevents dispatched smedjen agents (frontend-dev, backend-dev, etc.)
+      from receiving mismatched context packages.
+    reviewed_by:
+      - agent: smedjen:architect
+        verdict: "ARCH-007: interface contract matters more than who implements it."
+    affects:
+      - "plan-engine Build phase: always dispatch context-manager first"
+      - "Define shared context package schema"
+      - "smedjen context-assembler: align to same interface for dev-run"
+
+  - id: PC-D12
+    title: "CLAUDE.md routing as decision tree, tested like code"
+    domain: enforcement
+    status: confirmed
+    date: "2026-03-13"
+    summary: >
+      The ~15 lines of CLAUDE.md routing replace 5 commands as the primary
+      planning interface. Write as a decision tree (IF/THEN), not principles.
+      Test by giving Claude ambiguous planning requests and verifying correct
+      behavior. If routing fails, commands come back.
+    rationale: >
+      Both agents flagged this as the load-bearing wall. Soft principles
+      don't enforce behavior — decision trees do. If the routing lines don't
+      reliably trigger correct planning behavior in freestyle mode, the
+      entire consolidation fails its north star (freestyle = command quality).
+    reviewed_by:
+      - agent: smedjen:architect
+        verdict: "ARCH-003: write as decision tree, not principles. Test rigorously."
+      - agent: kronen:architect-reviewer
+        verdict: "CLAUDE.md routing lines are load-bearing. Test like code."
+    affects:
+      - "CLAUDE.md Planning section: decision tree format"
+      - "Test plan: ambiguous prompts → verify correct routing"
+      - "Fallback: if routing fails, restore /plan command as primary interface"
+
+  - id: PC-D13
+    title: "Migration in 3 phases: add → rewire → delete"
+    domain: process
+    status: confirmed
+    date: "2026-03-13"
+    summary: >
+      Phase 1: Create new components (consolidated plan-engine, agents, hooks).
+      Phase 2: Rewire all cross-references (8+ files within kronen, both
+      CLAUDE.md files, ecosystem.json, plugin.json). Phase 3: Delete old
+      components. Each phase leaves the system functional. Never leave
+      dangling references.
+    rationale: >
+      Both agents emphasized this. Big-bang migration of 14 components risks
+      unrecoverable broken state. Phase 1 is riskiest (changes core skill
+      contract). Atomic plugin.json updates critical — deleted scripts with
+      live hook registry entries cause silent failures.
+    reviewed_by:
+      - agent: smedjen:architect
+        verdict: "Migrate in three phases. Phase 1 is riskiest."
+      - agent: kronen:architect-reviewer
+        verdict: "Plan as 3 waves. Never leave dangling references."
+    affects:
+      - "Phase 1: add plan-engine (merged), plan-verifier agent, plan-classifier agent, new hooks"
+      - "Phase 2: update 8+ cross-references, ecosystem.json, plugin.json, both CLAUDE.md files"
+      - "Phase 3: delete plan-create, plan-dynamic, plan-execute, plan-resume, dynamic-planner, plan-verifier skill, old scripts"
+
+  - id: PC-D14
+    title: "Keep schemas as separate files"
+    domain: architecture
+    status: confirmed
+    date: "2026-03-13"
+    summary: >
+      plan-schema.yml, state-schema.yml, and learnings-schema.yml stay as
+      separate resource files. They serve different consumers and change at
+      different rates. Do not merge into a god-schema.
+    rationale: >
+      plan-schema is consumed by decomposition. state-schema by hooks,
+      recovery, and commands. learnings-schema by the OODA loop only.
+      Merging creates unnecessary coupling.
+    reviewed_by:
+      - agent: smedjen:architect
+        verdict: "Keep three schemas. Different consumers, different change rates."
+    affects:
+      - "No schema changes needed"
+      - "Update consumer references where component names changed"

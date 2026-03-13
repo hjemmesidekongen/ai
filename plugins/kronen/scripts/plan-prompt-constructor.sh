@@ -1,21 +1,20 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# Dynamic Prompt Constructor
-# Reads a dynamic plan's state.yml + learnings.yml and constructs a
-# cycle-appropriate prompt for the autopilot stop hook to feed back.
-# Instead of repeating a static prompt each iteration, this builds
-# context-aware instructions that tell the agent where it is in the
-# dynamic planning loop and what to do next.
+# Plan Prompt Constructor
+# Reads a plan's state.yml + learnings.yml and constructs a cycle-appropriate
+# prompt for the autopilot stop hook to feed back. Instead of repeating a
+# static prompt each iteration, this builds context-aware instructions that
+# tell the agent where it is in the planning loop and what to do next.
 #
-# Usage: dynamic-prompt-constructor.sh <plan-directory>
+# Usage: plan-prompt-constructor.sh <plan-directory>
 # Output: constructed prompt on stdout, errors on stderr
 # Exit:   0 on success (or plan done), 1 on errors
 
 # --- Validate arguments ---
 
 if [[ $# -ne 1 ]]; then
-  echo "Usage: dynamic-prompt-constructor.sh <plan-directory>" >&2
+  echo "Usage: plan-prompt-constructor.sh <plan-directory>" >&2
   exit 1
 fi
 
@@ -75,7 +74,7 @@ fi
 # Max cycles reached — output escalation message
 if [[ "$CYCLE" =~ ^[0-9]+$ ]] && [[ "$MAX_CYCLES" =~ ^[0-9]+$ ]] && [[ $CYCLE -ge $MAX_CYCLES ]]; then
   cat <<EOF
-Dynamic plan: $(basename "$PLAN_DIR") — ESCALATE (max cycles reached)
+Plan: $(basename "$PLAN_DIR") — ESCALATE (max cycles reached)
 
 Goal: $GOAL
 Cycles completed: $CYCLE / $MAX_CYCLES
@@ -115,7 +114,7 @@ NEXT_CYCLE=$((CYCLE + 1))
 PLAN_NAME=$(basename "$PLAN_DIR")
 
 cat <<EOF
-Dynamic plan: ${PLAN_NAME} — Cycle ${NEXT_CYCLE}
+Plan: ${PLAN_NAME} — Cycle ${NEXT_CYCLE}
 
 Goal: ${GOAL}
 Remaining: ${REMAINING:-"(not yet assessed)"}
@@ -130,9 +129,9 @@ fi
 
 cat <<EOF
 
-Continue the dynamic planning loop:
+Continue the planning loop:
 1. Read ${PLAN_DIR}/state.yml and ${PLAN_DIR}/learnings.yml
-2. Read plugins/kronen/skills/dynamic-planner/references/process.md for the full algorithm
+2. Read plugins/kronen/skills/plan-engine/references/process.md for the full algorithm
 3. Run the REFLECT phase — classify as CONTINUE/ADJUST/REPLAN/ESCALATE
 4. Based on classification, run the appropriate next step (plan next wave, replan, or escalate)
 5. Execute the wave

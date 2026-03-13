@@ -47,8 +47,8 @@
           },
           {
             "type": "command",
-            "command": "bash ${CLAUDE_PLUGIN_ROOT}/scripts/plan-gate.sh 2>/dev/null || true",
-            "timeout": 10
+            "command": "bash ${CLAUDE_PLUGIN_ROOT}/scripts/plan-verification-gate.sh 2>/dev/null",
+            "timeout": 15
           }
         ]
       }
@@ -140,6 +140,11 @@
             "type": "command",
             "command": "bash ${CLAUDE_PLUGIN_ROOT}/scripts/pencil-swarm-check.sh 2>/dev/null || true",
             "timeout": 5
+          },
+          {
+            "type": "command",
+            "command": "bash ${CLAUDE_PLUGIN_ROOT}/scripts/plan-recovery.sh 2>/dev/null || true",
+            "timeout": 10
           }
         ]
       }
@@ -157,12 +162,7 @@
             "command": "bash ${CLAUDE_PLUGIN_ROOT}/scripts/session-context-stop.sh 2>/dev/null || true",
             "timeout": 10
           },
-          {
-            "type": "command",
-            "command": "bash ${CLAUDE_PLUGIN_ROOT}/scripts/check-wave-complete.sh 2>/dev/null || true",
-            "timeout": 30
-          },
-          {
+{
             "type": "command",
             "command": "bash ${CLAUDE_PLUGIN_ROOT}/scripts/verification-gate-stop.sh 2>/dev/null || true",
             "timeout": 15

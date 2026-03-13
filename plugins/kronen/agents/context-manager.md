@@ -22,7 +22,7 @@ You assemble targeted context packages for multi-agent workflows. Instead of eac
 
 ## When to Use
 
-- Before dispatching parallel agents (plan-execute, parallel-reviewer, file-ownership streams)
+- Before dispatching parallel agents (plan-engine, parallel-reviewer, file-ownership streams)
 - When orchestrating multi-wave plans where context must carry across waves
 - When context window is >60% consumed and selective loading matters
 - When multiple agents need overlapping state (state.yml + snapshot.yml + findings.md)

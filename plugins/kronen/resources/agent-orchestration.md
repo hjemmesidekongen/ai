@@ -276,7 +276,7 @@ mid-workflow), and leads to divergent interpretations.
 
 ### The fix
 
-The coordinator (plan-execute, or any orchestrating command) reads shared state
+The coordinator (plan-engine, or any orchestrating skill) reads shared state
 files once before dispatching sub-agents, then includes the relevant context in
 each agent's prompt.
 
@@ -310,7 +310,7 @@ Output: write to .ai/plans/<name>/artifacts/<wave>-<task>-output.md"
 ### When to apply
 
 - Any orchestrated workflow with 2+ parallel agents
-- Wave-based plan execution (plan-execute)
+- Wave-based plan execution (plan-engine)
 - Sequential chains where later agents need earlier context
 
 ### When NOT to apply

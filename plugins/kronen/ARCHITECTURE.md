@@ -38,7 +38,9 @@ plugins/kronen/
 │   ├── trace-light.sh          # PostToolUse: append-only tool trace
 │   ├── memory-health-check.sh  # Memory bloat/stale detection
 │   ├── session-recovery.sh     # SessionStart: report plan + project state
-│   ├── check-wave-complete.sh  # Stop: warn if plan/project work in progress
+│   ├── plan-verification-gate.sh # PreToolUse: block writes to future wave files
+│   ├── plan-recovery.sh        # SessionStart: detect and surface interrupted plans
+│   ├── plan-prompt-constructor.sh # Build cycle-aware autopilot prompts
 │   ├── check-trace-written.sh  # Stop: remind about missing trace reflections
 │   ├── doc-stale-check.sh        # Stop: warn if plugin files changed without doc updates
 │   ├── port-dedup-check.sh       # Stop: warn if component duplicated across plugins
@@ -50,17 +52,17 @@ plugins/kronen/
 ├── commands/                # User-invocable commands (markdown)
 │   ├── brainstorm-start.md
 │   ├── brainstorm-decide.md
-│   ├── plan-create.md
-│   ├── plan-execute.md
-│   ├── plan-status.md
-│   ├── plan-resume.md
+│   ├── plan.md
+│   ├── plan-status-view.md
 │   ├── roadmap-add.md
 │   ├── roadmap-view.md
 │   └── trace-full.md
 ├── agents/                  # Autonomous validation agents
 │   ├── plugin-validator.md    # Full plugin structure validation
 │   ├── skill-auditor.md       # Deep skill quality review
-│   └── security-auditor.md    # Infrastructure security scan
+│   ├── security-auditor.md    # Infrastructure security scan
+│   ├── plan-verifier.md       # Isolated wave verification (no build context)
+│   └── plan-classifier.md     # CONTINUE/ADJUST/REPLAN/ESCALATE classification
 ├── skills/                  # Re-usable skills (SKILL.md + references/)
 │   ├── brainstorm-session/
 │   ├── brainstorm-decision-writer/
@@ -80,7 +82,6 @@ plugins/kronen/
 │   ├── root-cause-debugging/
 │   ├── plugin-settings/
 │   ├── plan-engine/
-│   ├── plan-verifier/
 │   └── roadmap-capture/
 ├── resources/               # Static resources, formats, rules
 │   ├── error-annotation-format.yml
@@ -102,7 +103,9 @@ plugins/kronen/
   "hooks": {
     "PostToolUse": ["claude-md-guardian.sh (Write|Edit)", "compact-gate-post.sh (Write|Edit)", "trace-light.sh (all)", "strategic-compact-trigger.sh (all)"],
     "SessionStart": ["session-recovery.sh"],
-    "Stop": ["check-wave-complete.sh", "check-trace-written.sh", "doc-stale-check.sh", "port-dedup-check.sh", "cache-clear.sh"]
+    "PreToolUse": ["plan-verification-gate.sh (Write|Edit)"],
+    "SessionStart": ["session-recovery.sh", "plan-recovery.sh"],
+    "Stop": ["check-trace-written.sh", "doc-stale-check.sh", "port-dedup-check.sh", "cache-clear.sh"]
   }
 }
 ```
@@ -116,7 +119,8 @@ plugins/kronen/
 | PostToolUse | `strategic-compact-trigger.sh` | All tools | Suggest /compact at depth thresholds (<10ms) |
 | Stop | `verification-gate-stop.sh` | Session end | Remind to run proof before claiming done |
 | SessionStart | `session-recovery.sh` | Session start | Report plan + project state |
-| Stop | `check-wave-complete.sh` | Session end | Warn if work in progress (informational) |
+| PreToolUse | `plan-verification-gate.sh` | Write\|Edit | Block writes to future wave files |
+| SessionStart | `plan-recovery.sh` | Session start | Detect and surface interrupted plans |
 | Stop | `check-trace-written.sh` | Session end | Remind about missing reflections |
 | Stop | `doc-stale-check.sh` | Session end | Warn if plugin files changed without doc updates |
 | Stop | `port-dedup-check.sh` | Session end | Warn if skill/command exists in multiple plugins |
@@ -243,7 +247,7 @@ plugins as scaffolding for their unique features.
 **Migrated to kronen (removed from legacy):**
 - Planning: plan-engine, plan-verifier (from task-planner's wave-decomposer, file-ownership, verification-runner, spec-compliance-reviewer)
 - Brainstorm: brainstorm-session, brainstorm-decision-writer (from both task-planner and agency)
-- Utilities: brainstorm-decision-reader (from both), session-recovery, check-wave-complete, check-trace-written (from both)
+- Utilities: brainstorm-decision-reader (from both), session-recovery, check-trace-written (from both)
 - Schemas: plan-schema.yml, state-schema.yml (from task-planner)
 
 **Remaining in task-planner:** plugin-* commands/skills, version-* skills, agents

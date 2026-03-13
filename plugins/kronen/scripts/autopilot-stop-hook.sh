@@ -110,11 +110,11 @@ if [[ -n "$DYNAMIC_PLAN" ]] && [[ "$DYNAMIC_PLAN" != "null" ]]; then
 
   # Resolve script path relative to this hook's location
   SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-  CONSTRUCTOR="$SCRIPT_DIR/dynamic-prompt-constructor.sh"
+  CONSTRUCTOR="$SCRIPT_DIR/plan-prompt-constructor.sh"
 
   if [[ ! -x "$CONSTRUCTOR" ]]; then
     echo "$(date -u +%Y-%m-%dT%H:%M:%SZ) FAIL: prompt constructor not found at $CONSTRUCTOR" >> "$DEBUG_LOG"
-    echo "Autopilot: dynamic-prompt-constructor.sh not found. Stopping." >&2
+    echo "Autopilot: plan-prompt-constructor.sh not found. Stopping." >&2
     rm "$STATE_FILE"
     exit 0
   fi
