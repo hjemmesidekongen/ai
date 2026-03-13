@@ -31,10 +31,50 @@ goal:
 - **Concrete** — does it reference specific systems, files, or behaviors?
 - **Acceptance criteria** — what does "done" look like? List verifiable conditions.
 
-### Goal clarity gate (PC-D04)
+### Goal clarity gate (PC-D04, strengthened)
 
-- **Cycle 1**: advisory. If the goal lacks clarity, surface what's missing and propose a sharpened version. Allow the user to proceed — cycle 1 orient will refine understanding.
-- **Cycle 2+**: hard gate. If acceptance criteria are still missing or vague after the first cycle of learning, ESCALATE. Do not spend resources on a target that cannot be verified.
+Runs before cycle 1 starts. Five mechanical checks — no vibes-based judgment.
+
+**Check 1: Non-empty criteria**
+- acceptance_criteria array has ≥2 entries
+- FAIL if: array is empty, has 1 entry, or entries are empty strings
+
+**Check 2: Minimum specificity**
+- Each criterion is ≥15 characters
+- FAIL if: any criterion is shorter (too terse to be verifiable)
+
+**Check 3: No vague markers**
+- Reject criteria containing generic phrases that resist verification
+- Vague markers: "works well", "is good", "is clean", "is better", "is correct", "looks right", "should work", "properly handles", "as expected", "is complete" (without quantifier)
+- FAIL if: any criterion matches a vague marker
+
+**Check 4: Verifiability signal**
+- Each criterion contains at least one verifiable signal:
+  - File path or glob pattern (contains `/` or `*`)
+  - Command or tool reference (contains `run`, `passes`, `returns`, `outputs`)
+  - Quantifier (`zero`, `no `, `all `, `every`, `none`, `≥`, `≤`, `exactly`)
+  - Metric or count (contains a number or percentage)
+- FAIL if: any criterion lacks a verifiable signal
+
+**Check 5: Goal-criteria alignment**
+- Extract nouns/key terms from goal statement (skip stop words)
+- At least 50% of key terms appear across the acceptance criteria
+- FAIL if: criteria don't reference what the goal is about
+
+**Scoring:**
+- 5/5 pass → proceed, goal is well-formed
+- 3-4/5 pass → proceed with advisory warnings for failed checks
+- 0-2/5 pass → block. Surface which checks failed with examples of how to fix each. Do not proceed until the user refines.
+
+**Cycle 2+ enforcement:**
+- Re-run checks 1-4 (check 5 is cycle-1 only since goal is fixed)
+- If any check that passed on cycle 1 now fails (e.g., criteria were edited) → ESCALATE
+- If checks that failed on cycle 1 still fail → ESCALATE
+
+**Goal immutability:**
+- After cycle 1 completes, `goal` and `acceptance_criteria` in state.yml are frozen
+- If state.yml shows different values than cycle 1 snapshot → ESCALATE with "goal was modified after initialization"
+- Only way to change the goal: create a new plan
 
 ### Plan directory setup
 
@@ -111,8 +151,8 @@ Establishes situational awareness before any planning.
 3. Summarize active learnings (don't dump raw into context)
 4. Scan relevant codebase areas for current state of the build
 5. Assess: "Where am I relative to the goal? What's done? What's left?"
-6. **Cycle 1**: run goal clarity gate (advisory). Check if acceptance criteria are concrete enough.
-7. **Cycle 2+**: enforce goal clarity gate. If acceptance criteria are missing → ESCALATE.
+6. **Cycle 1**: run goal clarity gate (5-point mechanical checklist). Block if <3 checks pass.
+7. **Cycle 2+**: re-run goal clarity gate. If any previously passing check now fails → ESCALATE. If cycle-1 failures persist → ESCALATE.
 
 ### Output
 A mental model of: what exists, what works, what's left, what learnings apply.
