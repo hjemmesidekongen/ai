@@ -5,20 +5,23 @@ description: How the hjemmesidekongen/ai plugins relate, communicate, and share 
 
 # Architecture
 
-The hjemmesidekongen/ai methodology is implemented as three plugins with one foundation. Each plugin has a clear responsibility boundary, communicates through data files, and never imports another plugin's skills directly. This architecture reflects the methodology's core constraint: agents work, but within strict boundaries.
+The hjemmesidekongen/ai methodology is implemented as five plugins with one foundation. Each plugin has a clear responsibility boundary, communicates through data files, and never imports another plugin's skills directly. This architecture reflects the methodology's core constraint: agents work, but within strict boundaries.
 
 ## Plugin Hierarchy
 
 ```
-kronen          ← foundation, always installed
-├── smedjen       ← development execution, depends on kronen
-└── herold         ← task management, depends on kronen
+kronen             ← foundation, always installed
+├── smedjen          ← development execution, depends on kronen
+├── herold            ← task management, depends on kronen
+├── våbenskjold       ← brand strategy, depends on kronen
+└── segl              ← visual identity + design tokens, depends on kronen
 ```
 
 **Rules:**
 - Every plugin depends on kronen. Nothing else.
-- Plugins never depend on each other directly - they communicate through shared data files.
+- Plugins never depend on each other directly — they communicate through shared data files.
 - Cross-plugin coordination happens through bridge skills (e.g., `taskflow-bridge` in smedjen reads herold's `active.yml` but never calls herold commands).
+- Brand-to-design pipeline: våbenskjold writes `.ai/brand/` → segl reads it and writes `.ai/design/` → smedjen's design-to-code patterns consumes tokens. Each step is independent.
 
 ## Responsibility Boundaries
 
@@ -28,6 +31,8 @@ kronen          ← foundation, always installed
 | **MCP interaction** | kronen | Raw API calls to Jira, Confluence, Bitbucket, Slack, Outlook |
 | **Task lifecycle** | herold | Ticket ingestion, contradiction detection, PR creation, QA handover |
 | **Code execution** | smedjen | Task decomposition, agent dispatch, framework knowledge, quality gates |
+| **Brand strategy** | våbenskjold | Brand creation, audit, evolution — structured YAML guidelines |
+| **Visual identity** | segl | OKLCH palettes, design tokens, Pencil integration, WCAG validation |
 
 ## Data Flow
 
@@ -53,7 +58,7 @@ kronen          ← foundation, always installed
     └─────────────────┘          └──────────────────┘
 ```
 
-herold writes task files. smedjen reads them (via `taskflow-bridge`). smedjen writes its own state to `.ai/smedjen/`. Neither plugin writes to the other's directories.
+herold writes task files. smedjen reads them (via `taskflow-bridge`). våbenskjold writes brand files to `.ai/brand/`. segl reads brand files and writes design files to `.ai/design/`. No plugin writes to another plugin's directories.
 
 ## Hooks Architecture
 
@@ -120,6 +125,8 @@ All state persists as YAML files in `.ai/`:
 | `.ai/tasks/` | herold | Task YAMLs, active pointer, handoff, QA handover |
 | `.ai/project-map.yml` | smedjen | Tech stack detection and module mapping |
 | `.ai/smedjen/` | smedjen | Pipeline state, execution artifacts |
+| `.ai/brand/` | våbenskjold | Brand guidelines: guideline.yml, voice.yml, values.yml |
+| `.ai/design/` | segl | Design tokens, identity, platform exports, Pencil files |
 
 No databases. No external services for state. Everything is local, versionable, and inspectable.
 
@@ -148,3 +155,5 @@ All three are mandatory. None can be bypassed by the implementing agent.
 - [kronen](/docs/kronen) - the foundation plugin with hooks, verification, and state management
 - [smedjen](/docs/smedjen) - the development execution pipeline and agent model
 - [herold](/docs/herold) - task lifecycle and MCP integrations
+- [våbenskjold](/docs/vaabenskjold) - brand strategy toolkit
+- [segl](/docs/segl) - visual identity and design tokens

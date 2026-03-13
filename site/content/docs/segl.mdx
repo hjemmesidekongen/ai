@@ -1,0 +1,151 @@
+---
+title: segl
+description: Visual identity and design tokens - OKLCH color palettes, typography systems, spacing scales, WCAG contrast validation, and Pencil design integration.
+---
+
+# segl
+
+The visual identity layer of the hjemmesidekongen/ai methodology. våbenskjold defines what a brand says and believes — segl defines what it looks like. Color palettes, typography, spacing, shadows — all generated from brand guidelines and exported to every platform format you need.
+
+**Version:** 0.1.0 · **4 skills** · **4 commands**
+
+## What It Does
+
+segl takes brand guidelines (from våbenskjold) and produces a complete visual identity system: OKLCH-based color palettes with 10-stop scales, typography pairings, spacing systems, and shadow definitions. Everything is validated against WCAG contrast requirements. Then it exports to CSS custom properties, Tailwind config, and W3C Design Token Community Group format.
+
+For design work, segl bridges tokens into Pencil and orchestrates multi-agent design sessions.
+
+## Commands
+
+| Command | Usage | What It Does |
+|---------|-------|-------------|
+| `/design:identity` | `/design:identity acme` | Create visual identity — palettes, typography, spacing |
+| `/design:tokens` | `/design:tokens acme` | Export to Tailwind, CSS, DTCG JSON with contrast audit |
+| `/design:status` | `/design:status [acme]` | Show design artifact availability |
+| `/design:page` | `/design:page acme` | Full Pencil orchestrator — tokens to designer agents in one command |
+
+### Identity → Tokens → Design Workflow
+
+```bash
+/design:identity my-saas       # Generate tokens.yml + identity.yml
+/design:tokens my-saas         # Export tailwind.json, variables.css, tokens.dtcg.json
+/design:page my-saas           # Load tokens into Pencil, spawn designer agents
+```
+
+## Key Concepts
+
+### OKLCH Color System
+
+All color palettes are generated in OKLCH color space, not HSL. OKLCH provides perceptual uniformity — equal numeric steps in lightness produce equal perceived visual changes. This matters for two reasons:
+
+1. **Consistent scales.** A 10-stop palette (50 through 950) has even visual progression. In HSL, mid-range steps often look bunched together.
+2. **Reliable contrast.** WCAG contrast ratios computed from OKLCH values are predictable. You don't get the HSL surprise where two colors look different but have nearly identical luminance.
+
+Each palette generates stops at 50, 100, 200, 300, 400, 500, 600, 700, 800, 900, 950 — with both hex and OKLCH values stored.
+
+### Token Pipeline
+
+The identity system follows a three-tier token architecture:
+
+```
+Primitives (raw values)
+  ↓ referenced by
+Semantic (intent-based: "primary", "surface", "error")
+  ↓ consumed by
+Platform exports (Tailwind, CSS, DTCG)
+```
+
+**Primitives** are the raw color scales, font stacks, and spacing values. They never appear in code directly.
+
+**Semantic tokens** reference primitives by intent: `primary` → `{primitives.color.primary.600}`, `surface` → `{primitives.color.neutral.50}`. Dark mode overrides only semantic tokens — the primitive scales stay constant.
+
+**Platform exports** resolve all references to concrete values for each target:
+
+| Export | Format | What's Included |
+|--------|--------|----------------|
+| `tailwind.json` | Tailwind theme config | colors, fontFamily, fontSize, spacing, borderRadius |
+| `variables.css` | CSS custom properties | `:root` organized by category + `.dark` override block |
+| `tokens.dtcg.json` | W3C DTCG format | Every token with `$value`, `$type`, `$description` |
+| `contrast-matrix.md` | Markdown tables | Light mode, dark mode, and colorblind safety audit |
+
+### WCAG Contrast Validation
+
+Every foreground/background pair is tested against WCAG 2.1 thresholds:
+
+| Context | Required Ratio |
+|---------|---------------|
+| Body text | 4.5:1 |
+| Large text (18px+ bold or 24px+) | 3:1 |
+| UI components | 3:1 |
+| Enhanced (optional) | 7:1 |
+
+Failures are flagged with the nearest passing shade suggested. The contrast matrix includes colorblind safety tables (protanopia, deuteranopia simulations).
+
+### Pencil Integration
+
+`/design:page` is the full orchestrator. It:
+
+1. Loads brand tokens into Pencil via `set_variables` (~50 variables: 19 semantic colors, 12 primitive highlights, fonts, spacing, radius, shadows)
+2. Creates placeholder frames in horizontal grid layout (mobile 390px + desktop 1440px per page)
+3. Fetches style guides and design guidelines
+4. Spawns 3-4 designer agents per batch — they read the design tokens and produce layouts autonomously
+5. Screenshots each frame for verification
+6. Applies targeted fixes via `batch_design` (adjustments only, never creative work)
+
+The key constraint: **all YAML references must be resolved to concrete values** before calling `set_variables`. Pencil cannot interpret `"{primitives.color.primary.500}"` — it needs `#e1943d`.
+
+Designer agents always produce better creative work than manual `batch_design` operations. The orchestrator uses agent swarm mode (requires `-enable_spawn_agents` flag) with an N-1 batching pattern to avoid pool exhaustion.
+
+### Design Deliverables
+
+Every design project produces:
+
+- **Foundations page** — color swatches, typography scale, spacing system, radius examples, shadow elevations
+- **Components page** — buttons (3 variants × 5 states), inputs (3 types × 5 states), badges, cards, navigation, accordions, dropdowns, skeletons
+- **Content pages** — both mobile (390px) and desktop (1440px) breakpoints for every page
+
+Component states are shown as separate explicit frames — Pencil has no prototype toggle mode.
+
+## Component Reference
+
+### Skills
+
+| Skill | Model | Interactive | Purpose |
+|-------|-------|-------------|---------|
+| visual-identity | Sonnet | Yes | Generate OKLCH palettes, typography, spacing from brand guidelines |
+| design-tokens | Sonnet | No | Export tokens.yml to Tailwind, CSS, DTCG with WCAG validation |
+| design-loader | Haiku | No | Check design artifact availability and status |
+| pencil-tokens | Sonnet | No | Resolve token references and inject into Pencil via set_variables |
+
+### Token Schema
+
+`resources/token-schema.yml` defines the DTCG-aligned structure:
+
+| Category | Token Types |
+|----------|------------|
+| Color | Primitives (10-stop scales), semantic (intent), surface, text, border |
+| Typography | family (heading/body/mono), scale (display→caption), weight |
+| Spacing | Base unit (4px) + named scale (xs through 3xl) |
+| Radius | sm through full (0.25rem → 9999px) |
+| Shadow | sm through lg (CSS box-shadow values) |
+
+### Output Files
+
+```
+.ai/design/{name}/
+├── tokens.yml              # Source of truth — OKLCH palettes, typography, spacing
+├── identity.yml            # Design rationale and color theory
+├── {name}.pen              # Pencil design file (user saves manually)
+└── tokens/
+    ├── tailwind.json       # Tailwind theme config
+    ├── variables.css       # CSS custom properties (:root + .dark)
+    ├── tokens.dtcg.json    # W3C Design Token Community Group format
+    └── contrast-matrix.md  # WCAG contrast audit with colorblind safety
+```
+
+## See also
+
+- [våbenskjold](/docs/vaabenskjold) — brand strategy that feeds into visual identity generation
+- [kronen](/docs/kronen) — foundation plugin that segl depends on
+- [smedjen](/docs/smedjen) — design-to-code patterns skill consumes design tokens
+- [Architecture](/docs/architecture) — how the five plugins relate

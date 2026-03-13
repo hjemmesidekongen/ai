@@ -23,7 +23,7 @@ No build step. The plugins are markdown and YAML — Claude Code discovers them 
 
 ```
 /kronen:brainstorm-start    — explore a problem before writing code
-/kronen:plan-create         — break work into dependency-ordered waves
+/kronen:plan                — create and run an iterative plan from a goal
 /smedjen:dev-scan           — map your project's tech stack
 /våbenskjold:brand-create   — build a brand from scratch
 ```
