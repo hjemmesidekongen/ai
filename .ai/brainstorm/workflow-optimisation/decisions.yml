@@ -1,0 +1,244 @@
+# ============================================================
+# DECISIONS — Workflow Optimisation Brainstorm
+# ============================================================
+# Extracted: 2026-03-12
+# Session: .ai/brainstorm/workflow-optimisation/
+# Status: confirmed
+# ============================================================
+
+decisions:
+
+  - id: WO-D01
+    title: "Operating mindset lives in CLAUDE.md, not a separate skill"
+    domain: architecture
+    status: confirmed
+    date: "2026-03-12"
+    summary: >
+      Cognitive operating principles (read before writing, declare scope, verify
+      don't infer, stop when done, etc.) belong directly in ~/CLAUDE.md as
+      always-loaded defaults. No separate mindset skill file needed — CLAUDE.md
+      is the mindset. Code quality standards also stay in CLAUDE.md.
+    rationale: >
+      Skills aren't loaded unless triggered. There's no always_active flag.
+      CLAUDE.md is genuinely always loaded every conversation. The principles
+      are short enough (~10 rules) to fit without bloating token cost.
+    affects:
+      - "~/CLAUDE.md — add operating mindset section"
+      - "Remove any planned mindset skill from scope"
+
+  - id: WO-D02
+    title: "Skill = knowledge, Agent = delegation"
+    domain: architecture
+    status: confirmed
+    date: "2026-03-12"
+    summary: >
+      Skills are knowledge documents loaded into context — they shape decisions
+      but never execute independently. Agents are separate Claude instances with
+      isolated context and tool access — they execute and return results.
+      Test: "Can the same Claude apply this, or does it need isolated execution?"
+    rationale: >
+      The boundary was blurry. Skills like prisma-patterns teach how to think.
+      Agents like test-engineer go run things. Mixing them creates confusion
+      about what's a document vs. what's a worker.
+    affects:
+      - "Agent definitions — ensure each justifies isolated execution"
+      - "Skills — ensure none require independent execution"
+      - "Review agents that duplicate reviewer skills — collapse"
+
+  - id: WO-D03
+    title: "Three-layer architecture: CLAUDE.md routes, Skills provide depth, Hooks enforce"
+    domain: architecture
+    status: confirmed
+    date: "2026-03-12"
+    summary: >
+      CLAUDE.md contains routing rules ("when to plan, when to review, when to
+      verify"). Core skills provide operational depth ("how to plan well, how to
+      review well"). Hooks enforce what must never be skipped. Commands become
+      optional convenience aliases that compose skills — not required for quality.
+    rationale: >
+      Commands created two classes of output quality. Someone who typed the command
+      got the full pipeline; someone who freestyled got improvisation. The fix is
+      making the process discoverable from context (CLAUDE.md + skills), not from
+      invocation (commands).
+    affects:
+      - "CLAUDE.md — add routing table for core workflows"
+      - "Commands — demote from primary path to convenience aliases"
+      - "Hooks — promote from advisory to enforcement where needed"
+
+  - id: WO-D04
+    title: "Commands reduce from 34 to ~12"
+    domain: simplification
+    status: confirmed
+    date: "2026-03-12"
+    summary: >
+      Surviving commands: plan, plan:status, plan:resume, brainstorm, review,
+      scan, brand:create, brand:evolve, design, task:start, task:done, trace.
+      Everything else dissolves into CLAUDE.md routing, merges into a parent
+      command, or becomes auto-triggered by hooks and skills.
+    rationale: >
+      34 commands is too many to discover or remember. Most encode sequences
+      that should be automatic. Fewer commands means less confusion about
+      whether to use a command or freestyle.
+    affects:
+      - "All 5 plugins — audit each command for merge/dissolve/keep"
+      - "CLAUDE.md — routing rules must cover dissolved command workflows"
+      - "Hooks — must enforce what dissolved commands used to guarantee"
+
+  - id: WO-D05
+    title: "Knowledge skills auto-detect from project context"
+    domain: architecture
+    status: confirmed
+    date: "2026-03-12"
+    summary: >
+      Tech-specific skills (Tailwind, Prisma, React, Expo, etc.) should not be
+      mentioned in CLAUDE.md. A lightweight scan at task start maps project files
+      (package.json, config files, imports) to relevant knowledge skills. All 62
+      smedjen knowledge skills stay but activate automatically.
+    rationale: >
+      Listing 62 tech skills in CLAUDE.md would blow up token cost on every
+      message. These skills are contextual — they matter when the project uses
+      that tech, not universally. Auto-detection makes them invisible until needed.
+    affects:
+      - "dev-scan skill — extend to produce skill activation map"
+      - "CLAUDE.md — no tech skill references, only core workflow routing"
+      - "SessionStart hook or task-start step — trigger lightweight scan"
+
+  - id: WO-D06
+    title: "Hooks shift from advisory to enforcement"
+    domain: quality
+    status: confirmed
+    date: "2026-03-12"
+    summary: >
+      Current hooks are mostly advisory (exit 0, just warn). Add blocking hooks
+      (exit 2) for critical gates: must-verify before claiming done, must-plan
+      before multi-file changes, output-format compliance. Advisory hooks stay
+      for soft guidance (scope drift, doc staleness).
+    rationale: >
+      Advisory hooks don't change behavior — Claude can ignore warnings.
+      The user's core complaint is that Claude claims done without verifying,
+      starts implementing without planning, and misses process steps. Blocking
+      hooks are the only reliable enforcement mechanism.
+    affects:
+      - "verification-gate-stop.sh — upgrade from advisory to blocking"
+      - "plan-gate.sh — consider blocking for 3+ file changes"
+      - "New hook: output-format compliance check"
+      - "Hook testing — blocking hooks need careful testing to avoid false blocks"
+
+  - id: WO-D07
+    title: "Review: one orchestration, specialized agents"
+    domain: architecture
+    status: confirmed
+    date: "2026-03-12"
+    summary: >
+      One review orchestration skill (parallel-reviewer) picks which dimensions
+      to check based on what changed. Existing agents (test-engineer, frontend-dev,
+      code-reviewer, content-writer) load relevant knowledge skills per review pass.
+      No new review agents needed — but each agent type is legitimately different
+      (code vs browser vs design vs content vs SEO).
+    rationale: >
+      Five separate review agents means five things to maintain and a composition
+      problem. But the underlying concerns are genuinely different — testing code
+      is nothing like testing a design in Pencil. The solution is smart orchestration,
+      not more agents.
+    affects:
+      - "parallel-reviewer skill — extend dimension selection logic"
+      - "Existing agents — ensure they load relevant knowledge skills for review"
+      - "code-review skill — merge into parallel-reviewer"
+
+  - id: WO-D08
+    title: "Merge duplicating components"
+    domain: simplification
+    status: confirmed
+    date: "2026-03-12"
+    summary: >
+      Specific merges identified:
+      - completion-gate + verification-gate → one verification skill
+      - auto-doc + doc-checkpoint → one documentation skill
+      - code-review + parallel-reviewer → one review skill
+      - plan-create + plan-dynamic → one plan command with mode flag
+      - task-ingest + task-ingest-bulk → one ingest command with scope flag
+      - Review agents duplicating reviewer skills → collapse to one mechanism
+    rationale: >
+      Duplicate components create confusion about which to use, increase
+      maintenance burden, and waste tokens when both get loaded. Each merge
+      reduces surface area without losing functionality.
+    affects:
+      - "6 merge operations across kronen, smedjen, herold"
+      - "Dependents of merged components need updating"
+      - "CLAUDE.md references to merged components need updating"
+
+  - id: WO-D09
+    title: "Iterative simplification with research loop"
+    domain: process
+    status: confirmed
+    date: "2026-03-12"
+    summary: >
+      One change at a time. For each simplification: debate what will happen,
+      what it affects, how to do it. Implement, verify, then assess: what helped,
+      what didn't, what got worse. Dedicated roadmap tracks the full effort.
+      This is an ongoing process, not a one-shot refactor.
+    rationale: >
+      The ecosystem is complex enough that big-bang changes risk breaking things
+      in ways we won't notice until later. Iterative approach lets us learn and
+      course-correct. Research loop builds institutional knowledge about what
+      actually improves quality.
+    affects:
+      - "New roadmap section for simplification effort"
+      - "Each change gets its own plan-execute cycle"
+      - "Post-implementation assessment becomes standard"
+
+  - id: WO-D10
+    title: "Hook quality and validation is a priority"
+    domain: quality
+    status: confirmed
+    date: "2026-03-12"
+    summary: >
+      Hooks must be well-written, tested, and reviewed via hook-creator and
+      hook-reviewer. Blocking hooks need especially careful testing to avoid
+      false positives. Investigate Hookify-style user-defined runtime guardrails
+      as a feedback loop for catching recurring mistakes.
+    rationale: >
+      Past experience: poorly written hooks caused debugging sessions and silent
+      failures. As hooks shift from advisory to enforcement (WO-D06), quality
+      becomes critical — a bad blocking hook breaks the entire workflow.
+    affects:
+      - "hook-creator process — emphasize testing for blocking hooks"
+      - "hook-reviewer — add blocking-hook-specific checks"
+      - "Evaluate Hookify pattern for user-defined guardrails"
+
+  - id: WO-D11
+    title: "Freestyle must match command quality — north star metric"
+    domain: architecture
+    status: confirmed
+    date: "2026-03-12"
+    summary: >
+      Whether the user types a command or just talks, the same skills activate,
+      the same verification runs, the same output standards apply. This is the
+      primary success metric for the entire simplification effort.
+    rationale: >
+      The user prefers freestyle conversation and most users will too. If
+      freestyle produces worse results than commands, the system fails its
+      purpose. Commands should be shortcuts, not quality gates.
+    affects:
+      - "Every simplification must be evaluated against this metric"
+      - "CLAUDE.md routing must be comprehensive enough for freestyle parity"
+      - "Hooks must enforce what commands used to guarantee"
+
+  - id: WO-D12
+    title: "docs/opportunities.md for systemic backlog"
+    domain: process
+    status: confirmed
+    date: "2026-03-12"
+    summary: >
+      When errors reveal fragility or refactors are out of scope during a
+      session, log them to docs/opportunities.md. Reviewed at the start of
+      each planning wave. Claude writes entries automatically when it spots
+      systemic issues.
+    rationale: >
+      Currently out-of-scope issues are either silently fixed (violating
+      surgical precision) or silently ignored (lost knowledge). A living
+      backlog captures them without derailing current work.
+    affects:
+      - "Create docs/opportunities.md"
+      - "CLAUDE.md — add rule to log out-of-scope issues there"
+      - "Plan verifier — check opportunities.md at wave start"

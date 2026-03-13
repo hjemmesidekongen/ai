@@ -1,0 +1,58 @@
+# ============================================================
+# RESEARCH LOG — Workflow Optimisation Simplification
+# ============================================================
+# Track what helped, what didn't, what got worse after each change.
+# Each entry corresponds to a completed roadmap item (RL-146+).
+# Reviewed before planning the next simplification step.
+# ============================================================
+
+entries:
+
+  - id: RL-146
+    title: "Operating mindset in CLAUDE.md"
+    status: implemented
+    date: "2026-03-12"
+    what_changed: >
+      Added 10 cognitive principles as Operating mindset section.
+      Cleaned up Planning, Discovery, Verification sections.
+    assessment: pending
+    what_helped: null
+    what_didnt: null
+    what_got_worse: null
+    notes: "First change — baseline. Assess over next 3-5 sessions."
+
+  - id: RL-147
+    title: "docs/opportunities.md systemic backlog"
+    status: implemented
+    date: "2026-03-12"
+    what_changed: >
+      Created docs/opportunities.md. Added CLAUDE.md rule to log
+      out-of-scope issues there instead of fixing silently.
+    assessment: pending
+    what_helped: null
+    what_didnt: null
+    what_got_worse: null
+    notes: "Track whether entries actually get written during sessions."
+
+  - id: RL-160
+    title: "Research loop tracking"
+    status: implemented
+    date: "2026-03-12"
+    what_changed: "This file. Meta."
+    assessment: active
+    what_helped: null
+    what_didnt: null
+    what_got_worse: null
+    notes: "Self-referential but necessary. The loop needs a home."
+
+# ============================================================
+# ASSESSMENT GUIDE
+# ============================================================
+# After 3-5 sessions using a change, fill in:
+#   what_helped:    concrete improvement observed
+#   what_didnt:     expected improvement that didn't materialize
+#   what_got_worse: regression or new problem introduced
+#   assessment:     pending → assessed
+#
+# If a change made things worse, add a new roadmap item to fix it.
+# ============================================================

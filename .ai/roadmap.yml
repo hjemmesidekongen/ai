@@ -1860,36 +1860,247 @@ items:
     added: "2026-03-11"
     tags: [testing, a-b-testing, skills, quality, high-leverage]
 
+  # ============================================================
+  # SIMPLIFICATION — Workflow Optimisation (2026-03-12)
+  # ============================================================
+  # Decisions: .ai/brainstorm/workflow-optimisation/decisions.yml
+  # North star: freestyle must match command quality (WO-D11)
+  # Process: one change at a time, debate → implement → verify → assess
+  # ============================================================
+
+  # --- Step 1: Foundation (do first) ---
+
+  - id: RL-146
+    title: "Add operating mindset to ~/CLAUDE.md"
+    description: >
+      Add 10 cognitive operating principles as an 'Operating mindset' section.
+      Clean up Planning, Discovery workflow, and Verification sections to be
+      less command-specific. This is the foundation everything else builds on.
+    category: simplification
+    plugin: kronen
+    priority: done
+    completed: "2026-03-12"
+    decision_ref: WO-D01
+    added: "2026-03-12"
+    tags: [simplification, claude-md, mindset, foundation]
+
+  - id: RL-147
+    title: "Create docs/opportunities.md systemic backlog"
+    description: >
+      Create the living backlog file. Add CLAUDE.md rule: when errors reveal
+      fragility or refactors are out of scope, log to docs/opportunities.md.
+      Add to plan-verifier: check opportunities.md at wave start.
+    category: simplification
+    plugin: kronen
+    priority: done
+    completed: "2026-03-12"
+    decision_ref: WO-D12
+    added: "2026-03-12"
+    tags: [simplification, backlog, quality, process]
+
+  # --- Step 2: Enforcement hooks ---
+
+  - id: RL-148
+    title: "Upgrade verification-gate-stop to blocking hook"
+    description: >
+      Change from advisory (exit 0) to blocking (exit 2) when verification-gate
+      has not run. Test thoroughly for false positives. Must detect that the
+      5-step protocol actually executed, not just that files were read.
+    category: simplification
+    plugin: kronen
+    priority: next
+    decision_ref: WO-D06
+    depends_on: RL-146
+    added: "2026-03-12"
+    tags: [simplification, hooks, enforcement, verification]
+
+  - id: RL-149
+    title: "Upgrade plan-gate to blocking for multi-file changes"
+    description: >
+      When 3+ files are being modified and no plan or declared scope exists,
+      block the write. Must handle legitimate exceptions (CLAUDE.md updates,
+      plugin.json, generated files). Test edge cases carefully.
+    category: simplification
+    plugin: kronen
+    priority: next
+    decision_ref: WO-D06
+    depends_on: RL-146
+    added: "2026-03-12"
+    tags: [simplification, hooks, enforcement, planning]
+
+  # --- Step 3: Merge duplicates ---
+
+  - id: RL-150
+    title: "Merge completion-gate into verification-gate"
+    description: >
+      Combine smedjen completion-gate and kronen verification-gate into one
+      verification skill. The 10-point quality gate and 5-step proof protocol
+      serve the same purpose. One skill, one process.
+    category: simplification
+    plugin: kronen
+    priority: next
+    decision_ref: WO-D08
+    depends_on: RL-148
+    added: "2026-03-12"
+    tags: [simplification, merge, verification, smedjen]
+
+  - id: RL-151
+    title: "Merge auto-doc and doc-checkpoint into one documentation skill"
+    description: >
+      Both skills handle post-task documentation updates. Merge into one skill
+      that evaluates what changed and produces the update checklist.
+    category: simplification
+    plugin: kronen
+    priority: next
+    decision_ref: WO-D08
+    added: "2026-03-12"
+    tags: [simplification, merge, documentation]
+
+  - id: RL-152
+    title: "Merge code-review into parallel-reviewer"
+    description: >
+      The code-review skill is a subset of parallel-reviewer. Absorb its
+      content into parallel-reviewer and update all dependents.
+    category: simplification
+    plugin: kronen
+    priority: next
+    decision_ref: WO-D08
+    added: "2026-03-12"
+    tags: [simplification, merge, review]
+
+  - id: RL-153
+    title: "Merge plan-create and plan-dynamic into one plan command"
+    description: >
+      One /plan command with a mode flag (wave vs dynamic). Default to dynamic.
+      Update CLAUDE.md routing to reference the unified command.
+    category: simplification
+    plugin: kronen
+    priority: next
+    decision_ref: WO-D08
+    added: "2026-03-12"
+    tags: [simplification, merge, planning, commands]
+
+  - id: RL-154
+    title: "Merge task-ingest and task-ingest-bulk into one command"
+    description: >
+      One /task:ingest command. Single ticket vs board/filter is determined
+      by the input (URL type or ticket key). Remove the bulk variant.
+    category: simplification
+    plugin: herold
+    priority: next
+    decision_ref: WO-D08
+    added: "2026-03-12"
+    tags: [simplification, merge, herold, commands]
+
+  # --- Step 4: Command dissolution ---
+
+  - id: RL-155
+    title: "Dissolve brand-apply into auto-load"
+    description: >
+      When a brand exists at .ai/brand/{name}/, auto-load it at session start
+      or when brand-related work is detected. Remove the brand-apply command.
+      Brand loading becomes automatic via CLAUDE.md routing or SessionStart hook.
+    category: simplification
+    plugin: våbenskjold
+    priority: next
+    decision_ref: WO-D04
+    depends_on: RL-146
+    added: "2026-03-12"
+    tags: [simplification, dissolve, brand, commands]
+
+  - id: RL-156
+    title: "Dissolve design-tokens into design-identity pipeline"
+    description: >
+      design-tokens is a sub-step of design-identity, not a standalone workflow.
+      Make it an internal step. Remove the command, keep the skill for
+      programmatic use.
+    category: simplification
+    plugin: segl
+    priority: next
+    decision_ref: WO-D04
+    added: "2026-03-12"
+    tags: [simplification, dissolve, design, commands]
+
+  # --- Step 5: Auto-detection ---
+
+  - id: RL-157
+    title: "Knowledge skill auto-detection from project context"
+    description: >
+      Extend dev-scan to produce a skill activation map. At task start, a
+      lightweight scan of package.json, config files, and imports maps the
+      project to relevant knowledge skills. No CLAUDE.md listing needed for
+      the 62 tech-specific smedjen skills.
+    category: simplification
+    plugin: smedjen
+    priority: later
+    decision_ref: WO-D05
+    added: "2026-03-12"
+    tags: [simplification, auto-detection, knowledge-skills, smedjen]
+
+  # --- Step 6: Collapse review agents into skills ---
+
+  - id: RL-158
+    title: "Audit review agent vs reviewer skill overlap"
+    description: >
+      Map which kronen agents duplicate reviewer skills (skill-auditor vs
+      skill-reviewer, component-reviewer vs hook-reviewer, etc.). Collapse
+      to one mechanism per review type. Agents justify isolation; skills
+      justify knowledge. Both shouldn't exist for the same concern.
+    category: simplification
+    plugin: kronen
+    priority: later
+    decision_ref: WO-D02
+    added: "2026-03-12"
+    tags: [simplification, agents, review, architecture]
+
+  # --- Step 7: CLAUDE.md routing table ---
+
+  - id: RL-159
+    title: "Add CLAUDE.md routing table for core workflows"
+    description: >
+      After merges and dissolutions are done, write the definitive routing
+      table in CLAUDE.md. Maps situations to skills: "when to plan, when to
+      review, when to verify, when to load brand, when to scan." This is what
+      makes freestyle match command quality.
+    category: simplification
+    plugin: kronen
+    priority: later
+    decision_ref: WO-D03
+    depends_on: [RL-150, RL-151, RL-152, RL-153, RL-155, RL-156]
+    added: "2026-03-12"
+    tags: [simplification, claude-md, routing, freestyle-parity]
+
+  # --- Ongoing: Research loop ---
+
+  - id: RL-160
+    title: "Simplification research loop — track what helped vs what didn't"
+    description: >
+      After each simplification step, assess: did freestyle quality improve?
+      Did anything break? What got worse? Log findings to the brainstorm
+      directory. Use findings to prioritize next steps and course-correct.
+      This is not a one-time task — it runs alongside the entire effort.
+      Tracking file: .ai/brainstorm/workflow-optimisation/research-log.yml
+    category: simplification
+    plugin: kronen
+    priority: done
+    completed: "2026-03-12"
+    decision_ref: WO-D09
+    added: "2026-03-12"
+    notes: "Ongoing — structure implemented, assessments happen after each simplification step"
+    tags: [simplification, research, assessment, ongoing]
+
 # ============================================================
-# STATS (updated 2026-03-10)
+# STATS (updated 2026-03-12)
 # ============================================================
-# Total items: 128
+# Total items: 143
 #
 # Done: 77
-#   Phase 1: 9 (RL-001–009)
-#   Phase 2: 8 (RL-010–017)
-#   Phase 3: 3 (RL-019, RL-020, RL-021)
-#   Phase 4: 7 (RL-022–025, RL-074, RL-085-gate, RL-023)
-#   Iteration-2: 3 (RL-069, RL-071, RL-072)
-#   Context compaction: 6 (RL-079–082, RL-084, RL-085)
-#   External references Batch 1+2: 20 (RL-087–RL-106)
-#   External references Batch 3: 9 (RL-107–RL-115)
-#   External references Batch 4: 10 (RL-116–RL-125, RL-126 deferred to dev plugin)
-#   External references Batch 5: 4 (RL-127–RL-130)
+#   Phase 1–5, Context compaction, External references batches 1–5
 #
-# Later: 6
-#   Phase 3: 1 (RL-018 project-scan)
-#   Phase 4: 3 (RL-073 cache-clear, RL-075 conventions, RL-076 agent-examples, RL-077 create-plugin-cmd)
-#   Memory: 2 (RL-031 episodic, RL-083 project-memory)
+# Simplification (RL-146–160): 15 items
+#   now: 3 (RL-146 mindset, RL-147 opportunities, RL-160 research loop)
+#   next: 9 (RL-148–156 hooks, merges, dissolutions)
+#   later: 3 (RL-157 auto-detect, RL-158 agent audit, RL-159 routing table)
 #
-# Backlog: 43
-#   Core enhancements: 8 (RL-030, RL-034, RL-066–068, RL-070, RL-078)
-#   Research/speculative: 7 (RL-032, RL-033, RL-042–048)
-#   Domain plugins: 3 (RL-026–028)
-#   Marketing/brand: 8 (RL-049–055, RL-064)
-#   Media: 3 (RL-041, RL-056, RL-057)
-#   Dev tooling: 6 (RL-037–040, RL-058–060)
-#   DevOps: 3 (RL-061–063)
-#   Design: 2 (RL-029, RL-065)
-#   Self-improvement: 3 (RL-035, RL-036, RL-045)
+# Other active: see individual items for priority
 # ============================================================
