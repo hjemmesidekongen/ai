@@ -1,0 +1,61 @@
+# Profile schema — the interface contract for all presets
+# Every profile MUST define all fields listed here with the same key names.
+
+fields:
+  - name: name
+    type: string
+    required: true
+    description: "Unique profile identifier"
+
+  - name: description
+    type: string
+    required: true
+    description: "Human-readable description of when to use this profile"
+
+  - name: tdd_gate
+    type: enum
+    values: [enabled, disabled]
+    required: true
+    tier: workflow
+    maps_to_hook: tdd-gate.sh
+    description: "Whether TDD gate blocks writes without tests"
+
+  - name: tracing
+    type: enum
+    values: [full, light, disabled]
+    required: true
+    tier: workflow
+    maps_to_hook: trace-light.sh
+    description: "Tracing level — full (YAML per session), light (append log), disabled"
+
+  - name: doc_checkpoint
+    type: enum
+    values: [enabled, disabled]
+    required: true
+    tier: workflow
+    maps_to_hook: doc-stale-check.sh
+    description: "Whether doc-checkpoint runs after tasks"
+
+  - name: verification
+    type: enum
+    values: [strict, light]
+    required: true
+    tier: workflow
+    maps_to_hook: verification-gate-stop.sh
+    description: "Verification strictness — strict requires all 5 steps, light allows inference"
+
+  - name: scope_guard
+    type: enum
+    values: [enabled]
+    required: true
+    tier: safety
+    maps_to_hook: scope-guard.sh
+    description: "File write scope protection — ALWAYS enabled, cannot be overridden"
+
+  - name: push_protection
+    type: enum
+    values: [enabled]
+    required: true
+    tier: safety
+    maps_to_hook: prevent-direct-push.sh
+    description: "Prevents direct push to main/master — ALWAYS enabled, cannot be overridden"

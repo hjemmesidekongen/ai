@@ -1,0 +1,13 @@
+# Personal profile — lighter hooks, faster iteration
+name: personal
+description: "Minimal hooks, light verification, no tracing. For side projects and experiments."
+
+# Hook flags
+tdd_gate: disabled
+tracing: disabled
+doc_checkpoint: disabled
+verification: light
+
+# Safety hooks (always enabled, not overridable)
+scope_guard: enabled
+push_protection: enabled

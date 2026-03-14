@@ -1,0 +1,13 @@
+# Work profile — strict validation, full observability
+name: work
+description: "Full hooks, strict verification, light tracing. For client and team projects."
+
+# Hook flags
+tdd_gate: enabled
+tracing: light
+doc_checkpoint: enabled
+verification: strict
+
+# Safety hooks (always enabled, not overridable)
+scope_guard: enabled
+push_protection: enabled

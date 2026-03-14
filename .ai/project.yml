@@ -1,0 +1,14 @@
+# hjemmesidekongen-ai project configuration
+# See docs/project-config.md for schema reference
+
+profile: work
+project_name: hjemmesidekongen-ai
+
+git:
+  branch_prefix: feature/
+  commit_style: imperative
+
+dev:
+  test: pnpm test
+  build: pnpm build
+  lint: pnpm lint
