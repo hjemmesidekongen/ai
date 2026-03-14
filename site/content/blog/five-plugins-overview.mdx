@@ -1,6 +1,6 @@
 ---
-title: "The 5 Plugins: What Each One Does and When to Use It"
-description: "Five Claude Code plugins, each owning a domain. Here's what kronen, smedjen, herold, vaabenskjold, and segl actually do — and when to reach for each one."
+title: "The 6 Plugins: What Each One Does and When to Use It"
+description: "Six Claude Code plugins, each owning a domain. Here's what kronen, smedjen, herold, vaabenskjold, segl, and skjalden actually do — and when to reach for each one."
 date: "2026-01-27"
 author: "Morten Nissen"
 image: "/blog/five-plugins-overview.svg"
@@ -19,16 +19,16 @@ Ever opened a new Claude Code session and spent the first ten minutes
 rebuilding context from scratch? Setting up the plan. Reminding it about
 your brand voice. Re-explaining your project structure. Again.
 
-I got tired of that loop, so I built a system: five plugins, each owning
-one domain of the development workflow. Planning. Execution. Task management.
-Brand. Visual identity. They share a foundation but stay out of each
-other's way.
+I got tired of that loop, so I built a system: six plugins, each owning
+one domain of the development workflow. Planning. Execution. Content.
+Task management. Brand. Visual identity. They share a foundation but
+stay out of each other's way.
 
-This post walks through all five — what they do, when to use them, when
+This post walks through all six — what they do, when to use them, when
 to skip them, and how they compose into end-to-end workflows. If you're
 evaluating whether this system fits your work, start here.
 
-## Why five plugins instead of one
+## Why six plugins instead of one
 
 The short answer: boundaries.
 
@@ -38,7 +38,7 @@ risks breaking something unrelated. Every skill would compete for
 attention in the same namespace. And you'd be forced to load capabilities
 you never use.
 
-Five plugins means five clear domains. Each plugin owns its skills,
+Six plugins means six clear domains. Each plugin owns its skills,
 commands, hooks, and agents. Dependencies are explicit — smedjen depends
 on kronen, not the other way around. You install what you need and ignore
 the rest.
@@ -47,6 +47,7 @@ The boundaries break down like this:
 
 > - **kronen** — Foundation: planning, memory, tracing, governance
 > - **smedjen** — Execution: dev agents, tech knowledge, completion gates
+> - **skjalden** — Content: copywriting, SEO, marketing, brand voice
 > - **herold** — Task management: Jira, PRs, QA handover
 > - **vaabenskjold** — Brand: strategy, voice, audit, evolution
 > - **segl** — Visual identity: design tokens, Pencil integration
@@ -139,7 +140,7 @@ framework-specific knowledge, and gates completion with verification
 checks.
 
 **Version**: 0.2.0
-**Stats**: 62 skills, 3 commands, 7 agents
+**Stats**: 50 skills, 1 command, 6 agents
 
 ### What it does
 
@@ -148,7 +149,7 @@ like Next.js, React Native, Expo, Tailwind, Supabase, and more. Six
 discipline skills for frontend, backend, testing, security, architecture,
 and code review. Seven agents that can run in parallel — architect,
 backend-dev, frontend-dev, test-engineer, code-reviewer,
-app-security-auditor, and content-writer.
+and app-security-auditor.
 
 The dev-scan command analyzes your repo to detect the tech stack and
 architecture. Then dev-run dispatches the right agents with the right
@@ -164,9 +165,6 @@ Not generic advice — real implementation guidance.
 frontend-dev builds UI, the test-engineer writes tests. File-ownership
 prevents write conflicts when agents run in parallel.
 
-**Studio skills**: Eight skills for content creation, including the
-content-writer agent that produced this blog post's structure.
-
 **Completion gates**: Work isn't done when the code compiles. smedjen's
 verification checks confirm the implementation matches the plan, tests
 pass, and code review findings are resolved.
@@ -177,7 +175,6 @@ pass, and code review findings are resolved.
 - You're building with a specific framework and want correct patterns
 - You need parallel agents working on different parts of a feature
 - You want code review, security audit, or test generation
-- You're writing content (blog posts, READMEs, marketing copy)
 
 ### When NOT to use it
 
@@ -297,7 +294,7 @@ context into other workflows at three depth levels.
 
 The output lives at `.ai/brand/{name}/` as structured YAML files:
 voice.yml, guideline.yml, values.yml, and dos-and-donts.md. These files
-are what smedjen's content-writer reads when generating on-brand copy.
+are what skjalden's content-writer reads when generating on-brand copy.
 They're what segl's visual-identity skill reads when creating a design
 system.
 
@@ -389,6 +386,85 @@ knowing who you're designing for.
 /segl:design-page
 ```
 
+## skjalden — The Skald
+
+skjalden handles content production and communications. It writes
+brand-aware copy — READMEs, blog posts, landing pages, social media,
+marketing materials — by loading brand context from vaabenskjold and
+routing through the right knowledge skills for each content type.
+The court poet, basically.
+
+**Version**: 0.1.0
+**Stats**: 8 skills, 1 command, 1 agent
+
+### What it does
+
+Seven of the eight skills are knowledge skills — focused reference
+material for specific content disciplines. web-copywriting knows
+conversion patterns. seo-fundamentals knows meta structures and keyword
+placement. content-strategy-patterns handles editorial frameworks.
+marketing-psychology-patterns covers persuasion without manipulation.
+brand-voice-implementation translates voice.yml attributes into actual
+writing decisions. social-media-patterns handles platform-specific
+formats. sitemap-planning maps content architecture.
+
+The eighth skill, content-writer, is the orchestrator. It doesn't hold
+content knowledge itself — it reads the content type you need, activates
+the right knowledge skills from that list, and applies the templates
+and quality gates. A blog post loads content-strategy-patterns,
+seo-fundamentals, and brand-voice-implementation. A landing page loads
+web-copywriting, seo-fundamentals, and marketing-psychology-patterns.
+You don't pick the skills manually — the routing is automatic.
+
+The content-writer agent wraps all of this with a 5-check quality gate:
+voice compliance (does it match the brand?), AI pattern sweep (does it
+read like a human wrote it?), structural compliance (does it follow the
+template for this content type?), claims audit (are there fabricated
+stats?), and scannability (headings, paragraph length, visual rhythm).
+Every draft passes all five before delivery.
+
+### When to use it
+
+- You need content that matches an existing brand voice
+- You're writing across multiple channels and want consistent tone
+- You want a README, blog post, or landing page that follows proven structure
+- You need social media posts adapted to platform conventions
+- You want AI pattern detection to catch "leveraging robust solutions" before it ships
+
+### When NOT to use it
+
+skjalden produces drafts, not final copy. It writes good first drafts
+that match your brand voice and follow structural best practices. But
+it doesn't replace editorial judgment — timing, cultural context, and
+the fact that your CEO just decided "AI-powered" is back on the table
+are all things a human catches.
+
+skjalden also needs brand input to be useful. Without brand files from
+vaabenskjold, it falls back to a neutral professional voice. That's
+fine for a quick README, but if you're writing marketing copy without
+a defined brand, you're solving the wrong problem. Run
+`/vaabenskjold:brand-create` first.
+
+Content strategy — deciding what to write, for whom, and why — is not
+skjalden's job either. It writes what you tell it to write. The
+strategic decisions about content pillars, audience segments, and
+editorial calendars live in your brand guidelines, not in a content
+generation tool.
+
+```bash
+# Writing brand-aware content
+
+# Load brand context into the session
+/vaabenskjold:brand-apply
+
+# Generate content (interactive — asks for type, audience, purpose)
+/skjalden:content-write
+
+# Or be specific in your prompt
+"Write a LinkedIn post announcing the new contradiction detection feature.
+Target audience: tech leads. Tone: confident but not salesy."
+```
+
 ## How they compose
 
 The plugins are independent but composable. Here's a real workflow that
@@ -444,6 +520,7 @@ convention, not a marketing exercise.
 - **kronen** (The Crown) — the foundation, the authority, the thing
   everything else reports to
 - **smedjen** (The Forge) — where things get built
+- **skjalden** (The Skald) — the court poet, the one who writes the words
 - **herold** (The Herald) — the messenger, carries information between
   systems
 - **vaabenskjold** (The Coat of Arms) — identity, what you stand for
@@ -466,18 +543,20 @@ it. Install it, run a brainstorm, create a plan, execute it. That alone
 will change how you work with Claude Code.
 
 Once kronen feels natural, add smedjen if you want agent-driven
-development execution. Add herold if you work from Jira tickets. Add
-vaabenskjold and segl if you need brand and design workflows.
+development execution. Add skjalden when you need content production.
+Add herold if you work from Jira tickets. Add vaabenskjold and segl
+if you need brand and design workflows.
 
-You don't need all five on day one. The system is designed so each plugin
+You don't need all six on day one. The system is designed so each plugin
 adds value independently. kronen + smedjen covers most development work.
 Add the others when you hit a problem they solve.
 
 > The recommended progression:
 > 1. **kronen** — planning and governance (start here)
 > 2. **smedjen** — development execution (add when you want agents)
-> 3. **herold** — task management (add when you work from tickets)
-> 4. **vaabenskjold** + **segl** — brand and design (add together when needed)
+> 3. **skjalden** — content production (add when you need branded copy)
+> 4. **herold** — task management (add when you work from tickets)
+> 5. **vaabenskjold** + **segl** — brand and design (add together when needed)
 
 ## The full inventory
 
@@ -495,9 +574,16 @@ kronen:
 
 smedjen:
   version: 0.2.0
-  skills: 62
-  commands: 3
-  agents: 7
+  skills: 50
+  commands: 1
+  agents: 6
+  depends_on: kronen
+
+skjalden:
+  version: 0.1.0
+  skills: 8
+  commands: 1
+  agents: 1
   depends_on: kronen
 
 herold:
@@ -519,7 +605,7 @@ segl:
   depends_on: kronen
 ```
 
-120 skills, 34 commands, 19 agents across five plugins. But the numbers
+120+ skills, 35 commands, 20 agents across six plugins. But the numbers
 don't matter as much as the boundaries. Each skill lives in exactly one
 plugin. Each command has one job. The system grows by adding skills to
 the right plugin, not by making any single plugin do more than its domain.

@@ -5,13 +5,14 @@ description: How the hjemmesidekongen/ai plugins relate, communicate, and share 
 
 # Architecture
 
-The hjemmesidekongen/ai methodology is implemented as five plugins with one foundation. Each plugin has a clear responsibility boundary, communicates through data files, and never imports another plugin's skills directly. This architecture reflects the methodology's core constraint: agents work, but within strict boundaries.
+The hjemmesidekongen/ai methodology is implemented as six plugins with one foundation. Each plugin has a clear responsibility boundary, communicates through data files, and never imports another plugin's skills directly. This architecture reflects the methodology's core constraint: agents work, but within strict boundaries.
 
 ## Plugin Hierarchy
 
 ```
 kronen             ← foundation, always installed
 ├── smedjen          ← development execution, depends on kronen
+├── skjalden         ← content production, depends on kronen
 ├── herold            ← task management, depends on kronen
 ├── våbenskjold       ← brand strategy, depends on kronen
 └── segl              ← visual identity + design tokens, depends on kronen
@@ -21,7 +22,7 @@ kronen             ← foundation, always installed
 - Every plugin depends on kronen. Nothing else.
 - Plugins never depend on each other directly — they communicate through shared data files.
 - Cross-plugin coordination happens through shared data files (e.g., smedjen's agent-dispatcher reads herold's task files but never calls herold commands directly).
-- Brand-to-design pipeline: våbenskjold writes `.ai/brand/` → segl reads it and writes `.ai/design/` → smedjen's design-to-code patterns consumes tokens. Each step is independent.
+- Brand-to-content pipeline: våbenskjold writes `.ai/brand/` → skjalden reads it for brand-aware content. Brand-to-design pipeline: våbenskjold → segl → smedjen's design-to-code patterns. Each step is independent.
 
 ## Responsibility Boundaries
 

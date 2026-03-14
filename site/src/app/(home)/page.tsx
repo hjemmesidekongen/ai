@@ -5,7 +5,7 @@ import { blogSource } from '@/lib/source';
 export const metadata: Metadata = {
   title: 'hjemmesidekongen/ai — Structured workflows for Claude Code',
   description:
-    'Five plugins that turn ad-hoc Claude Code sessions into structured, repeatable workflows. Planning, branding, design, development, and task management. Open source.',
+    'Six plugins that turn ad-hoc Claude Code sessions into structured, repeatable workflows. Planning, branding, design, development, content, and task management. Open source.',
 };
 
 const plugins = [
@@ -24,8 +24,8 @@ const plugins = [
     version: '0.2.0',
     tagline: 'The Forge',
     description:
-      'The execution engine. Task decomposition, parallel agent dispatch with file boundaries, a 10-point quality gate, and 60+ framework knowledge skills.',
-    stats: '62 skills · 3 commands · 7 agents',
+      'The execution engine. Task decomposition, parallel agent dispatch with file boundaries, a 10-point quality gate, and 50+ framework knowledge skills.',
+    stats: '50 skills · 1 command · 6 agents',
     href: '/docs/smedjen',
     icon: '⚒',
   },
@@ -59,6 +59,16 @@ const plugins = [
     href: '/docs/segl',
     icon: '🔏',
   },
+  {
+    name: 'skjalden',
+    version: '0.1.0',
+    tagline: 'The Skald',
+    description:
+      'Content production and communications. Copywriting, SEO, content strategy, marketing psychology, social media — with brand voice integration and automated quality gates.',
+    stats: '8 skills · 1 command · 1 agent',
+    href: '/docs/skjalden',
+    icon: '🪶',
+  },
 ];
 
 const features = [
@@ -83,9 +93,9 @@ const features = [
       'State files, session handoffs, and context snapshots mean you don\'t start from zero every time. The compact gate protects context during long sessions.',
   },
   {
-    title: '120+ framework skills',
+    title: '110+ skills across six plugins',
     description:
-      'React, Next.js, Vue, Nuxt, Expo, NestJS, Prisma, Tailwind, Playwright — patterns, anti-patterns, and real-world examples. Reference material that agents use during implementation.',
+      'Framework knowledge, content strategy, SEO, copywriting, marketing psychology — patterns, anti-patterns, and real-world examples. Reference material that agents use during implementation.',
   },
   {
     title: 'Brand-to-code pipeline',
@@ -125,9 +135,9 @@ export default function HomePage() {
         </h1>
 
         <p className="mt-6 text-lg text-fd-muted-foreground max-w-2xl mx-auto leading-relaxed">
-          Five Claude Code plugins that turn ad-hoc prompting into structured,
-          repeatable workflows. Planning, branding, design, development, and
-          task management — each handled by a plugin that knows its job.
+          Six Claude Code plugins that turn ad-hoc prompting into structured,
+          repeatable workflows. Planning, branding, design, development, content,
+          and task management — each handled by a plugin that knows its job.
         </p>
 
         <div className="mt-10 flex gap-4 justify-center flex-wrap">
@@ -178,10 +188,10 @@ export default function HomePage() {
       {/* Plugin cards */}
       <section className="w-full max-w-6xl px-6 py-20">
         <p className="text-xs font-mono text-fd-muted-foreground uppercase tracking-widest text-center mb-3">
-          Five plugins, each owns a domain
+          Six plugins, each owns a domain
         </p>
         <h2 className="text-2xl font-bold text-center mb-12">
-          Use one, use all five, or build your own
+          Use one, use all six, or build your own
         </h2>
         <div className="grid gap-5 grid-cols-2 lg:grid-cols-3">
           {plugins.map((plugin) => (

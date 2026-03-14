@@ -1,0 +1,104 @@
+---
+title: skjalden
+description: Content production and communications - copywriting, SEO, content strategy, marketing psychology, social media, brand voice, and automated quality gates.
+---
+
+# skjalden
+
+The content production layer of the hjemmesidekongen/ai methodology. While smedjen builds features and segl designs interfaces, skjalden writes the words. Copywriting, SEO, content strategy, marketing psychology, social media — all integrated with brand voice from our brand system and checked by automated quality gates before delivery.
+
+**Version:** 0.1.0 · **8 skills** · **1 command** · **1 agent**
+
+## What It Does
+
+skjalden handles anything that involves communicating with customers or producing written content. It combines domain knowledge skills (copywriting patterns, SEO rules, marketing psychology) with an orchestrating agent that loads the right knowledge for each content type, applies brand voice, and runs quality checks before delivering.
+
+The content-writer agent is the primary interface. It takes a content type (README, landing page, blog post, social media, email, marketing copy), loads brand context from `.ai/brand/`, activates the relevant knowledge skills, drafts the content, and runs a 5-check quality gate: voice compliance, AI pattern sweep, structural compliance, claims audit, and scannability.
+
+## Commands
+
+| Command | Usage | What It Does |
+|---------|-------|-------------|
+| `/content:write` | `/content:write blog-post` | Draft brand-aware content with quality gates |
+
+Content types: `README`, `landing-page`, `blog-post`, `social linkedin`, `email newsletter`, `marketing`
+
+### Typical Workflow
+
+```bash
+/brand:apply my-brand              # Load brand voice into context
+/content:write landing-page        # Agent drafts with brand voice + quality gates
+```
+
+If no brand exists, the agent uses a neutral professional voice and notes the gap.
+
+## Key Concepts
+
+### Knowledge Skill Activation
+
+The content-writer agent doesn't load all 7 knowledge skills at once. It activates only what the content type requires:
+
+| Content Type | Skills Loaded |
+|-------------|--------------|
+| README | web-copywriting, seo-fundamentals |
+| Landing page | web-copywriting, seo-fundamentals, marketing-psychology-patterns |
+| Blog post | content-strategy-patterns, seo-fundamentals, brand-voice-implementation |
+| Social media | social-media-patterns, brand-voice-implementation |
+| Email | content-strategy-patterns, brand-voice-implementation |
+| Marketing copy | web-copywriting, marketing-psychology-patterns, brand-voice-implementation |
+
+### Voice Priority Chain
+
+When writing content, voice decisions follow a strict priority:
+
+1. **User tone override** — if you specify "make it casual" or "formal tone", that wins
+2. **Brand voice.yml** — loaded from `.ai/brand/{name}/voice.yml` via brand-loader
+3. **Neutral professional default** — when no brand exists
+
+### Quality Gate
+
+Every draft passes 5 checks before delivery:
+
+| Check | What It Catches |
+|-------|----------------|
+| Voice compliance | Tone drift from brand guidelines |
+| AI pattern sweep | Generic AI phrasing, filler words, puffery |
+| Structural compliance | Missing sections, wrong format for content type |
+| Claims audit | Unverified statistics or testimonials — flagged as `[NEEDS DATA]` |
+| Scannability | Wall-of-text paragraphs, missing headers, poor visual hierarchy |
+
+### Scoring Frameworks
+
+Two original scoring models live in marketing-psychology-patterns:
+
+**PLFS (Psychological Leverage & Feasibility Score)** — rates behavioral models on a -3 to +3 scale across relevance, leverage potential, implementation feasibility, ethical risk, and audience alignment. Models scoring below 0 are never recommended.
+
+**MFS (Marketing Feasibility Score)** — rates marketing ideas across impact potential, resource requirements, audience readiness, competitive advantage, and ethical risk. Below 2.0 means "needs fundamental rethinking."
+
+## Component Reference
+
+### Skills
+
+| Skill | Purpose |
+|-------|---------|
+| web-copywriting | Headlines, CTAs, microcopy, landing page structure, Seven Sweeps editing |
+| seo-fundamentals | E-E-A-T, Core Web Vitals, technical SEO, SEO Health Index scoring |
+| content-strategy-patterns | Pillar ratios, editorial calendars, content templates, repurposing matrix |
+| marketing-psychology-patterns | PLFS/MFS scoring, journey-stage models, ethical guardrails |
+| brand-voice-implementation | Tone selection, personality archetypes, plain speech vs brand voice |
+| social-media-patterns | Platform strategies, hook formulas, content pillars, repurposing |
+| sitemap-planning | Page hierarchy, content siloing, internal linking, schema markup |
+| content-writer | Orchestrator — routes to knowledge skills per content type |
+
+### Agent
+
+| Agent | Model | Purpose |
+|-------|-------|---------|
+| content-writer | Sonnet | Orchestrates brand loading, skill activation, drafting, and quality gates |
+
+## See also
+
+- [our brand system](/docs/vaabenskjold) — brand guidelines that feed into content voice
+- [segl](/docs/segl) — visual identity that complements written content
+- [smedjen](/docs/smedjen) — development execution (skjalden handles content, smedjen handles code)
+- [Architecture](/docs/architecture) — how the six plugins relate

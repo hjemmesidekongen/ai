@@ -7,7 +7,7 @@ description: Multi-agent development execution - task decomposition, specialist 
 
 The execution arm of the hjemmesidekongen/ai methodology. Where kronen provides the infrastructure and verification, smedjen handles the actual development work - decomposing tasks, dispatching specialist agents, and enforcing quality gates before anything ships.
 
-**Version:** 0.2.0 · **58 skills** · **7 agents** · **2 commands**
+**Version:** 0.2.0 · **50 skills** · **6 agents** · **1 command**
 
 ## What It Does
 
@@ -119,14 +119,13 @@ The code-reviewer agent runs this gate. It's the only agent authorized to approv
 
 ### Agents
 
-Seven agents, each with a defined role and expertise:
+Six agents, each with a defined role and expertise:
 
 | Agent | Model | Specialty |
 |-------|-------|-----------|
 | frontend-dev | sonnet | React, Next.js, Vue, Nuxt, CSS, accessibility, responsive design |
 | backend-dev | sonnet | NestJS, Prisma, Node.js, APIs, database schema, data layer |
 | test-engineer | sonnet | Unit, integration, E2E tests across all frameworks |
-| content-writer | sonnet | Brand-aware content drafts — READMEs, blog posts, landing pages, marketing copy |
 | architect | opus | Design review, dependency analysis, module boundaries (read-only) |
 | app-security-auditor | opus | OWASP checks, dependency audit, auth review, secret detection (read-only) |
 | code-reviewer | opus | 10-point completion gate - the only agent that can approve work as done (read-only) |
@@ -228,6 +227,7 @@ When herold is not installed, smedjen works standalone using only the task descr
 
 - [kronen](/docs/kronen) - the foundation plugin that smedjen depends on
 - [herold](/docs/herold) - task management that feeds acceptance criteria into the pipeline
-- [våbenskjold](/docs/vaabenskjold) - brand strategy — content-writer agent consumes brand voice
+- [våbenskjold](/docs/vaabenskjold) - brand strategy that feeds into skjalden's content generation
+- [skjalden](/docs/skjalden) - content production (extracted from smedjen — copywriting, SEO, marketing)
 - [segl](/docs/segl) - design tokens that inform design-to-code patterns
 - [Workflows](/docs/workflows) - recipes showing smedjen in action
