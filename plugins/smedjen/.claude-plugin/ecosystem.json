@@ -248,49 +248,9 @@
       "description": "Fumadocs documentation framework — MDX components, content structure, meta.json navigation, LLM integration"
     },
     {
-      "name": "web-copywriting",
-      "path": "skills/web-copywriting/SKILL.md",
-      "description": "Web copywriting — headlines, CTAs, microcopy, error messages, landing page structure, Seven Sweeps editing"
-    },
-    {
-      "name": "content-strategy-patterns",
-      "path": "skills/content-strategy-patterns/SKILL.md",
-      "description": "Content strategy — pillar ratios, editorial calendars, blog/social/email templates, repurposing matrix"
-    },
-    {
-      "name": "seo-fundamentals",
-      "path": "skills/seo-fundamentals/SKILL.md",
-      "description": "SEO — E-E-A-T, Core Web Vitals, technical SEO, keywords, meta tags, Health Index scoring"
-    },
-    {
-      "name": "marketing-psychology-patterns",
-      "path": "skills/marketing-psychology-patterns/SKILL.md",
-      "description": "Marketing psychology — PLFS/MFS scoring, journey-stage models, ethical guardrails, growth strategy"
-    },
-    {
-      "name": "brand-voice-implementation",
-      "path": "skills/brand-voice-implementation/SKILL.md",
-      "description": "Brand voice in code — tone selection, personality archetypes, plain speech vs brand voice, consistency"
-    },
-    {
-      "name": "social-media-patterns",
-      "path": "skills/social-media-patterns/SKILL.md",
-      "description": "Social media — platform strategies, post templates, hook formulas, content pillars, repurposing"
-    },
-    {
-      "name": "sitemap-planning",
-      "path": "skills/sitemap-planning/SKILL.md",
-      "description": "Information architecture — page hierarchy, content siloing, internal linking, schema markup, URL patterns"
-    },
-    {
       "name": "design-to-code-patterns",
       "path": "skills/design-to-code-patterns/SKILL.md",
       "description": "Design to code — token consumption, spacing/typography systems, component decomposition, responsive grids"
-    },
-    {
-      "name": "content-writer",
-      "path": "skills/content-writer/SKILL.md",
-      "description": "Generate brand-aware content drafts — READMEs, landing pages, blog posts, social media, and marketing copy"
     }
   ],
   "agents": [
@@ -323,11 +283,6 @@
       "name": "architect",
       "path": "agents/architect.md",
       "description": "Architecture advisor — system design, decomposition review, dependency analysis"
-    },
-    {
-      "name": "content-writer",
-      "path": "agents/content-writer.md",
-      "description": "Content writing agent — brand-aware drafts for READMEs, landing pages, blog posts, social media, email, and marketing copy"
     }
   ],
   "commands": [
@@ -335,11 +290,6 @@
       "name": "dev-scan",
       "path": "commands/dev-scan.md",
       "description": "Scan repository to detect tech stack, modules, and architecture"
-    },
-    {
-      "name": "content-write",
-      "path": "commands/content-write.md",
-      "description": "Generate brand-aware content (README, landing page, blog post, social, marketing)"
     }
   ],
   "hooks": []

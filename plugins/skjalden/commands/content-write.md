@@ -1,17 +1,17 @@
-# /smedjen:content-write
+# /skjalden:content-write
 
 Draft brand-aware written content with automated quality checks.
 
 ## Usage
 
 ```
-/smedjen:content-write
-/smedjen:content-write README
-/smedjen:content-write landing-page
-/smedjen:content-write blog-post
-/smedjen:content-write social linkedin
-/smedjen:content-write email newsletter
-/smedjen:content-write marketing
+/skjalden:content-write
+/skjalden:content-write README
+/skjalden:content-write landing-page
+/skjalden:content-write blog-post
+/skjalden:content-write social linkedin
+/skjalden:content-write email newsletter
+/skjalden:content-write marketing
 ```
 
 ## Behavior

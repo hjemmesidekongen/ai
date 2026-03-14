@@ -15,7 +15,7 @@ tools:
   - Glob
   - Grep
 _source:
-  origin: "smedjen"
+  origin: "skjalden"
   inspired_by: "awesome-subagents/content-marketer + awesome-subagents/technical-writer + agent-toolkit/crafting-effective-readmes"
   ported_date: "2026-03-11"
   iteration: 1

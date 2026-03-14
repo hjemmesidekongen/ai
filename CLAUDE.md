@@ -1,12 +1,13 @@
 # hjemmesidekongen/ai
 
 ## What This Is
-Five plugins in a monorepo:
+Six plugins in a monorepo:
 - **kronen** (`plugins/kronen/`) — The Crown: core foundation. Planning, brainstorm, tracing, memory governance, roadmap, doc governance, creator/reviewer tooling, autopilot, prompt optimization, project configuration, and validation agents (39 skills, 12 commands, 14 agents).
-- **smedjen** (`plugins/smedjen/`) — The Forge: development execution engine. Task decomposition, agent dispatch, tech knowledge, disciplines, visual verification, completion gates, project mapping, orchestration, studio knowledge, content writing (58 skills, 2 commands, 7 agents).
+- **smedjen** (`plugins/smedjen/`) — The Forge: development execution engine. Task decomposition, agent dispatch, tech knowledge, disciplines, visual verification, completion gates, project mapping, orchestration, studio knowledge (50 skills, 1 command, 6 agents).
 - **herold** (`plugins/herold/`) — The Herald: task management and workplace integration. Jira ingestion, local task storage, contradiction detection, project profiles, QA handover, bulk ingestion, PR workflows (9 skills, 8 commands).
 - **våbenskjold** (`plugins/våbenskjold/`) — The Coat of Arms: brand strategy, audit, and evolution (4 skills, 5 commands).
 - **segl** (`plugins/segl/`) — The Royal Seal: visual identity, design tokens, and Pencil integration (4 skills, 4 commands).
+- **skjalden** (`plugins/skjalden/`) — The Skald: content production and communications. Copywriting, SEO, content strategy, marketing, social media, brand voice implementation (8 skills, 1 command, 1 agent).
 
 ## Target Platforms
 Windows, macOS, and Linux. Everything we build must work on all three. Scripts, hooks, paths, and commands should be cross-platform or provide platform-specific variants.
@@ -109,10 +110,16 @@ plugins/
     skills/                          # visual-identity, design-tokens, design-loader, pencil-tokens
     commands/                        # design-identity, design-tokens, design-status, design-page
     resources/                       # token-schema
-  smedjen/                           # The Forge — development execution (58 skills, 2 commands, 7 agents)
-    skills/                          # 7 core + 6 discipline + 24 tech + 12 expo + 1 integration + 8 studio
+  smedjen/                           # The Forge — development execution (50 skills, 1 command, 6 agents)
+    skills/                          # 7 core + 6 discipline + 24 tech + 12 expo + 1 integration
     commands/                        # dev-scan
-    agents/                          # architect, backend-dev, frontend-dev, test-engineer, code-reviewer, app-security-auditor, content-writer
+    agents/                          # architect, backend-dev, frontend-dev, test-engineer, code-reviewer, app-security-auditor
+  skjalden/                          # The Skald — content + communications (8 skills, 1 command, 1 agent)
+    skills/                          # web-copywriting, seo-fundamentals, content-strategy-patterns,
+                                     # marketing-psychology-patterns, brand-voice-implementation,
+                                     # social-media-patterns, sitemap-planning, content-writer
+    commands/                        # content-write
+    agents/                          # content-writer
   herold/                            # The Herald — task management (9 skills, 8 commands)
     skills/                          # jira-ingestion, contradiction-detection, bulk-ingestion, bitbucket-pr-workflow,
                                      # confluence-lookup, qa-handover-generator, azure-devops-pipeline,
@@ -157,6 +164,7 @@ docs/
 | `/segl:design-status` | Show design artifact status |
 | `/segl:design-page` | Full Pencil design orchestrator — tokens to agents in one command |
 | `/smedjen:dev-scan` | Scan repo to detect tech stack and architecture |
+| `/skjalden:content-write` | Generate brand-aware content (README, landing page, blog, social, marketing) |
 | `/herold:task-status` | Show active task details |
 | `/herold:task-list` | List locally stored tasks |
 | `/herold:task-start` | Set a task as active |

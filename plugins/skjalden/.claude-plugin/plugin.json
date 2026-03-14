@@ -1,0 +1,22 @@
+{
+  "name": "skjalden",
+  "version": "0.1.0",
+  "description": "The Skald — content production and communications. Copywriting, SEO, content strategy, marketing, social media, and brand voice implementation.",
+  "author": {
+    "name": "mvn"
+  },
+  "repository": "https://github.com/hjemmesidekongen/ai",
+  "license": "MIT",
+  "keywords": [
+    "content",
+    "copywriting",
+    "seo",
+    "marketing",
+    "social-media",
+    "brand-voice",
+    "communications"
+  ],
+  "dependencies": [
+    "kronen@hjemmesidekongen-ai"
+  ]
+}
