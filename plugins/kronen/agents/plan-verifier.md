@@ -13,7 +13,7 @@ description: |
   <assistant>Running stage 1 mechanical checks... file_existence: pass, schema_presence: pass, non_empty: pass, file_ownership: pass, state_consistency: pass. Stage 2 quality review... content matches contract, cross-wave references consistent. verdict: pass</assistant>
   </example>
 
-color: green
+color: magenta
 model_tier: senior
 model: sonnet
 tools: []

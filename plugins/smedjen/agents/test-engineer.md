@@ -6,7 +6,7 @@ description: >
   Use when writing standalone tests, filling coverage gaps, or building test infrastructure.
 model_tier: senior
 model: inherit
-color: "magenta"
+color: "cyan"
 tools:
   - Read
   - Write

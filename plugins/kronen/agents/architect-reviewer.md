@@ -10,7 +10,7 @@ description: |
   <user>Review the architecture of plugins/agency before the v1.0 migration</user>
   <assistant>Analyzing plugin boundaries, skill coupling, and hook event flow... architecture_review: { verdict: NEEDS_IMPROVEMENT, critical: [], warnings: ["agent-dispatcher and team-planner share state via the same YML file — introduce a clear ownership boundary"] }</assistant>
   </example>
-color: yellow
+color: blue
 capabilities:
   - "Plugin boundary and separation of concerns analysis"
   - "Skill coupling, cohesion, and granularity assessment"

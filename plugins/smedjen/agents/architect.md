@@ -6,7 +6,7 @@ description: >
   Use when reviewing architecture decisions, evaluating dependencies, or assessing design trade-offs.
 model_tier: principal
 model: inherit
-color: "cyan"
+color: "blue"
 tools:
   - Read
   - Glob

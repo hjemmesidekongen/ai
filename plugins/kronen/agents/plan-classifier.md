@@ -12,7 +12,7 @@ description: |
   <assistant>plan_classifier_output: { classification: CONTINUE, reasoning: "Wave completed successfully, no assumptions invalidated, learnings are observations not blockers", confidence: high, concerns: [] }</assistant>
   </example>
 
-color: yellow
+color: magenta
 model_tier: senior
 model: sonnet
 tools: []

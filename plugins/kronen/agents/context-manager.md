@@ -10,7 +10,7 @@ description: |
   <user>Assemble context for the wave-3 parallel agents before dispatch</user>
   <assistant>Reading state.yml, snapshot.yml, findings.md... context_package: { token_budget: 4200, freshness: FRESH, shared_state: { active_plan: "external-ref-batch-4", current_wave: "wave-3" }, instincts_loaded: 5 }</assistant>
   </example>
-color: blue
+color: magenta
 model_tier: senior
 model: inherit
 tools: ["Read", "Glob", "Grep"]

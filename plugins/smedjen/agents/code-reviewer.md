@@ -6,7 +6,7 @@ description: >
   Use when reviewing code after implementation as a final quality gate.
 model_tier: principal
 model: inherit
-color: "yellow"
+color: "blue"
 tools:
   - Read
   - Glob

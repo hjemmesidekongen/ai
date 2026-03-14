@@ -12,7 +12,7 @@ description: |
   <user>Review plugins/kronen/skills/plan-engine/SKILL.md before committing</user>
   <assistant>Reading SKILL.md frontmatter and body... component_review: { verdict: PASS, naming_valid: true, required_fields_present: true, secrets_found: false, description_quality: "strong" }</assistant>
   </example>
-color: yellow
+color: blue
 capabilities:
   - "YAML frontmatter validation against required field schemas"
   - "Naming convention compliance (kebab-case, directory match)"

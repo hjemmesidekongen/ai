@@ -10,7 +10,7 @@ description: |
   <user>Validate plugins/kronen before release</user>
   <assistant>Scanning plugin.json, ecosystem.json, and all component files... validation_report: { verdict: PASS, components_checked: 45, critical: [], warnings: ["skill-creator: _source.ported_date missing"] }</assistant>
   </example>
-color: green
+color: blue
 capabilities:
   - "Full plugin structure validation (manifest, registry, directories)"
   - "Component audit (skills, commands, agents, hooks)"

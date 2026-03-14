@@ -10,7 +10,7 @@ description: |
   <user>Security audit plugins/agency before v1.0 release</user>
   <assistant>Scanning hooks, scripts, and configs... security_audit: { verdict: BLOCK, critical: ["scripts/inject.sh:14 — unquoted variable $INPUT used in eval"], warnings: ["plugin.json: MCP server uses ws:// instead of wss://"] }</assistant>
   </example>
-color: yellow
+color: blue
 capabilities:
   - "Hook and script security review (injection, unquoted vars, unsafe eval)"
   - "Configuration security (credentials, HTTPS/WSS, secrets)"

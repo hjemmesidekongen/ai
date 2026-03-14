@@ -28,7 +28,7 @@ description: >
   <user>Audit all agents in plugins/kronen/agents/</user>
   <assistant>Reviewing 11 agents... [returns one agent_review block per agent]</assistant>
   </example>
-color: green
+color: blue
 capabilities:
   - "5-dimension agent quality review (frontmatter, description, system prompt, tools, model tier)"
   - "YAML frontmatter field validation with format and value checks"

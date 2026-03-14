@@ -6,7 +6,7 @@ description: >
   Use when auditing code before deployment, reviewing auth/payment features, or checking external endpoints.
 model_tier: principal
 model: inherit
-color: "red"
+color: "blue"
 tools:
   - Read
   - Glob

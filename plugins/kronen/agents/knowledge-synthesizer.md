@@ -11,7 +11,7 @@ description: |
   <user>Synthesize learnings from the last two weeks of trace logs</user>
   <assistant>Reading .ai/traces/trace-light.log... synthesis_report: { sessions_analyzed: 14, top_pattern: "parallel agent dispatch fails when artifacts/ directory missing — occurs 6/14 sessions", recommendations: ["Add artifacts/ pre-flight check to plan-execute wave start"] }</assistant>
   </example>
-color: magenta
+color: cyan
 capabilities:
   - "Cross-session pattern extraction from trace-light.log"
   - "Success and failure signature identification"

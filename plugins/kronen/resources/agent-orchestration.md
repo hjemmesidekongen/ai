@@ -18,10 +18,30 @@ ecosystem.json is for human tracking and validation tooling, not for discovery.
 | `name` | string | yes | Kebab-case, 3-50 chars. Must match filename |
 | `description` | string | yes | Purpose + 2-4 trigger phrases. Primary matching surface |
 | `model` | string | yes | `inherit`, `haiku`, `sonnet`, or `opus` |
-| `color` | string | yes | Terminal output color: blue/cyan/green/yellow/magenta/red |
+| `color` | string | yes | Functional group color (see Color Legend below) |
 | `tools` | array | no | Restrict to specific tools. Omit for all tools |
 | `model_tier` | string | no | Our tier label: junior/senior/principal |
 | `capabilities` | array | no | 2-4 short capability descriptions |
+
+## Color Legend
+
+Agent colors indicate functional role, not plugin origin. Pick the color that matches
+what the agent *does*, not where it lives.
+
+| Color | Role | When to assign |
+|-------|------|----------------|
+| **blue** | Reviewers & Auditors | Inspects, validates, or assesses without modifying |
+| **green** | Builders | Produces code, content, or artifacts |
+| **yellow** | Debugging & Incident | Investigates errors, coordinates incident response |
+| **magenta** | Planning & Orchestration | Coordinates workflows, classifies decisions, manages context |
+| **cyan** | Knowledge & Support | Synthesizes knowledge, provides supporting analysis |
+
+Edge case resolution:
+- Agent reviews code but doesn't change it → **blue** (reviewer, not builder)
+- Agent orchestrates a build workflow → **magenta** (orchestrator, not builder)
+- Agent produces test code → **green** (it builds artifacts)
+- Agent investigates *why* something failed → **yellow** (debugging)
+- Agent decides *what to do next* → **magenta** (planning)
 
 ## Tier Selection Guide
 

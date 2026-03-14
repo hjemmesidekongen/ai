@@ -6,7 +6,7 @@ description: >
   Use when implementing UI features with React/Next/Vue/Nuxt, CSS, or accessibility work.
 model_tier: senior
 model: inherit
-color: "blue"
+color: "green"
 tools:
   - Read
   - Write

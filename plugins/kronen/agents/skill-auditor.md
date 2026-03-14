@@ -16,7 +16,7 @@ description: |
   <user>Run a batch audit of all skills in plugins/kronen/</user>
   <assistant>Scanning plugins/kronen/skills/... reviewing 33 skills. [returns one skill_audit block per skill with verdict, grade, and top improvements]</assistant>
   </example>
-color: cyan
+color: blue
 capabilities:
   - "8-dimension quality scoring (120 points)"
   - "Knowledge delta analysis (Expert/Activation/Redundant)"
