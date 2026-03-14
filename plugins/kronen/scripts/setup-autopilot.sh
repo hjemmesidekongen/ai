@@ -109,10 +109,10 @@ HELP_EOF
 done
 
 # Join all prompt parts with spaces
-PROMPT="${PROMPT_PARTS[*]}"
+PROMPT="${PROMPT_PARTS[*]:-}"
 
-# Validate prompt is non-empty
-if [[ -z "$PROMPT" ]]; then
+# For dynamic plans, prompt is optional (plan-prompt-constructor generates it)
+if [[ -z "$PROMPT" ]] && [[ -z "$DYNAMIC_PLAN" ]]; then
   echo "Error: No prompt provided" >&2
   echo "" >&2
   echo "   Examples:" >&2
@@ -120,6 +120,11 @@ if [[ -z "$PROMPT" ]]; then
   echo "     /kronen:autopilot-run Fix the auth bug --max-iterations 20" >&2
   echo "     /kronen:autopilot-run --completion-promise 'DONE' Refactor code" >&2
   exit 1
+fi
+
+# For dynamic plans without explicit prompt, use a default
+if [[ -z "$PROMPT" ]] && [[ -n "$DYNAMIC_PLAN" ]]; then
+  PROMPT="Execute the next cycle of the dynamic plan at ${DYNAMIC_PLAN}"
 fi
 
 # Auto-detect completion promise from prompt if not explicitly set
