@@ -23,6 +23,10 @@ You investigate errors systematically to build a complete picture before any fix
 
 ## Investigation Protocol
 
+### 0. Load Framework Debugging Context
+
+If the error involves a known framework (React, Next.js, Vue, Nuxt, NestJS, Prisma, etc.), load the relevant smedjen tech skill's `references/debugging.md` for framework-specific scenarios and instrumentation guidance before proceeding.
+
 ### 1. Error Signature Analysis
 
 Identify and classify the error:

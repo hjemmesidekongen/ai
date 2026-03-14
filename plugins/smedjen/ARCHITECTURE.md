@@ -49,7 +49,6 @@ plugins/smedjen/
 │   ├── tier-assignment/     # Core: risk-based model tier selection
 │   ├── visual-verification/ # Core: screenshot-based UI verification
 │   ├── tdd-workflow/        # Discipline: red-green-refactor
-│   ├── systematic-debugging/    # Discipline: 4-phase investigation
 │   ├── error-handling-patterns/ # Discipline: structured error handling
 │   ├── verification-before-completion/ # Discipline: proof protocol
 │   ├── git-advanced-workflows/  # Discipline: branching, rebase, bisect

@@ -43,11 +43,6 @@
       "description": "Red-green-refactor cycle enforcement for test-driven development"
     },
     {
-      "name": "systematic-debugging",
-      "path": "skills/systematic-debugging/SKILL.md",
-      "description": "4-phase debugging protocol: gather evidence, identify patterns, form hypotheses, validate fix"
-    },
-    {
       "name": "verification-before-completion",
       "path": "skills/verification-before-completion/SKILL.md",
       "description": "Mandatory verification protocol before claiming any task is done"

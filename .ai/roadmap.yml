@@ -2089,13 +2089,133 @@ items:
     notes: "Ongoing — structure implemented, assessments happen after each simplification step"
     tags: [simplification, research, assessment, ongoing]
 
+  - id: RL-161
+    title: "Memory system simplification"
+    category: simplification
+    plugin: kronen
+    priority: next
+    status: "decided-and-postponed"
+    blocked_by: "shell-to-typescript conversion"
+    resume_trigger: "After TypeScript conversion of hook scripts is complete"
+    added: "2026-03-14"
+    decision_ref: ".ai/brainstorm/memory-simplification/decisions.yml"
+    notes: >
+      Two-namespace redesign: user memory (memory-manager skill + memory-gate hook)
+      and agent memory (.ai/agent-memory/observations.jsonl + plan-engine bridge).
+      15 decisions captured. Validated by architect, architect-reviewer, security-auditor.
+      Deletes ~400 lines of shell governance code. Instinct pipeline stays separate.
+      Blog post to be written after implementation.
+    tags: [simplification, memory, architecture, postponed]
+
+  - id: RL-162
+    title: "Blog post: optimal memory handling for Claude Code"
+    category: content
+    plugin: kronen
+    priority: next
+    blocked_by: "RL-161 (memory system simplification)"
+    added: "2026-03-14"
+    notes: >
+      Write after RL-161 implementation. Validate brief with UX + Content agents
+      before writing. Covers: research findings, two-namespace design, benchmarks,
+      community patterns, agent feedback. Check existing blog posts for update vs new.
+    tags: [content, blog, memory, postponed]
+
+  # ============================================================
+  # DEBUGGING ARCHITECTURE (RL-163–168)
+  # ============================================================
+
+  - id: RL-163
+    title: "Dissolve systematic-debugging, distribute to tech skills"
+    category: simplification
+    plugin: smedjen
+    priority: done
+    added: "2026-03-14"
+    completed: "2026-03-14"
+    decision_ref: ".ai/brainstorm/memory-simplification/decisions.yml D017"
+    notes: >
+      Dissolved. Framework-agnostic content absorbed into kronen root-cause-debugging.
+      17 tech skills received references/debugging.md with framework-specific scenarios.
+    tags: [simplification, debugging, architecture]
+
+  - id: RL-164
+    title: "Strengthen root-cause-debugging with enforcement"
+    category: simplification
+    plugin: kronen
+    priority: done
+    added: "2026-03-14"
+    completed: "2026-03-14"
+    decision_ref: ".ai/brainstorm/memory-simplification/decisions.yml D020"
+    notes: >
+      Done. Phase 1 now requires reproduction evidence, mandatory instrumentation step,
+      and file:line evidence in hypotheses. Absorbed escalation tree, anti-patterns,
+      and symptom-to-tool mapping from systematic-debugging.
+    tags: [simplification, debugging, enforcement]
+
+  - id: RL-165
+    title: "Add git-bisect command"
+    category: feature
+    plugin: kronen
+    priority: dropped
+    added: "2026-03-14"
+    completed: "2026-03-14"
+    decision_ref: ".ai/brainstorm/memory-simplification/decisions.yml D021"
+    notes: >
+      Dropped per architect review — git-advanced-workflows skill already covers
+      scripted bisect automation. Added cross-reference from root-cause-debugging instead.
+    tags: [feature, debugging, git]
+
+  - id: RL-166
+    title: "Update error-detective to load framework debugging"
+    category: enhancement
+    plugin: kronen
+    priority: done
+    added: "2026-03-14"
+    completed: "2026-03-14"
+    decision_ref: ".ai/brainstorm/memory-simplification/decisions.yml D022"
+    notes: >
+      Done. Added Step 0 to investigation protocol: load relevant tech skill's
+      references/debugging.md when error involves a known framework.
+    tags: [debugging, agents, integration]
+
+  - id: RL-167
+    title: "Add debugging checkpoint to skill-reviewer"
+    category: enhancement
+    plugin: kronen
+    priority: done
+    added: "2026-03-14"
+    completed: "2026-03-14"
+    decision_ref: ".ai/brainstorm/memory-simplification/decisions.yml D023"
+    notes: >
+      Done. Added Check 9 (debugging_reference) to skill-reviewer Stage 1 spec compliance.
+      Enforces references/debugging.md exists for smedjen tech skills.
+    tags: [debugging, quality-gate, enforcement]
+
+  - id: RL-168
+    title: "Brainstorm: extract content/marketing skills from smedjen"
+    category: architecture
+    plugin: smedjen
+    priority: later
+    added: "2026-03-14"
+    decision_ref: ".ai/brainstorm/memory-simplification/decisions.yml D025"
+    notes: >
+      8 content/marketing skills + content-writer agent are extraction candidates
+      into a 6th plugin. They violate smedjen's "dev execution engine" boundary.
+      Zero coupling to dev core. Needs its own brainstorm for naming, scope, migration.
+    tags: [architecture, plugin-boundary, brainstorm]
+
 # ============================================================
-# STATS (updated 2026-03-12)
+# STATS (updated 2026-03-14)
 # ============================================================
-# Total items: 143
+# Total items: 151
 #
 # Done: 77
 #   Phase 1–5, Context compaction, External references batches 1–5
+#
+# Memory (RL-161–162): 2 items, postponed (blocked by TS conversion)
+# Debugging (RL-163–168): 6 items
+#   done: 4 (RL-163 dissolve, RL-164 enforce, RL-166 error-detective, RL-167 checkpoint gate)
+#   dropped: 1 (RL-165 git-bisect — covered by git-advanced-workflows)
+#   later: 1 (RL-168 content extraction brainstorm)
 #
 # Simplification (RL-146–160): 15 items
 #   now: 3 (RL-146 mindset, RL-147 opportunities, RL-160 research loop)

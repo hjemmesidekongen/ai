@@ -4,11 +4,14 @@ description: >
   4-phase mandatory investigation protocol before any fix is attempted:
   Investigate → Pattern Analysis → Hypothesis → Implement. Prevents band-aid
   fixes by requiring evidence gathering, pattern identification, and a testable
-  hypothesis before touching code. If 3+ fixes fail, escalate to architecture
-  review. Use when diagnosing a bug or unexpected behavior, when a quick fix
-  isn't working and the problem keeps returning, when a test is failing and
-  the cause isn't immediately obvious, or when a system behaves differently
-  than expected and the reason is unclear.
+  hypothesis before touching code. Includes escalation tree, anti-patterns
+  (shotgun debugging, fix-and-pray, symptom fixation), symptom-to-tool mapping,
+  and framework-aware debugging references. If 3+ fixes fail, escalate to
+  architecture review. Use when diagnosing a bug or unexpected behavior, when
+  a quick fix isn't working and the problem keeps returning, when a test is
+  failing and the cause isn't immediately obvious, when a system behaves
+  differently than expected, or when debugging any framework-specific issue
+  (load the relevant tech skill's references/debugging.md for framework detail).
 user_invocable: false
 interactive: false
 depends_on: [verification-gate]
@@ -18,6 +21,9 @@ triggers:
   - "investigate failure"
   - "band-aid fix failing"
   - "unexpected behavior"
+  - "debug"
+  - "investigate bug"
+  - "systematic debugging"
 reads:
   - "logs, stack traces, error output (context-dependent)"
 writes: []

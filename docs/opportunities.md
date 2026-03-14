@@ -70,6 +70,29 @@ Each entry: what was observed, why it matters, and where to look.
 - **Location:** plugins/kronen/skills/skill-creator/scripts/run_eval.py
 - **Added:** 2026-03-14
 
+### eval injection in 10 hook scripts (cache-sourcing pattern)
+- **Observed:** `eval "$(grep '^KRONEN_[A-Z_]*=' "$CACHE")"` in 10 scripts. Value side not validated — crafted cache value could execute via eval.
+- **Impact:** Low exploitation risk (requires filesystem access to chmod 600 cache), trivial fix.
+- **Fix:** Tighten grep to `'^KRONEN_[A-Z_]*=[a-zA-Z0-9_-]*$'` or use `printf -v` instead of eval. Batch-fix all 10 scripts.
+- **Location:** plugins/kronen/scripts/ (observation-recorder, plan-scope-guard, tdd-gate, memory-health-daily, doc-stale-check, others)
+- **Added:** 2026-03-14
+- **Source:** memory-simplification brainstorm, security-auditor agent
+
+### observation-recorder.sh produces garbage data
+- **Observed:** Every entry in `.ai/instincts/observations.jsonl` has `tool='unknown'`, `context_type='general'`. CLAUDE_TOOL_NAME not populated by runtime.
+- **Impact:** Instinct pipeline has no useful input. Learning system is architecturally sound but data quality is zero.
+- **Fix:** Investigate whether Claude Code exposes tool name to PostToolUse hooks. If not, rethink observation-recorder approach.
+- **Location:** plugins/kronen/scripts/observation-recorder.sh
+- **Added:** 2026-03-14
+- **Source:** memory-simplification brainstorm, architect agent
+
+### Blog post: debugging architecture redesign
+- **Observed:** Completed the debugging architecture redesign (D016-D028): dissolved systematic-debugging, distributed 17 framework-specific debugging.md files, strengthened root-cause-debugging with enforcement, updated error-detective and skill-reviewer. This is a natural blog topic about co-location vs centralization in knowledge systems.
+- **Impact:** Shareable content about how debugging knowledge should live with the framework it debugs, not in a god-skill.
+- **Notes:** Content writer agent should handle this. Brief should cover: why centralized debugging fails at scale, the co-location principle, how enforcement gates prevent drift, and the platform-layer dependency model (Node.js as base for Next.js/NestJS).
+- **Location:** decisions at .ai/brainstorm/memory-simplification/decisions.yml D016-D028
+- **Added:** 2026-03-14
+
 ## Stale path references in ~/CLAUDE.md
 
 - `plugins/claude-core/resources/error-annotation-format.yml` (Error annotation section, line 167) — should be `plugins/kronen/resources/error-annotation-format.yml`

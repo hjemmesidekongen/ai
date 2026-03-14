@@ -211,6 +211,19 @@ Scan all skill files for second-person pronouns and phrases:
 
 These violate the imperative style convention.
 
+### Check 9: Debugging reference (smedjen tech skills only)
+
+For skills in the smedjen plugin whose triggers include framework or tool names
+(react, nextjs, vue, nuxt, nestjs, prisma, nodejs, typescript, playwright,
+storybook, vite, tailwind, expo-*, e2e-testing):
+
+```bash
+test -f plugins/smedjen/skills/<name>/references/debugging.md
+```
+
+Must exist and contain at least 3 debugging scenarios with framework-specific
+tools and commands. Skip for non-tech skills (orchestration, discipline, studio).
+
 ### Stage 1 output
 
 ```yaml
@@ -225,6 +238,7 @@ spec_compliance:
     ecosystem_registration: { status: pass|fail, detail: "" }
     referenced_files: { status: pass|fail, missing: [] }
     no_second_person: { status: pass|fail, violations: [] }
+    debugging_reference: { status: pass|fail|skipped, detail: "" }
   failed_count: 0
 ```
 
