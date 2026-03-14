@@ -19,10 +19,10 @@ Here's the full loop as a diagram before we dig into the details:
 ```mermaid
 flowchart TD
     START(["/plan GOAL"]) --> INIT[Initialize plan<br/>state.yml + learnings.yml]
-    INIT --> GATE{Goal clarity gate<br/>5-point checklist}
-    GATE -->|"< 3/5 pass"| BLOCK[Block: refine goal]
+    INIT --> GATE{Goal clarity gate<br/>6-point checklist}
+    GATE -->|"< 4/6 pass"| BLOCK[Block: refine goal]
     BLOCK --> GATE
-    GATE -->|"≥ 3/5 pass"| ORIENT
+    GATE -->|"≥ 4/6 pass"| ORIENT
 
     subgraph CYCLE ["OODA Cycle"]
         ORIENT[Orient<br/>Read state, scan codebase,<br/>summarize active learnings]
@@ -61,18 +61,27 @@ The acceptance criteria are what make "achieve this outcome" concrete. They're t
 ```yaml
 goal: "Consolidate 14 planning components into 8"
 acceptance_criteria:
-  - "skill-reviewer passes plan-engine with zero criticals"
-  - "agent-reviewer passes both agents with zero criticals"
-  - "A/B trigger testing confirms 10/10 prompt coverage"
+  - criterion: "skill-reviewer passes plan-engine with zero criticals"
+    verification:
+      type: command
+      value: "run skill-reviewer on plan-engine, check output for zero critical findings"
+  - criterion: "agent-reviewer passes both agents with zero criticals"
+    verification:
+      type: command
+      value: "run agent-reviewer on plan-verifier and plan-classifier"
+  - criterion: "A/B trigger testing confirms 10/10 prompt coverage"
+    verification:
+      type: metric
+      value: "trigger test results show 10/10 matches"
 ```
 
-Each criterion has to be something you can check mechanically. "Works well" doesn't cut it. "Zero criticals on review" does.
+Each criterion has to be something you can check mechanically. "Works well" doesn't cut it. "Zero criticals on review" does. The `verification` block makes this explicit — every criterion declares how to check it and what the expected result looks like. Plans also declare a `done_signal` that tells the system how to detect completion automatically, so autopilot can terminate without human confirmation when all criteria are met.
 
 ## The goal clarity gate
 
 Goals are the highest-leverage artifact in the system. Everything downstream flows from them — wave decomposition, task assignment, verification contracts, completion checks. A vague goal doesn't just waste the first wave; it wastes every wave that follows.
 
-So the system runs a mechanical checklist before cycle 1 starts. Five checks, no judgment calls:
+So the system runs a mechanical checklist before cycle 1 starts. Six checks, no judgment calls:
 
 1. **Non-empty criteria.** At least two acceptance criteria exist. One isn't enough — a single criterion is usually too narrow to cover the actual goal.
 2. **Minimum specificity.** Each criterion is at least 15 characters. Anything shorter is too terse to be verifiable.
@@ -80,7 +89,7 @@ So the system runs a mechanical checklist before cycle 1 starts. Five checks, no
 4. **Verifiability signal.** Each criterion contains something concrete — a file path, a command reference, a quantifier like "zero" or "all," or a number. If there's no verifiable signal, the criterion is aspirational, not measurable.
 5. **Goal-criteria alignment.** The key terms from the goal statement appear in the acceptance criteria. If the goal says "consolidate planning components" but the criteria only mention "update documentation," something is misaligned.
 
-If three or more checks pass, the plan proceeds (with warnings for failures). If fewer than three pass, it blocks and asks you to refine. This catches obviously bad goals without being so strict that it rejects reasonable ones.
+If four or more checks pass, the plan proceeds (with warnings for failures). If fewer than four pass, it blocks and asks you to refine. This catches obviously bad goals without being so strict that it rejects reasonable ones.
 
 After cycle 1 completes, the goal and acceptance criteria are frozen. If they change in `state.yml` — whether by accident or manual edit — the system escalates. The only way to change the goal is to create a new plan.
 
@@ -166,7 +175,7 @@ Here's what a three-cycle plan looks like in practice:
 
 ```
 Cycle 1:
-  Orient  -> scan codebase, run goal clarity gate (5/5 pass)
+  Orient  -> scan codebase, run goal clarity gate (6/6 pass)
   Plan    -> wave 1: 8 parallel review tasks
   Build   -> dispatch 6 review agents
   Verify  -> plan-verifier: 8/8 artifacts exist, all have verdicts

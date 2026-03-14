@@ -1,0 +1,138 @@
+---
+title: "Plan Drift: Why Your AI Agent Rewrites Files You Didn't Ask It To"
+description: "Telling an AI agent what files to avoid isn't enough. Scope enforcement needs two layers: prose boundaries for humans, glob patterns for hooks. Here's how runtime enforcement keeps multi-agent plans honest."
+date: "2026-03-14"
+author: "Morten Nissen"
+tags: ["claude-code", "scope-enforcement", "kronen", "multi-agent", "developer-workflow", "planning"]
+read_time: "8 min"
+target_audience: "developers"
+---
+
+You're building an authentication system. You create a plan with clear scope: auth routes, session management, token storage. The plan even says "don't touch payments." Wave 1 runs fine. Wave 2 starts implementing the session store, and the agent discovers that the session module shares a database connection pool with the payment processing system. So it refactors the connection pool. Then it updates the payment gateway's transaction handler to use the new pool interface. Then it modifies the billing webhook to match.
+
+You come back to three modified files in `src/payments/` that you never asked anyone to touch. The agent didn't malfunction. It followed a logical chain of dependencies and did what seemed reasonable. The problem is that "don't touch payments" was a suggestion, not a wall.
+
+This is plan drift. And if you're running multi-agent plans where subagents execute tasks in parallel, it's not a matter of *if* — it's when.
+
+## Instructions aren't constraints
+
+When you write "scope: authentication system only" in a plan description, that text enters the model's context window alongside everything else. The model processes it as information, not as a rule. It influences behavior the same way any other paragraph does — probabilistically, weighted against whatever else is in context.
+
+For a single-turn interaction, this is usually fine. The instruction is fresh, the context is small, and the model follows it. But in a multi-wave plan with accumulated learnings, dependency artifacts, and task specifications, that scope statement is competing with thousands of tokens of other context. When the agent encounters a compelling technical reason to step outside scope — like a shared database module — the technical reasoning often wins.
+
+This isn't a model quality problem. It's an architecture problem. You're using prose to do a job that requires enforcement.
+
+There's a related but distinct problem worth separating here: file-ownership. File-ownership partitions files across parallel agents within a single wave to prevent merge conflicts. Two agents writing to the same file in the same wave is a coordination failure. Scope enforcement is different — it prevents any agent from touching files that are outside the plan's boundaries, across the entire plan lifecycle. File-ownership prevents collisions. Scope enforcement prevents trespass. Both matter, but they solve different problems.
+
+## Two layers, one boundary
+
+The scope system in kronen uses a dual-layer design. One layer is for humans and verifier agents. The other is for bash hooks that run on every file write.
+
+```yaml
+# Layer 1: Human-readable (for verifier agent and context recovery)
+scope:
+  boundaries:
+    - "authentication system"
+    - "session management"
+
+# Layer 2: Machine-matchable (for hooks to enforce)
+scope:
+  paths:
+    include: ["src/auth/**", "src/session/**"]
+    exclude: ["src/payments/**", "src/billing/**"]
+```
+
+Both layers live in the plan's `state.yml`. They serve different consumers.
+
+The `boundaries` list gives the plan-verifier agent semantic context. During Stage 2 quality review, the verifier reads these boundaries to evaluate whether a wave's output stayed within the plan's intent. It can catch semantic drift that glob patterns miss — like an agent that technically only writes to `src/auth/` but implements billing logic inside an auth module.
+
+The `paths` lists give bash hooks something they can pattern-match against. A hook can't evaluate whether code "relates to authentication." But it can check whether `src/payments/gateway.ts` matches `src/payments/**`. That's a yes/no answer with zero ambiguity.
+
+Neither layer alone is sufficient. Boundaries without paths give you a verifier that can reason about scope after the fact, but can't prevent violations in real time. Paths without boundaries give you hard enforcement but no semantic understanding — the verifier can't tell you *why* a file should be excluded, only that it matched a pattern.
+
+## What happens when an agent crosses the line
+
+Here's the actual sequence when an agent working on an auth plan tries to write to `src/payments/gateway.ts`:
+
+**Step 1.** The agent calls the Write tool with `file_path: "src/payments/gateway.ts"`.
+
+**Step 2.** `plan-verification-gate.sh` fires as a PreToolUse hook. It reads `scope.paths.exclude` from `state.yml` and finds `["src/payments/**", "src/billing/**"]`.
+
+**Step 3.** The hook matches `src/payments/gateway.ts` against `src/payments/**`. Match found.
+
+**Step 4.** The hook checks whether the current task declares a `scope_override` that covers this path. It reads the task's `scope_override` array from `plan.yml`. None found.
+
+**Step 5.** The hook blocks the write:
+
+```json
+{
+  "decision": "block",
+  "reason": "File \"gateway.ts\" matches scope.paths.exclude pattern \"src/payments/**\". Add scope_override to the task in plan.yml if this is intentional."
+}
+```
+
+The agent never writes the file. The block is logged to `.ai/traces/hook-errors.log` with a timestamp, the file path, and the matched pattern. The agent receives the block reason and can either find an alternative approach that stays within scope, or surface the issue for human review.
+
+There's also a second hook — `plan-scope-guard.sh` — that runs independently. This one is advisory, not blocking. It checks writes against `scope.paths.include` and warns when a file doesn't match any include pattern. The warning doesn't stop the write, but it shows up in the agent's context as a signal that something might be off. Think of it as a yellow light versus the red light that `plan-verification-gate.sh` provides.
+
+## The escape hatch
+
+Sometimes a task legitimately needs to touch an excluded area. The auth system might need to update a shared database connection pool that lives under `src/db/`, and `src/db/` might be excluded because it's shared infrastructure that most plans shouldn't modify.
+
+The fix isn't to remove the exclusion. It's to declare the exception on the specific task that needs it:
+
+```yaml
+tasks:
+  - id: t3
+    name: "Update shared DB connection pool for session store"
+    files_written: ["src/db/connection-pool.ts"]
+    scope_override: ["src/db/**"]  # legitimate: shared infra needed for auth
+```
+
+The `scope_override` on task `t3` tells `plan-verification-gate.sh` to allow writes matching `src/db/**` for this task only. Other tasks in the plan are still blocked from writing to `src/db/`. The override is visible in `plan.yml`, shows up in plan reviews, and gets logged when it's exercised. No silent bypasses.
+
+This matters for auditability. When you review a completed plan, you can see exactly which tasks needed cross-boundary access and why. If a plan has twelve tasks and ten of them declare scope overrides, that's a signal that the scope was drawn wrong — not that the system is too restrictive.
+
+## Before and after
+
+Without scope enforcement, the plan has a prose instruction and a hope:
+
+```yaml
+# plan.yml — instruction-only scope
+description: >
+  Implement OAuth authentication. Do NOT modify payment
+  or billing code under any circumstances.
+
+tasks:
+  - id: t2
+    name: "Build session store"
+    files_written: ["src/auth/session.ts"]
+    # Agent discovers shared DB module, follows the dependency chain,
+    # modifies src/payments/gateway.ts because it seemed necessary.
+    # Nobody finds out until code review.
+```
+
+With scope enforcement, the boundary is mechanical:
+
+```yaml
+# state.yml — enforced scope
+scope:
+  boundaries: ["authentication system", "session management"]
+  paths:
+    include: ["src/auth/**", "src/session/**"]
+    exclude: ["src/payments/**", "src/billing/**"]
+
+# plan.yml — task tries to cross the line
+tasks:
+  - id: t2
+    name: "Build session store"
+    files_written: ["src/auth/session.ts"]
+    # Agent tries to write src/payments/gateway.ts
+    # plan-verification-gate.sh blocks it immediately
+    # Agent surfaces the dependency issue for human review
+    # No payment code is modified without explicit approval
+```
+
+The difference isn't sophistication. It's that the second version actually stops the agent instead of asking it nicely.
+
+Plans that enforce scope don't produce fewer dependency discoveries. The agent still notices that the session store shares a connection pool with payments. The difference is what happens next: instead of quietly refactoring across the boundary, it stops and tells you. That's the moment where a human decides whether to add a `scope_override` or redesign the approach. That decision shouldn't be made by an agent following a dependency chain at 2 AM.

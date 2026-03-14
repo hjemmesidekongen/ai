@@ -19,7 +19,7 @@ kronen turns Claude Code from a stateless Q&A tool into a stateful development e
 |---------|-------------|
 | `/brainstorm:start` | Open-ended exploration. Claude acts as a sparring partner, challenges assumptions, pushes back on weak reasoning. |
 | `/brainstorm:decide` | Extract structured decisions from a brainstorm session. Each decision gets user confirmation before it's saved. |
-| `/plan` | Create and run an iterative plan from a goal. Validates the goal with a 5-point mechanical checklist, plans one wave at a time, executes via multi-agent dispatch, verifies with an isolated agent, and loops until the goal is met. |
+| `/plan` | Create and run an iterative plan from a goal. Validates the goal with a 6-point mechanical checklist, plans one wave at a time, executes via multi-agent dispatch, verifies with an isolated agent, and loops until the goal is met. |
 | `/plan status` | See where you are — cycle number, wave progress, remaining goal, learnings count. |
 | `/full-review` | 5-phase code review with 2 parallel reviewers per phase. Severity gates between phases. |
 | `/autopilot-run` | Autonomous iteration loop. Give it a task, it works through iterations until completion, respecting stop hooks and verification gates. |
@@ -37,8 +37,8 @@ No task gets marked "done" without proof.
 
 Hooks enforce this at the system level:
 - **verification-gate-stop** prevents premature completion claims
-- **plan-verification-gate** blocks writes to future wave files before current wave verification passes
-- **scope-guard** prevents modifications to out-of-scope files
+- **plan-verification-gate** blocks writes to future wave files before current wave verification passes, and blocks writes to files matching `scope.paths.exclude` patterns
+- **plan-scope-guard** warns when writing outside declared task files or plan-level `scope.paths.include` patterns — advisory, not blocking
 
 ### Cross-Session Continuity
 
