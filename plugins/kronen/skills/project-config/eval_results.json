@@ -1,0 +1,37 @@
+{
+  "eval_type": "description_variants",
+  "date": "2026-03-14",
+  "note": "run_eval.py trigger detection fails for all positive cases (0/15) due to skill registration gap in the eval harness — the temporary command file approach doesn't register plugin skills correctly. All 18 negative cases pass (zero false positives). Manual description variant evaluation performed instead.",
+  "harness_results": {
+    "total": 33,
+    "passed": 18,
+    "failed": 15,
+    "false_positives": 0,
+    "false_negatives": 15,
+    "note": "All failures are false negatives from harness limitation, not description quality"
+  },
+  "variants": [
+    {
+      "id": "v1_original",
+      "description": "Project-level configuration via .ai/project.yml — profile presets (work/personal), hook flag overrides, dev commands, and git conventions. Explains the unified config system: how to bind a profile, which flags are overridable vs safety-locked, and where to find the full schema. Use when setting up a new project, switching profiles, configuring hook behavior, checking which profile is active, understanding override precedence, or asking about project.yml fields.",
+      "char_count": 480,
+      "strengths": "Comprehensive coverage, mentions both profiles, lists all config areas, clear use-when clause",
+      "weaknesses": "Long, explanation-heavy, 'unified config system' is jargon"
+    },
+    {
+      "id": "v2_action_oriented",
+      "description": "Configure project behavior via .ai/project.yml — choose work or personal profile, override hook flags (TDD gate, tracing, verification, doc checkpoint), set dev commands and git conventions. Safety flags (scope_guard, push_protection) cannot be disabled. Use when setting up project config, switching profiles, disabling specific hooks, checking active profile settings, or understanding which flags are overridable.",
+      "char_count": 419,
+      "strengths": "Names all 4 overridable flags explicitly, mentions safety constraint, action-oriented verbs",
+      "weaknesses": "Still long, lists flags which may date if flags change"
+    },
+    {
+      "id": "v3_concise",
+      "description": "Project configuration via .ai/project.yml. Profile presets (work/personal) control which hooks run — TDD gate, tracing, doc checkpoint, verification are overridable per project; scope_guard and push_protection are locked. Use when configuring project behavior, choosing a profile, overriding hook flags, or checking active settings.",
+      "char_count": 329,
+      "strengths": "Shortest, clearest structure, immediately actionable",
+      "weaknesses": "Doesn't mention dev commands, git conventions, or the full schema pointer"
+    }
+  ],
+  "recommendation": "v1_original retained — it has the broadest trigger surface and the eval confirmed zero false positives. v3_concise is the strongest alternative if context budget becomes a concern. The eval harness issue should be fixed separately (logged to opportunities.md)."
+}

@@ -2,11 +2,14 @@
 
 ## What This Is
 Five plugins in a monorepo:
-- **kronen** (`plugins/kronen/`) — The Crown: core foundation. Planning, brainstorm, tracing, memory governance, roadmap, doc governance, creator/reviewer tooling, autopilot, prompt optimization, and validation agents (39 skills, 11 commands, 14 agents).
+- **kronen** (`plugins/kronen/`) — The Crown: core foundation. Planning, brainstorm, tracing, memory governance, roadmap, doc governance, creator/reviewer tooling, autopilot, prompt optimization, project configuration, and validation agents (39 skills, 12 commands, 14 agents).
 - **smedjen** (`plugins/smedjen/`) — The Forge: development execution engine. Task decomposition, agent dispatch, tech knowledge, disciplines, visual verification, completion gates, project mapping, orchestration, studio knowledge, content writing (62 skills, 3 commands, 7 agents).
 - **herold** (`plugins/herold/`) — The Herald: task management and workplace integration. Jira ingestion, local task storage, contradiction detection, project profiles, QA handover, bulk ingestion, PR workflows (9 skills, 8 commands).
 - **våbenskjold** (`plugins/våbenskjold/`) — The Coat of Arms: brand strategy, audit, and evolution (4 skills, 5 commands).
 - **segl** (`plugins/segl/`) — The Royal Seal: visual identity, design tokens, and Pencil integration (4 skills, 4 commands).
+
+## Design Philosophy
+This is enterprise-grade infrastructure. Design for correctness, enforceability, and auditability — not convenience. Verification, schemas, safety guards, and formal processes are load-bearing, not overhead. When choosing between "quick and good enough" vs "correct and enforceable," choose correct. Cut complexity only when it doesn't work, not because it seems heavy.
 
 ## Context Recovery
 After `/compact` or when context seems incomplete, read `.ai/context/snapshot.yml` for working state (workspace, project, active plan, modified files). This file is written by PreCompact, Stop, and SessionStart hooks via `assemble-context.sh` and persists on disk.
@@ -36,7 +39,7 @@ After `/compact` or when context seems incomplete, read `.ai/context/snapshot.ym
   prompts/                           # Prompt templates
   roadmap.yml                        # Roadmap across 5 phases
 plugins/
-  kronen/                             # The Crown — core foundation (39 skills, 11 commands, 14 agents)
+  kronen/                             # The Crown — core foundation (38 skills, 11 commands, 14 agents)
     .claude-plugin/
       plugin.json                    # v0.3.0, hooks: PreToolUse, PostToolUse, PreCompact, SessionStart, Stop
       ecosystem.json                 # Component registry
@@ -46,7 +49,7 @@ plugins/
                                      # agent-reviewer, plan-verifier, plan-classifier
     commands/                        # trace-full, roadmap-add, roadmap-view, brainstorm-start,
                                      # brainstorm-decide, plan, plan-status, autopilot-run,
-                                     # autopilot-cancel, full-review, prompt-create
+                                     # autopilot-cancel, full-review, prompt-create, profile-status
     skills/
       roadmap-capture/               # Auto-capture out-of-scope ideas
       brainstorm-session/            # Open-ended brainstorm
@@ -60,7 +63,6 @@ plugins/
       agent-creator/                 # Create/modify agents
       plugin-creator/                # Create/modify plugins
       mcp-creator/                   # Create MCP server integrations
-      plugin-settings/               # .local.md config pattern for plugins
       hook-reviewer/                 # Review hooks (read-only)
       skill-reviewer/                # Review skills (read-only)
       plugin-reviewer/               # Review plugins (read-only)
@@ -82,6 +84,7 @@ plugins/
       agent-teams/                   # Preset team compositions for parallel agent dispatch
       auto-doc/                      # Automated documentation updates (complements doc-checkpoint)
       prompt-optimizer/              # Sharpen vague prompts using proven frameworks (auto + builder)
+      project-config/               # Project configuration via .ai/project.yml and profile presets
     scripts/                         # session-recovery, trace-light, check-trace-written,
                                      # doc-stale-check, cache-clear, verification-gate-stop,
                                      # observation-recorder, scope-guard, tdd-gate, compact-gate-pre/post,
@@ -136,6 +139,7 @@ docs/
 | `/kronen:autopilot-cancel` | Cancel active autopilot loop |
 | `/kronen:full-review` | 5-phase comprehensive code review |
 | `/kronen:prompt-create` | Turn rough intent into structured prompt |
+| `/kronen:profile-status` | Show active profile, compiled flags, overrides |
 | `/våbenskjold:brand-create` | Create a new brand from scratch |
 | `/våbenskjold:brand-audit` | Codify an existing brand from materials |
 | `/våbenskjold:brand-evolve` | Refresh or reinvent an existing brand |

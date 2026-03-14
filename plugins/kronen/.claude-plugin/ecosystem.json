@@ -10,7 +10,8 @@
     "full-review",
     "autopilot-run",
     "autopilot-cancel",
-    "prompt-create"
+    "prompt-create",
+    "profile-status"
   ],
   "skills": [
     "roadmap-capture",
@@ -29,7 +30,6 @@
     "plugin-reviewer",
     "agent-reviewer",
     "mcp-creator",
-    "plugin-settings",
     "verification-gate",
     "git-worktree-isolation",
     "root-cause-debugging",
@@ -51,7 +51,8 @@
     "bitbucket-basics",
     "slack-basics",
     "outlook-basics",
-    "prompt-optimizer"
+    "prompt-optimizer",
+    "project-config"
   ],
   "agents": [
     "plugin-validator",
