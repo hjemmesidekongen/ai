@@ -8,6 +8,14 @@ trap 'exit 0' ERR
 
 PROJECT_DIR="${CLAUDE_PROJECT_DIR:-.}"
 LOG_FILE="$PROJECT_DIR/.ai/traces/hook-errors.log"
+
+# --- Profile check ---
+CACHE="${CLAUDE_PROJECT_DIR:-.}/.ai/context/kronen-profile-cache"
+if [ -f "$CACHE" ]; then
+  eval "$(grep '^KRONEN_[A-Z_]*=' "$CACHE")"
+fi
+[ "${KRONEN_VERIFICATION:-strict}" = "disabled" ] && exit 0
+
 INPUT=$(cat)
 
 # Extract file path from tool input

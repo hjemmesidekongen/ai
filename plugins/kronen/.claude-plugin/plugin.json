@@ -128,6 +128,11 @@
         "hooks": [
           {
             "type": "command",
+            "command": "bash ${CLAUDE_PLUGIN_ROOT}/scripts/rules-sync.sh 2>/dev/null || true",
+            "timeout": 10
+          },
+          {
+            "type": "command",
             "command": "bash ${CLAUDE_PLUGIN_ROOT}/scripts/session-recovery.sh 2>/dev/null || true",
             "timeout": 10
           },

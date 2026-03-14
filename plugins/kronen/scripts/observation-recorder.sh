@@ -6,6 +6,14 @@
 set -euo pipefail
 
 PROJECT_DIR="${CLAUDE_PROJECT_DIR:-.}"
+
+# --- Profile check ---
+CACHE="${CLAUDE_PROJECT_DIR:-.}/.ai/context/kronen-profile-cache"
+if [ -f "$CACHE" ]; then
+  eval "$(grep '^KRONEN_[A-Z_]*=' "$CACHE")"
+fi
+[ "${KRONEN_TRACING:-light}" = "disabled" ] && exit 0
+
 OBSERVATIONS_FILE="$PROJECT_DIR/.ai/instincts/observations.jsonl"
 TOOL_NAME="${CLAUDE_TOOL_NAME:-unknown}"
 TOOL_OUTPUT="${CLAUDE_TOOL_OUTPUT:-}"

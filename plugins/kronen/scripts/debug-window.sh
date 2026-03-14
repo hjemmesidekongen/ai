@@ -10,6 +10,14 @@ trap 'exit 0' ERR
 
 PROJECT_DIR="${CLAUDE_PROJECT_DIR:-.}"
 DEBUG_LOG="$PROJECT_DIR/.ai/traces/debug-failures.log"
+
+# --- Profile check ---
+CACHE="${CLAUDE_PROJECT_DIR:-.}/.ai/context/kronen-profile-cache"
+if [ -f "$CACHE" ]; then
+  eval "$(grep '^KRONEN_[A-Z_]*=' "$CACHE")"
+fi
+[ "${KRONEN_TRACING:-light}" = "disabled" ] && exit 0
+
 INPUT=$(cat)
 
 # Extract exit code — only care about failures

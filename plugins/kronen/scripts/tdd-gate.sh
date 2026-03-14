@@ -9,6 +9,13 @@ set -euo pipefail
 PROJECT_DIR="${CLAUDE_PROJECT_DIR:-.}"
 LOG_FILE="$PROJECT_DIR/.ai/traces/hook-errors.log"
 
+# --- Profile check ---
+CACHE="${CLAUDE_PROJECT_DIR:-.}/.ai/context/kronen-profile-cache"
+if [ -f "$CACHE" ]; then
+  eval "$(grep '^KRONEN_[A-Z_]*=' "$CACHE")"
+fi
+[ "${KRONEN_TDD_GATE:-enabled}" = "disabled" ] && exit 0
+
 # Opt-out checks
 [ "${CLAUDE_NO_TDD_GATE:-}" = "1" ] && exit 0
 [ -f "$PROJECT_DIR/.claude/no-tdd-gate" ] && exit 0

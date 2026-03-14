@@ -5,6 +5,13 @@ set -euo pipefail
 
 PROJECT_DIR="${CLAUDE_PROJECT_DIR:-.}"
 
+# --- Profile check ---
+CACHE="${CLAUDE_PROJECT_DIR:-.}/.ai/context/kronen-profile-cache"
+if [ -f "$CACHE" ]; then
+  eval "$(grep '^KRONEN_[A-Z_]*=' "$CACHE")"
+fi
+[ "${KRONEN_DOC_CHECKPOINT:-enabled}" = "disabled" ] && exit 0
+
 # Gather changed files (staged + unstaged + last commit)
 CHANGED=$(git -C "$PROJECT_DIR" diff --name-only HEAD 2>/dev/null || true)
 STAGED=$(git -C "$PROJECT_DIR" diff --cached --name-only 2>/dev/null || true)

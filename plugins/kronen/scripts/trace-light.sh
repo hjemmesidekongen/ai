@@ -10,6 +10,13 @@ set -euo pipefail
 INPUT=$(cat)
 PROJECT_DIR="${CLAUDE_PROJECT_DIR:-.}"
 
+# --- Profile check ---
+CACHE="${CLAUDE_PROJECT_DIR:-.}/.ai/context/kronen-profile-cache"
+if [ -f "$CACHE" ]; then
+  eval "$(grep '^KRONEN_[A-Z_]*=' "$CACHE")"
+fi
+[ "${KRONEN_TRACING:-light}" = "disabled" ] && exit 0
+
 # Timestamp (UTC ISO 8601)
 TS=$(date -u +%Y-%m-%dT%H:%M:%SZ)
 

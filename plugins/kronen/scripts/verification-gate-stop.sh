@@ -11,6 +11,13 @@ PROJECT_DIR="${CLAUDE_PROJECT_DIR:-.}"
 TRACE_FILE="$PROJECT_DIR/.ai/traces/trace-light.log"
 MSG=""
 
+# --- Profile check ---
+CACHE="${CLAUDE_PROJECT_DIR:-.}/.ai/context/kronen-profile-cache"
+if [ -f "$CACHE" ]; then
+  eval "$(grep '^KRONEN_[A-Z_]*=' "$CACHE")"
+fi
+[ "${KRONEN_VERIFICATION:-strict}" = "disabled" ] && exit 0
+
 # Only meaningful if a plan is in progress
 ACTIVE_PLAN=""
 for state_file in "$PROJECT_DIR"/.ai/plans/*/state.yml; do

@@ -6,6 +6,14 @@ set -euo pipefail
 # Exit 0 always — signaling is via JSON decision field.
 
 PROJECT_DIR="${CLAUDE_PROJECT_DIR:-.}"
+
+# --- Profile check ---
+CACHE="${CLAUDE_PROJECT_DIR:-.}/.ai/context/kronen-profile-cache"
+if [ -f "$CACHE" ]; then
+  eval "$(grep '^KRONEN_[A-Z_]*=' "$CACHE")"
+fi
+[ "${KRONEN_TRACING:-light}" = "disabled" ] && exit 0
+
 AGENCY_FILE="$PROJECT_DIR/.ai/agency.yml"
 [ ! -f "$AGENCY_FILE" ] && exit 0
 
