@@ -22,7 +22,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "bash ${CLAUDE_PLUGIN_ROOT}/scripts/prevent-direct-push.sh",
+            "command": "node ${CLAUDE_PLUGIN_ROOT}/scripts/dist/hooks/prevent-direct-push.js",
             "timeout": 10
           }
         ]
@@ -32,22 +32,22 @@
         "hooks": [
           {
             "type": "command",
-            "command": "bash ${CLAUDE_PLUGIN_ROOT}/scripts/compact-gate-pre.sh 2>/dev/null",
+            "command": "node ${CLAUDE_PLUGIN_ROOT}/scripts/dist/hooks/compact-gate-pre.js",
             "timeout": 30
           },
           {
             "type": "command",
-            "command": "bash ${CLAUDE_PLUGIN_ROOT}/scripts/plan-scope-guard.sh 2>/dev/null || true",
+            "command": "node ${CLAUDE_PLUGIN_ROOT}/scripts/dist/hooks/plan-scope-guard.js",
             "timeout": 15
           },
           {
             "type": "command",
-            "command": "bash ${CLAUDE_PLUGIN_ROOT}/scripts/tdd-gate.sh",
+            "command": "node ${CLAUDE_PLUGIN_ROOT}/scripts/dist/hooks/tdd-gate.js",
             "timeout": 20
           },
           {
             "type": "command",
-            "command": "bash ${CLAUDE_PLUGIN_ROOT}/scripts/plan-verification-gate.sh 2>/dev/null",
+            "command": "node ${CLAUDE_PLUGIN_ROOT}/scripts/dist/hooks/plan-verification-gate.js",
             "timeout": 15
           }
         ]
@@ -59,7 +59,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "bash ${CLAUDE_PLUGIN_ROOT}/scripts/debug-window.sh 2>/dev/null || true",
+            "command": "node ${CLAUDE_PLUGIN_ROOT}/scripts/dist/hooks/debug-window.js",
             "timeout": 10
           }
         ]
@@ -69,7 +69,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "bash ${CLAUDE_PLUGIN_ROOT}/scripts/claude-md-guardian.sh 2>/dev/null || true",
+            "command": "node ${CLAUDE_PLUGIN_ROOT}/scripts/dist/hooks/claude-md-guardian.js",
             "timeout": 50
           }
         ]
@@ -79,7 +79,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "bash ${CLAUDE_PLUGIN_ROOT}/scripts/compact-gate-post.sh 2>/dev/null || true",
+            "command": "node ${CLAUDE_PLUGIN_ROOT}/scripts/dist/hooks/compact-gate-post.js",
             "timeout": 30
           }
         ]
@@ -88,7 +88,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "bash ${CLAUDE_PLUGIN_ROOT}/scripts/trace-light.sh 2>/dev/null || true",
+            "command": "node ${CLAUDE_PLUGIN_ROOT}/scripts/dist/hooks/trace-light.js",
             "timeout": 30
           }
         ]
@@ -97,7 +97,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "bash ${CLAUDE_PLUGIN_ROOT}/scripts/strategic-compact-trigger.sh 2>/dev/null || true",
+            "command": "node ${CLAUDE_PLUGIN_ROOT}/scripts/dist/hooks/strategic-compact-trigger.js",
             "timeout": 10
           }
         ]
@@ -106,7 +106,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "bash ${CLAUDE_PLUGIN_ROOT}/scripts/observation-recorder.sh 2>/dev/null || true",
+            "command": "node ${CLAUDE_PLUGIN_ROOT}/scripts/dist/hooks/observation-recorder.js",
             "timeout": 10
           }
         ]
@@ -117,7 +117,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "bash ${CLAUDE_PLUGIN_ROOT}/scripts/precompact-snapshot.sh 2>/dev/null || true",
+            "command": "node ${CLAUDE_PLUGIN_ROOT}/scripts/dist/hooks/precompact-snapshot.js",
             "timeout": 30
           }
         ]
@@ -128,27 +128,27 @@
         "hooks": [
           {
             "type": "command",
-            "command": "bash ${CLAUDE_PLUGIN_ROOT}/scripts/rules-sync.sh 2>/dev/null || true",
+            "command": "node ${CLAUDE_PLUGIN_ROOT}/scripts/dist/hooks/rules-sync.js",
             "timeout": 10
           },
           {
             "type": "command",
-            "command": "bash ${CLAUDE_PLUGIN_ROOT}/scripts/session-recovery.sh 2>/dev/null || true",
+            "command": "node ${CLAUDE_PLUGIN_ROOT}/scripts/dist/hooks/session-recovery.js",
             "timeout": 10
           },
           {
             "type": "command",
-            "command": "bash ${CLAUDE_PLUGIN_ROOT}/scripts/memory-health-daily.sh 2>/dev/null || true",
+            "command": "node ${CLAUDE_PLUGIN_ROOT}/scripts/dist/hooks/memory-health-daily.js",
             "timeout": 10
           },
           {
             "type": "command",
-            "command": "bash ${CLAUDE_PLUGIN_ROOT}/scripts/pencil-swarm-check.sh 2>/dev/null || true",
+            "command": "node ${CLAUDE_PLUGIN_ROOT}/scripts/dist/hooks/pencil-swarm-check.js",
             "timeout": 5
           },
           {
             "type": "command",
-            "command": "bash ${CLAUDE_PLUGIN_ROOT}/scripts/plan-recovery.sh 2>/dev/null || true",
+            "command": "node ${CLAUDE_PLUGIN_ROOT}/scripts/dist/hooks/plan-recovery.js",
             "timeout": 10
           }
         ]
@@ -159,37 +159,37 @@
         "hooks": [
           {
             "type": "command",
-            "command": "bash ${CLAUDE_PLUGIN_ROOT}/scripts/autopilot-stop-hook.sh 2>/dev/null || true",
+            "command": "node ${CLAUDE_PLUGIN_ROOT}/scripts/dist/hooks/autopilot-stop-hook.js",
             "timeout": 30
           },
           {
             "type": "command",
-            "command": "bash ${CLAUDE_PLUGIN_ROOT}/scripts/session-context-stop.sh 2>/dev/null || true",
+            "command": "node ${CLAUDE_PLUGIN_ROOT}/scripts/dist/hooks/session-context-stop.js",
             "timeout": 10
           },
-{
+          {
             "type": "command",
-            "command": "bash ${CLAUDE_PLUGIN_ROOT}/scripts/verification-gate-stop.sh 2>/dev/null || true",
+            "command": "node ${CLAUDE_PLUGIN_ROOT}/scripts/dist/hooks/verification-gate-stop.js",
             "timeout": 15
           },
           {
             "type": "command",
-            "command": "bash ${CLAUDE_PLUGIN_ROOT}/scripts/check-trace-written.sh 2>/dev/null || true",
+            "command": "node ${CLAUDE_PLUGIN_ROOT}/scripts/dist/hooks/check-trace-written.js",
             "timeout": 10
           },
           {
             "type": "command",
-            "command": "bash ${CLAUDE_PLUGIN_ROOT}/scripts/doc-stale-check.sh 2>/dev/null || true",
+            "command": "node ${CLAUDE_PLUGIN_ROOT}/scripts/dist/hooks/doc-stale-check.js",
             "timeout": 10
           },
           {
             "type": "command",
-            "command": "bash ${CLAUDE_PLUGIN_ROOT}/scripts/port-dedup-check.sh 2>/dev/null || true",
+            "command": "node ${CLAUDE_PLUGIN_ROOT}/scripts/dist/hooks/port-dedup-check.js",
             "timeout": 10
           },
           {
             "type": "command",
-            "command": "bash ${CLAUDE_PLUGIN_ROOT}/scripts/cache-clear.sh 2>/dev/null || true",
+            "command": "node ${CLAUDE_PLUGIN_ROOT}/scripts/dist/hooks/cache-clear.js",
             "timeout": 5
           }
         ]
@@ -200,7 +200,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "bash ${CLAUDE_PLUGIN_ROOT}/scripts/prompt-grade.sh 2>/dev/null || true",
+            "command": "node ${CLAUDE_PLUGIN_ROOT}/scripts/dist/hooks/prompt-grade.js",
             "timeout": 5
           }
         ]
