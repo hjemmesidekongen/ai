@@ -106,8 +106,3 @@ function runSetup(worktreeDir: string): void {
 
   console.log('No setup file detected. Skipping setup.');
 }
-
-// CLI entry point
-if (!process.env['VITEST']) {
-  createWorktree(process.argv[2] ?? '', process.argv[3] ?? '');
-}

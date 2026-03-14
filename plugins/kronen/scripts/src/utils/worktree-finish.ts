@@ -103,8 +103,3 @@ function removeWorktree(dir: string): void {
     execFileSync('git', ['worktree', 'remove', dir, '--force']);
   }
 }
-
-// CLI entry point
-if (!process.env['VITEST']) {
-  finishWorktree(process.argv[2] ?? '', process.argv[3] ?? '');
-}

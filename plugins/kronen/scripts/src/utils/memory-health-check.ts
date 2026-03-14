@@ -142,8 +142,3 @@ function findGraduationCandidates(lines: string[]): FlaggedEntry[] {
 
   return entries;
 }
-
-// CLI entry point
-if (!process.env['VITEST']) {
-  console.log(runHealthCheck());
-}

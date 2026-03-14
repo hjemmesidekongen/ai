@@ -320,9 +320,3 @@ function buildSnapshot(
 
   return lines.join('\n');
 }
-
-// CLI entry point — called directly via node
-if (!process.env['VITEST']) {
-  const source = process.argv[2] ?? 'unknown';
-  assembleContext(source);
-}

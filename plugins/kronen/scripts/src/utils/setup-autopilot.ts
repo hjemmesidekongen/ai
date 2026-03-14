@@ -150,8 +150,3 @@ function parseArgs(args: string[]): ParsedArgs | null {
 
   return { prompt, maxIterations, completionPromise, dynamicPlan };
 }
-
-// CLI entry point
-if (!process.env['VITEST']) {
-  setupAutopilot(process.argv.slice(2));
-}
