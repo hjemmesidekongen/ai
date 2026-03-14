@@ -24,18 +24,17 @@ herold               <- task management, depends on kronen
 plugins/smedjen/
 ├── .claude-plugin/
 │   ├── plugin.json          # Plugin manifest — no hooks
-│   └── ecosystem.json       # Component registry (58 skills, 7 agents, 2 commands)
-├── agents/                  # 7 agents
+│   └── ecosystem.json       # Component registry (50 skills, 6 agents, 1 command)
+├── agents/                  # 6 agents
 │   ├── architect.md
 │   ├── backend-dev.md
 │   ├── code-reviewer.md
-│   ├── content-writer.md
 │   ├── frontend-dev.md
 │   ├── app-security-auditor.md
 │   └── test-engineer.md
-├── commands/                # 2 commands
+├── commands/                # 1 command
 │   └── dev-scan.md
-├── skills/                  # 58 skills, each with SKILL.md + references/process.md
+├── skills/                  # 50 skills, each with SKILL.md + references/process.md
 │   ├── task-decomposer/     # Core: break tasks into subtasks
 │   ├── agent-dispatcher/    # Core: dispatch subtasks to agents (with reference_paths)
 │   ├── completion-gate/     # Core: 10-point quality gate
@@ -50,7 +49,7 @@ plugins/smedjen/
 │   ├── skill-quality-rubric/ # Integration: skill scoring framework
 │   ├── ...                  # 24 tech skills (react, nextjs, nestjs, expo, fumadocs, etc.)
 │   ├── expo-*/              # Expo: 12 skills (dom-components, swiftui, tailwind, etc.)
-│   └── ...                  # 8 studio skills (copywriting, SEO, content strategy, etc.)
+│   └── design-to-code-patterns/ # Integration: design-code handoff
 └── resources/               # Shared resources
 ```
 

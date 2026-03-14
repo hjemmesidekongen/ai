@@ -6,17 +6,15 @@ Generic development execution plugin — task decomposition, agent dispatch, tec
 
 | Category | Count | Purpose |
 |----------|-------|---------|
-| Core execution | 7 | Task decomposition, context assembly, agent dispatch, completion gates, orchestration |
-| Disciplines | 6 | TDD, debugging, error handling, verification, code review, git workflows |
-| Tech knowledge | 25 | React, Next.js, NestJS, Prisma, TypeScript, Tailwind, Vue, Nuxt, Fumadocs, testing, security |
+| Core execution | 6 | Task decomposition, agent dispatch, tier assignment, completion gates, project mapping, visual verification |
+| Disciplines | 6 | TDD, error handling, verification, code review, git workflows, e2e testing |
+| Tech knowledge | 24 | React, Next.js, NestJS, Prisma, TypeScript, Tailwind, Vue, Nuxt, Fumadocs, testing, security |
 | Expo | 12 | DOM components, SwiftUI, Tailwind, native UI, data fetching, CI/CD, deployment, upgrading |
-| Integration | 4 | Taskflow bridge, project mapping, file ownership, skill quality rubric |
-| Studio | 8 | Web copywriting, content strategy, SEO, marketing psychology, brand voice, social media, sitemap planning, design-to-code |
+| Integration | 2 | Design-to-code patterns, skill quality rubric |
 
 ## Commands
 
-- `/smedjen:scan` — Scan a project and generate a project map
-- `/smedjen:run` — Run the full smedjen pipeline from task intake to verified completion
+- `/smedjen:dev-scan` — Scan a project and generate a project map
 
 ## Agents
 

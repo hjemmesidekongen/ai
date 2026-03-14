@@ -75,8 +75,5 @@ Before dispatching, verify: (1) decomposition exists, (2) file ownership resolve
 7. Collect reports; retry once at same tier, then escalate
 8. Write dispatch records
 
-## reference_paths
-
-Agents receive 1-2 skill reference paths matched to their task's tech stack.
-Agent decides whether to read. See `references/process.md` for resolution
-algorithm, prompt templates, retry flow, and dispatch record schema.
+For reference_paths resolution, prompt templates, retry flow, wave construction,
+and dispatch record schema → `references/process.md`

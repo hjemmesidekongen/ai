@@ -2203,24 +2203,116 @@ items:
       Zero coupling to dev core. Needs its own brainstorm for naming, scope, migration.
     tags: [architecture, plugin-boundary, brainstorm]
 
+  # ============================================================
+  # SUBAGENT OPTIMIZATION (RL-169–175)
+  # ============================================================
+
+  - id: RL-169
+    title: "Smedjen pipeline simplification"
+    category: simplification
+    plugin: smedjen
+    priority: done
+    added: "2026-03-14"
+    completed: "2026-03-14"
+    decision_ref: ".ai/brainstorm/subagent-optimization/decisions.yml SA-D001 to SA-D006"
+    notes: >
+      Components were spec-only (never implemented). Nothing to delete.
+      Ordering invariants moved to agent-dispatcher prerequisites.
+      dev-scan kept as thin wrapper. project-mapper user_invocable.
+    tags: [simplification, pipeline, agents]
+
+  - id: RL-170
+    title: "Simplify project-mapper to project profile"
+    category: simplification
+    plugin: smedjen
+    priority: done
+    added: "2026-03-14"
+    completed: "2026-03-14"
+    decision_ref: ".ai/brainstorm/subagent-optimization/decisions.yml SA-D007"
+    notes: >
+      project-mapper produces .ai/project-map.yml with repo type, workspace,
+      apps with skills field, package topology, conventions, content hash.
+    tags: [simplification, scanning, project-profile]
+
+  - id: RL-171
+    title: "Add reference_paths to agent dispatch"
+    category: enhancement
+    plugin: smedjen
+    priority: done
+    added: "2026-03-14"
+    completed: "2026-03-14"
+    decision_ref: ".ai/brainstorm/subagent-optimization/decisions.yml SA-D009"
+    notes: >
+      reference_paths implemented in agent-dispatcher SKILL.md and process.md.
+      Paths from project profile skills field. Agents read on demand.
+    tags: [enhancement, agents, knowledge-loading]
+
+  - id: RL-172
+    title: "SessionStart profile freshness check"
+    category: feature
+    plugin: kronen
+    priority: done
+    added: "2026-03-14"
+    completed: "2026-03-14"
+    decision_ref: ".ai/brainstorm/subagent-optimization/decisions.yml SA-D008"
+    notes: >
+      TypeScript hook at profile-freshness.ts. Hashes workspace config files,
+      compares against stored hash. Registered in plugin.json. Vitest test passes.
+    tags: [feature, freshness, hooks]
+
+  - id: RL-173
+    title: "Blog post: subagent optimization (Danish)"
+    category: content
+    priority: in_progress
+    blocked_by: "RL-169, RL-170, RL-171"
+    added: "2026-03-14"
+    decision_ref: ".ai/brainstorm/subagent-optimization/decisions.yml SA-D014"
+    notes: >
+      Highest priority blog. Hook: 96% fewer tokens but most teams over-build.
+      Validate brief with UX + content agent. Written in Danish.
+    tags: [content, blog, agents]
+
+  - id: RL-174
+    title: "Blog post: debugging co-location (Danish)"
+    category: content
+    priority: in_progress
+    blocked_by: "RL-163"
+    added: "2026-03-14"
+    decision_ref: ".ai/brainstorm/subagent-optimization/decisions.yml SA-D016"
+    notes: >
+      Third priority blog. Hook: god-skills are an anti-pattern. Danish.
+    tags: [content, blog, debugging]
+
+  - id: RL-175
+    title: "Doc updates for pipeline simplification"
+    category: documentation
+    plugin: smedjen
+    priority: done
+    added: "2026-03-14"
+    completed: "2026-03-14"
+    decision_ref: ".ai/brainstorm/subagent-optimization/decisions.yml SA-D012"
+    notes: >
+      CLAUDE.md and ecosystem.json already accurate. ARCHITECTURE.md and README.md
+      updated to reflect 50 skills, 6 agents, 1 command. Removed stale references
+      to content-writer agent, taskflow-bridge, context-assembly, /smedjen:run.
+    tags: [documentation, cleanup]
+
 # ============================================================
 # STATS (updated 2026-03-14)
 # ============================================================
-# Total items: 151
+# Total items: 158
 #
-# Done: 77
-#   Phase 1–5, Context compaction, External references batches 1–5
+# Done: 81
+#   Phase 1–5, Context compaction, External references, Debugging arch
 #
 # Memory (RL-161–162): 2 items, postponed (blocked by TS conversion)
-# Debugging (RL-163–168): 6 items
-#   done: 4 (RL-163 dissolve, RL-164 enforce, RL-166 error-detective, RL-167 checkpoint gate)
-#   dropped: 1 (RL-165 git-bisect — covered by git-advanced-workflows)
-#   later: 1 (RL-168 content extraction brainstorm)
+# Debugging (RL-163–168): 6 items (4 done, 1 dropped, 1 later)
+# Subagent (RL-169–175): 7 items
+#   done: 5 (RL-169 pipeline, RL-170 profile, RL-171 ref_paths, RL-172 freshness, RL-175 docs)
+#   later: 2 (RL-173 blog, RL-174 blog)
 #
 # Simplification (RL-146–160): 15 items
-#   now: 3 (RL-146 mindset, RL-147 opportunities, RL-160 research loop)
-#   next: 9 (RL-148–156 hooks, merges, dissolutions)
-#   later: 3 (RL-157 auto-detect, RL-158 agent audit, RL-159 routing table)
+#   now: 3 | next: 9 | later: 3
 #
 # Other active: see individual items for priority
 # ============================================================
