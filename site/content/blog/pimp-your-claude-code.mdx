@@ -1,0 +1,427 @@
+---
+title: "Pimp Your Claude Code: Themes, Status Bars, and Custom Spinners"
+description: "Claude Code ships looking like every other terminal tool. Here's how to make it yours — custom status bars, themed spinners, notification sounds, output styles, and keybindings. Most of it takes 30 seconds."
+date: "2026-03-15"
+author: "Morten Nissen"
+tags: ["claude-code", "customization", "terminal", "developer-workflow", "productivity"]
+read_time: "7 min"
+target_audience: "everyone"
+---
+
+Claude Code ships looking like every other terminal tool. Dark background, default spinner, no information about context usage or session cost, no sound when a 3-minute task finishes while you're making coffee. It works, but it doesn't feel like yours.
+
+I've been running Claude Code as my primary dev tool for months. Somewhere along the way, I stopped accepting the defaults and started making it mine — a status bar that tells me everything at a glance, spinner messages that make me laugh, notification sounds so I can alt-tab without anxiety, and keybindings that match my muscle memory.
+
+Here's everything I changed. Most of it takes 30 seconds.
+
+## Where config files live
+
+Before we start — three locations, three scopes:
+
+- `~/.claude/settings.json` — applies to all your projects (user-level)
+- `.claude/settings.json` — applies to one project, shared with your team
+- `.claude/settings.local.json` — applies to one project, just you (gitignored)
+
+Everything in this post goes in user-level settings unless noted otherwise. Now let's make this thing look good.
+
+## Themes
+
+The fastest win. One command:
+
+```
+/config
+```
+
+Navigate to "Output configuration" and pick a theme. There are six built-in options — dark, light, and variants tuned for colorblind users or pure ANSI terminals.
+
+If you've spent time theming your terminal (Catppuccin, Tokyo Night, Gruvbox), try the ANSI-only theme. It inherits your terminal's color palette instead of overriding it, so Claude Code matches whatever you've already set up in iTerm2, Kitty, Ghostty, or WezTerm.
+
+You can also force a theme via environment variable:
+
+```bash
+export CLAUDE_CODE_THEME=dark
+```
+
+Full custom themes aren't supported yet — there's an [active feature request](https://github.com/anthropics/claude-code/issues/1302) — but ANSI mode gets you 80% of the way there.
+
+## Status line
+
+This is the single best customization you can make. A persistent bar at the bottom of your terminal showing live session data — model name, context window usage, cost, git branch, whatever you want. It updates after every interaction, runs locally (zero token cost), and makes the difference between flying blind and having instruments.
+
+The easiest way to set one up:
+
+```
+/statusline show model name, context percentage with a progress bar, and session cost
+```
+
+That's it. Claude generates a shell script and configures it for you. But if you want to build your own, here's what's available.
+
+### The data
+
+Claude Code pipes a JSON object to your status line script via stdin. The fields you'll actually use:
+
+```json
+{
+  "model": {
+    "display_name": "Opus 4.6",
+    "id": "claude-opus-4-6"
+  },
+  "context_window": {
+    "used_percentage": 42,
+    "total_input_tokens": 84000,
+    "context_window_size": 200000
+  },
+  "cost": {
+    "total_cost_usd": 0.47,
+    "total_duration_ms": 182000
+  },
+  "workspace": {
+    "current_dir": "/Users/you/project"
+  }
+}
+```
+
+### A basic status line
+
+This Bash script shows model, context percentage as a visual bar, and cost:
+
+```bash
+#!/bin/bash
+# ~/.claude/statusline.sh
+DATA=$(cat)
+
+MODEL=$(echo "$DATA" | jq -r '.model.display_name')
+PCT=$(echo "$DATA" | jq -r '.context_window.used_percentage')
+COST=$(echo "$DATA" | jq -r '.cost.total_cost_usd')
+
+# Build a 20-char progress bar
+FILLED=$((PCT / 5))
+EMPTY=$((20 - FILLED))
+BAR=$(printf '█%.0s' $(seq 1 $FILLED 2>/dev/null))$(printf '░%.0s' $(seq 1 $EMPTY 2>/dev/null))
+
+# Color the bar based on usage
+if [ "$PCT" -gt 80 ]; then
+  COLOR="\033[31m"  # Red
+elif [ "$PCT" -gt 60 ]; then
+  COLOR="\033[33m"  # Yellow
+else
+  COLOR="\033[32m"  # Green
+fi
+
+printf "${COLOR}${MODEL}\033[0m  ${COLOR}${BAR}\033[0m ${PCT}%%  \033[36m\$%.2f\033[0m" "$COST"
+```
+
+Wire it up:
+
+```json
+{
+  "statusLine": {
+    "type": "command",
+    "command": "~/.claude/statusline.sh",
+    "padding": 2
+  }
+}
+```
+
+### Cool status line ideas
+
+A few setups I've seen people build:
+
+**The minimalist** — just model and context percentage in one line:
+```
+Opus 4.6 · 42% · $0.47
+```
+
+**The git-aware bar** — adds branch name and modified file count, refreshed every 5 seconds (cache the git calls so they don't slow down the script):
+```
+Opus 4.6  ████████░░░░░░░░░░░░ 42%  $0.47  main +3
+```
+
+**The rate-limit tracker** — gabriel-dehan's [claude_monitor_statusline](https://github.com/gabriel-dehan/claude_monitor_statusline) (Ruby) shows remaining messages and time until rate limit reset. Supports `pro`, `max5`, and `max20` plan types with different display modes.
+
+**The multi-line dashboard** — two lines, session info on top, git info on bottom:
+```
+Opus 4.6  ████████░░░░░░░░░░░░ 42%  $0.47  3m elapsed
+~/project  main  +3 staged  ~1 modified
+```
+
+The status line supports ANSI colors, Unicode characters, and even clickable OSC 8 hyperlinks if your terminal supports them (iTerm2, Kitty, WezTerm). It debounces at 300ms, so your script can be as fancy as you want without lag.
+
+**Font tip:** If you want box-drawing characters or icons in your status line, make sure your terminal uses a Nerd Font variant (JetBrains Mono Nerd Font, Fira Code Nerd Font). Standard fonts won't render the glyphs.
+
+## Output styles
+
+This one changes how Claude talks to you. Three built-in styles:
+
+**Default** — standard software engineering mode. Direct, code-first.
+
+**Explanatory** — adds educational "Insights" sections between code blocks. Good when you're learning a new codebase.
+
+**Learning** — collaborative mode where Claude adds `TODO(human)` markers for pieces it wants you to implement yourself. Designed for people learning to code.
+
+Switch via `/config` → "Output style" or directly in your settings:
+
+```json
+{
+  "outputStyle": "Explanatory"
+}
+```
+
+### Custom output styles
+
+The built-in options are fine, but the real power is creating your own. Drop a markdown file in `~/.claude/output-styles/` and it shows up in the picker.
+
+Example — a no-nonsense style that kills the boilerplate:
+
+```markdown
+---
+name: Terse
+description: Minimal explanations, maximum code
+keep-coding-instructions: true
+---
+
+Be extremely concise. Lead with code, not explanation.
+Skip preamble. No "Great question!" or "Let me help with that."
+Only explain if the code isn't self-evident.
+One sentence where others would write a paragraph.
+```
+
+Or one tuned for documentation work:
+
+```markdown
+---
+name: Technical Writer
+description: Optimized for writing docs, READMEs, and guides
+keep-coding-instructions: false
+---
+
+You are a technical writer. Write clear, scannable documentation.
+Use short sentences. Active voice. Present tense.
+Structure with headers, not paragraphs.
+Every section should answer one question.
+```
+
+Output styles modify Claude's system prompt, so changes take effect on your next session — not mid-conversation.
+
+## Spinner verbs
+
+When Claude is thinking, it shows a spinner with a verb: "Thinking...", "Analyzing...", "Generating...". You can replace these with whatever you want.
+
+```json
+{
+  "spinnerVerbs": {
+    "mode": "replace",
+    "verbs": [
+      "Consulting the mass void",
+      "Pretending to think",
+      "Reticulating splines",
+      "Asking the magic 8-ball",
+      "Googling the answer",
+      "Convincing myself this will work",
+      "Blaming the last developer"
+    ]
+  }
+}
+```
+
+Set `mode` to `"replace"` to use only your list. Without it, your verbs get added to the defaults.
+
+### Spinner verb ideas
+
+**The honest engineer:**
+```json
+["Guessing", "Hoping for the best", "Reading the code I should have read earlier",
+ "Wondering if this is a skill issue", "Checking Stack Overflow in spirit",
+ "Overcomplicating things", "Simplifying the thing I overcomplicated"]
+```
+
+**The medieval court:**
+```json
+["Issuing royal decree", "Consulting the court wizard", "Polishing the crown",
+ "Summoning the royal scribe", "Dispatching ravens", "Forging in the smithy",
+ "Consulting the ancient scrolls"]
+```
+
+**The startup:**
+```json
+["Synergizing", "Disrupting the paradigm", "Pivoting aggressively",
+ "Crushing it", "Moving fast and breaking things", "Circling back",
+ "Taking this offline", "Putting a pin in it"]
+```
+
+**The suspiciously honest:**
+```json
+["Burning tokens", "Spending your money", "Processing at $0.01/sec",
+ "Hallucinating responsibly", "Predicting the next token",
+ "Doing what autocomplete does but fancier"]
+```
+
+These cycle randomly while Claude works. Small thing, but it makes waiting genuinely fun.
+
+## Alerts and notifications
+
+You spend 8 hours a day in Claude Code but you're not staring at it the whole time. A 3-minute code generation means you're checking Slack, reading docs, or making coffee. Without notifications, you come back to a finished response that's been sitting there for 2 minutes.
+
+Two hook events solve this: `Notification` (fires when Claude needs your attention) and `Stop` (fires when Claude finishes a response).
+
+### Desktop notifications
+
+**macOS:**
+```json
+{
+  "hooks": {
+    "Notification": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "osascript -e 'display notification \"Claude needs your attention\" with title \"Claude Code\" sound name \"Glass\"'"
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+
+**Linux:**
+```json
+{
+  "hooks": {
+    "Notification": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "notify-send 'Claude Code' 'Needs your attention'"
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+
+### Sound notifications
+
+Play a system sound when Claude finishes working:
+
+```json
+{
+  "hooks": {
+    "Stop": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "afplay /System/Library/Sounds/Funk.aiff"
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+
+macOS ships with 11 sounds in `/System/Library/Sounds/` — Basso, Blow, Bottle, Frog, Funk, Glass, Hero, Morse, Ping, Pop, Purr, Sosumi, Submarine, Tink. Try a few, pick one that doesn't make you flinch.
+
+Use different sounds for different events: a subtle `Purr` for Notification (Claude needs input), a louder `Funk` for Stop (task finished). You'll learn to distinguish them by ear within a day.
+
+### The ridiculous option
+
+[claude-sounds](https://github.com/daveschumaker/claude-sounds) by daveschumaker plays random AI-generated voice lines (think Archer meets your IDE) whenever Claude finishes a task. It pulls random MP3s from a folder and plays them via `afplay`. The author's own assessment: "Is this necessary? Absolutely not. Is it fun? Yes." Fair warning: it'll drive you insane after the 100th play.
+
+## Keybindings and vim mode
+
+Claude Code's keyboard shortcuts are fully customizable. Create `~/.claude/keybindings.json` (or run `/keybindings` to generate it):
+
+```json
+{
+  "bindings": [
+    {
+      "context": "Chat",
+      "bindings": {
+        "ctrl+e": "chat:externalEditor",
+        "ctrl+u": null
+      }
+    },
+    {
+      "context": "Global",
+      "bindings": {
+        "ctrl+t": "app:toggleTodos"
+      }
+    }
+  ]
+}
+```
+
+Set any action to `null` to unbind it. Supports modifier keys (`ctrl`, `alt`/`opt`, `shift`, `meta`/`cmd`) and chord sequences like `ctrl+k ctrl+s`. Changes apply immediately — no restart needed.
+
+Two shortcuts you can't rebind: `Ctrl+C` (interrupt) and `Ctrl+D` (exit). Everything else is fair game.
+
+### Vim mode
+
+If you live in Vim, run `/vim` and Claude Code's input area gets modal editing: `Esc` for normal mode, `i`/`a`/`o` for insert, `hjkl` navigation, `dd`/`dw`/`cw` for editing, yank/paste, text objects, the works. It's a subset of Vim — not full Neovim — but enough that your muscle memory transfers.
+
+## The full config
+
+Here's a combined `settings.json` that includes everything from this post. Copy it to `~/.claude/settings.json`, adjust to taste, and you've got a setup that looks nothing like the default.
+
+```json
+{
+  "spinnerVerbs": {
+    "mode": "replace",
+    "verbs": [
+      "Consulting the mass void",
+      "Pretending to think",
+      "Reticulating splines",
+      "Asking the magic 8-ball",
+      "Convincing myself this will work",
+      "Blaming the last developer",
+      "Burning tokens"
+    ]
+  },
+  "statusLine": {
+    "type": "command",
+    "command": "~/.claude/statusline.sh",
+    "padding": 2
+  },
+  "hooks": {
+    "Notification": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "osascript -e 'display notification \"Claude needs your attention\" with title \"Claude Code\" sound name \"Glass\"'"
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "afplay /System/Library/Sounds/Funk.aiff"
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+
+For the status line script, grab the Bash example from the [status line section](#status-line) above, save it to `~/.claude/statusline.sh`, and run `chmod +x ~/.claude/statusline.sh`.
+
+For Linux: swap `osascript` with `notify-send` and `afplay` with `paplay`. For Windows: see the [Anthropic docs](https://docs.anthropic.com/en/docs/claude-code) for PowerShell equivalents.
+
+## What's next
+
+None of this makes Claude Code smarter. But it makes it yours, and the tools you customize are the tools you actually use. Once your terminal stops feeling like a generic prompt, you won't want to go back.
+
+If you've done something with your setup that I haven't covered here, I'd genuinely like to see it.
