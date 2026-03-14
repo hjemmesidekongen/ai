@@ -1,6 +1,7 @@
 import { defineConfig, defineDocs } from 'fumadocs-mdx/config';
 import { metaSchema, pageSchema } from 'fumadocs-core/source/schema';
 import { z } from 'zod';
+import { rehypeMermaid } from './src/lib/rehype-mermaid.mjs';
 
 export const docs = defineDocs({
   dir: 'content/docs',
@@ -34,6 +35,6 @@ export const blog = defineDocs({
 
 export default defineConfig({
   mdxOptions: {
-    // MDX options
+    rehypePlugins: (v) => [rehypeMermaid, ...v],
   },
 });
