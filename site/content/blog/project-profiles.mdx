@@ -1,0 +1,111 @@
+---
+title: "Project Profiles: One Config File, Different Modes"
+description: "Configure how Claude Code plugins behave per project — strict for client work, lightweight for side projects. One YAML file, two presets, six flags."
+date: "2026-03-14"
+author: "Morten Nissen"
+tags: ["claude-code", "configuration", "kronen", "profiles", "developer-workflow"]
+read_time: "6 min"
+target_audience: "developers"
+---
+
+You have three repos open. One is a client project with a test suite, CI pipeline, and a team that reviews your PRs. Another is a weekend experiment where you're prototyping an idea. The third is an internal tool nobody else touches.
+
+All three use the same Claude Code plugins. All three get the same hooks, the same verification gates, the same TDD checks. That client project? The strictness makes sense — you want the safety net. The weekend prototype? You just want to write code without a verification gate telling you your throwaway script needs tests.
+
+Until now, CLAUDE.md was the only configuration surface. One file, applied everywhere. You could comment out rules you didn't want, but then you'd forget to uncomment them when you switched back to client work. The config was global, and the behavior was binary: everything on, or manually hacked off.
+
+## One file, per project
+
+Project profiles fix this with a single YAML file at `.ai/project.yml`. You pick a profile — `work` or `personal` — and the plugin system adjusts its behavior accordingly.
+
+```yaml
+profile: personal
+project_name: weekend-experiment
+```
+
+That's it. Two lines. The next time you start a Claude Code session in that repo, kronen reads this file, loads the `personal` preset, and compiles the flags. TDD gate off. Doc checkpoint off. Tracing off. Scope guard and push protection still on (more on that below). The plugin works the same way — it just stops enforcing ceremony you don't need.
+
+## Work vs. personal
+
+The two shipped profiles control six flags. Here's what each one sets:
+
+| Flag | Work | Personal |
+|------|------|----------|
+| `tdd_gate` | enabled | disabled |
+| `verification` | enabled | disabled |
+| `doc_checkpoint` | enabled | disabled |
+| `tracing` | enabled | disabled |
+| `scope_guard` | enabled | enabled |
+| `push_protection` | enabled | enabled |
+
+**Work** turns everything on. Every hook fires. You get TDD gates that block implementation until tests exist, verification checks before anything is marked done, doc checkpoint reminders after multi-file tasks, and full tracing for debugging sessions. This is the profile for repos where mistakes cost real time and money.
+
+**Personal** turns off the workflow gates and keeps the safety ones. No TDD checks on your prototype. No verification gate asking you to prove your config change works. No doc checkpoint telling you to update the README for a repo only you use. You still get scope guard (prevents accidentally editing files outside your task) and push protection (prevents pushing to protected branches).
+
+## Overriding specific flags
+
+Profiles are presets, not prisons. Sometimes you want work-level strictness but one flag doesn't fit. Maybe the project has no test suite, so the TDD gate just blocks you for no reason.
+
+```yaml
+profile: work
+project_name: legacy-client-app
+overrides:
+  hooks:
+    tdd_gate: disabled
+```
+
+The override takes precedence over the profile for that specific flag. Everything else from the `work` profile stays intact. You're not creating a custom profile — you're adjusting one flag for one project.
+
+Overrides are namespaced by concern area (`hooks`, `qa`, `dev`), not by plugin name. This keeps the mental model simple: you're configuring behavior, not wiring plugins together.
+
+## Under the hood
+
+When you start a Claude Code session, kronen's SessionStart hook runs a script called `rules-sync.sh`. It reads `.ai/project.yml`, resolves the profile preset, applies any overrides, and compiles the result into a flat cache file at `.ai/context/kronen-profile-cache`.
+
+The cache is a plain KEY=VALUE file that hooks source at runtime:
+
+```bash
+KRONEN_TDD_GATE=enabled
+KRONEN_VERIFICATION=enabled
+KRONEN_TRACING=disabled
+```
+
+Every overridable hook checks its flag before running. Three lines of bash:
+
+```bash
+CACHE="$PROJECT_DIR/.ai/context/kronen-profile-cache"
+[ -f "$CACHE" ] && . "$CACHE"
+[ "${KRONEN_TDD_GATE:-enabled}" = "disabled" ] && exit 0
+```
+
+If no `project.yml` exists, everything defaults to enabled. Secure by default — you opt out of strictness, never opt in. The cache is compiled once at session start and stays stable until the next session. No mid-session config drift.
+
+## Safety flags don't negotiate
+
+Two flags are hardcoded: `scope_guard` and `push_protection`. No profile, no override, and no inline config can turn them off. They're not workflow preferences — they prevent destructive actions. Scope guard stops you from editing files outside your current task's boundary. Push protection stops direct pushes to protected branches.
+
+Even in the lightest possible configuration, these two are always on. The hook scripts themselves enforce this with an allowlist-skip pattern that ignores override values for safety flags, then force-enables them as defense in depth.
+
+## Getting started
+
+Create the file in any repo where you use the plugins:
+
+```yaml
+# .ai/project.yml
+profile: personal
+project_name: my-side-project
+```
+
+Restart Claude Code. The SessionStart hook picks it up automatically. No install step, no migration, no setup command. If you want to verify it worked, check that `.ai/context/kronen-profile-cache` exists and has the values you expect.
+
+For client work, switch to `work` and add overrides for anything that doesn't fit:
+
+```yaml
+profile: work
+project_name: client-webapp
+overrides:
+  hooks:
+    tdd_gate: disabled
+```
+
+The profiles ship with kronen. If you're already running the plugin ecosystem, you have them. One file per project, two presets, six flags, and the freedom to stop fighting your own tooling on a Saturday afternoon.
