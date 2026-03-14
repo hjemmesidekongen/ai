@@ -42,6 +42,11 @@
           },
           {
             "type": "command",
+            "command": "node ${CLAUDE_PLUGIN_ROOT}/scripts/dist/hooks/tdd-gate.js",
+            "timeout": 20
+          },
+          {
+            "type": "command",
             "command": "node ${CLAUDE_PLUGIN_ROOT}/scripts/dist/hooks/plan-verification-gate.js",
             "timeout": 15
           }
