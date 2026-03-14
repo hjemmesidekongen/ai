@@ -11,10 +11,19 @@ export const metadata: Metadata = {
 const audienceColors: Record<string, string> = {
   developers: 'bg-fd-primary/10 text-fd-primary',
   designers: 'bg-teal-500/10 text-teal-400',
-  'seo specialists': 'bg-blue-500/10 text-blue-400',
-  'project managers': 'bg-purple-500/10 text-purple-400',
-  'brand/marketing': 'bg-rose-500/10 text-rose-400',
+  seo: 'bg-blue-500/10 text-blue-400',
+  'project-managers': 'bg-purple-500/10 text-purple-400',
+  'brand-marketing': 'bg-rose-500/10 text-rose-400',
   everyone: 'bg-fd-muted text-fd-muted-foreground',
+};
+
+const audienceLabels: Record<string, string> = {
+  developers: 'Developers',
+  designers: 'Designers',
+  seo: 'SEO',
+  'project-managers': 'Project Managers',
+  'brand-marketing': 'Brand & Marketing',
+  everyone: 'Everyone',
 };
 
 // Gradient backgrounds for cards
@@ -48,9 +57,10 @@ function PostMeta({ post }: { post: { data: { date: string; read_time?: string; 
 
 function AudienceBadge({ audience }: { audience: string }) {
   const colors = audienceColors[audience] || audienceColors.everyone;
+  const label = audienceLabels[audience] || audience;
   return (
-    <span className={`rounded-full px-2.5 py-0.5 text-xs font-medium capitalize ${colors}`}>
-      {audience}
+    <span className={`rounded-full px-2.5 py-0.5 text-xs font-medium ${colors}`}>
+      {label}
     </span>
   );
 }
