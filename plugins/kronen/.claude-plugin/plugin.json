@@ -42,11 +42,6 @@
           },
           {
             "type": "command",
-            "command": "node ${CLAUDE_PLUGIN_ROOT}/scripts/dist/hooks/tdd-gate.js",
-            "timeout": 20
-          },
-          {
-            "type": "command",
             "command": "node ${CLAUDE_PLUGIN_ROOT}/scripts/dist/hooks/plan-verification-gate.js",
             "timeout": 15
           }
@@ -155,6 +150,11 @@
             "type": "command",
             "command": "node ${CLAUDE_PLUGIN_ROOT}/scripts/dist/hooks/profile-freshness.js",
             "timeout": 5
+          },
+          {
+            "type": "command",
+            "command": "node ${CLAUDE_PLUGIN_ROOT}/scripts/dist/hooks/plugin-symlink-verify.js",
+            "timeout": 10
           }
         ]
       }
