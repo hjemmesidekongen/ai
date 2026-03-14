@@ -1,0 +1,98 @@
+---
+title: "God-Skills: Monolitmønstret Anvendt på AI-Viden"
+description: "En 400-linjers debugging-skill der vidste lidt om hvert framework og tog fejl om de fleste. Hvorfor debugging-viden hører til ved siden af den framework-viden den debugger."
+date: "2026-03-14"
+author: "Morten Nissen"
+image: "/blog/debugging-colocation.svg"
+tags:
+  - claude-code
+  - skill-architecture
+  - debugging
+  - co-location
+  - developer-tooling
+  - knowledge-design
+read_time: "5 min"
+target_audience: "developers"
+---
+
+Jeg havde en skill der hed `systematic-debugging`. 400 linjer. Den vidste lidt om React, lidt om Next.js, lidt om NestJS, lidt om Prisma, lidt om Vue, lidt om Nuxt, lidt om Node, lidt om Expo, lidt om TypeScript og lidt om Tailwind.
+
+Den vidste ikke nok om nogen af dem.
+
+Hver gang agenten ramte en React hydration-fejl, blev hele debugging-skillen loaded ind i konteksten. Inklusiv Prisma-migrationer, NestJS dependency injection, Expo build-konfigurationer og Vue reactivity-gotchas. 400 linjer kontekst for at debugge et problem der krævede 30 linjers React-specifik viden.
+
+Det er monolitmønstret. Bare med AI-viden i stedet for kode.
+
+## Problemet med gud-skills
+
+En gud-skill prøver at dække alt. Det lyder effektivt. Det er det modsatte.
+
+**For generisk til at være nyttig.** Når du debugger en Next.js App Router-fejl, har du brug for specifik viden om server components, route segments og build output. En generisk "check din bundler config" hjælper ikke. Den rigtige debugging-viden kender forskellen på en server component der fejler i build versus en der fejler i runtime, og ved præcis hvilke filer du skal tjekke.
+
+**For bred til at vedligeholde.** Prisma skifter API mellem major versions. React ændrer hydration-semantik. Tailwind v4 har en helt ny konfigurationsmodel. Hver gang ét framework opdateres, skal du ind i den monolitiske debugging-skill og finde de 20 linjer der handler om det framework. Blandt 380 andre linjer du ikke skal røre.
+
+**Forkert kontekst for det meste af tiden.** Kontekstvinduer har en pris. Hvert token der bliver loaded er et token der kunne have været brugt på noget relevant. Når du loader 400 linjers debugging-viden for at bruge 30 af dem, betaler du en kontekst-skat på 370 irrelevante linjer. Det lyder abstrakt, men det påvirker output-kvaliteten. Modellen har mere støj at filtrere fra.
+
+## Co-location: debugging-viden bor ved siden af framework-viden
+
+Løsningen er co-location. Den samme idé som gør at du lægger `Button.test.tsx` ved siden af `Button.tsx` i stedet for i en central `tests/`-mappe.
+
+Debugging-viden hører til i `references/debugging.md` inde i den framework-skill den debugger. React-debugging bor i `react-patterns/references/debugging.md`. Next.js-debugging bor i `nextjs-app-router/references/debugging.md`. Ikke i en central debugging-bibel.
+
+Vi opløste `systematic-debugging` og distribuerede framework-specifikke scenarier til 17 tech-skills:
+
+```text
+react-patterns/references/debugging.md
+nextjs-app-router/references/debugging.md
+nestjs-patterns/references/debugging.md
+prisma-patterns/references/debugging.md
+vue-patterns/references/debugging.md
+nuxt-patterns/references/debugging.md
+nodejs-patterns/references/debugging.md
+typescript-modern/references/debugging.md
+tailwind-v4/references/debugging.md
+expo-deployment/references/debugging.md
+expo-dev-client/references/debugging.md
+expo-native-ui/references/debugging.md
+expo-simulators/references/debugging.md
+playwright-testing/references/debugging.md
+e2e-testing-patterns/references/debugging.md
+storybook-patterns/references/debugging.md
+vite-patterns/references/debugging.md
+```
+
+Resultatet: hver `debugging.md` er fokuseret, vedligeholdbar og bliver kun loaded når den er relevant. Ingen kontekst-skat fra Prisma-debugging når du debugger React.
+
+## Protokollen er stadig central
+
+Der er ét stykke debugging-viden der *ikke* skal co-locates: undersøgelsesprotokollen.
+
+`root-cause-debugging` i kronen er framework-agnostisk. Den definerer 4 faser: Investigate, Pattern Analysis, Hypothesis, Implement. Den siger *hvordan* du debugger. Den siger ikke *hvad* der er specifikt for React versus Prisma.
+
+Når du rammer en fejl, loader `root-cause-debugging` protokollen. Protokollen identificerer hvilket framework der er involveret. Så loades den relevante tech-skills `debugging.md`. Protokollen plus kontekst. Ikke protokol plus alt.
+
+Det er separationen: *hvordan* man debugger er generisk. *Hvad* man debugger er framework-specifikt. Bland dem sammen og du får en gud-skill. Hold dem adskilt og du får et system der skalerer.
+
+## Mønstret er bredere end debugging
+
+Gud-skills er monolitmønstret anvendt på AI-viden. De har de samme fejlmønstre: svære at vedligeholde, svære at teste, og forkert abstraktionsniveau for de fleste use cases.
+
+Tænk over det: ville du skrive én `utils.ts` med hjælpefunktioner til hele din codebase? Eller ville du co-locate utility-funktioner med de moduler der bruger dem?
+
+Samme princip. Viden der kun er relevant i én kontekst bor i den kontekst. Viden der er relevant overalt (protokoller, principper, regler) bor centralt.
+
+Kriterierne er simple:
+
+- **Centralt** hvis det er en proces eller et princip der gælder uanset teknologi
+- **Co-located** hvis det er specifik viden der kun giver mening i én teknologisk kontekst
+- **Slettet** hvis det er for generisk til at hjælpe nogen
+
+Den tredje kategori er vigtigere end du tror. En del af de 400 linjer i `systematic-debugging` var generiske råd som "læs fejlmeddelelsen" og "tjek dine imports." Det er ikke viden. Det er fyld. Vi slettede det.
+
+## Resultatet
+
+17 fokuserede debugging-filer. Én central protokol. Nul kontekst-skat.
+
+Hver debugging-fil kender sit framework godt nok til at være nyttig. Protokollen sikrer at undersøgelsen er struktureret. Og agenten loader kun det den har brug for.
+
+Det hele startede med en 400-linjers fil der prøvede at være ekspert i alt. Kongen har talt: specialisering slår generalisme. Også i AI-skills.

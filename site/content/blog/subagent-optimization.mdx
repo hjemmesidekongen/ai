@@ -1,0 +1,172 @@
+---
+title: "96% fewer tokens og 100% task completion — men du over-bygger"
+description: "Specialiserede agenter slår generalister. Men løsningen er dynamisk knowledge loading, ikke 15 framework-specifikke agenter. Data, arkitektur og den pattern der faktisk virker."
+date: "2026-03-14"
+author: "Morten Nissen"
+image: "/blog/subagent-optimization.svg"
+tags:
+  - claude-code
+  - multi-agent
+  - subagent-optimization
+  - developer-tooling
+  - agent-architecture
+read_time: "6 min"
+target_audience: "developers"
+---
+
+Specialiserede agenter klarer 100% af opgaverne. Generalister lander på 65-85%.
+Specialisterne bruger 96% færre tokens.
+
+Og alligevel har du formentlig for mange agenter.
+
+Begge dele er sandt. Opløsningen er ikke et kompromis — det er en arkitekturbeslutning
+de fleste tager forkert.
+
+## Tre gyldige grunde til multi-agent
+
+Anthropic udgav i januar 2026 deres guide til multi-agent systemer. Konklusionen
+er overraskende snæver. Der er præcis tre situationer hvor multi-agent konsekvent
+slår single-agent:
+
+1. **Context pollution.** Irrelevant kontekst forringer svarenes kvalitet. Giv en
+   agent 40 tools den ikke har brug for, og den vælger dårligere blandt dem den
+   faktisk skal bruge.
+
+2. **Parallelle opgaver.** Uafhængigt arbejde der kan køre samtidigt. Frontend og
+   backend der ikke deler filer. Tests der venter på begge.
+
+3. **Specialisering.** Fokuserede agenter træffer bedre tool-valg og holder sig
+   til opgaven.
+
+Uden for de tre: koordineringsomkostningerne overstiger typisk gevinsten. Anthropics
+egne ord: "We've seen teams invest months building elaborate multi-agent architectures
+only to discover that improved prompting on a single agent achieved equivalent results."
+
+Måneder. På noget der kunne fixes med et bedre system prompt.
+
+## Token-skatten
+
+Multi-agent er ikke gratis. Overhead stiger eksponentielt.
+
+| Setup | Token-multiplikator |
+|-------|-------------------|
+| Enkelt agent | 1x baseline |
+| Enkelt agent + tools | ~4x baseline |
+| Multi-agent system | ~15x baseline |
+
+Fra 1x til 15x. Det er prisen for at agenter skal koordinere, dele kontekst,
+og rapportere resultater. Hver ny agent i kæden tilføjer system prompt, tool
+beskrivelser og koordineringsoverhead.
+
+Det betaler sig for komplekse breadth-first opgaver og parallel exploration.
+Det er spild for sekventielt arbejde der sagtens kan klares af én agent med
+det rigtige prompt.
+
+## Specialisterne vinder — men ikke som du tror
+
+Tallene fra "Beyond Generalist LLMs" (OpenReview) er svære at ignorere: 100%
+task completion mod 65-85% for generalisten, med 96% færre tokens.
+
+Men her er den detalje folk springer over: de 96% færre tokens kom ikke fra
+at tilføje flere agenter. De kom fra en fundamentalt anderledes arkitektur.
+Specialister udforsker ikke irrelevante muligheder. De spørger ikke "skal
+jeg bruge React eller Vue?" når opgaven handler om React. Den indsnævring er
+hvor besparelserne opstår.
+
+Anthropics eget research-system bekræfter mønstret. Multi-agent med Opus som
+lead og Sonnet subagenter slog single Opus med 90.2% på komplekse research-opgaver.
+LangChains Tau-bench viste det modsatte perspektiv: performance falder markant
+når agenter har "distractor domains" — irrelevante tools og instruktioner.
+
+Sammenhængen er klar. Fokus hjælper. Distraktioner skader. Flere agenter
+hjælper kun hvis de skaber fokus, ikke hvis de tilføjer lag.
+
+## Den viden du mangler er projekt-specifik
+
+Jeg spurgte mine egne agenter hvad de mangler. Frontend-dev agentens svar
+var ærligt: framework-viden fra React-docs eller Next.js-patterns er stort
+set redundant med det der allerede er i modellens træningsdata.
+
+Det agenten faktisk mangler:
+
+- Komponent-struktur og filnavngivning i dette projekt
+- State management patterns brugt her, ikke generelt
+- Fejlhåndteringskonventioner
+- Navnekonventioner
+- Package-topologi i et monorepo (hvilke pakker tilhører hvilken app)
+
+Den viden kommer fra at læse kodebasen. Ikke fra framework-dokumentation
+bagt ind i et system prompt.
+
+Konsekvensen: at lave en `nextjs-dev` agent der har Next.js App Router
+patterns hardcodet i sit system prompt giver minimal værdi. Modellen kender
+allerede App Router. Det den ikke kender er om dit projekt bruger
+`src/app/(marketing)/` eller `apps/web/src/routes/` og hvad der hører til
+hvor.
+
+## reference_paths: den pattern der virker
+
+I stedet for at pre-loade kontekst ind i agenter bruger jeg en simpel pattern:
+fortæl agenten hvilke reference-filer den kan læse, og lad den selv bestemme.
+
+```text
+Before implementing, read these references if relevant:
+  plugins/smedjen/skills/nextjs-app-router/references/process.md
+  plugins/smedjen/skills/react-patterns/references/process.md
+```
+
+Agenten bruger Read tool on demand. Hvis opgaven ikke kræver det, læser den
+ikke filerne. Nul pre-loading cost. Fuld fidelitet når det er relevant — ingen
+trunkering, ingen 1.500-token sammenfatninger der mister vigtige detaljer.
+
+Det tidligere system (en context-assembler med 8K token budget, fordelt i
+fire buckets) læste aldrig de faktiske reference-filer. Den læste SKILL.md
+bodyen — 40 linjer — og ignorerede references/process.md med 200+ linjer
+af framework-specifikke patterns. Opsummering tabte præcis den viden der
+skulle bruges.
+
+reference_paths løser det ved at eliminere mellemleddet. Agenten læser
+kilden direkte.
+
+## Lav ikke 15 framework-agenter
+
+Fristelsen er reel. Du har React, Next.js, Vue, NestJS, Express, Prisma —
+hvorfor ikke lave en agent per framework?
+
+Fordi du ender med 15 system prompts at vedligeholde. 15 sæt instruktioner
+der kan drive. 15 agenter der skal vælges korrekt af dispatcheren. Og
+gevinsten er minimal, fordi framework-viden allerede er i modellens
+træningsdata.
+
+Hold agenter rollebaserede: frontend-dev, backend-dev, test-engineer.
+Specialisér via dynamisk knowledge loading, ikke via agent-multiplikation.
+
+En frontend-dev agent der loader Next.js App Router patterns on demand er
+mere fleksibel end en nextjs-dev agent med hardcoded patterns. Når Next.js
+opdaterer sin API, opdaterer du ét reference-dokument. Ikke et system prompt
+bagt ind i en agent-definition.
+
+## Den egentlige beslutning
+
+Spændingen mellem "specialisering virker" og "du har for mange agenter"
+løses ikke med et kompromis. Den løses med en arkitekturbeslutning:
+
+**Specialisér gennem viden, ikke gennem agenter.**
+
+Få rollebaserede agenter. Rig kontekst on demand. Projekt-specifik viden
+fra scanning, ikke framework-docs fra system prompts. reference_paths der
+peger agenten mod de rigtige filer uden at pre-loade noget.
+
+Resultatet: du får specialistens fokus og token-besparelse uden
+generalistens distraktioner — og uden vedligeholdelsesbyrden af 15
+framework-specifikke agenter.
+
+Eller sagt på en anden måde: byg ikke flere agenter. Giv de eksisterende
+agenter bedre viden.
+
+---
+
+*Kilderne bag dette indlæg: Anthropic, "When to use multi-agent systems" (jan. 2026).
+"Beyond Generalist LLMs: Specialist Agentic Systems" (OpenReview).
+Anthropic, "Multi-agent research system" (engineering blog).
+LangChain, "Benchmarking multi-agent architectures" (jun. 2025).*
