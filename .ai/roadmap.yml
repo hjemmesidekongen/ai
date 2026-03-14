@@ -1639,9 +1639,9 @@ items:
     title: "Improved debugging skills"
     description: >
       Enhance debugging capabilities beyond root-cause-debugging and
-      systematic-debugging. Areas: better stack trace analysis, log
-      correlation across services, reproduction step generation,
-      bisect-driven isolation, and structured debugging sessions
+      the 17 framework-specific debugging references. Areas: better stack
+      trace analysis, log correlation across services, reproduction step
+      generation, bisect-driven isolation, and structured debugging sessions
       with persistent findings across compaction.
     category: dev
     plugin: dev-engine
