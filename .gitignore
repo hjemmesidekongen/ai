@@ -15,6 +15,7 @@ node_modules/
 .next/
 .vercel
 *.tsbuildinfo
+dist/
 
 # Python
 __pycache__/
