@@ -1,12 +1,12 @@
 ---
 name: project-mapper
 description: >
-  Scan a repository to detect tech stack, map file dependencies and module
-  boundaries, and output a Mermaid C4 context diagram. Use when onboarding
-  to a new codebase, determining which tech knowledge skills to activate,
-  generating an architecture overview, or producing a project-map.yml for
-  downstream agent dispatch.
-user_invocable: false
+  Scan a repository to detect tech stack, workspace shape, and produce a
+  project profile at .ai/project-map.yml. Includes skills matching: maps
+  detected stack to relevant smedjen knowledge skills for reference_paths
+  dispatch. Use when onboarding to a codebase, before agent dispatch, when
+  checking which skills apply, or generating a project profile.
+user_invocable: true
 interactive: false
 model_tier: senior
 depends_on: []
@@ -14,63 +14,65 @@ triggers:
   - "scan project"
   - "project mapper"
   - "detect tech stack"
-  - "codebase overview"
+  - "project profile"
+  - "project map"
+  - "what stack"
+  - "which skills"
+  - "dev scan"
 reads:
   - "package.json"
   - "tsconfig*.json"
   - "prisma/schema.prisma"
-  - "app.json"
-  - "app.config.js"
-  - "next.config.*"
-  - "nuxt.config.*"
-  - "vite.config.*"
-  - "turbo.json"
+  - "app.json / app.config.*"
+  - "next.config.* / nuxt.config.* / vite.config.*"
+  - "turbo.json / pnpm-workspace.yaml"
 writes:
   - ".ai/project-map.yml"
 checkpoint:
   type: data_validation
   required_checks:
-    - name: "stack_detected"
-      verify: "At least one framework detected and written to project-map.yml"
-      fail_action: "Check config file globs — scan root and workspaces if monorepo"
-    - name: "diagram_valid"
-      verify: "Mermaid output parses without syntax errors (C4Context block present)"
-      fail_action: "Validate against references/process.md diagram template"
-    - name: "module_boundaries"
-      verify: "Each detected workspace/package has an entry in modules[]"
-      fail_action: "Re-scan packages/ or apps/ directories for missing entries"
-    - name: "output_written"
-      verify: ".ai/project-map.yml exists and contains stack, modules, and diagram fields"
-      fail_action: "Write project-map.yml before reporting completion"
+    - name: "profile_written"
+      verify: ".ai/project-map.yml exists with repo_type, apps, and content_hash fields"
+      fail_action: "Scan config files and write the profile"
+    - name: "skills_matched"
+      verify: "Each app entry has a skills[] array mapping stack to smedjen skill names"
+      fail_action: "Run skills matching algorithm from references/process.md"
+    - name: "hash_computed"
+      verify: "content_hash field contains SHA-256 of source config files"
+      fail_action: "Compute hash from workspace config files"
+  on_fail: "Re-scan and rewrite profile"
+  on_pass: "Report repo type, app count, and matched skills count"
 _source:
   origin: "smedjen"
-  inspired_by: "D-027 decisions"
+  inspired_by: "SA-D007 decision"
   ported_date: "2026-03-10"
-  iteration: 1
-  changes: "Codebase scanning and tech stack detection"
+  iteration: 2
+  changes: "Simplified from module-boundary mapper to project profile with skills matching"
 ---
 
 # Project Mapper
 
-Scans a repo to build a structured picture of its tech stack, module boundaries,
-and architecture — written to `.ai/project-map.yml` with a Mermaid diagram.
+Scans a repo and produces a lightweight project profile at `.ai/project-map.yml`.
+Focuses on what agents need: repo shape, stack per app, and which smedjen knowledge
+skills are relevant.
 
 ## When to trigger
 
-- Onboarding to an unfamiliar codebase before dispatching agents
-- Determining which tech knowledge skills are relevant
-- Generating an architecture diagram for documentation or planning
-- Detecting monorepo structure before decomposing tasks
+- Onboarding to a new codebase
+- Before dispatching agents (profile provides reference_paths)
+- Checking which tech skills apply to the current project
+- After workspace topology changes (new app, new package)
 
-## What it scans
+## What it produces
 
-Reads config files at repo root (and workspace roots for monorepos):
-`package.json` → deps/scripts, `tsconfig*.json` → TS config, `prisma/schema.prisma` → DB,
-`app.json`/`app.config.js` → Expo, `next.config.*` → Next.js, `nuxt.config.*` → Nuxt,
-`vite.config.*` → Vite, `turbo.json` → monorepo pipeline.
+`.ai/project-map.yml` with:
+- **repo_type**: monorepo | single-package
+- **workspace**: pnpm/yarn/npm workspace config
+- **apps**: each with platform, path, stack entries, and matched skills
+- **packages**: brand-specific, shared, forbidden topology
+- **conventions**: detected coding conventions
+- **commands**: dev/build/test/lint commands
+- **content_hash**: SHA-256 of source config files (for freshness checking)
 
-## Output
-
-Writes `.ai/project-map.yml` (stack, modules[], diagram) and prints a Mermaid C4
-context diagram. Full detection patterns, dependency mapping, module boundary rules,
-diagram template, output schema, monorepo support, and anti-patterns: `references/process.md`.
+Full schema, detection heuristics, skills matching algorithm, and monorepo
+support: `references/process.md`.

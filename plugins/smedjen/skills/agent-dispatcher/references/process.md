@@ -90,6 +90,10 @@ You MAY read these files for context:
 
 Do NOT write to any file not listed above.
 
+## Knowledge References
+Before implementing, read these references if relevant to your task:
+{reference_paths — one per line, from project profile skills field}
+
 ## Constraints
 - Follow existing code patterns in the files you read.
 - Do not refactor code outside your scope.
@@ -215,6 +219,27 @@ After all agents in a wave complete, verify:
 - No file was modified by two agents (even if they were in different sub-waves).
 
 If a violation is detected, log it and do not proceed to the next wave until resolved.
+
+## reference_paths Resolution (SA-D009)
+
+Before building the agent prompt, resolve knowledge references from the project profile:
+
+1. Read `.ai/project-map.yml` — get the app entry matching the subtask's file scope
+2. From the app's `skills[]` array, select 1-2 skills most relevant to the subtask
+3. Build paths: `plugins/smedjen/skills/{skill-name}/references/process.md`
+4. Include in the agent prompt under "Knowledge References"
+
+### Selection heuristics
+- Match by file extension: `.tsx` files → react-patterns, nextjs-app-router
+- Match by directory: `prisma/` → prisma-patterns, `api/` → nestjs-patterns
+- Limit to 2 references per agent — more than 2 dilutes focus
+- For junior-tier (haiku) agents: consider pre-packing the first 50 lines of each reference
+  into the prompt instead of giving paths (haiku may not read proactively)
+
+### When project-map.yml doesn't exist
+- Skip reference_paths — agents work without them
+- The prompt template's Knowledge References section is omitted entirely
+- Do not fail or block dispatch because of missing profile
 
 ## Report Collection and Aggregation
 

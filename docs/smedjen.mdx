@@ -7,7 +7,7 @@ description: Multi-agent development execution - task decomposition, specialist 
 
 The execution arm of the hjemmesidekongen/ai methodology. Where kronen provides the infrastructure and verification, smedjen handles the actual development work - decomposing tasks, dispatching specialist agents, and enforcing quality gates before anything ships.
 
-**Version:** 0.2.0 · **62 skills** · **6 agents** · **2 commands**
+**Version:** 0.2.0 · **58 skills** · **7 agents** · **2 commands**
 
 ## What It Does
 
@@ -19,37 +19,25 @@ No agent marks its own work complete. No file is written to by two agents simult
 
 | Command | What It Does |
 |---------|-------------|
-| `/smedjen:run` | Full pipeline - decompose, assign, dispatch, verify. Supports `--dry-run` for preview. |
-| `/smedjen:scan` | Scan repo for tech stack and architecture. Outputs `.ai/project-map.yml` with Mermaid C4 diagram. |
+| `/smedjen:dev-scan` | Scan repo for tech stack and produce a project profile at `.ai/project-map.yml` with skills matching. |
 
-Run the full pipeline:
-
-```bash
-/smedjen:run "Build user profile page with avatar upload and form validation"
-```
-
-Or preview without executing:
+Scan a project:
 
 ```bash
-/smedjen:run "Build user profile page" --dry-run
+/smedjen:dev-scan
 ```
 
 ## Key Concepts
 
-### The Pipeline
+### The Execution Flow
 
 ```
 Task Description
       │
       ▼
 ┌─────────────┐
-│ project-mapper │  Scans repo → detects stack, maps modules
+│ project-mapper │  Scans repo → project profile with skills matching
 └──────┬──────┘
-       │
-       ▼
-┌──────────────┐
-│ taskflow-bridge │  Loads acceptance criteria (if herold active)
-└──────┬───────┘
        │
        ▼
 ┌───────────────┐
@@ -63,12 +51,7 @@ Task Description
        │
        ▼
 ┌──────────────────┐
-│ context-assembler  │  Packages relevant knowledge per agent (8k token budget)
-└──────┬───────────┘
-       │
-       ▼
-┌──────────────────┐
-│ agent-dispatcher   │  Parallel execution with file ownership enforcement
+│ agent-dispatcher   │  Parallel execution with file ownership + reference_paths
 └──────┬───────────┘
        │
        ▼
@@ -76,6 +59,12 @@ Task Description
 │ completion-gate  │  10-point quality check by code-reviewer agent
 └────────────────┘
 ```
+
+Components chain naturally — no pipeline orchestrator. Ordering invariants are enforced by agent-dispatcher's prerequisites checkpoint.
+
+### reference_paths
+
+When dispatching agents, the dispatcher includes relevant skill reference paths from the project profile. Each app in `.ai/project-map.yml` has a `skills` field mapping its tech stack to smedjen knowledge skills. Agents read references on demand — zero pre-loading cost, full fidelity.
 
 ### Parallel Execution with File Ownership
 
@@ -130,13 +119,14 @@ The code-reviewer agent runs this gate. It's the only agent authorized to approv
 
 ### Agents
 
-Six agents, each with a defined role and expertise:
+Seven agents, each with a defined role and expertise:
 
 | Agent | Model | Specialty |
 |-------|-------|-----------|
 | frontend-dev | sonnet | React, Next.js, Vue, Nuxt, CSS, accessibility, responsive design |
 | backend-dev | sonnet | NestJS, Prisma, Node.js, APIs, database schema, data layer |
 | test-engineer | sonnet | Unit, integration, E2E tests across all frameworks |
+| content-writer | sonnet | Brand-aware content drafts — READMEs, blog posts, landing pages, marketing copy |
 | architect | opus | Design review, dependency analysis, module boundaries (read-only) |
 | app-security-auditor | opus | OWASP checks, dependency audit, auth review, secret detection (read-only) |
 | code-reviewer | opus | 10-point completion gate - the only agent that can approve work as done (read-only) |

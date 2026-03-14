@@ -3,10 +3,13 @@
 ## What This Is
 Five plugins in a monorepo:
 - **kronen** (`plugins/kronen/`) — The Crown: core foundation. Planning, brainstorm, tracing, memory governance, roadmap, doc governance, creator/reviewer tooling, autopilot, prompt optimization, project configuration, and validation agents (39 skills, 12 commands, 14 agents).
-- **smedjen** (`plugins/smedjen/`) — The Forge: development execution engine. Task decomposition, agent dispatch, tech knowledge, disciplines, visual verification, completion gates, project mapping, orchestration, studio knowledge, content writing (62 skills, 3 commands, 7 agents).
+- **smedjen** (`plugins/smedjen/`) — The Forge: development execution engine. Task decomposition, agent dispatch, tech knowledge, disciplines, visual verification, completion gates, project mapping, orchestration, studio knowledge, content writing (58 skills, 2 commands, 7 agents).
 - **herold** (`plugins/herold/`) — The Herald: task management and workplace integration. Jira ingestion, local task storage, contradiction detection, project profiles, QA handover, bulk ingestion, PR workflows (9 skills, 8 commands).
 - **våbenskjold** (`plugins/våbenskjold/`) — The Coat of Arms: brand strategy, audit, and evolution (4 skills, 5 commands).
 - **segl** (`plugins/segl/`) — The Royal Seal: visual identity, design tokens, and Pencil integration (4 skills, 4 commands).
+
+## Target Platforms
+Windows, macOS, and Linux. Everything we build must work on all three. Scripts, hooks, paths, and commands should be cross-platform or provide platform-specific variants.
 
 ## Design Philosophy
 This is enterprise-grade infrastructure. Design for correctness, enforceability, and auditability — not convenience. Verification, schemas, safety guards, and formal processes are load-bearing, not overhead. When choosing between "quick and good enough" vs "correct and enforceable," choose correct. Cut complexity only when it doesn't work, not because it seems heavy.
@@ -31,6 +34,12 @@ After `/compact` or when context seems incomplete, read `.ai/context/snapshot.ym
 
 ## Project Structure
 ```
+package.json                         # pnpm workspace root (preflight, build, test, lint, type:check)
+pnpm-workspace.yaml                  # packages/*, plugins/kronen/scripts, site
+tsconfig.base.json                   # shared TypeScript compiler options
+eslint.config.mjs                    # shared ESLint flat config (typescript-eslint)
+packages/
+  hook-utils/                        # @kronen/hook-utils — typed runner, stdin, YAML, paths, profile
 .ai/                                 # Project-specific generated data
   context/                           # Session context (snapshot.yml — survives compaction via CLAUDE.md pointer)
   projects/                          # Per-project data (state.yml, brand/, design/, etc.)
@@ -41,7 +50,7 @@ After `/compact` or when context seems incomplete, read `.ai/context/snapshot.ym
 plugins/
   kronen/                             # The Crown — core foundation (38 skills, 11 commands, 14 agents)
     .claude-plugin/
-      plugin.json                    # v0.3.0, hooks: PreToolUse, PostToolUse, PreCompact, SessionStart, Stop
+      plugin.json                    # v0.3.0, hooks via node (TypeScript): PreToolUse, PostToolUse, PreCompact, SessionStart, Stop, UserPromptSubmit
       ecosystem.json                 # Component registry
     agents/                          # plugin-validator, skill-auditor, security-auditor, component-reviewer,
                                      # architect-reviewer, refactoring-specialist, knowledge-synthesizer,
@@ -85,14 +94,12 @@ plugins/
       auto-doc/                      # Automated documentation updates (complements doc-checkpoint)
       prompt-optimizer/              # Sharpen vague prompts using proven frameworks (auto + builder)
       project-config/               # Project configuration via .ai/project.yml and profile presets
-    scripts/                         # session-recovery, trace-light, check-trace-written,
-                                     # doc-stale-check, cache-clear, verification-gate-stop,
-                                     # observation-recorder, plan-scope-guard, tdd-gate, compact-gate-pre/post,
-                                     # setup-autopilot, autopilot-stop-hook,
-                                     # prevent-direct-push, debug-window,
-                                     # plan-prompt-constructor, plan-verification-gate, plan-recovery,
-                                     # pencil-swarm-check
-      tests/                         # Hook unit tests (test-tdd-gate.sh, test-plan-scope-guard.sh)
+    scripts/                         # TypeScript hooks + utilities (migrated from bash)
+      src/hooks/                     # 25 hook scripts (evaluate+runner pattern)
+      src/utils/                     # 6 utility scripts (main pattern)
+      __tests__/                     # vitest tests (22 test files, 168 tests)
+      dist/                          # esbuild output (code-split, self-contained)
+      build.mjs                      # esbuild build script
     resources/                       # error-annotation-format, memory-rules, agent-orchestration, instincts-schema
   våbenskjold/                       # The Coat of Arms — brand strategy (4 skills, 5 commands)
     skills/                          # brand-strategy, brand-audit, brand-evolve, brand-loader
@@ -102,9 +109,9 @@ plugins/
     skills/                          # visual-identity, design-tokens, design-loader, pencil-tokens
     commands/                        # design-identity, design-tokens, design-status, design-page
     resources/                       # token-schema
-  smedjen/                           # The Forge — development execution (62 skills, 3 commands, 7 agents)
-    skills/                          # 7 core + 6 discipline + 24 tech + 12 expo + 5 integration + 8 studio
-    commands/                        # dev-scan, dev-run
+  smedjen/                           # The Forge — development execution (58 skills, 2 commands, 7 agents)
+    skills/                          # 7 core + 6 discipline + 24 tech + 12 expo + 1 integration + 8 studio
+    commands/                        # dev-scan
     agents/                          # architect, backend-dev, frontend-dev, test-engineer, code-reviewer, app-security-auditor, content-writer
   herold/                            # The Herald — task management (9 skills, 8 commands)
     skills/                          # jira-ingestion, contradiction-detection, bulk-ingestion, bitbucket-pr-workflow,
@@ -150,7 +157,6 @@ docs/
 | `/segl:design-status` | Show design artifact status |
 | `/segl:design-page` | Full Pencil design orchestrator — tokens to agents in one command |
 | `/smedjen:dev-scan` | Scan repo to detect tech stack and architecture |
-| `/smedjen:dev-run` | Run full dev-engine pipeline |
 | `/herold:task-status` | Show active task details |
 | `/herold:task-list` | List locally stored tasks |
 | `/herold:task-start` | Set a task as active |

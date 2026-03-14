@@ -150,6 +150,11 @@
             "type": "command",
             "command": "node ${CLAUDE_PLUGIN_ROOT}/scripts/dist/hooks/plan-recovery.js",
             "timeout": 10
+          },
+          {
+            "type": "command",
+            "command": "node ${CLAUDE_PLUGIN_ROOT}/scripts/dist/hooks/profile-freshness.js",
+            "timeout": 5
           }
         ]
       }

@@ -2,8 +2,10 @@
 name: agent-dispatcher
 description: >
   Dispatches decomposed subtasks to worker agents with tier-appropriate model
-  assignment. Enforces file ownership, collects reports, retries failures once
-  at the same tier, then escalates to the next tier.
+  assignment. Enforces file ownership, includes reference_paths from project
+  profile for knowledge loading, collects reports, retries failures once at
+  the same tier, then escalates to the next tier. Called after task-decomposer
+  and tier-assignment complete.
 user_invocable: false
 interactive: false
 model_tier: senior
@@ -14,13 +16,20 @@ triggers:
   - "dispatch agents"
   - "agent dispatch"
   - "parallel execution"
+  - "run agents"
+  - "parallel agents"
+  - "multi-agent execution"
 reads:
   - ".ai/tasks/decomposed/*.yml"
+  - ".ai/project-map.yml"
 writes:
   - ".ai/tasks/dispatched/<task-id>.yml"
 checkpoint:
   type: data_validation
   required_checks:
+    - name: "prerequisites_met"
+      verify: "Decomposition exists and file ownership is resolved before dispatch"
+      fail_action: "Run task-decomposer and resolve ownership first"
     - name: "all_dispatched"
       verify: "Every subtask has a dispatch record with agent_id and status"
       fail_action: "Retry dispatch for missing subtasks"
@@ -34,45 +43,40 @@ checkpoint:
   on_pass: "All agents dispatched and reported — ready for completion gate"
 _source:
   origin: "smedjen"
-  inspired_by: "superpowers-main/skills/dispatching-parallel-agents/SKILL.md + agency agent-dispatcher"
+  inspired_by: "SA-D009 + SA-D011 decisions"
   ported_date: "2026-03-09"
-  iteration: 1
-  changes: "Built for smedjen with tier escalation, file ownership enforcement, and structured dispatch records"
+  iteration: 2
+  changes: "Added reference_paths, prerequisites checkpoint, ordering invariants. Removed pipeline dependency."
 ---
 
 # Agent Dispatcher
 
-Coordinates parallel agent execution for decomposed subtasks. Each agent gets an exclusive file list, a model tier, and a focused prompt.
+Coordinates parallel agent execution. Each agent gets an exclusive file list,
+a model tier, relevant skill references, and a focused prompt.
+
+## Hard rules
+
+- NEVER dispatch before file ownership is resolved
+- NEVER let an agent self-grade — completion-gate reviews all work
+- NEVER skip the same-tier retry before escalating
+
+## Prerequisites (SA-D011)
+
+Before dispatching, verify: (1) decomposition exists, (2) file ownership resolved.
 
 ## Dispatch Flow
 
-1. Read decomposed subtasks with tier assignments.
-2. Group subtasks by dependency level — independent tasks dispatch in parallel.
-3. For each group, assign file ownership (no shared files between agents).
-4. Dispatch via the Agent tool with the assigned model tier.
-5. Collect completion reports from all agents.
-6. Failed agents: retry once at same tier, then escalate one tier up.
-7. Write dispatch records to `.ai/tasks/dispatched/<task-id>.yml`.
+1. Read decomposed subtasks with tier assignments
+2. Load `.ai/project-map.yml` for reference_paths
+3. Group by dependency level — independent tasks run in parallel
+4. Assign file ownership (no shared files between agents)
+5. Build agent prompt with reference_paths from profile's skills field
+6. Dispatch via Agent tool at assigned tier
+7. Collect reports; retry once at same tier, then escalate
+8. Write dispatch records
 
-## Retry and Escalation
+## reference_paths
 
-| Attempt | Action |
-|---------|--------|
-| 1st | Dispatch at assigned tier |
-| 2nd | Retry at same tier with error context |
-| 3rd | Escalate to next tier (junior→senior, senior→principal) |
-| After 3rd | Mark as failed, log blocker |
-
-## File Ownership
-
-Before dispatching parallel agents, each agent receives an exclusive file list. If two subtasks need the same file, they are serialized (dispatched sequentially, not in parallel).
-
-## Agent Prompt Template
-
-Each dispatched agent receives:
-- Task description and acceptance criteria
-- File ownership list (what it may read and write)
-- Context files to read first
-- Instruction: "Report completion, never mark your own work done"
-
-See `references/process.md` for dispatch schemas, prompt templates, and error handling.
+Agents receive 1-2 skill reference paths matched to their task's tech stack.
+Agent decides whether to read. See `references/process.md` for resolution
+algorithm, prompt templates, retry flow, and dispatch record schema.

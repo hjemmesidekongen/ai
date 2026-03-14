@@ -20,7 +20,7 @@ kronen             ← foundation, always installed
 **Rules:**
 - Every plugin depends on kronen. Nothing else.
 - Plugins never depend on each other directly — they communicate through shared data files.
-- Cross-plugin coordination happens through bridge skills (e.g., `taskflow-bridge` in smedjen reads herold's `active.yml` but never calls herold commands).
+- Cross-plugin coordination happens through shared data files (e.g., smedjen's agent-dispatcher reads herold's task files but never calls herold commands directly).
 - Brand-to-design pipeline: våbenskjold writes `.ai/brand/` → segl reads it and writes `.ai/design/` → smedjen's design-to-code patterns consumes tokens. Each step is independent.
 
 ## Responsibility Boundaries
@@ -58,7 +58,7 @@ kronen             ← foundation, always installed
     └─────────────────┘          └──────────────────┘
 ```
 
-herold writes task files. smedjen reads them (via `taskflow-bridge`). våbenskjold writes brand files to `.ai/brand/`. segl reads brand files and writes design files to `.ai/design/`. No plugin writes to another plugin's directories.
+herold writes task files. smedjen reads them directly (agent-dispatcher loads task context from `.ai/tasks/`). våbenskjold writes brand files to `.ai/brand/`. segl reads brand files and writes design files to `.ai/design/`. No plugin writes to another plugin's directories.
 
 ## Hooks Architecture
 
