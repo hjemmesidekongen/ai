@@ -112,5 +112,72 @@ if [ "$FOUND_IN_FUTURE" -eq 1 ]; then
   exit 2
 fi
 
-# File is either in the current wave, a past wave, or not claimed by any wave — allow
+# --- Scope.paths.exclude enforcement ---
+# If the active plan declares scope.paths.exclude, block writes matching excluded patterns.
+# Per-task scope_override provides an escape hatch for legitimate exceptions.
+
+# Extract scope.paths.exclude from state.yml
+SCOPE_EXCLUDES=""
+IN_SCOPE=0; IN_PATHS=0; IN_EXCLUDE=0
+while IFS= read -r line; do
+  case "$line" in "scope:"*) IN_SCOPE=1; continue ;; esac
+  [ "$IN_SCOPE" -eq 0 ] && continue
+  case "$line" in [a-zA-Z]*) break ;; esac
+  case "$line" in
+    "  paths:"*) IN_PATHS=1; continue ;;
+    "  "[a-zA-Z]*) [ "$IN_PATHS" -eq 1 ] && IN_PATHS=0 ;;
+  esac
+  [ "$IN_PATHS" -eq 0 ] && continue
+  case "$line" in
+    "    exclude:"*) IN_EXCLUDE=1; continue ;;
+    "    "[a-zA-Z]*) IN_EXCLUDE=0 ;;
+  esac
+  if [ "$IN_EXCLUDE" -eq 1 ]; then
+    case "$line" in "      - "*)
+      pattern="${line#      - }"; pattern="${pattern%\"*}"; pattern="${pattern#\"}"
+      SCOPE_EXCLUDES="$SCOPE_EXCLUDES $pattern" ;;
+    esac
+  fi
+done < "$ACTIVE_STATE"
+
+# If no excludes declared, skip
+if [ -n "$SCOPE_EXCLUDES" ]; then
+  EXCLUDE_MATCH=0
+  MATCHED_PATTERN=""
+  for pattern in $SCOPE_EXCLUDES; do
+    simple_pattern="${pattern//\*\*/DOUBLEGLOBSTAR}"
+    simple_pattern="${simple_pattern//\*/[^/]*}"
+    simple_pattern="${simple_pattern//DOUBLEGLOBSTAR/*}"
+    case "$FILE_PATH" in $simple_pattern)
+      EXCLUDE_MATCH=1; MATCHED_PATTERN="$pattern"; break ;;
+    esac
+  done
+
+  if [ "$EXCLUDE_MATCH" -eq 1 ]; then
+    # Check for per-task scope_override in plan.yml
+    # Extract scope_override entries for all tasks in the current wave
+    OVERRIDE_MATCH=0
+    if [ -f "$PLAN_YML" ]; then
+      OVERRIDES=$(grep -A 50 'scope_override:' "$PLAN_YML" 2>/dev/null | grep '^ *- ' | sed 's/^ *- *//' | sed 's/^"\(.*\)"$/\1/' | tr -d "'" || true)
+      while IFS= read -r override; do
+        [ -z "$override" ] && continue
+        ovr_pattern="${override//\*\*/DOUBLEGLOBSTAR}"
+        ovr_pattern="${ovr_pattern//\*/[^/]*}"
+        ovr_pattern="${ovr_pattern//DOUBLEGLOBSTAR/*}"
+        case "$FILE_PATH" in $ovr_pattern) OVERRIDE_MATCH=1; break ;; esac
+      done <<< "$OVERRIDES"
+    fi
+
+    if [ "$OVERRIDE_MATCH" -eq 0 ]; then
+      mkdir -p "$(dirname "$LOG_FILE")" 2>/dev/null || true
+      printf '%s|plan-verification-gate|block|%s|matches scope.paths.exclude pattern: %s\n' \
+        "$(date -u +%Y-%m-%dT%H:%M:%SZ)" "$FILE_PATH" "$MATCHED_PATTERN" >> "$LOG_FILE" 2>/dev/null || true
+      printf '{"decision": "block", "reason": "File \"%s\" matches scope.paths.exclude pattern \"%s\". Add scope_override to the task in plan.yml if this is intentional."}' \
+        "$(basename "$FILE_PATH")" "$MATCHED_PATTERN" >&2
+      exit 2
+    fi
+  fi
+fi
+
+# File is either in the current wave, a past wave, not claimed by any wave, or override matched — allow
 exit 0

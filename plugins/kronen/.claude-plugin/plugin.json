@@ -37,7 +37,7 @@
           },
           {
             "type": "command",
-            "command": "bash ${CLAUDE_PLUGIN_ROOT}/scripts/scope-guard.sh 2>/dev/null || true",
+            "command": "bash ${CLAUDE_PLUGIN_ROOT}/scripts/plan-scope-guard.sh 2>/dev/null || true",
             "timeout": 15
           },
           {

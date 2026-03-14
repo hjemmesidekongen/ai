@@ -87,12 +87,12 @@ plugins/
       project-config/               # Project configuration via .ai/project.yml and profile presets
     scripts/                         # session-recovery, trace-light, check-trace-written,
                                      # doc-stale-check, cache-clear, verification-gate-stop,
-                                     # observation-recorder, scope-guard, tdd-gate, compact-gate-pre/post,
+                                     # observation-recorder, plan-scope-guard, tdd-gate, compact-gate-pre/post,
                                      # setup-autopilot, autopilot-stop-hook,
                                      # prevent-direct-push, debug-window,
                                      # plan-prompt-constructor, plan-verification-gate, plan-recovery,
                                      # pencil-swarm-check
-      tests/                         # Hook unit tests (test-tdd-gate.sh, test-scope-guard.sh)
+      tests/                         # Hook unit tests (test-tdd-gate.sh, test-plan-scope-guard.sh)
     resources/                       # error-annotation-format, memory-rules, agent-orchestration, instincts-schema
   våbenskjold/                       # The Coat of Arms — brand strategy (4 skills, 5 commands)
     skills/                          # brand-strategy, brand-audit, brand-evolve, brand-loader

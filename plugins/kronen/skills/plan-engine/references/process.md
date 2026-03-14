@@ -17,11 +17,19 @@ Every plan starts with a clearly defined goal. The goal is the fixed north star 
 goal:
   statement: "What we are building and why"
   acceptance_criteria:
-    - "Concrete, verifiable condition 1"
-    - "Concrete, verifiable condition 2"
-  scope:
-    includes: ["what is in scope"]
-    excludes: ["what is explicitly out of scope"]
+    - criterion: "Concrete, verifiable condition"
+      verification:
+        type: command | file_check | metric | expert_review
+        value: "specific check to run"
+  done_signal:
+    type: command | file_check | metric
+    target: "what to check"
+    expected: "expected result"
+  scope:                              # optional — enforced by hooks when present
+    boundaries: ["prose description of what's in/out of scope"]
+    paths:
+      include: ["src/auth/**"]        # plan-scope-guard.sh warns outside these
+      exclude: ["src/payments/**"]    # plan-verification-gate.sh blocks these
   constraints: ["technical, timeline, or resource constraints"]
 ```
 
@@ -33,7 +41,7 @@ goal:
 
 ### Goal clarity gate (PC-D04, strengthened)
 
-Runs before cycle 1 starts. Five mechanical checks — no vibes-based judgment.
+Runs before cycle 1 starts. Six mechanical checks — no vibes-based judgment.
 
 **Check 1: Non-empty criteria**
 - acceptance_criteria array has ≥2 entries
@@ -61,13 +69,19 @@ Runs before cycle 1 starts. Five mechanical checks — no vibes-based judgment.
 - At least 50% of key terms appear across the acceptance criteria
 - FAIL if: criteria don't reference what the goal is about
 
+**Check 6: Verification method declared**
+- Each acceptance criterion has a non-empty `verification` field
+- The `verification.type` matches the allowed enum: `command`, `file_check`, `metric`, or `expert_review`
+- The `verification.value` is a non-empty string
+- FAIL if: any criterion is missing `verification`, has an empty `verification.value`, or uses a type not in the enum
+
 **Scoring:**
-- 5/5 pass → proceed, goal is well-formed
-- 3-4/5 pass → proceed with advisory warnings for failed checks
-- 0-2/5 pass → block. Surface which checks failed with examples of how to fix each. Do not proceed until the user refines.
+- 6/6 pass → proceed, goal is well-formed
+- 4-5/6 pass → proceed with advisory warnings for failed checks
+- 0-3/6 pass → block. Surface which checks failed with examples of how to fix each. Do not proceed until the user refines.
 
 **Cycle 2+ enforcement:**
-- Re-run checks 1-4 (check 5 is cycle-1 only since goal is fixed)
+- Re-run checks 1-4 and 6 (check 5 is cycle-1 only since goal is fixed)
 - If any check that passed on cycle 1 now fails (e.g., criteria were edited) → ESCALATE
 - If checks that failed on cycle 1 still fail → ESCALATE
 
@@ -93,13 +107,29 @@ status: in_progress
 mode: dynamic
 goal: "{goal statement}"
 acceptance_criteria:
-  - "{criterion 1}"
-  - "{criterion 2}"
+  - criterion: "{what must be true}"
+    verification:
+      type: command | file_check | metric | expert_review
+      value: "{specific check}"
+  - criterion: "{what must be true}"
+    verification:
+      type: command | file_check | metric | expert_review
+      value: "{specific check}"
+done_signal:
+  type: command | file_check | metric
+  target: "{what to check}"
+  expected: "{expected result}"
+scope:                                   # optional — omit if no scope enforcement needed
+  boundaries: ["{prose description}"]
+  paths:
+    include: ["{glob pattern}"]
+    exclude: ["{glob pattern}"]
 cycle: 1
 planned_waves: []
 remaining_goal: "{initial assessment of full scope}"
 max_cycles: 15
 replan_count: 0
+done_signal_fail_streak: 0
 started_at: "{timestamp}"
 updated_at: "{timestamp}"
 errors: []
@@ -151,7 +181,7 @@ Establishes situational awareness before any planning.
 3. Summarize active learnings (don't dump raw into context)
 4. Scan relevant codebase areas for current state of the build
 5. Assess: "Where am I relative to the goal? What's done? What's left?"
-6. **Cycle 1**: run goal clarity gate (5-point mechanical checklist). Block if <3 checks pass.
+6. **Cycle 1**: run goal clarity gate (6-point mechanical checklist). Block if <4 checks pass.
 7. **Cycle 2+**: re-run goal clarity gate. If any previously passing check now fails → ESCALATE. If cycle-1 failures persist → ESCALATE.
 
 ### Output
@@ -186,7 +216,12 @@ Evaluates the last cycle's results and classifies the path forward. **Dispatched
 ```yaml
 plan_classifier_input:
   goal: "{goal statement}"
-  acceptance_criteria: ["{criterion 1}", "{criterion 2}"]
+  acceptance_criteria:
+    - criterion: "{what must be true}"
+      verification:
+        type: command | file_check | metric | expert_review
+        value: "{specific check}"
+      status: pass | fail | pending
   cycle: {N}
   replan_count: {N}
   max_cycles: {N}
@@ -491,7 +526,7 @@ plan_verifier_output:
 
 ### Stage 1: Spec compliance (mechanical)
 
-Five checks. All must pass.
+Six checks. All must pass.
 
 1. **File existence** — every declared output file exists on disk
    - Section refs (`file.yml#section`): parent file must exist
@@ -594,14 +629,35 @@ Record what happened and prepare for the next cycle.
 
 ## Loop Control (after Learn phase)
 
-### Done conditions
-- remaining_goal is empty or satisfied
-- All acceptance criteria verified
-- All verification gates passed
+### Done conditions (checked in order of precedence)
+
+**Primary check — done_signal:**
+1. Execute the `done_signal` defined in state.yml:
+   - `type: command` → run `target`, compare output/exit code against `expected`
+   - `type: file_check` → read `target` file, check contents match `expected` pattern
+   - `type: metric` → evaluate `target` metric against `expected` threshold
+2. If done_signal passes → proceed to secondary checks
+3. If done_signal fails → not done, continue looping
+
+**Secondary checks (all must pass after done_signal):**
+- All acceptance criteria verified (each criterion's `verification` check passes)
+- All verification gates passed for completed waves
 - No open_questions that block completion
 
+**Sanity warning (non-blocking):**
+- If `remaining_goal` is non-empty when done_signal + criteria pass, log a warning:
+  "done_signal and all criteria passed but remaining_goal is non-empty — review whether remaining_goal is stale"
+- This does NOT block completion — remaining_goal may be stale from a prior cycle
+
+**Safety valve — done_signal misconfiguration:**
+- Track consecutive cycles where all acceptance criteria pass but done_signal fails
+- If this happens for 2+ consecutive cycles → ESCALATE with "done_signal may be misconfigured — all acceptance criteria pass but done_signal keeps failing"
+- ESCALATE pauses for human input (same behavior as classifier ESCALATE)
+- The human can fix the done_signal, override completion, or abort the plan
+- Track the streak via `done_signal_fail_streak` counter in state.yml (reset to 0 when done_signal passes or any criterion changes status)
+
 ### Loop conditions
-- remaining_goal has unfinished work
+- done_signal has not passed, OR acceptance criteria have unverified entries
 - max_cycles not reached
 - No ESCALATE pending
 
@@ -609,7 +665,7 @@ Record what happened and prepare for the next cycle.
 - Set state.yml `status: done`
 - Clear `remaining_goal`
 - Final summary: cycles completed, learnings count, replans used
-- Run final acceptance criteria verification
+- Run final acceptance criteria verification (each criterion's verification check)
 
 ---
 

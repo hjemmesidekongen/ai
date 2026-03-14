@@ -1,9 +1,10 @@
 #!/usr/bin/env bash
 set -euo pipefail
-# scope-guard.sh — Advisory scope warning for active plan tasks
+# plan-scope-guard.sh — Advisory scope warning for active plan tasks
 # kronen PreToolUse hook (Write|Edit)
-# Warns when writing a file not in the current wave's declared task writes.
-# Non-blocking (exit 0). Only fires when active plan has non-empty writes lists.
+# Two checks (both advisory, non-blocking):
+#   1. Task-level: warns when writing a file not in the current wave's declared task writes
+#   2. Plan-level: warns when writing outside scope.paths.include (if declared in state.yml)
 # Complements compact-gate-pre.sh which blocks writes when compact is needed.
 
 trap 'exit 0' ERR
@@ -96,13 +97,59 @@ for wp in $WAVE_WRITES; do
   [ "$FILE_PATH" = "$wp" ] && exit 0
 done
 
-# File not found in declared scope — advisory only
+# File not found in declared task writes — advisory warning
 PLAN_NAME=$(basename "$(dirname "$ACTIVE_PLAN")")
-# Log to hook-errors.log
 mkdir -p "$(dirname "$LOG_FILE")" 2>/dev/null || true
-printf '%s|scope-guard|warn|%s|not in declared writes for %s (plan: %s)\n' \
+printf '%s|plan-scope-guard|warn|%s|not in declared writes for %s (plan: %s)\n' \
   "$(date -u +%Y-%m-%dT%H:%M:%SZ)" "$FILE_PATH" "$WAVE" "$PLAN_NAME" >> "$LOG_FILE" 2>/dev/null || true
 printf 'SCOPE GUARD: "%s" not in declared writes for wave "%s" (plan: %s).\n' \
   "$(basename "$FILE_PATH")" "$WAVE" "$PLAN_NAME" >&2
 printf '  Confirm intent or add path to the task writes list in state.yml.\n' >&2
+
+# --- Plan-level scope.paths.include check ---
+# If the plan declares scope.paths.include, warn when writing outside all include patterns.
+# This is independent of the task-writes check above — both fire independently.
+SCOPE_INCLUDES=""
+IN_SCOPE=0; IN_PATHS=0; IN_INCLUDE=0
+while IFS= read -r line; do
+  case "$line" in "scope:"*) IN_SCOPE=1; continue ;; esac
+  [ "$IN_SCOPE" -eq 0 ] && continue
+  case "$line" in [a-zA-Z]*) break ;; esac
+  case "$line" in
+    "  paths:"*) IN_PATHS=1; continue ;;
+    "  "[a-zA-Z]*) [ "$IN_PATHS" -eq 1 ] && IN_PATHS=0 ;;
+  esac
+  [ "$IN_PATHS" -eq 0 ] && continue
+  case "$line" in
+    "    include:"*) IN_INCLUDE=1; continue ;;
+    "    "[a-zA-Z]*) IN_INCLUDE=0 ;;
+  esac
+  if [ "$IN_INCLUDE" -eq 1 ]; then
+    case "$line" in "      - "*)
+      pattern="${line#      - }"; pattern="${pattern%\"*}"; pattern="${pattern#\"}"
+      SCOPE_INCLUDES="$SCOPE_INCLUDES $pattern" ;;
+    esac
+  fi
+done < "$ACTIVE_PLAN"
+
+# If scope.paths.include is declared, check if file matches any pattern
+if [ -n "$SCOPE_INCLUDES" ]; then
+  SCOPE_MATCH=0
+  for pattern in $SCOPE_INCLUDES; do
+    # Use bash glob matching (fnmatch-style via case)
+    # Convert ** to match-all for simple glob matching
+    simple_pattern="${pattern//\*\*/DOUBLEGLOBSTAR}"
+    simple_pattern="${simple_pattern//\*/[^/]*}"
+    simple_pattern="${simple_pattern//DOUBLEGLOBSTAR/*}"
+    case "$FILE_PATH" in $simple_pattern) SCOPE_MATCH=1; break ;; esac
+  done
+  if [ "$SCOPE_MATCH" -eq 0 ]; then
+    printf '%s|plan-scope-guard|warn|%s|outside scope.paths.include (plan: %s)\n' \
+      "$(date -u +%Y-%m-%dT%H:%M:%SZ)" "$FILE_PATH" "$PLAN_NAME" >> "$LOG_FILE" 2>/dev/null || true
+    printf 'SCOPE GUARD: "%s" is outside plan scope.paths.include (plan: %s).\n' \
+      "$(basename "$FILE_PATH")" "$PLAN_NAME" >&2
+    printf '  This file does not match any include pattern. Confirm intent.\n' >&2
+  fi
+fi
+
 exit 0

@@ -11,6 +11,44 @@ plan:
   total_tasks: integer
   total_waves: integer
 
+  # --- Goal verifiability ---
+  # Every plan declares how completion is detected and how each criterion is verified.
+
+  # done_signal: the primary, automatable completion check for the plan.
+  # Plan is done when done_signal passes AND all acceptance_criteria are verified.
+  # NOTE: done_signal.type intentionally excludes expert_review — plan completion
+  # must be automatable. Individual criteria may use expert_review for judgment-based
+  # checks, but the overall plan done signal must be machine-verifiable.
+  done_signal:
+    type: command | file_check | metric    # how to check completion
+    target: string                         # what to check (command to run, file to read, metric to query)
+    expected: string                       # expected result (exit code, file content pattern, threshold)
+
+  # acceptance_criteria: structured list where each criterion declares its verification method.
+  # Replaces the previous list[string] format — each entry now carries how it will be checked.
+  acceptance_criteria:
+    - criterion: string                    # what must be true (the acceptance condition)
+      verification:
+        type: command | file_check | metric | expert_review   # verification method category
+        value: string                      # specific check (command to run, file to read, metric, or reviewer)
+
+  # --- Scope (optional) ---
+  # When populated, hooks enforce scope boundaries at runtime.
+  # Dual-layer design: boundaries are human-readable (for verifier agent and context recovery),
+  # paths are machine-matchable (for hooks to enforce mechanically).
+  # If scope is omitted, the plan operates without scope enforcement.
+  scope:
+    boundaries: [string]       # optional — prose descriptions of what's in/out of scope
+                               # e.g. ["authentication system", "session management"]
+                               # consumed by plan-verifier agent and human readers
+    paths:
+      include: [string]        # optional — glob patterns for allowed file paths
+                               # e.g. ["src/auth/**", "src/session/**"]
+                               # plan-scope-guard.sh warns on writes outside these
+      exclude: [string]        # optional — glob patterns for forbidden file paths
+                               # e.g. ["src/payments/**", "src/billing/**"]
+                               # plan-verification-gate.sh blocks writes matching these
+
   # --- Tasks (flat list) ---
   # Waves reference tasks by id.
   tasks:
@@ -20,6 +58,8 @@ plan:
       depends_on: [string]   # task ids that must complete first (empty = root)
       files_written: [string] # paths this task owns — supports section refs (file.yml#key) and globs (dir/*)
       files_read: [string]   # paths this task reads (no ownership)
+      scope_override: [string] # optional — glob patterns that override scope.paths.exclude for this task
+                               # use when a task legitimately needs to touch an excluded area
       status: pending | in_progress | completed | failed | skipped
       model_tier: junior | senior | principal  # junior=Haiku, senior=Sonnet, principal=Opus
       artifact: string         # optional — path for step output file (relative to plan dir)

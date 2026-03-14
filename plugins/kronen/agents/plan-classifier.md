@@ -31,7 +31,17 @@ You are a lightweight, direct Agent call. You must NOT be dispatched through con
 ```yaml
 plan_classifier_input:
   goal: "{goal statement}"
-  acceptance_criteria: ["{criterion 1}", "{criterion 2}"]
+  acceptance_criteria:
+    - criterion: "{what must be true}"
+      verification:
+        type: command | file_check | metric | expert_review
+        value: "{specific check}"
+      status: pass | fail | pending
+    - criterion: "{what must be true}"
+      verification:
+        type: command | file_check | metric | expert_review
+        value: "{specific check}"
+      status: pass | fail | pending
   cycle: {N}
   replan_count: {N}
   max_cycles: {N}
@@ -54,6 +64,7 @@ plan_classifier_input:
 - Learnings are observations, not blockers
 - The planned direction still makes sense
 - No fundamental assumptions changed
+- Criterion verification statuses show forward progress (more pass, fewer pending)
 
 ### ADJUST
 - Wave succeeded but revealed the next wave should differ from expectation
@@ -64,6 +75,7 @@ plan_classifier_input:
 - Wave failed and the failure isn't recoverable by retrying
 - A learning invalidates the overall approach (not just next step)
 - The remaining_goal needs fundamental restructuring
+- Previously passing criteria have regressed to fail status
 - **Check replan_count first: if >= 2, force ESCALATE instead**
 
 ### ESCALATE

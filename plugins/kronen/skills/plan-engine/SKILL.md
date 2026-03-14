@@ -27,6 +27,8 @@ triggers:
   - "execute plan"
   - "execute this plan"
   - "multi-step task"
+  - "OODA"
+  - "wave decomposition"
 reads:
   - ".ai/plans/{name}/state.yml"
   - ".ai/plans/{name}/learnings.yml"
@@ -73,7 +75,7 @@ Goal-driven iterative planning. Plans one wave, executes, learns, loops. Goal fi
 
 ## OODA Cycle (7 phases)
 
-1. **Orient** — read learnings (active only), scan codebase, assess position vs goal. Cycle 1: run 5-point goal clarity gate (blocks if <3/5 pass). Cycle 2+: re-enforce, ESCALATE on regression.
+1. **Orient** — read learnings (active only), scan codebase, assess position vs goal. Cycle 1: run 6-point goal clarity gate (blocks if <4/6 pass). Cycle 2+: re-enforce, ESCALATE on regression.
 2. **Reflect** — dispatch plan-classifier agent for unbiased classification: CONTINUE / ADJUST / REPLAN / ESCALATE. Skip on cycle 1. Fallback: inline classification if agent fails.
 3. **Research** — optional. Triggered when reflect finds knowledge gaps. Scoped, time-boxed.
 4. **Plan** — decompose next wave: topological sort, file-ownership isolation, model-tier assignment, verification contract. ONE wave only.
@@ -83,7 +85,7 @@ Goal-driven iterative planning. Plans one wave, executes, learns, loops. Goal fi
 
 ## Safety guards
 
-- Goal clarity gate: 5-point mechanical checklist before cycle 1. Blocks on <3/5 pass.
+- Goal clarity gate: 6-point mechanical checklist before cycle 1. Blocks on <4/6 pass.
 - Goal immutability: goal + acceptance_criteria frozen after cycle 1. Changes → ESCALATE.
 - Max 2 replans per goal → then ESCALATE
 - max_cycles (default 15) → then ESCALATE

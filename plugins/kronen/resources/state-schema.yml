@@ -46,5 +46,13 @@ state:
       result: resolved | partial | unresolved
       next_approach: string  # what to try next (required if unresolved)
 
+  # --- Scope (optional) ---
+  # Dual-layer scope boundaries. When populated, hooks enforce at runtime.
+  scope:
+    boundaries: [string]     # prose descriptions (for verifier agent and humans)
+    paths:
+      include: [string]      # glob patterns — plan-scope-guard.sh warns on writes outside
+      exclude: [string]      # glob patterns — plan-verification-gate.sh blocks writes matching
+
   # --- Recovery ---
   recovery_notes: string    # human-readable status for session resume
